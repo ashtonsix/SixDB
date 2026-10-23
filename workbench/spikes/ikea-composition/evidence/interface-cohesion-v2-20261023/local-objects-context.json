@@ -1,0 +1,79 @@
+{
+  "artifact_reference": "workbench/spikes/ikea-composition/evidence/interface-cohesion-v2-20261023/local-objects-artifact.json",
+  "artifact_tool_sha256": "930f5fbe6e3b1b2ed85bcb4a2c580bd8cdef441b97d1df8dc892e867214480d0",
+  "limits": "This is durable recovery, not a new correctness/performance qualification. No local file was deleted. Native predicate-control measurements remain in their own worker archives.",
+  "publication_recovery": {
+    "helper_sha256": "a307f2b216e783e3b3a60b90fdae9fd12632c36a2a6a821ea6f3f093d595442f",
+    "method": "Existing compressed bytes reused; gzip CRC, all 1578 local members, full remote compressed size/SHA and every remote member verified.",
+    "old_handle": 35114,
+    "old_process": 2425146,
+    "state": "process and handle absent; completed gzip recovered; exact S3 key absent before conditional upload"
+  },
+  "recovery_manifest_sha256": "b93f2cbf3acd7741e54de00fdb4b145c27f24305c9ef393b977fb30c170566d7",
+  "reproduce_selection": "python3 workbench/spikes/ikea-composition/handle-boundaries/archive-local.py --staging UNUSED --preview",
+  "scope": "Archive the unique local cohesion proofs without duplicating durable sources.\n\nSelection follows the completed ABI/actual-caller/control questions. Immutable\noutputs are hard-linked into staging; small maintained sources are copied.\nNothing is evicted. Every omitted snapshot byte must match a named R3/R4 source\nmanifest already recoverable from its worker artifact. The archive retains a\nper-file recovery map; the Git context stays compact.\n",
+  "selection_script_sha256": "36b399e5275d2db1eba4757a55399e88a92678cd89ded7baafb3f98aa2405131",
+  "source_recovery": {
+    "R3/after": {
+      "artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe.tar.gz",
+      "manifest_sha256": "f61c0d75ccc73d8642e16c89b693098171bc64c22a8fe5503fdcfccc275cfb19",
+      "recovery": "Fetch worker artifact, extract source.tar.gz, then cohesion-inputs/after/"
+    },
+    "R3/before": {
+      "artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe.tar.gz",
+      "manifest_sha256": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327",
+      "recovery": "Fetch worker artifact, extract source.tar.gz, then cohesion-inputs/before/"
+    },
+    "R4/after": {
+      "artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz",
+      "manifest_sha256": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72",
+      "recovery": "Fetch worker artifact, extract source.tar.gz, then cohesion-inputs/after/"
+    },
+    "R4/before": {
+      "artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz",
+      "manifest_sha256": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327",
+      "recovery": "Fetch worker artifact, extract source.tar.gz, then cohesion-inputs/before/"
+    }
+  },
+  "summary": {
+    "by_root": {
+      "codegen-final-r4/bytes": 458234179,
+      "codegen-final-r4/files": 488,
+      "codegen-final-r4/objects": 69,
+      "directory-codegen-r3/bytes": 112433528,
+      "directory-codegen-r3/files": 90,
+      "directory-codegen-r3/objects": 12,
+      "handle-boundaries/bytes": 362500473,
+      "handle-boundaries/files": 574,
+      "handle-boundaries/objects": 79,
+      "mutation-ablation/bytes": 85985282,
+      "mutation-ablation/files": 70,
+      "mutation-ablation/objects": 3,
+      "native-r4-filter-audit/bytes": 63877504,
+      "native-r4-filter-audit/files": 57,
+      "native-r4-filter-audit/objects": 0,
+      "predicate-storage-r4/bytes": 37417843,
+      "predicate-storage-r4/files": 25,
+      "predicate-storage-r4/objects": 3,
+      "predicate-tight-address-r4/bytes": 49425292,
+      "predicate-tight-address-r4/files": 57,
+      "predicate-tight-address-r4/objects": 7,
+      "predicate-tight-r4/bytes": 47580996,
+      "predicate-tight-r4/files": 31,
+      "predicate-tight-r4/objects": 3,
+      "sources-and-context/bytes": 4115191,
+      "sources-and-context/files": 46,
+      "sources-and-context/objects": 0,
+      "tp-api-final-codegen/bytes": 54796601,
+      "tp-api-final-codegen/files": 134,
+      "tp-api-final-codegen/objects": 19,
+      "tp-api-final-sources/bytes": 33058,
+      "tp-api-final-sources/files": 5,
+      "tp-api-final-sources/objects": 0
+    },
+    "omitted_source_bytes": 69263398,
+    "omitted_source_files": 10699,
+    "selected_files": 1577,
+    "selected_raw_bytes": 1276399947
+  }
+}

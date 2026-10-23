@@ -1,0 +1,1022 @@
+{
+  "source_delta": {
+    "before": "build/ikea-cohesion-v2/native-r4-sources/after",
+    "after": "build/ikea-cohesion-v2/tp-api-final-sources/after",
+    "baseline_capture_sha256": "2d1edc87337c8561b208a3800089b2bdbb73546da9dcb76981a30390230c6120",
+    "baseline_manifest_sha256": "054472e7d34517099ed6bfc191c503a87e4afbaad3966ff1ba7e7eb59cc45d9c",
+    "changes": [
+      {
+        "path": "ikea/include/ikea/tuplepack/initialize.h",
+        "before_sha256": "8ba6932d153496ade7db1bd2dc6002918dfc8c0e8376740ee9ce2a8069ae5f4b",
+        "after_sha256": "23016ad6ac7ccd9860c74201dd135b56cb31acdb4835883fd0b45b0c100e2694"
+      },
+      {
+        "path": "ikea/include/ikea/streampack/write.h",
+        "before_sha256": "4d79cfd0099200c0c5e5d2644de788a2a4699653e915595ff26367abe6b7e55e",
+        "after_sha256": "aa98475d49c4c25e8fd94772a6b585622ac592d16e4879bfd10cfcc5b3e452d4"
+      },
+      {
+        "path": "ikea/test/tuplepack/operations.cpp",
+        "before_sha256": "be71c65fd9e988e4421ee01a00daf565d75f7d6db0307c435fb1001901d342a2",
+        "after_sha256": "558b381ae1d93cc3e4e9ccc5b89df415745f983db01179026d61dba1e093750c"
+      }
+    ],
+    "patch_sha256": "b20a1e54dbeee28550c9ab4c09696243808d872a10ea0c9800ac507a5afc828e"
+  },
+  "verified_source_files": 3565,
+  "commands": [
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=aarch64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/operations.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/test/tuplepack/operations.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/operations.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=aarch64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/standalone-initialize.d",
+        "-fsyntax-only",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/standalone-initialize.cpp"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=x86-64-v3",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx2-zen5/operations.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/test/tuplepack/operations.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx2-zen5/operations.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=x86-64-v3",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx2-zen5/standalone-initialize.d",
+        "-fsyntax-only",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/standalone-initialize.cpp"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=znver5",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx512-zen5/operations.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/test/tuplepack/operations.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx512-zen5/operations.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=x86_64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=znver5",
+        "-mtune=znver5",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=1",
+        "-DSIXDB_TUNE_NEOVERSE_V2=0",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx512-zen5/standalone-initialize.d",
+        "-fsyntax-only",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/standalone-initialize.cpp"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "--target=aarch64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/ikea/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/r4-overlap.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/native-r4-sources/after/ikea/src/overlap.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/r4-overlap.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang++-21",
+        "-fno-fast-math",
+        "-Wl,--gc-sections",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/operations.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-layout.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-prepare.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-kernels.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-gpr.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-routes.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-packet_layout.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-packet_prepare.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-packet.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/codegen-final-r4/neon-v2/after/tuplepack-initialize.o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/r4-overlap.o",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/operations"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/operations"
+      ],
+      "returncode": 0,
+      "stdout": "TuplePack operation admission, complete maintenance, nesting and construction passed\n",
+      "stderr": ""
+    }
+  ],
+  "comparisons": [
+    {
+      "profile": "neon-v2",
+      "logical": "streampack-ordinary",
+      "r4_object_sha256": "cb02275897a62605cf5fadd60a8d1caf392e9d9f7b90f2795348f14484316ab7",
+      "corrected_object_sha256": "d10afa5cf48b52d3a5d1e197f53d1faca48728da0db31b9ed51ddd59373ed3a9",
+      "r4_strict_record_sha256": "80b2d65c55cdb5f8a466693b33274878dccec7ee6c188f48137b34062540b73b",
+      "corrected_strict_record_sha256": "0d2bcfbcf1c075e4ed730ae314d37e1ab3b9b8e59c807b1c0eb8cecdd3d4653e",
+      "functions": {
+        "equal": 78,
+        "total": 78
+      },
+      "constants": {
+        "equal": 3,
+        "total": 3
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-ordinary",
+      "r4_object_sha256": "99358766cd73087f87050fef4ac169d329c97e8f1ff3bcc86c23a2062d7d0dff",
+      "corrected_object_sha256": "4e0d3c588a60de7446235ade87ddf65e581f0042f94bc8b112a128209c6e50b9",
+      "r4_strict_record_sha256": "52d0ee71c780c9cfa7d7b71fa4fac8809384dc930cabf26f8e073d384bdf74f6",
+      "corrected_strict_record_sha256": "0815c9266c8b51e29fb63a05c6bda376f96a4b4574624403e5b1a358d4127186",
+      "functions": {
+        "equal": 2,
+        "total": 2
+      },
+      "constants": {
+        "equal": 3,
+        "total": 3
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-words",
+      "r4_object_sha256": "050945f06ee3391f1697f55bca64786855c848c7d41284650dc5dcaf1f04b841",
+      "corrected_object_sha256": "050945f06ee3391f1697f55bca64786855c848c7d41284650dc5dcaf1f04b841",
+      "r4_strict_record_sha256": "d2d706a1f499bd9e8a09b0db364ac78f14a417833b4de21d9909ba552cd7ac01",
+      "corrected_strict_record_sha256": "d2d706a1f499bd9e8a09b0db364ac78f14a417833b4de21d9909ba552cd7ac01",
+      "functions": {
+        "equal": 1,
+        "total": 1
+      },
+      "constants": {
+        "equal": 5,
+        "total": 5
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "filters-ordinary",
+      "r4_object_sha256": "04590daac049ee8ee29fbc68fc970fb6b1c09c97e777d3f18ff18b2f5d3fbbaa",
+      "corrected_object_sha256": "04590daac049ee8ee29fbc68fc970fb6b1c09c97e777d3f18ff18b2f5d3fbbaa",
+      "r4_strict_record_sha256": "d3486edba1233af350c3fb6091d231ec4ef83588d93623fb70a063ecbd43dfcb",
+      "corrected_strict_record_sha256": "d3486edba1233af350c3fb6091d231ec4ef83588d93623fb70a063ecbd43dfcb",
+      "functions": {
+        "equal": 6,
+        "total": 6
+      },
+      "constants": {
+        "equal": 5,
+        "total": 5
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-initialize",
+      "r4_object_sha256": "38fb813ee6bd0901dd3504f4327200c2148297aaa795afabf7ab5995aad9951d",
+      "corrected_object_sha256": "b97d9980dcc48c938cace51d3690e0dc72b16403bb2e13035e8aa3e645b8dd6d",
+      "r4_strict_record_sha256": "c03480ec30de753b053380df6d4e9bff2a96db0916e7036b6dbfe3d8e0f2778b",
+      "corrected_strict_record_sha256": "202cb58ac870765bc6b7731e0366f18ae319495e227f1bbf976597b5496290fe",
+      "functions": {
+        "equal": 1,
+        "total": 1
+      },
+      "constants": {
+        "equal": 0,
+        "total": 0
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "streampack-ordinary",
+      "r4_object_sha256": "3f9a74df309633865a03d232857828472f5b078f4683b74240b82da26b949ed8",
+      "corrected_object_sha256": "e2426c8fe6e6bfcee0de1bfefe384ae652b026d6b22d8ffe58e345066969b573",
+      "r4_strict_record_sha256": "283845e2bc45dc973057edfbd8ccff277835a42003a3d4a22c2f8f0e6261047c",
+      "corrected_strict_record_sha256": "6c91fc1a01ce5e231e0bca45f9f2a0a4ebfcb8818a6154369ea3b8975b690f80",
+      "functions": {
+        "equal": 78,
+        "total": 78
+      },
+      "constants": {
+        "equal": 4,
+        "total": 4
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-ordinary",
+      "r4_object_sha256": "564ea0733887a6e9d751cad68903ce4c2225ecc7943ae935ea7ef1280fbbd1ab",
+      "corrected_object_sha256": "ef3fd28bcec892f8b92cdd0e0c1bf59176da66f638699714a96d251509cecc76",
+      "r4_strict_record_sha256": "aa3858ac1fd9498ffbc9df8b1211886308db7fef499f1d4bd1c805d05d95ef07",
+      "corrected_strict_record_sha256": "bc24832fefb23b2ef1d1a0495768f40b6b614f5d3031166de408fc04af3cba1d",
+      "functions": {
+        "equal": 2,
+        "total": 2
+      },
+      "constants": {
+        "equal": 3,
+        "total": 3
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-words",
+      "r4_object_sha256": "3515933bcf39f4dacfbda91fb76c9b51c35a0dd07a79c983a4009ad0ef87cf78",
+      "corrected_object_sha256": "3515933bcf39f4dacfbda91fb76c9b51c35a0dd07a79c983a4009ad0ef87cf78",
+      "r4_strict_record_sha256": "84778cd5251b6ac2867a393f71b7394bb5357ec175b0a728ec0a3daba1633ab3",
+      "corrected_strict_record_sha256": "84778cd5251b6ac2867a393f71b7394bb5357ec175b0a728ec0a3daba1633ab3",
+      "functions": {
+        "equal": 1,
+        "total": 1
+      },
+      "constants": {
+        "equal": 7,
+        "total": 7
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "filters-ordinary",
+      "r4_object_sha256": "24698600921e978c61a104fab697ea50149ff3a82d9abd469d5abb6b4600a5ed",
+      "corrected_object_sha256": "24698600921e978c61a104fab697ea50149ff3a82d9abd469d5abb6b4600a5ed",
+      "r4_strict_record_sha256": "16268f4e3fb217fd4362941646423f780f0e824ad0c4bb6771d31a8a92e7bc52",
+      "corrected_strict_record_sha256": "16268f4e3fb217fd4362941646423f780f0e824ad0c4bb6771d31a8a92e7bc52",
+      "functions": {
+        "equal": 6,
+        "total": 6
+      },
+      "constants": {
+        "equal": 6,
+        "total": 6
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-initialize",
+      "r4_object_sha256": "1ef57abcdee3ac1ca6d3487e4fc9b552fb226ef2c4e331b588ed03142a62b080",
+      "corrected_object_sha256": "4971a011f25c7790fa32c9883a02d6520b6ed59eaf0ae119519637293a95e0f2",
+      "r4_strict_record_sha256": "895103ab96c0b748bd487114ba63e226b2b489c2e242039a76d642d19f87c1d4",
+      "corrected_strict_record_sha256": "a7da279c7d5176b7c3bd81de80d1494d840e10c251b8c53c1e493153e3a11fe4",
+      "functions": {
+        "equal": 1,
+        "total": 1
+      },
+      "constants": {
+        "equal": 0,
+        "total": 0
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "streampack-ordinary",
+      "r4_object_sha256": "5b83993119f7a1e258d746a3b0a5487a134b3b3bf62b6fd1a0e79d4fca0833af",
+      "corrected_object_sha256": "da4621c220075325b74ce56409e65a444774ba891403511dab8e1e5a3a7d5872",
+      "r4_strict_record_sha256": "fe6d3aaf37d8d8a0ab8decbd24dbcd6af7688214dab4c60417ff18d5a8081d5a",
+      "corrected_strict_record_sha256": "cb2d228ba1c7b4ba0241ff42a84ea9c49de707336873cf95db0be2c404c455e2",
+      "functions": {
+        "equal": 82,
+        "total": 82
+      },
+      "constants": {
+        "equal": 4,
+        "total": 4
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-ordinary",
+      "r4_object_sha256": "ed5258147d9fa9138cef99df4d721fd3e6e6708164b700e86296519162978aed",
+      "corrected_object_sha256": "b9104b4845384b37bc1bd70af1c14c8ed5575cc65741e1d7ce50cc45671a30b3",
+      "r4_strict_record_sha256": "f456354d0a7ad04889e30983be598bad1162d87b70913698696d5e20bd1395ed",
+      "corrected_strict_record_sha256": "6777ac64be900402d9fca8cbcaf38020aa1aacbe54e6dcf4eaecc63cbb1bdf43",
+      "functions": {
+        "equal": 2,
+        "total": 2
+      },
+      "constants": {
+        "equal": 3,
+        "total": 3
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-words",
+      "r4_object_sha256": "51bb8c33a95e527b1d5adc4abc20c402eb9064cc35cc240783d052484efc554a",
+      "corrected_object_sha256": "51bb8c33a95e527b1d5adc4abc20c402eb9064cc35cc240783d052484efc554a",
+      "r4_strict_record_sha256": "0c1d3270f40389d28ddae58771e753678909d4bdb58958cc43de0f59d0f6d7a6",
+      "corrected_strict_record_sha256": "0c1d3270f40389d28ddae58771e753678909d4bdb58958cc43de0f59d0f6d7a6",
+      "functions": {
+        "equal": 1,
+        "total": 1
+      },
+      "constants": {
+        "equal": 7,
+        "total": 7
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "filters-ordinary",
+      "r4_object_sha256": "64e393f6dab4c731b92b4a1483d5cb5b0ab0ec888f151358b80e2ed6cdcd4796",
+      "corrected_object_sha256": "64e393f6dab4c731b92b4a1483d5cb5b0ab0ec888f151358b80e2ed6cdcd4796",
+      "r4_strict_record_sha256": "d993b9e5dc99fc38fedc11dd7b6c880b082f0da17c2e4cf0e592c79b3d6efd63",
+      "corrected_strict_record_sha256": "d993b9e5dc99fc38fedc11dd7b6c880b082f0da17c2e4cf0e592c79b3d6efd63",
+      "functions": {
+        "equal": 6,
+        "total": 6
+      },
+      "constants": {
+        "equal": 7,
+        "total": 7
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-initialize",
+      "r4_object_sha256": "bc26df15135baac007d1dbe27e51344bca9a5d2fc5353220be0e3bcfe0d5fba4",
+      "corrected_object_sha256": "b21aad83ece692f1cb9832b7115f109c4fa3a5854395439cb3ef39c6820538a8",
+      "r4_strict_record_sha256": "e9beaf62799b51353417f3eff5caf707a9a0030d3eab5e60cefe317b8c1e49a4",
+      "corrected_strict_record_sha256": "5bdf1abbae7e6cd682f46f1e7052d998feaa4e115adbb1d58923a15cbfe1baeb",
+      "functions": {
+        "equal": 1,
+        "total": 1
+      },
+      "constants": {
+        "equal": 3,
+        "total": 3
+      },
+      "unwind": {
+        "equal": 1,
+        "total": 1
+      }
+    }
+  ],
+  "operations_objects": [
+    {
+      "profile": "neon-v2",
+      "object_sha256": "498507825e168bc09113d7ec70a874b32bceb01b1248afa741930d534a54b937",
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/operations.o"
+    },
+    {
+      "profile": "avx2-zen5",
+      "object_sha256": "32272109261aff311eb9e0b0e84cb8c7872aa9be1ad5f30ae825b82e57e2c31e",
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx2-zen5/operations.o"
+    },
+    {
+      "profile": "avx512-zen5",
+      "object_sha256": "03d3e5310a4422b195c51a34e8828fff3f705436976f5659140ce8aea8415acd",
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/avx512-zen5/operations.o"
+    }
+  ],
+  "runtime_algorithm_objects": [
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-layout.o",
+      "object_sha256": "4b8ad1ad24cfeb2c2db7627684866f1874938c9385f01b0a6a758efae8a2c2e1",
+      "compile_record_sha256": "551c1e49fdf6d63c77728ff3220d85a63a3de7ec74da10423872d4a69c8474c1",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-prepare.o",
+      "object_sha256": "d811cda39532b641b1228e79f19d9496888dc9791dd8e0790625b4c23abe40c1",
+      "compile_record_sha256": "c198c8689ff00a0e31412e9d8d804895a567290535b7589d41c111a6511466cb",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-kernels.o",
+      "object_sha256": "6aea3c9d223f4effc2263d4a840a93a5a682bff1598330d2e4b5f0055abd9945",
+      "compile_record_sha256": "f0c13492599606063e4894bcf1649fc42796c351bf6841bbc4ce7c4035a1a406",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-gpr.o",
+      "object_sha256": "3cd2400b2be1d0b2b82d94b769e8b90c84fbc7e4976e534ea7f1cb41438ab088",
+      "compile_record_sha256": "af4e423ebec5d638c74ee159393d841c4f410959635b1391df7c3b5ee8151a61",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-routes.o",
+      "object_sha256": "f8ab138a5e14c678aafa7ec1794805235293ac097f6ffcc0f9186ae0b9050919",
+      "compile_record_sha256": "bda6b4883c6730a2b685bc15a2f1d6eea71eec5f54ae70c8db3cca8420f9a615",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-packet_layout.o",
+      "object_sha256": "7e3d604f33ca8e7f409c4feaa27978fc4044ecf992c6e935b493ddb2521317d1",
+      "compile_record_sha256": "009ff47380c7b7394a4891b74e7a2e615aff9d672de43fcc0bee406184d978a8",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-packet_prepare.o",
+      "object_sha256": "ae5e73a8c2f70ffd356b4194eab615b498280a7732d9827dc552b7646740ecff",
+      "compile_record_sha256": "f4f5c4c36c966d7ca65b0290f912da7e005818f5dfe9eefcc8820f0eb9e1d805",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/handle-boundaries/neon-v2/predicate16/tuplepack-packet.o",
+      "object_sha256": "ecb59de0260ba04e801e91d731bed1da18eda47751f7009455703d4eb39db2b1",
+      "compile_record_sha256": "c650482a6902e79d8b55667285c360c6e3f693f219b0f2bfb3e4dbf6dc35629d",
+      "configured_debug_info": false,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/codegen-final-r4/neon-v2/after/tuplepack-initialize.o",
+      "object_sha256": "38fb813ee6bd0901dd3504f4327200c2148297aaa795afabf7ab5995aad9951d",
+      "configured_debug_info": true,
+      "owned_dependencies_match_R4": true
+    },
+    {
+      "object": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/tp-api-final-codegen/neon-v2/r4-overlap.o",
+      "object_sha256": "d19a8d9db7b1ea54ff5d2f5136b4f0c044785a93879bed7b0c875863ab4ac427",
+      "configured_debug_info": true,
+      "owned_dependencies_match_R4": true
+    }
+  ],
+  "native_runtime": {
+    "profile": "native NEON in OrbStack Ubuntu; correctness only",
+    "binary_sha256": "ca548244dfe835b2e32a1645b321b7db135185e4f66765a3fbccee531c6ab31c",
+    "returncode": 0,
+    "stdout": "TuplePack operation admission, complete maintenance, nesting and construction passed\n"
+  },
+  "compiler_version": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "strict_parser_sha256": "3ca00733fbe15e5d70adccbd3f2ab900d658633299df263e5886d4c61a0e320e",
+  "helper_sha256": "0e51512bca6b072533a2f60bad949ced6e4ec753fe912ae9092feb664dbcc097",
+  "limits": [
+    "The exact3-file correction is separate from frozen R4; no claim that R4 is live-identical.",
+    "All15 affected R4-after source objects compare literally on3profiles. Remaining21 after objects have no modified dependency;33 original before-arm objects are untouched. This is dependency closure rather than a repeat of the whole69.",
+    "Operations/API assertions and standalone initialize.h compile on3profiles; runtime executes on local native NEON only.",
+    "Eight retained algorithm objects use earlier O3/-gline-tables-only/-Werror flags; their complete owned dependencies match R4. Initializer/overlap and new operations use configured O3/-g flags.",
+    "Machine bytes, relocations, allocated data, unwind, ABI aliases and duplicate sections compare literally. Debug/source paths differ and complete ELF hashes need not match.",
+    "No timing measurement or speed claim."
+  ],
+  "dependency_closure": {
+    "r4_after_objects": 36,
+    "recompiled_affected_after_objects": 15,
+    "unmodified_after_objects": 21,
+    "unchanged_before_arm_objects": 33,
+    "modified_dependency_census": [
+      {
+        "profile": "neon-v2",
+        "logical": "streampack-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/streampack/write.h"
+        ]
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "tuplepack-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "tuplepack-words",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "filters-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "tuplepack-initialize",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "streampack-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/streampack/write.h"
+        ]
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "tuplepack-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "tuplepack-words",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "filters-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "tuplepack-initialize",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "streampack-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/streampack/write.h"
+        ]
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "tuplepack-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "tuplepack-words",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "filters-ordinary",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "tuplepack-initialize",
+        "changed_dependencies": [
+          "ikea/include/ikea/tuplepack/initialize.h"
+        ]
+      }
+    ],
+    "unchanged_after_objects": [
+      {
+        "profile": "neon-v2",
+        "logical": "seriespack-ordinary",
+        "r4_object_sha256": "29e0039f3e470195e5ff3283f940bc482848a15f295bff26cb85b42d650b6237",
+        "dependency_count": 234
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "seriespack-integration",
+        "r4_object_sha256": "5ee5787ec3fab2dacfd45b110cf7e515e761a232e6c1f5596373ac9646c484c6",
+        "dependency_count": 342
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "filters-composition",
+        "r4_object_sha256": "0c350d9c675b3c63431d3f976dda87b570e4735e014d1b8b24b2eb2eafab58d3",
+        "dependency_count": 236
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "seriespack-readers",
+        "r4_object_sha256": "ba7bb91b6fbd5aecbc6425891f800d381781897d7a5e3e13114c55889b787a33",
+        "dependency_count": 195
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "bec256-ordinary",
+        "r4_object_sha256": "94d6b8268e1824919dc91543c48b06db61cbe5bfbc4ec086c6a70be0f3d1d397",
+        "dependency_count": 166
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "hashtable-ordinary",
+        "r4_object_sha256": "2d2aeaab00c3600ca715a26907d89110df337ded1c4d2a1f36bb507592015404",
+        "dependency_count": 463
+      },
+      {
+        "profile": "neon-v2",
+        "logical": "selection",
+        "r4_object_sha256": "5f903dc906b280216b779bbdd52b6e4b8a4806ca02e993dd343c2ee7bdd30deb",
+        "dependency_count": 178
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "seriespack-ordinary",
+        "r4_object_sha256": "8e9911cb9b2d605e9df158a288fa9f1ae1a98a9e8a9fbea31a90b04444f7551f",
+        "dependency_count": 352
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "seriespack-integration",
+        "r4_object_sha256": "c8a40bf00a6d65609c5b8cce978c7839a65dfbb86afa365687343996bbab506d",
+        "dependency_count": 461
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "filters-composition",
+        "r4_object_sha256": "2d031c4f86e125a5f74a982e0fc7e7bbe2370cb428324e72ed1f7c9dc12446bc",
+        "dependency_count": 354
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "seriespack-readers",
+        "r4_object_sha256": "fabce5c38887089c7d18bec2324889de2f3866efe72acf43998e80e0ba3c50a1",
+        "dependency_count": 313
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "bec256-ordinary",
+        "r4_object_sha256": "ef6e37cf0cdf26c0aa53a76677ddb5683e69773da35f0a15c0367533e131a842",
+        "dependency_count": 166
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "hashtable-ordinary",
+        "r4_object_sha256": "74dd7fb385b461f954b0a578468ea0e7056cc060db6fd058570806099b79d393",
+        "dependency_count": 582
+      },
+      {
+        "profile": "avx2-zen5",
+        "logical": "selection",
+        "r4_object_sha256": "d6273d2333fbb571aa08ebd2a79bf25b9770c65593a928e831a8964b712358e8",
+        "dependency_count": 178
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "seriespack-ordinary",
+        "r4_object_sha256": "2a298f4cf7f8f8f24aa75f5de3d2516eb320c3100c15ddbc35064043e1107218",
+        "dependency_count": 354
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "seriespack-integration",
+        "r4_object_sha256": "85c1a98fb71236bdf4aa9a4d41be0ecc0a69d942ab323ea991d080e7c6337a7d",
+        "dependency_count": 463
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "filters-composition",
+        "r4_object_sha256": "fca3edd84cdc415ad708846f91b379faa3ac72f0e6fd773d58a87e1bc21247df",
+        "dependency_count": 356
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "seriespack-readers",
+        "r4_object_sha256": "a17c201af18dd7a03f7d7c436988977e1544538c9e070b79fe5ad9ec7450f246",
+        "dependency_count": 314
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "bec256-ordinary",
+        "r4_object_sha256": "1ee132ee1dc075c9b500a096c523b1949f20990bd615a2416e1cd8c1ddfe0702",
+        "dependency_count": 166
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "hashtable-ordinary",
+        "r4_object_sha256": "d2f1e556ec88b66c43833a938695e0310dc95c20247c411b59370702968ffedc",
+        "dependency_count": 584
+      },
+      {
+        "profile": "avx512-zen5",
+        "logical": "selection",
+        "r4_object_sha256": "16db03cc8b8d179d7a6f32231ed820ad344ae2c9ecea6c35b5932edd400898a6",
+        "dependency_count": 178
+      }
+    ],
+    "proof": "The correction changes exactly3 frozen files. Every affected R4-after dependency set is recompiled on all3profiles; every other after object has no modified dependency. Existing before-arm sources are untouched. No cached object is relabeled or assigned a different compile command."
+  },
+  "frozen_r4_receipt_sha256": "2323eaf6ab3ae3587c90721052152de711f9964d710a34f67f48688d0d56e281",
+  "new_compilation_receipts": [
+    {
+      "path": "build/ikea-cohesion-v2/tp-api-final-codegen/compile-only-after.json",
+      "sha256": "f926b1cf58bd072af76257f2570e634387c809b712950ccfd2864cfe4f55e3bb"
+    },
+    {
+      "path": "build/ikea-cohesion-v2/tp-api-final-codegen/closure/compile-only-after.json",
+      "sha256": "5fe90c8ab516063a29f85a22319f8dcb1805845a5be3f2c12d9d2d842dc9c601"
+    }
+  ],
+  "caller_scan": {
+    "scope": [
+      "ikea/examples",
+      "ikea/test",
+      "workbench/spikes/orbital-mvcc",
+      "workbench/spikes/filter-composition"
+    ],
+    "pattern": "write_plan<128|writer<128",
+    "matches": [
+      "ikea/examples/tuplepack/ordinary.cpp",
+      "ikea/test/tuplepack/operations.cpp",
+      "workbench/spikes/orbital-mvcc/consumer/data.h",
+      "workbench/spikes/orbital-mvcc/consumer/data.cpp"
+    ],
+    "finding": "No concrete direct preserving set/replace call on writer<128> found. Complete writers use initialize; compound author construction continues through the existing set_unchecked leaf. The new concepts assert mapped writer<8> retains checked set/replace while complete writer<128> does not."
+  },
+  "reproduction": {
+    "prepare": "Restore the frozen R4-after capture, copy it, apply tp-api-final.patch only to the copy. Verify the3 changed hashes in source_delta and unchanged files against the R4 source manifest.",
+    "codegen": "Use cohesion-v2-codegen.py --arm after --compile-only --configured-release with logical sources tuplepack-ordinary, tuplepack-initialize, tuplepack-words, filters-ordinary, streampack-ordinary on all3profiles. Compare each new strict record against the corresponding frozen R4-after record.",
+    "contracts": "The exact commands below compile operations.cpp and standalone initialize.h on all3profiles. All assertions stay enabled.",
+    "native_runtime": "Compile operations.cpp at configured O3/-g for NEON and link against the same R4 TP algorithm sources and overlap.cpp. This run reused eight existing dependency-verified R4-equivalent algorithm objects; their debug-flag difference is recorded in limits."
+  }
+}

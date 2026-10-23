@@ -150,7 +150,7 @@ so dense-domain bitmaps can be expensive for large values.
 
 Start with enough buckets for the expected population and monitor both `size()`
 and `spill_size()`. `capacity()` stays fixed. Growth is a caller decision; the
-descriptor's `needs_growth(850)` is an optional 850-per-mille occupancy test,
+erased table's `needs_growth(850)` is an optional 850-per-mille occupancy test,
 not an automatically enforced growth policy. Seed selection and coordination
 across worker tables also belong to the caller. Apply a primary-growth policy
 only for `K > 9`: a bitmap already covers the complete key domain, so raising
@@ -262,7 +262,7 @@ int main() {
 }
 ```
 
-The specialization must match the descriptor's current `b`, `E` and kernel;
+The specialization must match the erased table's current `b`, `E` and kernel;
 a mismatch fails at binding. A capture retains its owner and the storage
 policy's retention tokens. Keep it alive until every borrowed view and pending
 probe has finished. For runtime profile selection, `bind_measured_encoding<K>`
@@ -271,7 +271,7 @@ put the complete native consumer inside that callback.
 
 Use `read()` when an erased point reader is sufficient. Avoid repeatedly
 capturing shared ownership or crossing an erased callback per key in a loop
-that can use one native binding. Descriptor overhead is not included in
+that can use one native binding. The erased table's overhead is not included in
 concrete-owner benchmark timings.
 
 ### Borrow wide inline values
@@ -300,7 +300,7 @@ The bytes have no alignment or typed-object promise. Use byte operations or
 `memcpy`; casting to a struct or integer pointer does not establish a C++ object
 lifetime. Keep the concrete owner, or its retaining native capture, alive and
 **unmodified** until every borrowed address has been consumed. A capture can
-retain the old image across descriptor rebuild/replacement, but it does not
+retain the old image when the erased table rebuilds or replaces its owner, but it does not
 freeze an owner that the caller mutates in place. Treat every owner mutation as
 invalidating outstanding borrows. Borrowing is read-only; use `modify` or guarded
 RMW for writes.
@@ -336,7 +336,7 @@ encoding and its storage do not acquire profiling state.
 
 ```cpp
 ht::lookup_selector selector; // Outside the repeated batch calls.
-// held = descriptor.read_native<b,E,Kernel>(); view = held.borrow();
+// held = values.read_native<b,E,Kernel>(); view = held.borrow();
 selector.run(requests.size(), [&](auto hint, std::size_t first, std::size_t count) {
     // Both compiled functions do the same useful work; choose once per range.
     result.add(read_range<decltype(hint)::value>(view, requests, first, count));
@@ -474,13 +474,13 @@ key/flag stores on a hit and still inserts missing keys. Neither name is a
 promise that keys exist. The [rationale](rationale.md#mutations-expose-their-physical-effects-before-writing)
 explains the shared-byte cost and guarded alternatives.
 
-A descriptor stores the strategy selected at construction. For a hot mutable
+An erased table stores the strategy selected at construction. For a hot mutable
 batch, `with_native_mutation<b,E,Kernel>(callback)` supplies a concrete owner
 and a compile-time strategy constant. Use
 `owner.template insert<decltype(writer)::value>(key, value)` to preserve that
 selection. The [composition example](../../examples/hashtable/composition.cpp)
 shows this alongside RMW. This is a synchronous borrowed binding: exclude
-concurrent access, keep the descriptor and owner in place, and let no reference
+concurrent access, keep the erased table and owner in place, and let no reference
 escape. It acquires no reader retention tokens that would obstruct an internal
 Swiss rehash.
 
@@ -507,21 +507,21 @@ int main() {
 
 `grow` builds an independent same-seed destination; allocation failure preserves
 the source. Its geometry must admit at least the old row positions, or be the
-bitmap transition. With a descriptor, `grow<b,E,Kernel>()` verifies the current
+bitmap transition. With an erased table, `grow<b,E,Kernel>()` verifies the current
 specialization, constructs the next owner, then replaces it. By default it keeps
 the encoding/kernel when compatible, otherwise choosing exact generic encoding.
 Explicit `NextE` and `NextKernel` can select the destination. General
 `rebuild_explicit` or `rebuild_measured` instead reconstructs entries for the
 requested bucket count and encoding.
 
-Retained captures continue using the old owner after descriptor replacement.
+Retained captures continue using the old owner after the erased table replaces it.
 They do **not** hold a content snapshot of a backing modified in place. Finish
 pending reads before mutating that backing. Before replacing buffers in place
 (for example, through Swiss growth or `reserve_overflow`), also release captures
 retaining those buffers; an in-place rehash does not rebind their retention
 tokens. If readers need an older version, edit an independent owner and publish
 it through the enclosing system. A custom storage context must outlive the
-descriptor, escaped captures and final token release. The descriptor is not a
+erased table, escaped captures and final token release. The erased table is not a
 concurrent root or an MVCC implementation.
 
 ## Mutable accumulation
@@ -561,7 +561,7 @@ exception. Sources remain unchanged. Only
 a successfully completed destination is eligible for final publication.
 
 To preserve an initial input, `clone` it explicitly, then reserve and accumulate.
-To reuse a disposable worker allocation, transfer that owner instead. A descriptor
+To reuse a disposable worker allocation, transfer that owner instead. An erased table
 offers the same operations with explicit source/destination specializations.
 Preparation and leaf time are separate in the
 [accumulation measurements](../../../workbench/benchmarks/hashtable/ACCUMULATION.md).
@@ -628,7 +628,7 @@ lifetime rules.
 ### Account for allocation separately from contents
 
 `bytes_used()` reports buffer capacities plus the concrete owner object; it
-is not process RSS or the full cost of a descriptor's shared ownership.
+is not process RSS or the full cost of an erased table's shared ownership.
 `storage()` separates assigned bytes, accessible bytes and reserved bytes as
 reported by the storage policy. `allocations(visitor)` exposes concrete backing
 extents for integration. A table has a primary allocation and optional Swiss

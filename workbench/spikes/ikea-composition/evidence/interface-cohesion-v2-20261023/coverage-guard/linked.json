@@ -1,0 +1,3358 @@
+{
+  "worker": "20261023T014343Z-22c72eab",
+  "scope": "Actual R4 linked SeriesPack AVX512 point loops and selected callees, plus actual AVX2 substituted all-row mutation driver/region/coverage paths. No new compilation or native timing.",
+  "method": "Parse every full instruction line including bytes with no padding before tab; timed region runs after StartKeepRunning call and before FinishKeepRunning call. Byte hashes concatenate complete instruction bytes. Static helper traces follow explicit fixture-derived branch choices, not measured PMU counts. Full representative k31 regular helper traces are embedded; duplicate k63/first-body traces retain all branch decisions, counts and a hash, with full instructions recoverable from worker disassembly.",
+  "inputs": {
+    "avx2/before/seriespack-disassembly.txt": {
+      "sha256": "640721c7c6f3a82afa15ec00f1d223e29a1512b28343ec24dccae4ae61c562db",
+      "binary_receipt": {
+        "arm": "before",
+        "bytes": 22814960,
+        "family": "seriespack",
+        "profile": "avx2",
+        "sha256": "c2a8a6febb4cb3ea5ac55275cec4290095e13a5dcad81484172286eb1c02a43c"
+      },
+      "objdump": {
+        "command": [
+          "llvm-objdump-21",
+          "-d",
+          "-r",
+          "--demangle",
+          "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx2/before/ikea_seriespack_bench"
+        ],
+        "cwd": "/opt/sixdb/source",
+        "exit_code": 0,
+        "log": "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx2/before/seriespack-disassembly.txt",
+        "stderr_log": null,
+        "wall_seconds": 0.34755030599998804
+      }
+    },
+    "avx2/after/seriespack-disassembly.txt": {
+      "sha256": "be0b1b3e99577a1941e0872db0c7e2f6d84fb0d69c40130335645e34f6f94760",
+      "binary_receipt": {
+        "arm": "after",
+        "bytes": 23045088,
+        "family": "seriespack",
+        "profile": "avx2",
+        "sha256": "e1a53717d2047306705871f1e0605127ae25aa81069a79b29815571a8476f707"
+      },
+      "objdump": {
+        "command": [
+          "llvm-objdump-21",
+          "-d",
+          "-r",
+          "--demangle",
+          "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx2/after/ikea_seriespack_bench"
+        ],
+        "cwd": "/opt/sixdb/source",
+        "exit_code": 0,
+        "log": "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx2/after/seriespack-disassembly.txt",
+        "stderr_log": null,
+        "wall_seconds": 0.35704270600001564
+      }
+    },
+    "avx512/before/seriespack-disassembly.txt": {
+      "sha256": "6581f0e9ee4b38c73fe37d5278a42e2bc09666de85c71182b518d5941e662270",
+      "binary_receipt": {
+        "arm": "before",
+        "bytes": 22464912,
+        "family": "seriespack",
+        "profile": "avx512",
+        "sha256": "6dc9eea793bd067bfdc987d56945393818758f246f0aaa075fffab645e343155"
+      },
+      "objdump": {
+        "command": [
+          "llvm-objdump-21",
+          "-d",
+          "-r",
+          "--demangle",
+          "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx512/before/ikea_seriespack_bench"
+        ],
+        "cwd": "/opt/sixdb/source",
+        "exit_code": 0,
+        "log": "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx512/before/seriespack-disassembly.txt",
+        "stderr_log": null,
+        "wall_seconds": 0.3458203059999505
+      }
+    },
+    "avx512/after/seriespack-disassembly.txt": {
+      "sha256": "eedf27d838b649c3cb7e0353dad8ebaa4ff7e256e6771262133d388bec802f2f",
+      "binary_receipt": {
+        "arm": "after",
+        "bytes": 22700048,
+        "family": "seriespack",
+        "profile": "avx512",
+        "sha256": "d6b0cf02a647295dca2928f3edbb91571fa15859029fc3bb79299ad0f656933a"
+      },
+      "objdump": {
+        "command": [
+          "llvm-objdump-21",
+          "-d",
+          "-r",
+          "--demangle",
+          "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx512/after/ikea_seriespack_bench"
+        ],
+        "cwd": "/opt/sixdb/source",
+        "exit_code": 0,
+        "log": "/opt/sixdb/jobs/20261023T014343Z-22c72eab/results/avx512/after/seriespack-disassembly.txt",
+        "stderr_log": null,
+        "wall_seconds": 0.35691977600004066
+      }
+    }
+  },
+  "point": {
+    "before": {
+      "7": {
+        "function_address": "0x2f9e0",
+        "loop_start": "0x302fc",
+        "loop_instruction_count": 25,
+        "loop_bytes_sha256": "a4232863e385b5d928aa865f471392fea894b57a50ce350ca6113113cfa56045",
+        "loop": [
+          "   302fc: 85 ed                        \ttestl\t%ebp, %ebp",
+          "   302fe: 75 61                        \tjne\t0x30361 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x981>",
+          "   30300: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   30303: 74 5c                        \tje\t0x30361 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x981>",
+          "   30305: 66 66 2e 0f 1f 84 00 00 00 00 00     \tnopw\t%cs:(%rax,%rax)",
+          "   30310: 4c 8b bc 24 e0 00 00 00      \tmovq\t0xe0(%rsp), %r15",
+          "   30318: 4c 8b ac 24 e8 00 00 00      \tmovq\t0xe8(%rsp), %r13",
+          "   30320: 31 ed                        \txorl\t%ebp, %ebp",
+          "   30322: 4d 39 ef                     \tcmpq\t%r13, %r15",
+          "   30325: 74 27                        \tje\t0x3034e <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x96e>",
+          "   30327: 66 0f 1f 84 00 00 00 00 00   \tnopw\t(%rax,%rax)",
+          "   30330: 49 8b 37                     \tmovq\t(%r15), %rsi",
+          "   30333: 48 8b bc 24 40 01 00 00      \tmovq\t0x140(%rsp), %rdi",
+          "   3033b: ff 94 24 58 01 00 00         \tcallq\t*0x158(%rsp)",
+          "   30342: 40 00 c5                     \taddb\t%al, %bpl",
+          "   30345: 49 83 c7 08                  \taddq\t$0x8, %r15",
+          "   30349: 4d 39 ef                     \tcmpq\t%r13, %r15",
+          "   3034c: 75 e2                        \tjne\t0x30330 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x950>",
+          "   3034e: 40 88 6c 24 68               \tmovb\t%bpl, 0x68(%rsp)",
+          "   30353: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   30356: 0f 8e d0 01 00 00            \tjle\t0x3052c <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0xb4c>",
+          "   3035c: 49 ff ce                     \tdecq\t%r14",
+          "   3035f: 75 af                        \tjne\t0x30310 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x930>",
+          "   30361: 4c 8b ac 24 a8 00 00 00      \tmovq\t0xa8(%rsp), %r13",
+          "   30369: 4c 89 ef                     \tmovq\t%r13, %rdi"
+        ],
+        "point_address": "0x16d810",
+        "point_instructions": 14,
+        "point_bytes_sha256": "503d2a782a76a8fd210e2ed99ad168fbec515c480c167d716ae8e1d517d29bde",
+        "point": [
+          "  16d810: 48 89 f0                     \tmovq\t%rsi, %rax",
+          "  16d813: 48 89 f1                     \tmovq\t%rsi, %rcx",
+          "  16d816: 48 c1 e8 03                  \tshrq\t$0x3, %rax",
+          "  16d81a: 48 83 e1 f8                  \tandq\t$-0x8, %rcx",
+          "  16d81e: 40 80 e6 07                  \tandb\t$0x7, %sil",
+          "  16d822: 48 ba 01 01 01 01 01 01 01 00\tmovabsq\t$0x1010101010101, %rdx  # imm = 0x1010101010101",
+          "  16d82c: 48 29 c1                     \tsubq\t%rax, %rcx",
+          "  16d82f: 8b 04 0f                     \tmovl\t(%rdi,%rcx), %eax",
+          "  16d832: 8b 4c 0f 03                  \tmovl\t0x3(%rdi,%rcx), %ecx",
+          "  16d836: 48 c1 e1 18                  \tshlq\t$0x18, %rcx",
+          "  16d83a: 48 09 c1                     \torq\t%rax, %rcx",
+          "  16d83d: c4 e2 cb f7 c1               \tshrxq\t%rsi, %rcx, %rax",
+          "  16d842: c4 e2 fa f5 c2               \tpextq\t%rdx, %rax, %rax",
+          "  16d847: c3                           \tretq"
+        ]
+      },
+      "12": {
+        "function_address": "0x31420",
+        "loop_start": "0x31d5a",
+        "loop_instruction_count": 32,
+        "loop_bytes_sha256": "15c20add29aad88835dcc6217f6a2df743f5f17130b96070e505fffbdabb2093",
+        "loop": [
+          "   31d5a: 85 ed                        \ttestl\t%ebp, %ebp",
+          "   31d5c: 0f 85 83 00 00 00            \tjne\t0x31de5 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9c5>",
+          "   31d62: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   31d65: 0f 84 7a 00 00 00            \tje\t0x31de5 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9c5>",
+          "   31d6b: 0f 1f 44 00 00               \tnopl\t(%rax,%rax)",
+          "   31d70: 48 8b ac 24 e0 00 00 00      \tmovq\t0xe0(%rsp), %rbp",
+          "   31d78: 4c 8b a4 24 e8 00 00 00      \tmovq\t0xe8(%rsp), %r12",
+          "   31d80: 4c 39 e5                     \tcmpq\t%r12, %rbp",
+          "   31d83: 74 4b                        \tje\t0x31dd0 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9b0>",
+          "   31d85: 45 31 ff                     \txorl\t%r15d, %r15d",
+          "   31d88: 0f 1f 84 00 00 00 00 00      \tnopl\t(%rax,%rax)",
+          "   31d90: 48 8b 75 00                  \tmovq\t(%rbp), %rsi",
+          "   31d94: 48 8b bc 24 40 01 00 00      \tmovq\t0x140(%rsp), %rdi",
+          "   31d9c: ff 94 24 58 01 00 00         \tcallq\t*0x158(%rsp)",
+          "   31da3: 44 01 f8                     \taddl\t%r15d, %eax",
+          "   31da6: 48 83 c5 08                  \taddq\t$0x8, %rbp",
+          "   31daa: 41 89 c7                     \tmovl\t%eax, %r15d",
+          "   31dad: 4c 39 e5                     \tcmpq\t%r12, %rbp",
+          "   31db0: 75 de                        \tjne\t0x31d90 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x970>",
+          "   31db2: 66 89 44 24 70               \tmovw\t%ax, 0x70(%rsp)",
+          "   31db7: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   31dba: 7f 24                        \tjg\t0x31de0 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9c0>",
+          "   31dbc: e9 fe 01 00 00               \tjmp\t0x31fbf <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0xb9f>",
+          "   31dc1: 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 \tnopw\t%cs:(%rax,%rax)",
+          "   31dd0: 31 c0                        \txorl\t%eax, %eax",
+          "   31dd2: 66 89 44 24 70               \tmovw\t%ax, 0x70(%rsp)",
+          "   31dd7: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   31dda: 0f 8e df 01 00 00            \tjle\t0x31fbf <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0xb9f>",
+          "   31de0: 49 ff ce                     \tdecq\t%r14",
+          "   31de3: 75 8b                        \tjne\t0x31d70 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x950>",
+          "   31de5: 4c 8b a4 24 a0 00 00 00      \tmovq\t0xa0(%rsp), %r12",
+          "   31ded: 4c 89 e7                     \tmovq\t%r12, %rdi"
+        ],
+        "point_address": "0x17c1d0",
+        "point_instructions": 18,
+        "point_bytes_sha256": "676f7a82a87c371e27be2b2c6b2c432e3de8b9f43d00221272bda8c7e1000599",
+        "point": [
+          "  17c1d0: 48 89 f0                     \tmovq\t%rsi, %rax",
+          "  17c1d3: 48 c1 e8 06                  \tshrq\t$0x6, %rax",
+          "  17c1d7: 89 f1                        \tmovl\t%esi, %ecx",
+          "  17c1d9: 89 f2                        \tmovl\t%esi, %edx",
+          "  17c1db: 83 e1 3f                     \tandl\t$0x3f, %ecx",
+          "  17c1de: 83 e2 1f                     \tandl\t$0x1f, %edx",
+          "  17c1e1: 40 c0 ee 03                  \tshrb\t$0x3, %sil",
+          "  17c1e5: 48 8d 04 40                  \tleaq\t(%rax,%rax,2), %rax",
+          "  17c1e9: 40 80 e6 04                  \tandb\t$0x4, %sil",
+          "  17c1ed: 48 c1 e0 05                  \tshlq\t$0x5, %rax",
+          "  17c1f1: 48 01 f8                     \taddq\t%rdi, %rax",
+          "  17c1f4: 0f b6 0c 01                  \tmovzbl\t(%rcx,%rax), %ecx",
+          "  17c1f8: 0f b6 44 02 40               \tmovzbl\t0x40(%rdx,%rax), %eax",
+          "  17c1fd: c4 e2 4b f7 c0               \tshrxl\t%esi, %eax, %eax",
+          "  17c202: c1 e1 04                     \tshll\t$0x4, %ecx",
+          "  17c205: 83 e0 0f                     \tandl\t$0xf, %eax",
+          "  17c208: 09 c8                        \torl\t%ecx, %eax",
+          "  17c20a: c3                           \tretq"
+        ]
+      }
+    },
+    "after": {
+      "7": {
+        "function_address": "0x30200",
+        "loop_start": "0x30b1c",
+        "loop_instruction_count": 25,
+        "loop_bytes_sha256": "a4232863e385b5d928aa865f471392fea894b57a50ce350ca6113113cfa56045",
+        "loop": [
+          "   30b1c: 85 ed                        \ttestl\t%ebp, %ebp",
+          "   30b1e: 75 61                        \tjne\t0x30b81 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x981>",
+          "   30b20: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   30b23: 74 5c                        \tje\t0x30b81 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x981>",
+          "   30b25: 66 66 2e 0f 1f 84 00 00 00 00 00     \tnopw\t%cs:(%rax,%rax)",
+          "   30b30: 4c 8b bc 24 e0 00 00 00      \tmovq\t0xe0(%rsp), %r15",
+          "   30b38: 4c 8b ac 24 e8 00 00 00      \tmovq\t0xe8(%rsp), %r13",
+          "   30b40: 31 ed                        \txorl\t%ebp, %ebp",
+          "   30b42: 4d 39 ef                     \tcmpq\t%r13, %r15",
+          "   30b45: 74 27                        \tje\t0x30b6e <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x96e>",
+          "   30b47: 66 0f 1f 84 00 00 00 00 00   \tnopw\t(%rax,%rax)",
+          "   30b50: 49 8b 37                     \tmovq\t(%r15), %rsi",
+          "   30b53: 48 8b bc 24 40 01 00 00      \tmovq\t0x140(%rsp), %rdi",
+          "   30b5b: ff 94 24 58 01 00 00         \tcallq\t*0x158(%rsp)",
+          "   30b62: 40 00 c5                     \taddb\t%al, %bpl",
+          "   30b65: 49 83 c7 08                  \taddq\t$0x8, %r15",
+          "   30b69: 4d 39 ef                     \tcmpq\t%r13, %r15",
+          "   30b6c: 75 e2                        \tjne\t0x30b50 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x950>",
+          "   30b6e: 40 88 6c 24 68               \tmovb\t%bpl, 0x68(%rsp)",
+          "   30b73: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   30b76: 0f 8e d0 01 00 00            \tjle\t0x30d4c <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0xb4c>",
+          "   30b7c: 49 ff ce                     \tdecq\t%r14",
+          "   30b7f: 75 af                        \tjne\t0x30b30 <void ordinary_benchmark<7u, (ikea::seriespack::geometry)0, 1u, true>(benchmark::State&)+0x930>",
+          "   30b81: 4c 8b ac 24 a8 00 00 00      \tmovq\t0xa8(%rsp), %r13",
+          "   30b89: 4c 89 ef                     \tmovq\t%r13, %rdi"
+        ],
+        "point_address": "0x16c630",
+        "point_instructions": 14,
+        "point_bytes_sha256": "503d2a782a76a8fd210e2ed99ad168fbec515c480c167d716ae8e1d517d29bde",
+        "point": [
+          "  16c630: 48 89 f0                     \tmovq\t%rsi, %rax",
+          "  16c633: 48 89 f1                     \tmovq\t%rsi, %rcx",
+          "  16c636: 48 c1 e8 03                  \tshrq\t$0x3, %rax",
+          "  16c63a: 48 83 e1 f8                  \tandq\t$-0x8, %rcx",
+          "  16c63e: 40 80 e6 07                  \tandb\t$0x7, %sil",
+          "  16c642: 48 ba 01 01 01 01 01 01 01 00\tmovabsq\t$0x1010101010101, %rdx  # imm = 0x1010101010101",
+          "  16c64c: 48 29 c1                     \tsubq\t%rax, %rcx",
+          "  16c64f: 8b 04 0f                     \tmovl\t(%rdi,%rcx), %eax",
+          "  16c652: 8b 4c 0f 03                  \tmovl\t0x3(%rdi,%rcx), %ecx",
+          "  16c656: 48 c1 e1 18                  \tshlq\t$0x18, %rcx",
+          "  16c65a: 48 09 c1                     \torq\t%rax, %rcx",
+          "  16c65d: c4 e2 cb f7 c1               \tshrxq\t%rsi, %rcx, %rax",
+          "  16c662: c4 e2 fa f5 c2               \tpextq\t%rdx, %rax, %rax",
+          "  16c667: c3                           \tretq"
+        ]
+      },
+      "12": {
+        "function_address": "0x31c40",
+        "loop_start": "0x3257a",
+        "loop_instruction_count": 32,
+        "loop_bytes_sha256": "15c20add29aad88835dcc6217f6a2df743f5f17130b96070e505fffbdabb2093",
+        "loop": [
+          "   3257a: 85 ed                        \ttestl\t%ebp, %ebp",
+          "   3257c: 0f 85 83 00 00 00            \tjne\t0x32605 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9c5>",
+          "   32582: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   32585: 0f 84 7a 00 00 00            \tje\t0x32605 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9c5>",
+          "   3258b: 0f 1f 44 00 00               \tnopl\t(%rax,%rax)",
+          "   32590: 48 8b ac 24 e0 00 00 00      \tmovq\t0xe0(%rsp), %rbp",
+          "   32598: 4c 8b a4 24 e8 00 00 00      \tmovq\t0xe8(%rsp), %r12",
+          "   325a0: 4c 39 e5                     \tcmpq\t%r12, %rbp",
+          "   325a3: 74 4b                        \tje\t0x325f0 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9b0>",
+          "   325a5: 45 31 ff                     \txorl\t%r15d, %r15d",
+          "   325a8: 0f 1f 84 00 00 00 00 00      \tnopl\t(%rax,%rax)",
+          "   325b0: 48 8b 75 00                  \tmovq\t(%rbp), %rsi",
+          "   325b4: 48 8b bc 24 40 01 00 00      \tmovq\t0x140(%rsp), %rdi",
+          "   325bc: ff 94 24 58 01 00 00         \tcallq\t*0x158(%rsp)",
+          "   325c3: 44 01 f8                     \taddl\t%r15d, %eax",
+          "   325c6: 48 83 c5 08                  \taddq\t$0x8, %rbp",
+          "   325ca: 41 89 c7                     \tmovl\t%eax, %r15d",
+          "   325cd: 4c 39 e5                     \tcmpq\t%r12, %rbp",
+          "   325d0: 75 de                        \tjne\t0x325b0 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x970>",
+          "   325d2: 66 89 44 24 70               \tmovw\t%ax, 0x70(%rsp)",
+          "   325d7: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   325da: 7f 24                        \tjg\t0x32600 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x9c0>",
+          "   325dc: e9 fe 01 00 00               \tjmp\t0x327df <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0xb9f>",
+          "   325e1: 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 \tnopw\t%cs:(%rax,%rax)",
+          "   325f0: 31 c0                        \txorl\t%eax, %eax",
+          "   325f2: 66 89 44 24 70               \tmovw\t%ax, 0x70(%rsp)",
+          "   325f7: 4d 85 f6                     \ttestq\t%r14, %r14",
+          "   325fa: 0f 8e df 01 00 00            \tjle\t0x327df <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0xb9f>",
+          "   32600: 49 ff ce                     \tdecq\t%r14",
+          "   32603: 75 8b                        \tjne\t0x32590 <void ordinary_benchmark<12u, (ikea::seriespack::geometry)1, 1u, true>(benchmark::State&)+0x950>",
+          "   32605: 4c 8b a4 24 a0 00 00 00      \tmovq\t0xa0(%rsp), %r12",
+          "   3260d: 4c 89 e7                     \tmovq\t%r12, %rdi"
+        ],
+        "point_address": "0x17aff0",
+        "point_instructions": 18,
+        "point_bytes_sha256": "676f7a82a87c371e27be2b2c6b2c432e3de8b9f43d00221272bda8c7e1000599",
+        "point": [
+          "  17aff0: 48 89 f0                     \tmovq\t%rsi, %rax",
+          "  17aff3: 48 c1 e8 06                  \tshrq\t$0x6, %rax",
+          "  17aff7: 89 f1                        \tmovl\t%esi, %ecx",
+          "  17aff9: 89 f2                        \tmovl\t%esi, %edx",
+          "  17affb: 83 e1 3f                     \tandl\t$0x3f, %ecx",
+          "  17affe: 83 e2 1f                     \tandl\t$0x1f, %edx",
+          "  17b001: 40 c0 ee 03                  \tshrb\t$0x3, %sil",
+          "  17b005: 48 8d 04 40                  \tleaq\t(%rax,%rax,2), %rax",
+          "  17b009: 40 80 e6 04                  \tandb\t$0x4, %sil",
+          "  17b00d: 48 c1 e0 05                  \tshlq\t$0x5, %rax",
+          "  17b011: 48 01 f8                     \taddq\t%rdi, %rax",
+          "  17b014: 0f b6 0c 01                  \tmovzbl\t(%rcx,%rax), %ecx",
+          "  17b018: 0f b6 44 02 40               \tmovzbl\t0x40(%rdx,%rax), %eax",
+          "  17b01d: c4 e2 4b f7 c0               \tshrxl\t%esi, %eax, %eax",
+          "  17b022: c1 e1 04                     \tshll\t$0x4, %ecx",
+          "  17b025: 83 e0 0f                     \tandl\t$0xf, %eax",
+          "  17b028: 09 c8                        \torl\t%ecx, %eax",
+          "  17b02a: c3                           \tretq"
+        ]
+      }
+    }
+  },
+  "mutation": {
+    "before": {
+      "31": {
+        "driver": {
+          "address": "0xfa440",
+          "timed_instructions": 41,
+          "timed_ops": [
+            {
+              "address": "0xfb4a6",
+              "op": "testl\t%ebx, %ebx"
+            },
+            {
+              "address": "0xfb4a8",
+              "op": "jne\t0xfb587"
+            },
+            {
+              "address": "0xfb4ae",
+              "op": "testq\t%r15, %r15"
+            },
+            {
+              "address": "0xfb4b1",
+              "op": "je\t0xfb587"
+            },
+            {
+              "address": "0xfb4b7",
+              "op": "leaq\t0x2c8(%rsp), %rbx"
+            },
+            {
+              "address": "0xfb4bf",
+              "op": "leaq\t0x8f(%rsp), %r14"
+            },
+            {
+              "address": "0xfb4c7",
+              "op": "leaq\t0x100(%rsp), %r12"
+            },
+            {
+              "address": "0xfb4cf",
+              "op": "nop"
+            },
+            {
+              "address": "0xfb4d0",
+              "op": "vpxor\t%xmm0, %xmm0, %xmm0"
+            },
+            {
+              "address": "0xfb4d4",
+              "op": "movq\t$0x0, 0x188(%rsp)"
+            },
+            {
+              "address": "0xfb4e0",
+              "op": "vmovdqa\t%ymm0, 0x100(%rsp)"
+            },
+            {
+              "address": "0xfb4e9",
+              "op": "vmovdqa\t%ymm0, 0x120(%rsp)"
+            },
+            {
+              "address": "0xfb4f2",
+              "op": "movq\t$0x0, 0x140(%rsp)"
+            },
+            {
+              "address": "0xfb4fe",
+              "op": "movq\t0xc0(%rsp), %rcx"
+            },
+            {
+              "address": "0xfb506",
+              "op": "movl\t$0x2000, %edx           # imm = 0x2000"
+            },
+            {
+              "address": "0xfb50b",
+              "op": "movq\t%r13, (%rsp)"
+            },
+            {
+              "address": "0xfb50f",
+              "op": "movq\t%rbx, %rdi"
+            },
+            {
+              "address": "0xfb512",
+              "op": "xorl\t%esi, %esi"
+            },
+            {
+              "address": "0xfb514",
+              "op": "movq\t%r14, %r8"
+            },
+            {
+              "address": "0xfb517",
+              "op": "movq\t%r12, %r9"
+            },
+            {
+              "address": "0xfb51a",
+              "op": "vzeroupper"
+            },
+            {
+              "address": "0xfb51d",
+              "op": "callq\t0xfd720"
+            },
+            {
+              "address": "0xfb522",
+              "op": "vmovdqa\t0x120(%rsp), %xmm1"
+            },
+            {
+              "address": "0xfb52b",
+              "op": "vmovdqa\t0x100(%rsp), %xmm0"
+            },
+            {
+              "address": "0xfb534",
+              "op": "vpaddq\t0x130(%rsp), %xmm1, %xmm1"
+            },
+            {
+              "address": "0xfb53d",
+              "op": "vpaddq\t0x110(%rsp), %xmm0, %xmm0"
+            },
+            {
+              "address": "0xfb546",
+              "op": "vpshufd\t$0xee, %xmm1, %xmm2     # xmm2 = xmm1[2,3,2,3]"
+            },
+            {
+              "address": "0xfb54b",
+              "op": "vpaddq\t%xmm2, %xmm1, %xmm1"
+            },
+            {
+              "address": "0xfb54f",
+              "op": "vmovq\t%xmm1, %rax"
+            },
+            {
+              "address": "0xfb554",
+              "op": "addq\t0x140(%rsp), %rax"
+            },
+            {
+              "address": "0xfb55c",
+              "op": "vpshufd\t$0xee, %xmm0, %xmm1     # xmm1 = xmm0[2,3,2,3]"
+            },
+            {
+              "address": "0xfb561",
+              "op": "vpaddq\t%xmm1, %xmm0, %xmm0"
+            },
+            {
+              "address": "0xfb565",
+              "op": "vmovq\t%xmm0, %rcx"
+            },
+            {
+              "address": "0xfb56a",
+              "op": "subq\t%rcx, %rax"
+            },
+            {
+              "address": "0xfb56d",
+              "op": "movq\t%rax, 0x90(%rsp)"
+            },
+            {
+              "address": "0xfb575",
+              "op": "testq\t%r15, %r15"
+            },
+            {
+              "address": "0xfb578",
+              "op": "jle\t0xfb750"
+            },
+            {
+              "address": "0xfb57e",
+              "op": "decq\t%r15"
+            },
+            {
+              "address": "0xfb581",
+              "op": "jne\t0xfb4d0"
+            },
+            {
+              "address": "0xfb587",
+              "op": "movq\t0xd8(%rsp), %r13"
+            },
+            {
+              "address": "0xfb58f",
+              "op": "movq\t%r13, %rdi"
+            }
+          ]
+        },
+        "region": {
+          "address": "0xfd720",
+          "static_instructions": 4285,
+          "bytes_including_alignment": 19760,
+          "stack_allocation": [
+            "subq\t$0x208, %rsp            # imm = 0x208"
+          ],
+          "static_calls": 54,
+          "stack_reference_instructions": 326,
+          "vector_opcodes": {
+            "vpbroadcastd": 3,
+            "vmovdqu": 174,
+            "vpaddq": 159,
+            "vmovd": 120,
+            "vpbroadcastb": 87,
+            "vpand": 151,
+            "vpandn": 85,
+            "vpor": 155,
+            "vpsrld": 72,
+            "vextracti128": 216,
+            "vpackusdw": 144,
+            "vpackuswb": 90,
+            "vpmovzxbd": 108,
+            "vmovq": 72,
+            "vpmovzxwd": 36,
+            "vpsrlq": 35,
+            "vpshufd": 18,
+            "vpslld": 72,
+            "vpmovzxdq": 128,
+            "vmovdqa": 36,
+            "vzeroupper": 4,
+            "vpxor": 19,
+            "vpblendw": 36,
+            "vpsllq": 17,
+            "vpaddd": 16
+          },
+          "all16_target_tail_skips": [
+            {
+              "call": "0xfe13c",
+              "identity_skip": "0xfe123",
+              "skip_to": "0xfe141"
+            },
+            {
+              "call": "0xfe18b",
+              "identity_skip": "0xfe172",
+              "skip_to": "0xfe190"
+            },
+            {
+              "call": "0xfe1ed",
+              "identity_skip": "0xfe1d4",
+              "skip_to": "0xfe1f2"
+            },
+            {
+              "call": "0xfe247",
+              "identity_skip": "0xfe22e",
+              "skip_to": "0xfe24c"
+            },
+            {
+              "call": "0xfe2ae",
+              "identity_skip": "0xfe295",
+              "skip_to": "0xfe2b3"
+            },
+            {
+              "call": "0xfe308",
+              "identity_skip": "0xfe2ef",
+              "skip_to": "0xfe30d"
+            },
+            {
+              "call": "0xfe36a",
+              "identity_skip": "0xfe351",
+              "skip_to": "0xfe36f"
+            },
+            {
+              "call": "0xfe3cc",
+              "identity_skip": "0xfe3b3",
+              "skip_to": "0xfe3d1"
+            },
+            {
+              "call": "0xfe42e",
+              "identity_skip": "0xfe415",
+              "skip_to": "0xfe433"
+            },
+            {
+              "call": "0xfe493",
+              "identity_skip": "0xfe47a",
+              "skip_to": "0xfe498"
+            },
+            {
+              "call": "0xfe4f8",
+              "identity_skip": "0xfe4df",
+              "skip_to": "0xfe4fd"
+            },
+            {
+              "call": "0xfe55d",
+              "identity_skip": "0xfe544",
+              "skip_to": "0xfe562"
+            },
+            {
+              "call": "0xfe5c2",
+              "identity_skip": "0xfe5a9",
+              "skip_to": "0xfe5c7"
+            },
+            {
+              "call": "0xfe627",
+              "identity_skip": "0xfe60e",
+              "skip_to": "0xfe62c"
+            },
+            {
+              "call": "0xfe68c",
+              "identity_skip": "0xfe673",
+              "skip_to": "0xfe691"
+            },
+            {
+              "call": "0xfe6f1",
+              "identity_skip": "0xfe6d8",
+              "skip_to": "0xfe6f6"
+            }
+          ]
+        },
+        "coverage_helpers": {
+          "body": {
+            "address": "0x102a80",
+            "static_instructions": 89,
+            "regular_trace": {
+              "instructions": 56,
+              "push_pop": 4,
+              "conditional_branches": 8,
+              "unconditional_branches": 0,
+              "executed": [
+                {
+                  "address": "0x102a80",
+                  "op": "pushq\t%r14"
+                },
+                {
+                  "address": "0x102a82",
+                  "op": "pushq\t%rbx"
+                },
+                {
+                  "address": "0x102a83",
+                  "op": "movq\t(%rsi), %r8"
+                },
+                {
+                  "address": "0x102a86",
+                  "op": "movq\t(%rdi), %rcx"
+                },
+                {
+                  "address": "0x102a89",
+                  "op": "shrq\t$0x3, %rdx"
+                },
+                {
+                  "address": "0x102a8d",
+                  "op": "imulq\t0x10(%r8), %rdx"
+                },
+                {
+                  "address": "0x102a92",
+                  "op": "movq\t(%rcx), %rax"
+                },
+                {
+                  "address": "0x102a95",
+                  "op": "movq\t0x10(%rcx), %r9"
+                },
+                {
+                  "address": "0x102a99",
+                  "op": "testq\t%r9, %r9"
+                },
+                {
+                  "address": "0x102a9c",
+                  "op": "je\t0x102ab6",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x102a9e",
+                  "op": "movq\t%r9, %r10"
+                },
+                {
+                  "address": "0x102aa1",
+                  "op": "shlq\t$0x5, %r10"
+                },
+                {
+                  "address": "0x102aa5",
+                  "op": "cmpq\t%r8, -0x20(%rax,%r10)"
+                },
+                {
+                  "address": "0x102aaa",
+                  "op": "jne\t0x102ab6",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x102aac",
+                  "op": "addq\t%rax, %r10"
+                },
+                {
+                  "address": "0x102aaf",
+                  "op": "cmpl\t$0x0, -0x18(%r10)"
+                },
+                {
+                  "address": "0x102ab4",
+                  "op": "je\t0x102b35",
+                  "taken": false,
+                  "reason": "previous head plane differs from body plane0"
+                },
+                {
+                  "address": "0x102ab6",
+                  "op": "leaq\t0x1(%r9), %r10"
+                },
+                {
+                  "address": "0x102aba",
+                  "op": "shlq\t$0x5, %r9"
+                },
+                {
+                  "address": "0x102abe",
+                  "op": "movq\t%r10, 0x10(%rcx)"
+                },
+                {
+                  "address": "0x102ac2",
+                  "op": "movq\t%r8, (%rax,%r9)"
+                },
+                {
+                  "address": "0x102ac6",
+                  "op": "movl\t$0x0, 0x8(%rax,%r9)"
+                },
+                {
+                  "address": "0x102acf",
+                  "op": "movq\t%rdx, 0x10(%rax,%r9)"
+                },
+                {
+                  "address": "0x102ad4",
+                  "op": "movq\t$0x10, 0x18(%rax,%r9)"
+                },
+                {
+                  "address": "0x102add",
+                  "op": "movq\t(%rdi), %rcx"
+                },
+                {
+                  "address": "0x102ae0",
+                  "op": "movq\t(%rsi), %rsi"
+                },
+                {
+                  "address": "0x102ae3",
+                  "op": "movq\t(%rcx), %rax"
+                },
+                {
+                  "address": "0x102ae6",
+                  "op": "addq\t0x10(%r8), %rdx"
+                },
+                {
+                  "address": "0x102aea",
+                  "op": "movq\t0x10(%rcx), %rdi"
+                },
+                {
+                  "address": "0x102aee",
+                  "op": "testq\t%rdi, %rdi"
+                },
+                {
+                  "address": "0x102af1",
+                  "op": "je\t0x102b0b",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x102af3",
+                  "op": "movq\t%rdi, %r8"
+                },
+                {
+                  "address": "0x102af6",
+                  "op": "shlq\t$0x5, %r8"
+                },
+                {
+                  "address": "0x102afa",
+                  "op": "cmpq\t%rsi, -0x20(%rax,%r8)"
+                },
+                {
+                  "address": "0x102aff",
+                  "op": "jne\t0x102b0b",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x102b01",
+                  "op": "addq\t%rax, %r8"
+                },
+                {
+                  "address": "0x102b04",
+                  "op": "cmpl\t$0x0, -0x18(%r8)"
+                },
+                {
+                  "address": "0x102b09",
+                  "op": "je\t0x102b85",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x102b85",
+                  "op": "movq\t-0x10(%r8), %r9"
+                },
+                {
+                  "address": "0x102b89",
+                  "op": "leaq\t0x10(%rdx), %r10"
+                },
+                {
+                  "address": "0x102b8d",
+                  "op": "cmpq\t%r10, %r9"
+                },
+                {
+                  "address": "0x102b90",
+                  "op": "ja\t0x102b0b",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x102b96",
+                  "op": "movq\t-0x8(%r8), %r11"
+                },
+                {
+                  "address": "0x102b9a",
+                  "op": "addq\t%r9, %r11"
+                },
+                {
+                  "address": "0x102b9d",
+                  "op": "cmpq\t%r11, %rdx"
+                },
+                {
+                  "address": "0x102ba0",
+                  "op": "ja\t0x102b0b",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                },
+                {
+                  "address": "0x102b0b",
+                  "op": "leaq\t0x1(%rdi), %r8"
+                },
+                {
+                  "address": "0x102b0f",
+                  "op": "shlq\t$0x5, %rdi"
+                },
+                {
+                  "address": "0x102b13",
+                  "op": "movq\t%r8, 0x10(%rcx)"
+                },
+                {
+                  "address": "0x102b17",
+                  "op": "movq\t%rsi, (%rax,%rdi)"
+                },
+                {
+                  "address": "0x102b1b",
+                  "op": "movl\t$0x0, 0x8(%rax,%rdi)"
+                },
+                {
+                  "address": "0x102b23",
+                  "op": "movq\t%rdx, 0x10(%rax,%rdi)"
+                },
+                {
+                  "address": "0x102b28",
+                  "op": "movq\t$0x10, 0x18(%rax,%rdi)"
+                },
+                {
+                  "address": "0x102b31",
+                  "op": "popq\t%rbx"
+                },
+                {
+                  "address": "0x102b32",
+                  "op": "popq\t%r14"
+                },
+                {
+                  "address": "0x102b34",
+                  "op": "retq"
+                }
+              ]
+            },
+            "first_body_in_tile_trace": {
+              "instructions": 53,
+              "push_pop": 4,
+              "conditional_branches": 7,
+              "unconditional_branches": 0,
+              "executed_sha256": "325b34ca1ef4d97e1d261db50a83c33479d46f4fb7e50bb09c5c67b0d55c7e33",
+              "decisions": [
+                {
+                  "address": "0x102a9c",
+                  "op": "je\t0x102ab6",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x102aaa",
+                  "op": "jne\t0x102ab6",
+                  "taken": true,
+                  "reason": "first body call in tile follows substituted tail source"
+                },
+                {
+                  "address": "0x102af1",
+                  "op": "je\t0x102b0b",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x102aff",
+                  "op": "jne\t0x102b0b",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x102b09",
+                  "op": "je\t0x102b85",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x102b90",
+                  "op": "ja\t0x102b0b",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x102ba0",
+                  "op": "ja\t0x102b0b",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          },
+          "head0": {
+            "address": "0x102df0",
+            "static_instructions": 91,
+            "regular_trace": {
+              "instructions": 59,
+              "push_pop": 4,
+              "conditional_branches": 8,
+              "unconditional_branches": 0,
+              "executed": [
+                {
+                  "address": "0x102df0",
+                  "op": "pushq\t%r14"
+                },
+                {
+                  "address": "0x102df2",
+                  "op": "pushq\t%rbx"
+                },
+                {
+                  "address": "0x102df3",
+                  "op": "movq\t(%rsi), %r8"
+                },
+                {
+                  "address": "0x102df6",
+                  "op": "movl\t%edx, %eax"
+                },
+                {
+                  "address": "0x102df8",
+                  "op": "shrq\t$0x3, %rdx"
+                },
+                {
+                  "address": "0x102dfc",
+                  "op": "movq\t(%rdi), %rcx"
+                },
+                {
+                  "address": "0x102dff",
+                  "op": "andl\t$0x7, %eax"
+                },
+                {
+                  "address": "0x102e02",
+                  "op": "imulq\t0x28(%r8), %rdx"
+                },
+                {
+                  "address": "0x102e07",
+                  "op": "movq\t0x10(%rcx), %r9"
+                },
+                {
+                  "address": "0x102e0b",
+                  "op": "addq\t%rax, %rdx"
+                },
+                {
+                  "address": "0x102e0e",
+                  "op": "movq\t(%rcx), %rax"
+                },
+                {
+                  "address": "0x102e11",
+                  "op": "testq\t%r9, %r9"
+                },
+                {
+                  "address": "0x102e14",
+                  "op": "je\t0x102e75",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x102e16",
+                  "op": "movq\t%r9, %r10"
+                },
+                {
+                  "address": "0x102e19",
+                  "op": "shlq\t$0x5, %r10"
+                },
+                {
+                  "address": "0x102e1d",
+                  "op": "cmpq\t%r8, -0x20(%rax,%r10)"
+                },
+                {
+                  "address": "0x102e22",
+                  "op": "jne\t0x102e75",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x102e24",
+                  "op": "addq\t%rax, %r10"
+                },
+                {
+                  "address": "0x102e27",
+                  "op": "cmpl\t$0x1, -0x18(%r10)"
+                },
+                {
+                  "address": "0x102e2c",
+                  "op": "jne\t0x102e75",
+                  "taken": true,
+                  "reason": "previous original-source plane differs from this head plane"
+                },
+                {
+                  "address": "0x102e75",
+                  "op": "leaq\t0x1(%r9), %r10"
+                },
+                {
+                  "address": "0x102e79",
+                  "op": "shlq\t$0x5, %r9"
+                },
+                {
+                  "address": "0x102e7d",
+                  "op": "movq\t%r10, 0x10(%rcx)"
+                },
+                {
+                  "address": "0x102e81",
+                  "op": "movq\t%r8, (%rax,%r9)"
+                },
+                {
+                  "address": "0x102e85",
+                  "op": "movl\t$0x1, 0x8(%rax,%r9)"
+                },
+                {
+                  "address": "0x102e8e",
+                  "op": "movq\t%rdx, 0x10(%rax,%r9)"
+                },
+                {
+                  "address": "0x102e93",
+                  "op": "movq\t$0x8, 0x18(%rax,%r9)"
+                },
+                {
+                  "address": "0x102e9c",
+                  "op": "movq\t(%rdi), %rcx"
+                },
+                {
+                  "address": "0x102e9f",
+                  "op": "movq\t(%rsi), %rsi"
+                },
+                {
+                  "address": "0x102ea2",
+                  "op": "movq\t(%rcx), %rax"
+                },
+                {
+                  "address": "0x102ea5",
+                  "op": "addq\t0x28(%r8), %rdx"
+                },
+                {
+                  "address": "0x102ea9",
+                  "op": "movq\t0x10(%rcx), %rdi"
+                },
+                {
+                  "address": "0x102ead",
+                  "op": "testq\t%rdi, %rdi"
+                },
+                {
+                  "address": "0x102eb0",
+                  "op": "je\t0x102f00",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x102eb2",
+                  "op": "movq\t%rdi, %r8"
+                },
+                {
+                  "address": "0x102eb5",
+                  "op": "shlq\t$0x5, %r8"
+                },
+                {
+                  "address": "0x102eb9",
+                  "op": "cmpq\t%rsi, -0x20(%rax,%r8)"
+                },
+                {
+                  "address": "0x102ebe",
+                  "op": "jne\t0x102f00",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x102ec0",
+                  "op": "addq\t%rax, %r8"
+                },
+                {
+                  "address": "0x102ec3",
+                  "op": "cmpl\t$0x1, -0x18(%r8)"
+                },
+                {
+                  "address": "0x102ec8",
+                  "op": "jne\t0x102f00",
+                  "taken": false,
+                  "reason": "second span uses same head plane"
+                },
+                {
+                  "address": "0x102eca",
+                  "op": "movq\t-0x10(%r8), %r9"
+                },
+                {
+                  "address": "0x102ece",
+                  "op": "leaq\t0x8(%rdx), %r10"
+                },
+                {
+                  "address": "0x102ed2",
+                  "op": "cmpq\t%r10, %r9"
+                },
+                {
+                  "address": "0x102ed5",
+                  "op": "ja\t0x102f00",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x102ed7",
+                  "op": "movq\t-0x8(%r8), %r11"
+                },
+                {
+                  "address": "0x102edb",
+                  "op": "addq\t%r9, %r11"
+                },
+                {
+                  "address": "0x102ede",
+                  "op": "cmpq\t%r11, %rdx"
+                },
+                {
+                  "address": "0x102ee1",
+                  "op": "ja\t0x102f00",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                },
+                {
+                  "address": "0x102f00",
+                  "op": "leaq\t0x1(%rdi), %r8"
+                },
+                {
+                  "address": "0x102f04",
+                  "op": "shlq\t$0x5, %rdi"
+                },
+                {
+                  "address": "0x102f08",
+                  "op": "movq\t%r8, 0x10(%rcx)"
+                },
+                {
+                  "address": "0x102f0c",
+                  "op": "movq\t%rsi, (%rax,%rdi)"
+                },
+                {
+                  "address": "0x102f10",
+                  "op": "movl\t$0x1, 0x8(%rax,%rdi)"
+                },
+                {
+                  "address": "0x102f18",
+                  "op": "movq\t%rdx, 0x10(%rax,%rdi)"
+                },
+                {
+                  "address": "0x102f1d",
+                  "op": "movq\t$0x8, 0x18(%rax,%rdi)"
+                },
+                {
+                  "address": "0x102f26",
+                  "op": "popq\t%rbx"
+                },
+                {
+                  "address": "0x102f27",
+                  "op": "popq\t%r14"
+                },
+                {
+                  "address": "0x102f29",
+                  "op": "retq"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "63": {
+        "driver": {
+          "address": "0x139a50",
+          "timed_instructions": 41,
+          "timed_ops": [
+            {
+              "address": "0x13adae",
+              "op": "testl\t%ebx, %ebx"
+            },
+            {
+              "address": "0x13adb0",
+              "op": "jne\t0x13ae97"
+            },
+            {
+              "address": "0x13adb6",
+              "op": "testq\t%r13, %r13"
+            },
+            {
+              "address": "0x13adb9",
+              "op": "je\t0x13ae97"
+            },
+            {
+              "address": "0x13adbf",
+              "op": "leaq\t0x2c8(%rsp), %rbx"
+            },
+            {
+              "address": "0x13adc7",
+              "op": "leaq\t0x9f(%rsp), %r14"
+            },
+            {
+              "address": "0x13adcf",
+              "op": "leaq\t0x160(%rsp), %r15"
+            },
+            {
+              "address": "0x13add7",
+              "op": "nopw\t(%rax,%rax)"
+            },
+            {
+              "address": "0x13ade0",
+              "op": "vpxor\t%xmm0, %xmm0, %xmm0"
+            },
+            {
+              "address": "0x13ade4",
+              "op": "movq\t$0x0, 0x1d8(%rsp)"
+            },
+            {
+              "address": "0x13adf0",
+              "op": "vmovdqa\t%ymm0, 0x160(%rsp)"
+            },
+            {
+              "address": "0x13adf9",
+              "op": "vmovdqa\t%ymm0, 0x180(%rsp)"
+            },
+            {
+              "address": "0x13ae02",
+              "op": "movq\t$0x0, 0x1a0(%rsp)"
+            },
+            {
+              "address": "0x13ae0e",
+              "op": "movq\t0xc8(%rsp), %rcx"
+            },
+            {
+              "address": "0x13ae16",
+              "op": "movl\t$0x2000, %edx           # imm = 0x2000"
+            },
+            {
+              "address": "0x13ae1b",
+              "op": "movq\t%r12, (%rsp)"
+            },
+            {
+              "address": "0x13ae1f",
+              "op": "movq\t%rbx, %rdi"
+            },
+            {
+              "address": "0x13ae22",
+              "op": "xorl\t%esi, %esi"
+            },
+            {
+              "address": "0x13ae24",
+              "op": "movq\t%r14, %r8"
+            },
+            {
+              "address": "0x13ae27",
+              "op": "movq\t%r15, %r9"
+            },
+            {
+              "address": "0x13ae2a",
+              "op": "vzeroupper"
+            },
+            {
+              "address": "0x13ae2d",
+              "op": "callq\t0x13cf90"
+            },
+            {
+              "address": "0x13ae32",
+              "op": "vmovdqa\t0x180(%rsp), %xmm1"
+            },
+            {
+              "address": "0x13ae3b",
+              "op": "vmovdqa\t0x160(%rsp), %xmm0"
+            },
+            {
+              "address": "0x13ae44",
+              "op": "vpaddq\t0x190(%rsp), %xmm1, %xmm1"
+            },
+            {
+              "address": "0x13ae4d",
+              "op": "vpaddq\t0x170(%rsp), %xmm0, %xmm0"
+            },
+            {
+              "address": "0x13ae56",
+              "op": "vpshufd\t$0xee, %xmm1, %xmm2     # xmm2 = xmm1[2,3,2,3]"
+            },
+            {
+              "address": "0x13ae5b",
+              "op": "vpaddq\t%xmm2, %xmm1, %xmm1"
+            },
+            {
+              "address": "0x13ae5f",
+              "op": "vmovq\t%xmm1, %rax"
+            },
+            {
+              "address": "0x13ae64",
+              "op": "addq\t0x1a0(%rsp), %rax"
+            },
+            {
+              "address": "0x13ae6c",
+              "op": "vpshufd\t$0xee, %xmm0, %xmm1     # xmm1 = xmm0[2,3,2,3]"
+            },
+            {
+              "address": "0x13ae71",
+              "op": "vpaddq\t%xmm1, %xmm0, %xmm0"
+            },
+            {
+              "address": "0x13ae75",
+              "op": "vmovq\t%xmm0, %rcx"
+            },
+            {
+              "address": "0x13ae7a",
+              "op": "subq\t%rcx, %rax"
+            },
+            {
+              "address": "0x13ae7d",
+              "op": "movq\t%rax, 0xa0(%rsp)"
+            },
+            {
+              "address": "0x13ae85",
+              "op": "testq\t%r13, %r13"
+            },
+            {
+              "address": "0x13ae88",
+              "op": "jle\t0x13b063"
+            },
+            {
+              "address": "0x13ae8e",
+              "op": "decq\t%r13"
+            },
+            {
+              "address": "0x13ae91",
+              "op": "jne\t0x13ade0"
+            },
+            {
+              "address": "0x13ae97",
+              "op": "movq\t0xd8(%rsp), %r12"
+            },
+            {
+              "address": "0x13ae9f",
+              "op": "movq\t%r12, %rdi"
+            }
+          ]
+        },
+        "region": {
+          "address": "0x13cf90",
+          "static_instructions": 7718,
+          "bytes_including_alignment": 37888,
+          "stack_allocation": [
+            "subq\t$0x298, %rsp            # imm = 0x298"
+          ],
+          "static_calls": 72,
+          "stack_reference_instructions": 448,
+          "vector_opcodes": {
+            "vpaddq": 183,
+            "vmovd": 120,
+            "vpbroadcastb": 92,
+            "vpand": 295,
+            "vpandn": 85,
+            "vpor": 561,
+            "vmovdqu": 415,
+            "vpsrlq": 251,
+            "vmovq": 270,
+            "vpackusdw": 252,
+            "vextracti128": 432,
+            "vpshufd": 432,
+            "vpunpcklqdq": 234,
+            "vpackuswb": 90,
+            "vpmovzxbq": 216,
+            "vpshufb": 540,
+            "vpbroadcastq": 5,
+            "vinserti128": 90,
+            "vbroadcasti128": 18,
+            "vpmovzxbw": 36,
+            "vpsllw": 18,
+            "vmovdqa": 190,
+            "vpsllq": 155,
+            "vpmovzxwq": 72,
+            "vzeroupper": 4,
+            "vpslldq": 36,
+            "vperm2i128": 18,
+            "vbroadcastsd": 1,
+            "vmovups": 11,
+            "vmovaps": 10,
+            "vpxor": 14
+          },
+          "all16_target_tail_skips": [
+            {
+              "call": "0x13dfa3",
+              "identity_skip": "0x13df8b",
+              "skip_to": "0x13dfa8"
+            },
+            {
+              "call": "0x13e001",
+              "identity_skip": "0x13dfe9",
+              "skip_to": "0x13e006"
+            },
+            {
+              "call": "0x13e067",
+              "identity_skip": "0x13e04f",
+              "skip_to": "0x13e06c"
+            },
+            {
+              "call": "0x13e0c5",
+              "identity_skip": "0x13e0ad",
+              "skip_to": "0x13e0ca"
+            },
+            {
+              "call": "0x13e12b",
+              "identity_skip": "0x13e113",
+              "skip_to": "0x13e130"
+            },
+            {
+              "call": "0x13e191",
+              "identity_skip": "0x13e179",
+              "skip_to": "0x13e196"
+            },
+            {
+              "call": "0x13e1f7",
+              "identity_skip": "0x13e1df",
+              "skip_to": "0x13e1fc"
+            },
+            {
+              "call": "0x13e25a",
+              "identity_skip": "0x13e242",
+              "skip_to": "0x13e25f"
+            },
+            {
+              "call": "0x13e2c3",
+              "identity_skip": "0x13e2ab",
+              "skip_to": "0x13e2c8"
+            },
+            {
+              "call": "0x13e32c",
+              "identity_skip": "0x13e314",
+              "skip_to": "0x13e331"
+            },
+            {
+              "call": "0x13e395",
+              "identity_skip": "0x13e37d",
+              "skip_to": "0x13e39a"
+            },
+            {
+              "call": "0x13e3fb",
+              "identity_skip": "0x13e3e3",
+              "skip_to": "0x13e400"
+            },
+            {
+              "call": "0x13e464",
+              "identity_skip": "0x13e44c",
+              "skip_to": "0x13e469"
+            },
+            {
+              "call": "0x13e4cd",
+              "identity_skip": "0x13e4b5",
+              "skip_to": "0x13e4d2"
+            },
+            {
+              "call": "0x13e536",
+              "identity_skip": "0x13e51e",
+              "skip_to": "0x13e53b"
+            },
+            {
+              "call": "0x13e597",
+              "identity_skip": "0x13e57f",
+              "skip_to": "0x13e59c"
+            }
+          ]
+        },
+        "coverage_helpers": {
+          "body": {
+            "address": "0x1465a0",
+            "static_instructions": 89,
+            "regular_trace": {
+              "instructions": 56,
+              "push_pop": 4,
+              "conditional_branches": 8,
+              "unconditional_branches": 0,
+              "executed_sha256": "19bfb208f81bfde0c119e3f011cf97a394ecf3a70763c9c0a00c56ceadcf3a7f",
+              "decisions": [
+                {
+                  "address": "0x1465bc",
+                  "op": "je\t0x1465d6",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x1465ca",
+                  "op": "jne\t0x1465d6",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x1465d4",
+                  "op": "je\t0x146655",
+                  "taken": false,
+                  "reason": "previous head plane differs from body plane0"
+                },
+                {
+                  "address": "0x146611",
+                  "op": "je\t0x14662b",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x14661f",
+                  "op": "jne\t0x14662b",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146629",
+                  "op": "je\t0x1466a5",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x1466b0",
+                  "op": "ja\t0x14662b",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x1466c0",
+                  "op": "ja\t0x14662b",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            },
+            "first_body_in_tile_trace": {
+              "instructions": 53,
+              "push_pop": 4,
+              "conditional_branches": 7,
+              "unconditional_branches": 0,
+              "executed_sha256": "152ae9dca01b5af0f401494a0456775c9ec087d9b3df3feb059d16043a7284dc",
+              "decisions": [
+                {
+                  "address": "0x1465bc",
+                  "op": "je\t0x1465d6",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x1465ca",
+                  "op": "jne\t0x1465d6",
+                  "taken": true,
+                  "reason": "first body call in tile follows substituted tail source"
+                },
+                {
+                  "address": "0x146611",
+                  "op": "je\t0x14662b",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x14661f",
+                  "op": "jne\t0x14662b",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146629",
+                  "op": "je\t0x1466a5",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x1466b0",
+                  "op": "ja\t0x14662b",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x1466c0",
+                  "op": "ja\t0x14662b",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          },
+          "head0": {
+            "address": "0x1466f0",
+            "static_instructions": 91,
+            "regular_trace": {
+              "instructions": 59,
+              "push_pop": 4,
+              "conditional_branches": 8,
+              "unconditional_branches": 0,
+              "executed_sha256": "e56d91939181efd95443dae492077191b524755338d521119b7b6839109d7efd",
+              "decisions": [
+                {
+                  "address": "0x146714",
+                  "op": "je\t0x146775",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x146722",
+                  "op": "jne\t0x146775",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x14672c",
+                  "op": "jne\t0x146775",
+                  "taken": true,
+                  "reason": "previous original-source plane differs from this head plane"
+                },
+                {
+                  "address": "0x1467b0",
+                  "op": "je\t0x146800",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x1467be",
+                  "op": "jne\t0x146800",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x1467c8",
+                  "op": "jne\t0x146800",
+                  "taken": false,
+                  "reason": "second span uses same head plane"
+                },
+                {
+                  "address": "0x1467d5",
+                  "op": "ja\t0x146800",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x1467e1",
+                  "op": "ja\t0x146800",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          },
+          "head1": {
+            "address": "0x146830",
+            "static_instructions": 91,
+            "regular_trace": {
+              "instructions": 59,
+              "push_pop": 4,
+              "conditional_branches": 8,
+              "unconditional_branches": 0,
+              "executed_sha256": "c1cf14c9cf6ddf7a62785056d480e8cab58b7ee1ba311899d21cd138ac2809b4",
+              "decisions": [
+                {
+                  "address": "0x146854",
+                  "op": "je\t0x1468b5",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x146862",
+                  "op": "jne\t0x1468b5",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x14686c",
+                  "op": "jne\t0x1468b5",
+                  "taken": true,
+                  "reason": "previous original-source plane differs from this head plane"
+                },
+                {
+                  "address": "0x1468f0",
+                  "op": "je\t0x146940",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x1468fe",
+                  "op": "jne\t0x146940",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146908",
+                  "op": "jne\t0x146940",
+                  "taken": false,
+                  "reason": "second span uses same head plane"
+                },
+                {
+                  "address": "0x146915",
+                  "op": "ja\t0x146940",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x146921",
+                  "op": "ja\t0x146940",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "after": {
+      "31": {
+        "driver": {
+          "address": "0xfb1f0",
+          "timed_instructions": 41,
+          "timed_ops": [
+            {
+              "address": "0xfc1f3",
+              "op": "testl\t%ebx, %ebx"
+            },
+            {
+              "address": "0xfc1f5",
+              "op": "jne\t0xfc2d4"
+            },
+            {
+              "address": "0xfc1fb",
+              "op": "testq\t%r15, %r15"
+            },
+            {
+              "address": "0xfc1fe",
+              "op": "je\t0xfc2d4"
+            },
+            {
+              "address": "0xfc204",
+              "op": "leaq\t0x2a8(%rsp), %rbx"
+            },
+            {
+              "address": "0xfc20c",
+              "op": "leaq\t0x6f(%rsp), %r14"
+            },
+            {
+              "address": "0xfc211",
+              "op": "leaq\t0xe0(%rsp), %r12"
+            },
+            {
+              "address": "0xfc219",
+              "op": "nopl\t(%rax)"
+            },
+            {
+              "address": "0xfc220",
+              "op": "vpxor\t%xmm0, %xmm0, %xmm0"
+            },
+            {
+              "address": "0xfc224",
+              "op": "movq\t$0x0, 0x168(%rsp)"
+            },
+            {
+              "address": "0xfc230",
+              "op": "vmovdqa\t%ymm0, 0xe0(%rsp)"
+            },
+            {
+              "address": "0xfc239",
+              "op": "vmovdqa\t%ymm0, 0x100(%rsp)"
+            },
+            {
+              "address": "0xfc242",
+              "op": "movq\t$0x0, 0x120(%rsp)"
+            },
+            {
+              "address": "0xfc24e",
+              "op": "movq\t0xa0(%rsp), %rcx"
+            },
+            {
+              "address": "0xfc256",
+              "op": "movl\t$0x2000, %edx           # imm = 0x2000"
+            },
+            {
+              "address": "0xfc25b",
+              "op": "movq\t%r13, (%rsp)"
+            },
+            {
+              "address": "0xfc25f",
+              "op": "movq\t%rbx, %rdi"
+            },
+            {
+              "address": "0xfc262",
+              "op": "xorl\t%esi, %esi"
+            },
+            {
+              "address": "0xfc264",
+              "op": "movq\t%r14, %r8"
+            },
+            {
+              "address": "0xfc267",
+              "op": "movq\t%r12, %r9"
+            },
+            {
+              "address": "0xfc26a",
+              "op": "vzeroupper"
+            },
+            {
+              "address": "0xfc26d",
+              "op": "callq\t0xfe3c0"
+            },
+            {
+              "address": "0xfc272",
+              "op": "vmovdqa\t0x100(%rsp), %xmm1"
+            },
+            {
+              "address": "0xfc27b",
+              "op": "vmovdqa\t0xe0(%rsp), %xmm0"
+            },
+            {
+              "address": "0xfc284",
+              "op": "vpaddq\t0x110(%rsp), %xmm1, %xmm1"
+            },
+            {
+              "address": "0xfc28d",
+              "op": "vpaddq\t0xf0(%rsp), %xmm0, %xmm0"
+            },
+            {
+              "address": "0xfc296",
+              "op": "vpshufd\t$0xee, %xmm1, %xmm2     # xmm2 = xmm1[2,3,2,3]"
+            },
+            {
+              "address": "0xfc29b",
+              "op": "vpaddq\t%xmm2, %xmm1, %xmm1"
+            },
+            {
+              "address": "0xfc29f",
+              "op": "vmovq\t%xmm1, %rax"
+            },
+            {
+              "address": "0xfc2a4",
+              "op": "addq\t0x120(%rsp), %rax"
+            },
+            {
+              "address": "0xfc2ac",
+              "op": "vpshufd\t$0xee, %xmm0, %xmm1     # xmm1 = xmm0[2,3,2,3]"
+            },
+            {
+              "address": "0xfc2b1",
+              "op": "vpaddq\t%xmm1, %xmm0, %xmm0"
+            },
+            {
+              "address": "0xfc2b5",
+              "op": "vmovq\t%xmm0, %rcx"
+            },
+            {
+              "address": "0xfc2ba",
+              "op": "subq\t%rcx, %rax"
+            },
+            {
+              "address": "0xfc2bd",
+              "op": "movq\t%rax, 0x70(%rsp)"
+            },
+            {
+              "address": "0xfc2c2",
+              "op": "testq\t%r15, %r15"
+            },
+            {
+              "address": "0xfc2c5",
+              "op": "jle\t0xfc488"
+            },
+            {
+              "address": "0xfc2cb",
+              "op": "decq\t%r15"
+            },
+            {
+              "address": "0xfc2ce",
+              "op": "jne\t0xfc220"
+            },
+            {
+              "address": "0xfc2d4",
+              "op": "movq\t0xa8(%rsp), %rbx"
+            },
+            {
+              "address": "0xfc2dc",
+              "op": "movq\t%rbx, %rdi"
+            }
+          ]
+        },
+        "region": {
+          "address": "0xfe3c0",
+          "static_instructions": 4261,
+          "bytes_including_alignment": 19568,
+          "stack_allocation": [
+            "subq\t$0x1f8, %rsp            # imm = 0x1F8"
+          ],
+          "static_calls": 54,
+          "stack_reference_instructions": 277,
+          "vector_opcodes": {
+            "vpbroadcastd": 3,
+            "vmovdqu": 174,
+            "vpaddq": 159,
+            "vmovd": 120,
+            "vpbroadcastb": 87,
+            "vpand": 151,
+            "vpandn": 85,
+            "vpor": 155,
+            "vpsrld": 72,
+            "vextracti128": 216,
+            "vpackusdw": 144,
+            "vpackuswb": 90,
+            "vpmovzxbd": 108,
+            "vmovq": 72,
+            "vpmovzxwd": 36,
+            "vpsrlq": 35,
+            "vpshufd": 18,
+            "vpslld": 72,
+            "vpmovzxdq": 128,
+            "vmovdqa": 36,
+            "vzeroupper": 4,
+            "vpxor": 19,
+            "vpblendw": 36,
+            "vpsllq": 17,
+            "vpaddd": 16
+          },
+          "all16_target_tail_skips": [
+            {
+              "call": "0xfef22",
+              "identity_skip": "0xfef15",
+              "skip_to": "0xfef27"
+            },
+            {
+              "call": "0xfef65",
+              "identity_skip": "0xfef58",
+              "skip_to": "0xfef6a"
+            },
+            {
+              "call": "0xfefb0",
+              "identity_skip": "0xfefa3",
+              "skip_to": "0xfefb5"
+            },
+            {
+              "call": "0xfeff3",
+              "identity_skip": "0xfefe6",
+              "skip_to": "0xfeff8"
+            },
+            {
+              "call": "0xff051",
+              "identity_skip": "0xff044",
+              "skip_to": "0xff056"
+            },
+            {
+              "call": "0xff09f",
+              "identity_skip": "0xff092",
+              "skip_to": "0xff0a4"
+            },
+            {
+              "call": "0xff0f5",
+              "identity_skip": "0xff0e8",
+              "skip_to": "0xff0fa"
+            },
+            {
+              "call": "0xff14b",
+              "identity_skip": "0xff13e",
+              "skip_to": "0xff150"
+            },
+            {
+              "call": "0xff1a4",
+              "identity_skip": "0xff197",
+              "skip_to": "0xff1a9"
+            },
+            {
+              "call": "0xff1fd",
+              "identity_skip": "0xff1f0",
+              "skip_to": "0xff202"
+            },
+            {
+              "call": "0xff256",
+              "identity_skip": "0xff249",
+              "skip_to": "0xff25b"
+            },
+            {
+              "call": "0xff2af",
+              "identity_skip": "0xff2a2",
+              "skip_to": "0xff2b4"
+            },
+            {
+              "call": "0xff308",
+              "identity_skip": "0xff2fb",
+              "skip_to": "0xff30d"
+            },
+            {
+              "call": "0xff361",
+              "identity_skip": "0xff354",
+              "skip_to": "0xff366"
+            },
+            {
+              "call": "0xff3ba",
+              "identity_skip": "0xff3ad",
+              "skip_to": "0xff3bf"
+            },
+            {
+              "call": "0xff40b",
+              "identity_skip": "0xff3fe",
+              "skip_to": "0xff410"
+            }
+          ]
+        },
+        "coverage_helpers": {
+          "body": {
+            "address": "0x103650",
+            "static_instructions": 98,
+            "regular_trace": {
+              "instructions": 63,
+              "push_pop": 6,
+              "conditional_branches": 8,
+              "unconditional_branches": 1,
+              "executed": [
+                {
+                  "address": "0x103650",
+                  "op": "pushq\t%r15"
+                },
+                {
+                  "address": "0x103652",
+                  "op": "pushq\t%r14"
+                },
+                {
+                  "address": "0x103654",
+                  "op": "pushq\t%rbx"
+                },
+                {
+                  "address": "0x103655",
+                  "op": "movq\t(%rsi), %r9"
+                },
+                {
+                  "address": "0x103658",
+                  "op": "movq\t(%rdi), %r8"
+                },
+                {
+                  "address": "0x10365b",
+                  "op": "shrq\t$0x3, %rdx"
+                },
+                {
+                  "address": "0x10365f",
+                  "op": "movq\t0x10(%r9), %r10"
+                },
+                {
+                  "address": "0x103663",
+                  "op": "movq\t(%r8), %rax"
+                },
+                {
+                  "address": "0x103666",
+                  "op": "movq\t0x10(%r8), %rcx"
+                },
+                {
+                  "address": "0x10366a",
+                  "op": "imulq\t%r10, %rdx"
+                },
+                {
+                  "address": "0x10366e",
+                  "op": "testq\t%rcx, %rcx"
+                },
+                {
+                  "address": "0x103671",
+                  "op": "je\t0x10368f",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x103673",
+                  "op": "movq\t%rcx, %r11"
+                },
+                {
+                  "address": "0x103676",
+                  "op": "shlq\t$0x5, %r11"
+                },
+                {
+                  "address": "0x10367a",
+                  "op": "cmpq\t%r9, -0x20(%rax,%r11)"
+                },
+                {
+                  "address": "0x10367f",
+                  "op": "jne\t0x10368f",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x103681",
+                  "op": "addq\t%rax, %r11"
+                },
+                {
+                  "address": "0x103684",
+                  "op": "cmpl\t$0x0, -0x18(%r11)"
+                },
+                {
+                  "address": "0x103689",
+                  "op": "je\t0x103753",
+                  "taken": false,
+                  "reason": "previous head plane differs from body plane0"
+                },
+                {
+                  "address": "0x10368f",
+                  "op": "leaq\t0x1(%rcx), %r10"
+                },
+                {
+                  "address": "0x103693",
+                  "op": "shlq\t$0x5, %rcx"
+                },
+                {
+                  "address": "0x103697",
+                  "op": "movq\t%r10, 0x10(%r8)"
+                },
+                {
+                  "address": "0x10369b",
+                  "op": "movq\t%r9, (%rax,%rcx)"
+                },
+                {
+                  "address": "0x10369f",
+                  "op": "movl\t$0x0, 0x8(%rax,%rcx)"
+                },
+                {
+                  "address": "0x1036a7",
+                  "op": "movq\t%rdx, 0x10(%rax,%rcx)"
+                },
+                {
+                  "address": "0x1036ac",
+                  "op": "movq\t$0x10, 0x18(%rax,%rcx)"
+                },
+                {
+                  "address": "0x1036b5",
+                  "op": "movq\t(%rdi), %rcx"
+                },
+                {
+                  "address": "0x1036b8",
+                  "op": "movq\t(%rsi), %rsi"
+                },
+                {
+                  "address": "0x1036bb",
+                  "op": "addq\t0x10(%r9), %rdx"
+                },
+                {
+                  "address": "0x1036bf",
+                  "op": "leaq\t0x10(%rcx), %r8"
+                },
+                {
+                  "address": "0x1036c3",
+                  "op": "movq\t(%rcx), %rax"
+                },
+                {
+                  "address": "0x1036c6",
+                  "op": "movq\t0x10(%rcx), %rcx"
+                },
+                {
+                  "address": "0x1036ca",
+                  "op": "testq\t%rcx, %rcx"
+                },
+                {
+                  "address": "0x1036cd",
+                  "op": "je\t0x1036ee",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x1036cf",
+                  "op": "movq\t%rsi, %r9"
+                },
+                {
+                  "address": "0x1036d2",
+                  "op": "movq\t%rcx, %rsi"
+                },
+                {
+                  "address": "0x1036d5",
+                  "op": "shlq\t$0x5, %rsi"
+                },
+                {
+                  "address": "0x1036d9",
+                  "op": "cmpq\t%r9, -0x20(%rax,%rsi)"
+                },
+                {
+                  "address": "0x1036de",
+                  "op": "jne\t0x1036e9",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x1036e0",
+                  "op": "addq\t%rax, %rsi"
+                },
+                {
+                  "address": "0x1036e3",
+                  "op": "cmpl\t$0x0, -0x18(%rsi)"
+                },
+                {
+                  "address": "0x1036e7",
+                  "op": "je\t0x10371b",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x10371b",
+                  "op": "movq\t-0x10(%rsi), %rdi"
+                },
+                {
+                  "address": "0x10371f",
+                  "op": "leaq\t0x10(%rdx), %r10"
+                },
+                {
+                  "address": "0x103723",
+                  "op": "cmpq\t%r10, %rdi"
+                },
+                {
+                  "address": "0x103726",
+                  "op": "ja\t0x1036e9",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x103728",
+                  "op": "movq\t-0x8(%rsi), %r11"
+                },
+                {
+                  "address": "0x10372c",
+                  "op": "addq\t%rdi, %r11"
+                },
+                {
+                  "address": "0x10372f",
+                  "op": "cmpq\t%r11, %rdx"
+                },
+                {
+                  "address": "0x103732",
+                  "op": "ja\t0x1036e9",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                },
+                {
+                  "address": "0x1036e9",
+                  "op": "movq\t%r9, %rsi"
+                },
+                {
+                  "address": "0x1036ec",
+                  "op": "jmp\t0x1036f0"
+                },
+                {
+                  "address": "0x1036f0",
+                  "op": "leaq\t0x1(%rcx), %rdi"
+                },
+                {
+                  "address": "0x1036f4",
+                  "op": "shlq\t$0x5, %rcx"
+                },
+                {
+                  "address": "0x1036f8",
+                  "op": "movq\t%rdi, (%r8)"
+                },
+                {
+                  "address": "0x1036fb",
+                  "op": "movq\t%rsi, (%rax,%rcx)"
+                },
+                {
+                  "address": "0x1036ff",
+                  "op": "movl\t$0x0, 0x8(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103707",
+                  "op": "movq\t%rdx, 0x10(%rax,%rcx)"
+                },
+                {
+                  "address": "0x10370c",
+                  "op": "movq\t$0x10, 0x18(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103715",
+                  "op": "popq\t%rbx"
+                },
+                {
+                  "address": "0x103716",
+                  "op": "popq\t%r14"
+                },
+                {
+                  "address": "0x103718",
+                  "op": "popq\t%r15"
+                },
+                {
+                  "address": "0x10371a",
+                  "op": "retq"
+                }
+              ]
+            },
+            "first_body_in_tile_trace": {
+              "instructions": 60,
+              "push_pop": 6,
+              "conditional_branches": 7,
+              "unconditional_branches": 1,
+              "executed_sha256": "cc1afb8ecd84d64feb08a689db4a18575f3e1e564a26f8079e5c1ffaeadde528",
+              "decisions": [
+                {
+                  "address": "0x103671",
+                  "op": "je\t0x10368f",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x10367f",
+                  "op": "jne\t0x10368f",
+                  "taken": true,
+                  "reason": "first body call in tile follows substituted tail source"
+                },
+                {
+                  "address": "0x1036cd",
+                  "op": "je\t0x1036ee",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x1036de",
+                  "op": "jne\t0x1036e9",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x1036e7",
+                  "op": "je\t0x10371b",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x103726",
+                  "op": "ja\t0x1036e9",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x103732",
+                  "op": "ja\t0x1036e9",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          },
+          "head0": {
+            "address": "0x1039d0",
+            "static_instructions": 102,
+            "regular_trace": {
+              "instructions": 66,
+              "push_pop": 6,
+              "conditional_branches": 8,
+              "unconditional_branches": 1,
+              "executed": [
+                {
+                  "address": "0x1039d0",
+                  "op": "pushq\t%r15"
+                },
+                {
+                  "address": "0x1039d2",
+                  "op": "pushq\t%r14"
+                },
+                {
+                  "address": "0x1039d4",
+                  "op": "pushq\t%rbx"
+                },
+                {
+                  "address": "0x1039d5",
+                  "op": "movq\t(%rsi), %r9"
+                },
+                {
+                  "address": "0x1039d8",
+                  "op": "movq\t(%rdi), %r8"
+                },
+                {
+                  "address": "0x1039db",
+                  "op": "movl\t%edx, %eax"
+                },
+                {
+                  "address": "0x1039dd",
+                  "op": "shrq\t$0x3, %rdx"
+                },
+                {
+                  "address": "0x1039e1",
+                  "op": "andl\t$0x7, %eax"
+                },
+                {
+                  "address": "0x1039e4",
+                  "op": "movq\t0x28(%r9), %r10"
+                },
+                {
+                  "address": "0x1039e8",
+                  "op": "movq\t0x10(%r8), %rcx"
+                },
+                {
+                  "address": "0x1039ec",
+                  "op": "imulq\t%r10, %rdx"
+                },
+                {
+                  "address": "0x1039f0",
+                  "op": "addq\t%rax, %rdx"
+                },
+                {
+                  "address": "0x1039f3",
+                  "op": "movq\t(%r8), %rax"
+                },
+                {
+                  "address": "0x1039f6",
+                  "op": "testq\t%rcx, %rcx"
+                },
+                {
+                  "address": "0x1039f9",
+                  "op": "je\t0x103a60",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x1039fb",
+                  "op": "movq\t%rcx, %r11"
+                },
+                {
+                  "address": "0x1039fe",
+                  "op": "shlq\t$0x5, %r11"
+                },
+                {
+                  "address": "0x103a02",
+                  "op": "cmpq\t%r9, -0x20(%rax,%r11)"
+                },
+                {
+                  "address": "0x103a07",
+                  "op": "jne\t0x103a60",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x103a09",
+                  "op": "addq\t%rax, %r11"
+                },
+                {
+                  "address": "0x103a0c",
+                  "op": "cmpl\t$0x1, -0x18(%r11)"
+                },
+                {
+                  "address": "0x103a11",
+                  "op": "jne\t0x103a60",
+                  "taken": true,
+                  "reason": "previous original-source plane differs from this head plane"
+                },
+                {
+                  "address": "0x103a60",
+                  "op": "leaq\t0x1(%rcx), %r10"
+                },
+                {
+                  "address": "0x103a64",
+                  "op": "shlq\t$0x5, %rcx"
+                },
+                {
+                  "address": "0x103a68",
+                  "op": "movq\t%r10, 0x10(%r8)"
+                },
+                {
+                  "address": "0x103a6c",
+                  "op": "movq\t%r9, (%rax,%rcx)"
+                },
+                {
+                  "address": "0x103a70",
+                  "op": "movl\t$0x1, 0x8(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103a78",
+                  "op": "movq\t%rdx, 0x10(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103a7d",
+                  "op": "movq\t$0x8, 0x18(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103a86",
+                  "op": "movq\t(%rdi), %rcx"
+                },
+                {
+                  "address": "0x103a89",
+                  "op": "movq\t(%rsi), %rsi"
+                },
+                {
+                  "address": "0x103a8c",
+                  "op": "addq\t0x28(%r9), %rdx"
+                },
+                {
+                  "address": "0x103a90",
+                  "op": "leaq\t0x10(%rcx), %r8"
+                },
+                {
+                  "address": "0x103a94",
+                  "op": "movq\t(%rcx), %rax"
+                },
+                {
+                  "address": "0x103a97",
+                  "op": "movq\t0x10(%rcx), %rcx"
+                },
+                {
+                  "address": "0x103a9b",
+                  "op": "testq\t%rcx, %rcx"
+                },
+                {
+                  "address": "0x103a9e",
+                  "op": "je\t0x103af7",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x103aa0",
+                  "op": "movq\t%rsi, %r9"
+                },
+                {
+                  "address": "0x103aa3",
+                  "op": "movq\t%rcx, %rsi"
+                },
+                {
+                  "address": "0x103aa6",
+                  "op": "shlq\t$0x5, %rsi"
+                },
+                {
+                  "address": "0x103aaa",
+                  "op": "cmpq\t%r9, -0x20(%rax,%rsi)"
+                },
+                {
+                  "address": "0x103aaf",
+                  "op": "jne\t0x103af2",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x103ab1",
+                  "op": "addq\t%rax, %rsi"
+                },
+                {
+                  "address": "0x103ab4",
+                  "op": "cmpl\t$0x1, -0x18(%rsi)"
+                },
+                {
+                  "address": "0x103ab8",
+                  "op": "jne\t0x103af2",
+                  "taken": false,
+                  "reason": "second span uses same head plane"
+                },
+                {
+                  "address": "0x103aba",
+                  "op": "movq\t-0x10(%rsi), %rdi"
+                },
+                {
+                  "address": "0x103abe",
+                  "op": "leaq\t0x8(%rdx), %r10"
+                },
+                {
+                  "address": "0x103ac2",
+                  "op": "cmpq\t%r10, %rdi"
+                },
+                {
+                  "address": "0x103ac5",
+                  "op": "ja\t0x103af2",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x103ac7",
+                  "op": "movq\t-0x8(%rsi), %r11"
+                },
+                {
+                  "address": "0x103acb",
+                  "op": "addq\t%rdi, %r11"
+                },
+                {
+                  "address": "0x103ace",
+                  "op": "cmpq\t%r11, %rdx"
+                },
+                {
+                  "address": "0x103ad1",
+                  "op": "ja\t0x103af2",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                },
+                {
+                  "address": "0x103af2",
+                  "op": "movq\t%r9, %rsi"
+                },
+                {
+                  "address": "0x103af5",
+                  "op": "jmp\t0x103af9"
+                },
+                {
+                  "address": "0x103af9",
+                  "op": "leaq\t0x1(%rcx), %rdi"
+                },
+                {
+                  "address": "0x103afd",
+                  "op": "shlq\t$0x5, %rcx"
+                },
+                {
+                  "address": "0x103b01",
+                  "op": "movq\t%rdi, (%r8)"
+                },
+                {
+                  "address": "0x103b04",
+                  "op": "movq\t%rsi, (%rax,%rcx)"
+                },
+                {
+                  "address": "0x103b08",
+                  "op": "movl\t$0x1, 0x8(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103b10",
+                  "op": "movq\t%rdx, 0x10(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103b15",
+                  "op": "movq\t$0x8, 0x18(%rax,%rcx)"
+                },
+                {
+                  "address": "0x103b1e",
+                  "op": "popq\t%rbx"
+                },
+                {
+                  "address": "0x103b1f",
+                  "op": "popq\t%r14"
+                },
+                {
+                  "address": "0x103b21",
+                  "op": "popq\t%r15"
+                },
+                {
+                  "address": "0x103b23",
+                  "op": "retq"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "63": {
+        "driver": {
+          "address": "0x13a1e0",
+          "timed_instructions": 41,
+          "timed_ops": [
+            {
+              "address": "0x13b4de",
+              "op": "testl\t%ebx, %ebx"
+            },
+            {
+              "address": "0x13b4e0",
+              "op": "jne\t0x13b5c7"
+            },
+            {
+              "address": "0x13b4e6",
+              "op": "testq\t%r13, %r13"
+            },
+            {
+              "address": "0x13b4e9",
+              "op": "je\t0x13b5c7"
+            },
+            {
+              "address": "0x13b4ef",
+              "op": "leaq\t0x2c8(%rsp), %rbx"
+            },
+            {
+              "address": "0x13b4f7",
+              "op": "leaq\t0x9f(%rsp), %r14"
+            },
+            {
+              "address": "0x13b4ff",
+              "op": "leaq\t0x100(%rsp), %r15"
+            },
+            {
+              "address": "0x13b507",
+              "op": "nopw\t(%rax,%rax)"
+            },
+            {
+              "address": "0x13b510",
+              "op": "vpxor\t%xmm0, %xmm0, %xmm0"
+            },
+            {
+              "address": "0x13b514",
+              "op": "movq\t$0x0, 0x1d8(%rsp)"
+            },
+            {
+              "address": "0x13b520",
+              "op": "vmovdqa\t%ymm0, 0x100(%rsp)"
+            },
+            {
+              "address": "0x13b529",
+              "op": "vmovdqa\t%ymm0, 0x120(%rsp)"
+            },
+            {
+              "address": "0x13b532",
+              "op": "movq\t$0x0, 0x140(%rsp)"
+            },
+            {
+              "address": "0x13b53e",
+              "op": "movq\t0xc8(%rsp), %rcx"
+            },
+            {
+              "address": "0x13b546",
+              "op": "movl\t$0x2000, %edx           # imm = 0x2000"
+            },
+            {
+              "address": "0x13b54b",
+              "op": "movq\t%r12, (%rsp)"
+            },
+            {
+              "address": "0x13b54f",
+              "op": "movq\t%rbx, %rdi"
+            },
+            {
+              "address": "0x13b552",
+              "op": "xorl\t%esi, %esi"
+            },
+            {
+              "address": "0x13b554",
+              "op": "movq\t%r14, %r8"
+            },
+            {
+              "address": "0x13b557",
+              "op": "movq\t%r15, %r9"
+            },
+            {
+              "address": "0x13b55a",
+              "op": "vzeroupper"
+            },
+            {
+              "address": "0x13b55d",
+              "op": "callq\t0x13d640"
+            },
+            {
+              "address": "0x13b562",
+              "op": "vmovdqa\t0x120(%rsp), %xmm1"
+            },
+            {
+              "address": "0x13b56b",
+              "op": "vmovdqa\t0x100(%rsp), %xmm0"
+            },
+            {
+              "address": "0x13b574",
+              "op": "vpaddq\t0x130(%rsp), %xmm1, %xmm1"
+            },
+            {
+              "address": "0x13b57d",
+              "op": "vpaddq\t0x110(%rsp), %xmm0, %xmm0"
+            },
+            {
+              "address": "0x13b586",
+              "op": "vpshufd\t$0xee, %xmm1, %xmm2     # xmm2 = xmm1[2,3,2,3]"
+            },
+            {
+              "address": "0x13b58b",
+              "op": "vpaddq\t%xmm2, %xmm1, %xmm1"
+            },
+            {
+              "address": "0x13b58f",
+              "op": "vmovq\t%xmm1, %rax"
+            },
+            {
+              "address": "0x13b594",
+              "op": "addq\t0x140(%rsp), %rax"
+            },
+            {
+              "address": "0x13b59c",
+              "op": "vpshufd\t$0xee, %xmm0, %xmm1     # xmm1 = xmm0[2,3,2,3]"
+            },
+            {
+              "address": "0x13b5a1",
+              "op": "vpaddq\t%xmm1, %xmm0, %xmm0"
+            },
+            {
+              "address": "0x13b5a5",
+              "op": "vmovq\t%xmm0, %rcx"
+            },
+            {
+              "address": "0x13b5aa",
+              "op": "subq\t%rcx, %rax"
+            },
+            {
+              "address": "0x13b5ad",
+              "op": "movq\t%rax, 0xa0(%rsp)"
+            },
+            {
+              "address": "0x13b5b5",
+              "op": "testq\t%r13, %r13"
+            },
+            {
+              "address": "0x13b5b8",
+              "op": "jle\t0x13b793"
+            },
+            {
+              "address": "0x13b5be",
+              "op": "decq\t%r13"
+            },
+            {
+              "address": "0x13b5c1",
+              "op": "jne\t0x13b510"
+            },
+            {
+              "address": "0x13b5c7",
+              "op": "movq\t0xd8(%rsp), %r12"
+            },
+            {
+              "address": "0x13b5cf",
+              "op": "movq\t%r12, %rdi"
+            }
+          ]
+        },
+        "region": {
+          "address": "0x13d640",
+          "static_instructions": 7687,
+          "bytes_including_alignment": 37488,
+          "stack_allocation": [
+            "subq\t$0x278, %rsp            # imm = 0x278"
+          ],
+          "static_calls": 72,
+          "stack_reference_instructions": 396,
+          "vector_opcodes": {
+            "vpaddq": 183,
+            "vmovd": 120,
+            "vpbroadcastb": 92,
+            "vpand": 295,
+            "vpandn": 85,
+            "vpor": 561,
+            "vmovdqu": 415,
+            "vpsrlq": 251,
+            "vmovq": 270,
+            "vpackusdw": 252,
+            "vextracti128": 432,
+            "vpshufd": 432,
+            "vpunpcklqdq": 234,
+            "vpackuswb": 90,
+            "vpmovzxbq": 216,
+            "vpshufb": 540,
+            "vpbroadcastq": 5,
+            "vinserti128": 90,
+            "vbroadcasti128": 18,
+            "vpmovzxbw": 36,
+            "vpsllw": 18,
+            "vmovdqa": 190,
+            "vpsllq": 155,
+            "vpmovzxwq": 72,
+            "vzeroupper": 4,
+            "vpslldq": 36,
+            "vperm2i128": 18,
+            "vbroadcastsd": 1,
+            "vmovups": 11,
+            "vmovaps": 10,
+            "vpxor": 14
+          },
+          "all16_target_tail_skips": [
+            {
+              "call": "0x13e7ad",
+              "identity_skip": "0x13e7a1",
+              "skip_to": "0x13e7b2"
+            },
+            {
+              "call": "0x13e7ff",
+              "identity_skip": "0x13e7f3",
+              "skip_to": "0x13e804"
+            },
+            {
+              "call": "0x13e861",
+              "identity_skip": "0x13e855",
+              "skip_to": "0x13e866"
+            },
+            {
+              "call": "0x13e8b3",
+              "identity_skip": "0x13e8a7",
+              "skip_to": "0x13e8b8"
+            },
+            {
+              "call": "0x13e90d",
+              "identity_skip": "0x13e901",
+              "skip_to": "0x13e912"
+            },
+            {
+              "call": "0x13e95f",
+              "identity_skip": "0x13e953",
+              "skip_to": "0x13e964"
+            },
+            {
+              "call": "0x13e9b9",
+              "identity_skip": "0x13e9ad",
+              "skip_to": "0x13e9be"
+            },
+            {
+              "call": "0x13ea10",
+              "identity_skip": "0x13ea04",
+              "skip_to": "0x13ea15"
+            },
+            {
+              "call": "0x13ea6d",
+              "identity_skip": "0x13ea61",
+              "skip_to": "0x13ea72"
+            },
+            {
+              "call": "0x13eaca",
+              "identity_skip": "0x13eabe",
+              "skip_to": "0x13eacf"
+            },
+            {
+              "call": "0x13eb27",
+              "identity_skip": "0x13eb1b",
+              "skip_to": "0x13eb2c"
+            },
+            {
+              "call": "0x13eb84",
+              "identity_skip": "0x13eb78",
+              "skip_to": "0x13eb89"
+            },
+            {
+              "call": "0x13ebe1",
+              "identity_skip": "0x13ebd5",
+              "skip_to": "0x13ebe6"
+            },
+            {
+              "call": "0x13ec3e",
+              "identity_skip": "0x13ec32",
+              "skip_to": "0x13ec43"
+            },
+            {
+              "call": "0x13ec9b",
+              "identity_skip": "0x13ec8f",
+              "skip_to": "0x13eca0"
+            },
+            {
+              "call": "0x13ecf8",
+              "identity_skip": "0x13ecec",
+              "skip_to": "0x13ecfd"
+            }
+          ]
+        },
+        "coverage_helpers": {
+          "body": {
+            "address": "0x146ac0",
+            "static_instructions": 98,
+            "regular_trace": {
+              "instructions": 63,
+              "push_pop": 6,
+              "conditional_branches": 8,
+              "unconditional_branches": 1,
+              "executed_sha256": "db2786dfe1388bd6c9a70fce31469402eb6a4d12134cfaaec4e229b4f786531d",
+              "decisions": [
+                {
+                  "address": "0x146ae1",
+                  "op": "je\t0x146aff",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x146aef",
+                  "op": "jne\t0x146aff",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x146af9",
+                  "op": "je\t0x146bc3",
+                  "taken": false,
+                  "reason": "previous head plane differs from body plane0"
+                },
+                {
+                  "address": "0x146b3d",
+                  "op": "je\t0x146b5e",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x146b4e",
+                  "op": "jne\t0x146b59",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146b57",
+                  "op": "je\t0x146b8b",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x146b96",
+                  "op": "ja\t0x146b59",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x146ba2",
+                  "op": "ja\t0x146b59",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            },
+            "first_body_in_tile_trace": {
+              "instructions": 60,
+              "push_pop": 6,
+              "conditional_branches": 7,
+              "unconditional_branches": 1,
+              "executed_sha256": "d6c1ba23fa6837c6789b7dc3947d3ac783258b85c248dba26c99e530c4de74a2",
+              "decisions": [
+                {
+                  "address": "0x146ae1",
+                  "op": "je\t0x146aff",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x146aef",
+                  "op": "jne\t0x146aff",
+                  "taken": true,
+                  "reason": "first body call in tile follows substituted tail source"
+                },
+                {
+                  "address": "0x146b3d",
+                  "op": "je\t0x146b5e",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x146b4e",
+                  "op": "jne\t0x146b59",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146b57",
+                  "op": "je\t0x146b8b",
+                  "taken": true,
+                  "reason": "second span uses same body plane0"
+                },
+                {
+                  "address": "0x146b96",
+                  "op": "ja\t0x146b59",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x146ba2",
+                  "op": "ja\t0x146b59",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          },
+          "head0": {
+            "address": "0x146c20",
+            "static_instructions": 102,
+            "regular_trace": {
+              "instructions": 66,
+              "push_pop": 6,
+              "conditional_branches": 8,
+              "unconditional_branches": 1,
+              "executed_sha256": "a4bd37319a5e020b84afa151b09eb038f9d299f84f891ac70b709b1f4bb70506",
+              "decisions": [
+                {
+                  "address": "0x146c49",
+                  "op": "je\t0x146cb0",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x146c57",
+                  "op": "jne\t0x146cb0",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x146c61",
+                  "op": "jne\t0x146cb0",
+                  "taken": true,
+                  "reason": "previous original-source plane differs from this head plane"
+                },
+                {
+                  "address": "0x146cee",
+                  "op": "je\t0x146d47",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x146cff",
+                  "op": "jne\t0x146d42",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146d08",
+                  "op": "jne\t0x146d42",
+                  "taken": false,
+                  "reason": "second span uses same head plane"
+                },
+                {
+                  "address": "0x146d15",
+                  "op": "ja\t0x146d42",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x146d21",
+                  "op": "ja\t0x146d42",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          },
+          "head1": {
+            "address": "0x146d80",
+            "static_instructions": 102,
+            "regular_trace": {
+              "instructions": 66,
+              "push_pop": 6,
+              "conditional_branches": 8,
+              "unconditional_branches": 1,
+              "executed_sha256": "cc63fa893c95c8047b926951b5b3d75b518aad8f31502daa83001ebaccb8e867",
+              "decisions": [
+                {
+                  "address": "0x146da9",
+                  "op": "je\t0x146e10",
+                  "taken": false,
+                  "reason": "journal is nonempty"
+                },
+                {
+                  "address": "0x146db7",
+                  "op": "jne\t0x146e10",
+                  "taken": false,
+                  "reason": "same original source as previous entry"
+                },
+                {
+                  "address": "0x146dc1",
+                  "op": "jne\t0x146e10",
+                  "taken": true,
+                  "reason": "previous original-source plane differs from this head plane"
+                },
+                {
+                  "address": "0x146e4e",
+                  "op": "je\t0x146ea7",
+                  "taken": false,
+                  "reason": "journal remains nonempty"
+                },
+                {
+                  "address": "0x146e5f",
+                  "op": "jne\t0x146ea2",
+                  "taken": false,
+                  "reason": "second span has same original source"
+                },
+                {
+                  "address": "0x146e68",
+                  "op": "jne\t0x146ea2",
+                  "taken": false,
+                  "reason": "second span uses same head plane"
+                },
+                {
+                  "address": "0x146e75",
+                  "op": "ja\t0x146ea2",
+                  "taken": false,
+                  "reason": "previous start precedes next end"
+                },
+                {
+                  "address": "0x146e81",
+                  "op": "ja\t0x146ea2",
+                  "taken": true,
+                  "reason": "stride64 leaves a gap; next start exceeds previous end"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "dependency_closure": {
+    "method": "recursive literal project-include superset including all conditional arms; excludes unbuilt catalog targets; toolchain/system headers qualified by each native receipt",
+    "roots": [
+      "workbench/benchmarks/seriespack/ordinary.cpp",
+      "workbench/benchmarks/seriespack/stress_chain.cpp",
+      "workbench/benchmarks/seriespack/pipeline_packets.cpp",
+      "workbench/benchmarks/seriespack/placed_low.cpp",
+      "workbench/benchmarks/seriespack/placed_mid.cpp",
+      "workbench/benchmarks/seriespack/placed_wide.cpp",
+      "workbench/benchmarks/seriespack/main.cpp",
+      "ikea/src/seriespack/admission.cpp",
+      "ikea/src/seriespack/layout.cpp",
+      "ikea/src/seriespack/readers.cpp",
+      "ikea/src/overlap.cpp"
+    ],
+    "r3_after": {
+      "ikea/include/ikea/author/chain.h": "c0ba7660a7d787b244f0833f942ac9099924380ef3336dce0a7beef4658f5c81",
+      "ikea/include/ikea/bitset256.h": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af",
+      "ikea/include/ikea/bytes.h": "30472394c26ba69348ddd9a270407276954073d0e7e44e0f508d116896858b19",
+      "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+      "ikea/include/ikea/config.h": "b04b0a2c7f317c879fa3e10a66401df47995e4c2dba0d0bb5ddbb398c3744dde",
+      "ikea/include/ikea/description.h": "a1a9679870d2a5a90a730222253c0c9bcf6ef90badd92deba1ab261191811409",
+      "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+      "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+      "ikea/include/ikea/effects.h": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8",
+      "ikea/include/ikea/seriespack/author/chain.h": "255c74b66506da5a252503ae26c9bbaf76fa42b5851a8f136860272c0f571f7e",
+      "ikea/include/ikea/seriespack/author/expression.h": "6894feabe25eeaa2814835d68134decf34a96867b1e339a11c7b6f67c39ad0be",
+      "ikea/include/ikea/seriespack/author/filter.h": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329",
+      "ikea/include/ikea/seriespack/author/indexof.h": "2643915d39eb19271f0ff42ccf6a8769b51194e95ec69eeb9a1c4d2b9b2f832e",
+      "ikea/include/ikea/seriespack/author/local_equal.h": "22f7c2c7f1b72edb18ef705000ce72d12c8464975f9952742156b4d5d9a31d81",
+      "ikea/include/ikea/seriespack/author/mutation.h": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+      "ikea/include/ikea/seriespack/author/native.h": "fb7feef8a08131536d03f40e25ab312c3f7b8d7e095f1e1b14a7d8aec063822f",
+      "ikea/include/ikea/seriespack/author/store.h": "27eaffcdbba6eac3c197260f56e737cd06f8c8bf23cdc6c5911744e69a78c6d9",
+      "ikea/include/ikea/seriespack/author/summaries.h": "5fa83c2c583955099fff1a284446306c0b4a3ff47e86743b1509c711b985e3a9",
+      "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+      "ikea/include/ikea/seriespack/detail/dense_read.h": "6e7fc3da61456a93f881c03959540ba9d3cdb5065c91a807ccbdc88dcb0343ed",
+      "ikea/include/ikea/seriespack/detail/effects.h": "b71f7db70cc2132b075d78a6ab1dce3d53be5f4e84a21cf6aeea70b2a66a685d",
+      "ikea/include/ikea/seriespack/detail/filter8.h": "b89bd50fcbe6322769ebf9bdfb7e29e5ad979e116a40c9353852d3875b4acf6e",
+      "ikea/include/ikea/seriespack/detail/mutation/admission.h": "dfe17b5a507e3f3e4074a7caa8c7a26604e0584c93b6af04edbde76c756d4a73",
+      "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "4dc16d414fb0be164418d92e2efd6956f473621319fb0dfb4c6848bf3cd4eac6",
+      "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "d5b1b8ed1a4d87f692c8ef1b72386139822ff47cb3e383b9eb9d020460ca2033",
+      "ikea/include/ikea/seriespack/detail/mutation/composed.h": "133bcbccd845e139e1feed108f4747a0156a25e58bf53417687dde0d130e991a",
+      "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "e5e83a713e9333b6db48f19a3c85963612eb7e1c6d759b71370af38d07e76008",
+      "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+      "ikea/include/ikea/seriespack/detail/native/avx2/read.h": "577a12ff831559d8284d30d1d9d345d090abbf9257749bbe28525d778c6f29fe",
+      "ikea/include/ikea/seriespack/detail/native/avx2/write.h": "b6fe857d4b6140de65f5ccd419d1a604824d06bc2b1accbb3bee6b15bdc32bb5",
+      "ikea/include/ikea/seriespack/detail/native/avx512/read.h": "8e0d5abad1e06b5bcb1f7b9efa9358c02377292d0ff7934aa8281e90e74fbb03",
+      "ikea/include/ikea/seriespack/detail/native/avx512/write.h": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a",
+      "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107",
+      "ikea/include/ikea/seriespack/detail/native/neon/read.h": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d",
+      "ikea/include/ikea/seriespack/detail/native/neon/write.h": "6180c12f403137dde8ae31dbbedb429cb39e3a2143b34802d051aa43776dbee5",
+      "ikea/include/ikea/seriespack/detail/physical_source.h": "a79116d85b082e1848f4404e0edf72135877f02d8b291b7eeb4fa472be67e38e",
+      "ikea/include/ikea/seriespack/detail/placed_read.h": "0feeea6a0d838f84dd431cb0e20c1498ec93ba61764847a600b499fa648b1903",
+      "ikea/include/ikea/seriespack/detail/point.h": "124229fc8516abeba01aa010938386dcb08f8a4a09268b575f380d448df08f94",
+      "ikea/include/ikea/seriespack/detail/wire.h": "0e0e002323e319fc5f817bd4fe136435d0722539f7487b998597c971f631288d",
+      "ikea/include/ikea/seriespack/erased_reader.h": "1a19db339a91371ed7e8f833749a0eff018ef9d50ca2b7ec9825b6d362a8f259",
+      "ikea/include/ikea/seriespack/erased_writer.h": "9e2c890acf1e3b6d9a0a793d937a14a249e328f0600714f9b2b018c68e466b7f",
+      "ikea/include/ikea/seriespack/layout.h": "f29d77fa37da523e3c1893426aa8fccf6d2f3a1be9f9a770f902565228c5a09e",
+      "ikea/include/ikea/seriespack/layout_value.h": "9a338c94172055dfb5f273d417c68c2b5b17d6eddf21443ab2d115df8cddab24",
+      "ikea/include/ikea/seriespack/point.h": "52d736603fa6839086a110335f22b57c49c49080363ce203e51b23c3e82b7d96",
+      "ikea/include/ikea/seriespack/read.h": "60c6873b0b5de71ca11ac2a56b63833c36eaf753d155d30001e0c8c463a9ced9",
+      "ikea/include/ikea/seriespack/reader.h": "0c75e87eccc3ea07b19c88c31788af9741b22345319235ec09b58e19c8721b09",
+      "ikea/include/ikea/seriespack/selection.h": "6dabe389cb5772b0ed2eaa8a8ce0f8a89c9ee54ea064c598db7e49e934a34e87",
+      "ikea/include/ikea/seriespack/status.h": "e0553cbb17aca0d843371cb1fe3baf8a34fc71cc9091f4b23730552203118cbf",
+      "ikea/include/ikea/seriespack/view.h": "b29c5c35d680c5251d33053b883694de8fb2576982cff95d065d572b78973bf5",
+      "ikea/include/ikea/seriespack/write.h": "a31c5acfaa5e52bd20ed40c8fbfa2d82dd9bf67462d1f324d7ad5f3b518679e5",
+      "ikea/include/ikea/seriespack/writer.h": "9025e30f51622e3ed0a3ee3164996257683608bd5af904de1d7df75a1602b8d3",
+      "ikea/src/overlap.cpp": "ed327d3c978b5503fad1eaf158964a93033d7c9c243171bd790afd0d1eb1a4a2",
+      "ikea/src/seriespack/admission.cpp": "0785bd7902e0315a04c67d742ea26c9e9383fca937abaf733831207a5255ea20",
+      "ikea/src/seriespack/layout.cpp": "a2b33a3c8d618a8c3a5621229bf226105bc358389603f79b243d47d2f5810349",
+      "ikea/src/seriespack/readers.cpp": "94262616d019a741e1f35c054b76269620dc9603a91597ea26d6a6fa3ae72e02",
+      "ikea/test/seriespack/reference/layout.h": "2f6b28e406189a9f8d623b58294e3956764cd8a5423ae4b2d9c1e2a37817f4b9",
+      "ikea/test/seriespack/reference/physical.h": "1e3118d45f89a6419b7c5289dba0f213c5c56516bd7a24083c6aa9d6ec84e239",
+      "workbench/benchmarks/seriespack/fixture.h": "95efec5c01a1c594ff2eddcf6c92efea8b42cb1bedf9654edec2b026acbd85b5",
+      "workbench/benchmarks/seriespack/main.cpp": "6d91198f6fa03b8f7e8359f8a80c355c8467267b6818a88f51d9813b6d6e9a49",
+      "workbench/benchmarks/seriespack/ordinary.cpp": "b0c20062e8990d1997e0b5497537db1dc22062692f623334b57926abdb5b06a8",
+      "workbench/benchmarks/seriespack/pipeline_packets.cpp": "ad67a5325f382b091ae2f4a7ceb6c7bf894d272df7c84eaba33a4b7a5f3977a3",
+      "workbench/benchmarks/seriespack/pipeline_recipe.h": "c40aa506a464163217a91f47396b87b11c995e5a587f895d6db1dc0df8e2a2cf",
+      "workbench/benchmarks/seriespack/placed_benchmark.h": "becc74c1579f6d1475ae8d1c829e2c88b34781d042843d6730727bc0afd8a861",
+      "workbench/benchmarks/seriespack/placed_low.cpp": "93c6865d32a2bb9ef3c0464d01f90467301c10718bd6e2f32b68cf3def4b0a2f",
+      "workbench/benchmarks/seriespack/placed_mid.cpp": "d595eb215afd56e5a6ad78feddd0629bbb8c6bdcbd5f8f038c8794431dc86c4a",
+      "workbench/benchmarks/seriespack/placed_wide.cpp": "9049327592c464ef105b0a0900c9e7634073e2fcd55adef3cdc1fd824da73377",
+      "workbench/benchmarks/seriespack/stress_chain.cpp": "5819024f98a313b679777fc52ba06a6e30ba00a4251d3d26eae7617f89d3325f"
+    },
+    "r4_after": {
+      "ikea/include/ikea/author/chain.h": "c0ba7660a7d787b244f0833f942ac9099924380ef3336dce0a7beef4658f5c81",
+      "ikea/include/ikea/bitset256.h": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af",
+      "ikea/include/ikea/bytes.h": "30472394c26ba69348ddd9a270407276954073d0e7e44e0f508d116896858b19",
+      "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+      "ikea/include/ikea/config.h": "b04b0a2c7f317c879fa3e10a66401df47995e4c2dba0d0bb5ddbb398c3744dde",
+      "ikea/include/ikea/description.h": "a1a9679870d2a5a90a730222253c0c9bcf6ef90badd92deba1ab261191811409",
+      "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+      "ikea/include/ikea/detail/overlap.h": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44",
+      "ikea/include/ikea/effects.h": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8",
+      "ikea/include/ikea/seriespack/author/chain.h": "255c74b66506da5a252503ae26c9bbaf76fa42b5851a8f136860272c0f571f7e",
+      "ikea/include/ikea/seriespack/author/expression.h": "6894feabe25eeaa2814835d68134decf34a96867b1e339a11c7b6f67c39ad0be",
+      "ikea/include/ikea/seriespack/author/filter.h": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329",
+      "ikea/include/ikea/seriespack/author/indexof.h": "2643915d39eb19271f0ff42ccf6a8769b51194e95ec69eeb9a1c4d2b9b2f832e",
+      "ikea/include/ikea/seriespack/author/local_equal.h": "22f7c2c7f1b72edb18ef705000ce72d12c8464975f9952742156b4d5d9a31d81",
+      "ikea/include/ikea/seriespack/author/mutation.h": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+      "ikea/include/ikea/seriespack/author/native.h": "fb7feef8a08131536d03f40e25ab312c3f7b8d7e095f1e1b14a7d8aec063822f",
+      "ikea/include/ikea/seriespack/author/store.h": "27eaffcdbba6eac3c197260f56e737cd06f8c8bf23cdc6c5911744e69a78c6d9",
+      "ikea/include/ikea/seriespack/author/summaries.h": "5fa83c2c583955099fff1a284446306c0b4a3ff47e86743b1509c711b985e3a9",
+      "ikea/include/ikea/seriespack/detail/admission.h": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5",
+      "ikea/include/ikea/seriespack/detail/dense_read.h": "6e7fc3da61456a93f881c03959540ba9d3cdb5065c91a807ccbdc88dcb0343ed",
+      "ikea/include/ikea/seriespack/detail/effects.h": "b71f7db70cc2132b075d78a6ab1dce3d53be5f4e84a21cf6aeea70b2a66a685d",
+      "ikea/include/ikea/seriespack/detail/filter8.h": "b89bd50fcbe6322769ebf9bdfb7e29e5ad979e116a40c9353852d3875b4acf6e",
+      "ikea/include/ikea/seriespack/detail/mutation/admission.h": "dfe17b5a507e3f3e4074a7caa8c7a26604e0584c93b6af04edbde76c756d4a73",
+      "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": "4dc16d414fb0be164418d92e2efd6956f473621319fb0dfb4c6848bf3cd4eac6",
+      "ikea/include/ikea/seriespack/detail/mutation/assignment.h": "d5b1b8ed1a4d87f692c8ef1b72386139822ff47cb3e383b9eb9d020460ca2033",
+      "ikea/include/ikea/seriespack/detail/mutation/composed.h": "3f0bc7073215c6c0cf028161b048fc5c9c876ab8076d8c76a75c689230e26f3a",
+      "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": "e5e83a713e9333b6db48f19a3c85963612eb7e1c6d759b71370af38d07e76008",
+      "ikea/include/ikea/seriespack/detail/mutation/fields.h": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a",
+      "ikea/include/ikea/seriespack/detail/native/avx2/read.h": "577a12ff831559d8284d30d1d9d345d090abbf9257749bbe28525d778c6f29fe",
+      "ikea/include/ikea/seriespack/detail/native/avx2/write.h": "b6fe857d4b6140de65f5ccd419d1a604824d06bc2b1accbb3bee6b15bdc32bb5",
+      "ikea/include/ikea/seriespack/detail/native/avx512/read.h": "8e0d5abad1e06b5bcb1f7b9efa9358c02377292d0ff7934aa8281e90e74fbb03",
+      "ikea/include/ikea/seriespack/detail/native/avx512/write.h": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a",
+      "ikea/include/ikea/seriespack/detail/native/neon/groups.h": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107",
+      "ikea/include/ikea/seriespack/detail/native/neon/read.h": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d",
+      "ikea/include/ikea/seriespack/detail/native/neon/write.h": "6180c12f403137dde8ae31dbbedb429cb39e3a2143b34802d051aa43776dbee5",
+      "ikea/include/ikea/seriespack/detail/physical_source.h": "a79116d85b082e1848f4404e0edf72135877f02d8b291b7eeb4fa472be67e38e",
+      "ikea/include/ikea/seriespack/detail/placed_read.h": "0feeea6a0d838f84dd431cb0e20c1498ec93ba61764847a600b499fa648b1903",
+      "ikea/include/ikea/seriespack/detail/point.h": "124229fc8516abeba01aa010938386dcb08f8a4a09268b575f380d448df08f94",
+      "ikea/include/ikea/seriespack/detail/wire.h": "0e0e002323e319fc5f817bd4fe136435d0722539f7487b998597c971f631288d",
+      "ikea/include/ikea/seriespack/erased_reader.h": "1a19db339a91371ed7e8f833749a0eff018ef9d50ca2b7ec9825b6d362a8f259",
+      "ikea/include/ikea/seriespack/erased_writer.h": "9e2c890acf1e3b6d9a0a793d937a14a249e328f0600714f9b2b018c68e466b7f",
+      "ikea/include/ikea/seriespack/layout.h": "f29d77fa37da523e3c1893426aa8fccf6d2f3a1be9f9a770f902565228c5a09e",
+      "ikea/include/ikea/seriespack/layout_value.h": "9a338c94172055dfb5f273d417c68c2b5b17d6eddf21443ab2d115df8cddab24",
+      "ikea/include/ikea/seriespack/point.h": "52d736603fa6839086a110335f22b57c49c49080363ce203e51b23c3e82b7d96",
+      "ikea/include/ikea/seriespack/read.h": "60c6873b0b5de71ca11ac2a56b63833c36eaf753d155d30001e0c8c463a9ced9",
+      "ikea/include/ikea/seriespack/reader.h": "0e740cd5b04a215e5e09e1abe75ec1ef91516d04d0e63abc5e701b448f6deb37",
+      "ikea/include/ikea/seriespack/selection.h": "6dabe389cb5772b0ed2eaa8a8ce0f8a89c9ee54ea064c598db7e49e934a34e87",
+      "ikea/include/ikea/seriespack/status.h": "e0553cbb17aca0d843371cb1fe3baf8a34fc71cc9091f4b23730552203118cbf",
+      "ikea/include/ikea/seriespack/view.h": "b29c5c35d680c5251d33053b883694de8fb2576982cff95d065d572b78973bf5",
+      "ikea/include/ikea/seriespack/write.h": "a31c5acfaa5e52bd20ed40c8fbfa2d82dd9bf67462d1f324d7ad5f3b518679e5",
+      "ikea/include/ikea/seriespack/writer.h": "9025e30f51622e3ed0a3ee3164996257683608bd5af904de1d7df75a1602b8d3",
+      "ikea/src/overlap.cpp": "ed327d3c978b5503fad1eaf158964a93033d7c9c243171bd790afd0d1eb1a4a2",
+      "ikea/src/seriespack/admission.cpp": "0785bd7902e0315a04c67d742ea26c9e9383fca937abaf733831207a5255ea20",
+      "ikea/src/seriespack/layout.cpp": "a2b33a3c8d618a8c3a5621229bf226105bc358389603f79b243d47d2f5810349",
+      "ikea/src/seriespack/readers.cpp": "94262616d019a741e1f35c054b76269620dc9603a91597ea26d6a6fa3ae72e02",
+      "ikea/test/seriespack/reference/layout.h": "2f6b28e406189a9f8d623b58294e3956764cd8a5423ae4b2d9c1e2a37817f4b9",
+      "ikea/test/seriespack/reference/physical.h": "1e3118d45f89a6419b7c5289dba0f213c5c56516bd7a24083c6aa9d6ec84e239",
+      "workbench/benchmarks/seriespack/fixture.h": "95efec5c01a1c594ff2eddcf6c92efea8b42cb1bedf9654edec2b026acbd85b5",
+      "workbench/benchmarks/seriespack/main.cpp": "6d91198f6fa03b8f7e8359f8a80c355c8467267b6818a88f51d9813b6d6e9a49",
+      "workbench/benchmarks/seriespack/ordinary.cpp": "b0c20062e8990d1997e0b5497537db1dc22062692f623334b57926abdb5b06a8",
+      "workbench/benchmarks/seriespack/pipeline_packets.cpp": "ad67a5325f382b091ae2f4a7ceb6c7bf894d272df7c84eaba33a4b7a5f3977a3",
+      "workbench/benchmarks/seriespack/pipeline_recipe.h": "c40aa506a464163217a91f47396b87b11c995e5a587f895d6db1dc0df8e2a2cf",
+      "workbench/benchmarks/seriespack/placed_benchmark.h": "becc74c1579f6d1475ae8d1c829e2c88b34781d042843d6730727bc0afd8a861",
+      "workbench/benchmarks/seriespack/placed_low.cpp": "93c6865d32a2bb9ef3c0464d01f90467301c10718bd6e2f32b68cf3def4b0a2f",
+      "workbench/benchmarks/seriespack/placed_mid.cpp": "d595eb215afd56e5a6ad78feddd0629bbb8c6bdcbd5f8f038c8794431dc86c4a",
+      "workbench/benchmarks/seriespack/placed_wide.cpp": "9049327592c464ef105b0a0900c9e7634073e2fcd55adef3cdc1fd824da73377",
+      "workbench/benchmarks/seriespack/stress_chain.cpp": "5819024f98a313b679777fc52ba06a6e30ba00a4251d3d26eae7617f89d3325f"
+    },
+    "changes": {
+      "ikea/include/ikea/seriespack/detail/mutation/composed.h": {
+        "r3": "133bcbccd845e139e1feed108f4747a0156a25e58bf53417687dde0d130e991a",
+        "r4": "3f0bc7073215c6c0cf028161b048fc5c9c876ab8076d8c76a75c689230e26f3a"
+      },
+      "ikea/include/ikea/seriespack/reader.h": {
+        "r3": "0c75e87eccc3ea07b19c88c31788af9741b22345319235ec09b58e19c8721b09",
+        "r4": "0e740cd5b04a215e5e09e1abe75ec1ef91516d04d0e63abc5e701b448f6deb37"
+      }
+    }
+  },
+  "findings": [
+    "Both AVX512 point timed loops are byte-identical including all indirect-call setup/repeated source and function-pointer stack loads, query load, accumulator and loop branches. Actual selected dense_point callees are byte-identical too, with no dependent descriptor load, extra branch or spill. Their addresses change; caller inner loops and both callees move by32 modulo64. This bounds added-instruction explanations but does not dismiss observed bimodality or prove a predictor/layout cause.",
+    "For actual AVX2 all-row substituted mutation drivers, compiler devirtualizes the bound operation directly to the selected region: 41 instructions between benchmark timer calls in each arm, same opcode schedule. Pointer/stack slots differ; no additional dispatch/selection work is introduced in this outer loop.",
+    "Each full256-row substituted tile executes16 body and16 head0 coverage helpers (k63 also16 head1), each covering two physical8-row original tiles separated by stride64. Real body/head spans are disjoint and append twice. The same-source target-tail helper is skipped at all16 sites in both original before and finalR4; R3 alone had unconditional no-op calls.",
+    "Regular actual body path grows56\u219263 instructions and head paths59\u219266, adding one callee-saved push/pop pair, one unconditional branch and register bookkeeping, with eight conditional branches unchanged. First body after substituted tail also adds7. This yields7168 additional traced helper instructions per8192-row k31 operation and10752 for k63; these are source-derived instruction counts, not PMU events or a cycle estimate. Main region shrinks and may offset other work.",
+    "The helper overhead is a concrete remaining lead for AVX2 losses, not an attribution of the complete5\u20137% elapsed loss. Isolated flat-journal lowering ablation is being prepared separately; no production alignment or blanket inlining is selected."
+  ]
+}

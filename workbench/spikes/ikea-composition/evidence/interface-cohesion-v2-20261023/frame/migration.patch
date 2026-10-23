@@ -1,0 +1,267 @@
+--- before/workbench/spikes/ikea-frame/encoding/material.h
++++ after/workbench/spikes/ikea-frame/encoding/material.h
+@@ -215,15 +215,15 @@
+     std::vector<std::uint8_t> payload;
+     // Retained bindings, filled only under options.bind_decoders. Owner
+     // operations below never read them.
+-    std::vector<sp::decoder<u64>> decoders;            // per block with a plane
++    std::vector<sp::erased_reader<u64>> decoders;            // per block with a plane
+     // Narrowest output lane per block (u8/u16/u32), for narrow-lane reduction.
+-    std::vector<std::optional<sp::decoder<std::uint8_t>>> d8;
+-    std::vector<std::optional<sp::decoder<std::uint16_t>>> d16;
+-    std::vector<std::optional<sp::decoder<std::uint32_t>>> d32;
+-    std::vector<std::optional<sp::decoder<u64>>> exceptions;  // patched, delta_patched
++    std::vector<std::optional<sp::erased_reader<std::uint8_t>>> d8;
++    std::vector<std::optional<sp::erased_reader<std::uint16_t>>> d16;
++    std::vector<std::optional<sp::erased_reader<std::uint32_t>>> d32;
++    std::vector<std::optional<sp::erased_reader<u64>>> exceptions;  // patched, delta_patched
+     std::vector<dictionary_part> parts;  // empty unless options.dictionary
+     std::vector<u64> coded;              // one bit per block; empty unless options.dictionary
+-    std::vector<std::optional<sp::decoder<u64>>> dictionaries;  // per part with a dictionary
++    std::vector<std::optional<sp::erased_reader<u64>>> dictionaries;  // per part with a dictionary
+     std::size_t rows = 0;
+     // Retained binding state: the binding vectors' capacities (not charged to
+     // the image's bytes).
+--- before/workbench/spikes/ikea-frame/encoding/material.cpp
++++ after/workbench/spikes/ikea-frame/encoding/material.cpp
+@@ -583,9 +583,9 @@
+         c.dictionaries.emplace_back();
+         if (!p.count)
+             continue;
+-        auto decoder = sp::bind_decoder<u64>(sp::dense_input{
++        auto decoder = sp::bind_reader<u64>(sp::dense_input{
+             p.width, sp::geometry::local,
+-            std::span<const std::uint8_t>(c.payload).subspan(p.offset, plane_bytes(p.width, p.count)),
++            std::as_bytes(std::span<const std::uint8_t>(c.payload).subspan(p.offset, plane_bytes(p.width, p.count))),
+             p.count});
+         if (!decoder)
+             std::abort();
+@@ -606,9 +606,9 @@
+         const std::size_t at = d.offset + (d.type == kind::arrival ? arrival_flag_bytes : 0);
+         const sp::dense_input input{
+             d.width, sp::geometry::local,
+-            std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(d.width, d.count)),
++            std::as_bytes(std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(d.width, d.count))),
+             d.count};
+-        auto decoder = sp::bind_decoder<u64>(input);
++        auto decoder = sp::bind_reader<u64>(input);
+         if (!decoder)
+             std::abort();
+         c.decoders.push_back(*decoder);
+@@ -618,9 +618,9 @@
+             const std::size_t b = c.decoders.size() - 1;
+             const auto p = d.type == kind::patched ? patches(c, b) : delta_patches(c, b);
+             const unsigned ew = p.value_width;  // stored in the body
+-            auto exc = sp::bind_decoder<u64>(sp::dense_input{
++            auto exc = sp::bind_reader<u64>(sp::dense_input{
+                 ew, sp::geometry::local,
+-                std::span<const std::uint8_t>(p.values, plane_bytes(ew, p.n)), p.n});
++                std::as_bytes(std::span<const std::uint8_t>(p.values, plane_bytes(ew, p.n))), p.n});
+             if (!exc)
+                 std::abort();
+             c.exceptions.back() = *exc;
+@@ -629,11 +629,11 @@
+         if (d.type == kind::arrival)
+             continue;
+         if (d.width <= 8)
+-            c.d8.back() = *sp::bind_decoder<std::uint8_t>(input);
++            c.d8.back() = *sp::bind_reader<std::uint8_t>(input);
+         else if (d.width <= 16)
+-            c.d16.back() = *sp::bind_decoder<std::uint16_t>(input);
++            c.d16.back() = *sp::bind_reader<std::uint16_t>(input);
+         else if (d.width <= 32)
+-            c.d32.back() = *sp::bind_decoder<std::uint32_t>(input);
++            c.d32.back() = *sp::bind_reader<std::uint32_t>(input);
+     }
+     return c;
+ }
+--- before/workbench/spikes/ikea-frame/encoding/kernels.cpp
++++ after/workbench/spikes/ikea-frame/encoding/kernels.cpp
+@@ -12,13 +12,13 @@
+ namespace sp = ikea::seriespack;
+ 
+ template <unsigned K> std::uint64_t point(const std::uint8_t *data, std::size_t row) {
+-    return sp::bind_decoder<std::uint64_t>(sp::dense_source<sp::format<K>>{data, row + 1})
++    return sp::bind_reader<std::uint64_t>(sp::dense_source<sp::layout<K>>{reinterpret_cast<const std::byte*>(data), row + 1})
+         .get_unchecked(row);
+ }
+ 
+ template <unsigned K, class U = std::uint64_t>
+ void range(const std::uint8_t *data, std::size_t first, std::size_t take, U *out) {
+-    sp::bind_decoder<U>(sp::dense_source<sp::format<K>>{data, first + take})
++    sp::bind_reader<U>(sp::dense_source<sp::layout<K>>{reinterpret_cast<const std::byte*>(data), first + take})
+         .read_unchecked(first, take, out);
+ }
+ 
+@@ -34,12 +34,12 @@
+ template <unsigned K> std::uint64_t sum(const std::uint8_t *data, unsigned take) {
+     if (!take)
+         return 0;
+-    const sp::dense_source<sp::format<K>> source{data, (take + 15) / 16 * 16};
++    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), (take + 15) / 16 * 16};
+ #if defined(__aarch64__) || defined(__AVX2__)
+     // Reconstruct native 16-row packets and reduce them in registers; no
+     // widened scratch array.
+-    namespace cp = sp::composition;
+-    const auto expression = cp::describe(source);
++    namespace cp = sp::author;
++    const auto expression = cp::expression(source);
+     cp::native_ops ops;
+     sp::native::sum_state total;
+     for (unsigned done = 0; done < take; done += 16) {
+@@ -50,7 +50,7 @@
+     }
+     return total.finish();
+ #else
+-    const auto decoder = sp::bind_decoder<std::uint64_t>(source);
++    const auto decoder = sp::bind_reader<std::uint64_t>(source);
+     std::uint64_t total = 0;
+     for (unsigned i = 0; i < take; ++i)
+         total += decoder.get_unchecked(i);
+@@ -60,13 +60,13 @@
+ 
+ template <unsigned K>
+ std::uint64_t count_ge(const std::uint8_t *data, unsigned take, std::uint64_t rhs) {
+-    const sp::dense_source<sp::format<K>> source{data, take};
++    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), take};
+     std::uint64_t total = 0;
+     for (unsigned first = 0; first < take; first += 64) {
+         const unsigned n = std::min(64u, take - first);
+         const std::uint64_t active = n == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << n) - 1;
+-        total += std::popcount(sp::filter_unchecked<ikea::comparison::greater_equal>(
+-            source, first, n, rhs, active));
++        total += std::popcount(sp::author::filter_unchecked<ikea::comparison::greater_equal>(
++            sp::author::expression(source), first, n, rhs, active));
+     }
+     return total;
+ }
+@@ -75,10 +75,10 @@
+ // with no selected row is not read; others reduce under mask16 of their
+ // selection bits.
+ template <unsigned K> std::uint64_t masked_sum(const std::uint8_t *data, const std::uint64_t *selected) {
+-    const sp::dense_source<sp::format<K>> source{data, 256};
++    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), 256};
+ #if defined(__aarch64__) || defined(__AVX2__)
+-    namespace cp = sp::composition;
+-    const auto expression = cp::describe(source);
++    namespace cp = sp::author;
++    const auto expression = cp::expression(source);
+     cp::native_ops ops;
+     sp::native::sum_state total;
+     for (unsigned done = 0; done < 256; done += 16) {
+@@ -90,7 +90,7 @@
+     }
+     return total.finish();
+ #else
+-    const auto decoder = sp::bind_decoder<std::uint64_t>(source);
++    const auto decoder = sp::bind_reader<std::uint64_t>(source);
+     std::uint64_t total = 0;
+     for (unsigned i = 0; i < 256; ++i)
+         if (selected[i / 64] >> (i % 64) & 1)
+@@ -101,11 +101,11 @@
+ 
+ template <ikea::comparison Op, unsigned K>
+ std::uint64_t masked_count(const std::uint8_t *data, const std::uint64_t *selected, std::uint64_t rhs) {
+-    const sp::dense_source<sp::format<K>> source{data, 256};
++    const sp::dense_source<sp::layout<K>> source{reinterpret_cast<const std::byte*>(data), 256};
+     std::uint64_t total = 0;
+     for (unsigned word = 0; word < 4; ++word)
+         if (selected[word])
+-            total += std::popcount(sp::filter_unchecked<Op>(source, word * 64, 64, rhs, selected[word]) &
++            total += std::popcount(sp::author::filter_unchecked<Op>(sp::author::expression(source), word * 64, 64, rhs, selected[word]) &
+                                    selected[word]);
+     return total;
+ }
+--- before/workbench/spikes/ikea-frame/encoding/packing.cpp
++++ after/workbench/spikes/ikea-frame/encoding/packing.cpp
+@@ -24,21 +24,21 @@
+         constexpr unsigned K = decltype(index)::value + 1;
+         if (k != K)
+             return;
+-        using F = sp::format<K>;
++        using F = sp::layout<K>;
+         const std::size_t bytes = plane_bytes(K, values.size());
+-        auto v = sp::view<F, std::uint8_t>::attach(
+-            values.size(), {{{std::span(out, bytes), F::tile_bytes}, {}, {}}});
++        auto v = sp::view<F>::attach(
++            values.size(), {{{std::as_writable_bytes(std::span(out, bytes)), F::tile_bytes}, {}, {}}});
+         if (!v)
+             std::abort();
+-        auto prepared = sp::bind_mutation(*v);
++        auto prepared = sp::bind_writer(*v);
+         if (!prepared)
+             std::abort();
+-        auto write = prepared->template erase<u64, sp::no_summary>();
+-        auto capacity = prepared->construction_effect_capacity();
++        auto write = prepared->template erase<u64, sp::author::no_summary>();
++        auto capacity = prepared->effect_capacity_initialize();
+         if (!capacity)
+             std::abort();
+-        std::vector<sp::composition::owner_write> records(*capacity);
+-        ikea::source_write_journal effects{records};
++        std::vector<ikea::journal::entry> records(*capacity);
++        ikea::journal effects{records};
+         if (!write.initialize(values, effects))
+             std::abort();
+         done = true;
+--- before/workbench/spikes/ikea-frame/encoding/masked_access_check.cpp
++++ after/workbench/spikes/ikea-frame/encoding/masked_access_check.cpp
+@@ -70,9 +70,9 @@
+             auto *bytes = payload->data + b * payload->page;
+             std::memset(bytes, static_cast<int>(b + 1), block_rows);
+             const sp::dense_input input{8, sp::geometry::local,
+-                                       std::span<const std::uint8_t>(bytes, block_rows), block_rows};
+-            auto wide = sp::bind_decoder<u64>(input);
+-            auto narrow = sp::bind_decoder<std::uint8_t>(input);
++                                       std::as_bytes(std::span<const std::uint8_t>(bytes, block_rows)), block_rows};
++            auto wide = sp::bind_reader<u64>(input);
++            auto narrow = sp::bind_reader<std::uint8_t>(input);
+             need(wide.has_value() && narrow.has_value(), "decoder binding failed");
+             const auto offset = bytes - material->payload.data();
+             need(offset >= 0 && static_cast<std::size_t>(offset) <= UINT32_MAX, "offset overflow");
+@@ -116,8 +116,8 @@
+             auto *data = payload->data + b * payload->page;
+             std::memset(data, b % 2, block_rows);
+             material->blocks.push_back({0, offset(data), block_rows, kind::packed, 8});
+-            const auto decoder = sp::bind_decoder<u64>(sp::dense_input{
+-                8, sp::geometry::local, std::span<const std::uint8_t>(data, block_rows), block_rows});
++            const auto decoder = sp::bind_reader<u64>(sp::dense_input{
++                8, sp::geometry::local, std::as_bytes(std::span<const std::uint8_t>(data, block_rows)), block_rows});
+             need(decoder.has_value(), "code plane binding failed");
+             material->decoders.push_back(*decoder);
+             material->coded[b / 64] |= u64{1} << (b % 64);
+@@ -126,8 +126,8 @@
+             auto *data = payload->data + (count + p) * payload->page;
+             data[0] = 7; data[1] = 19;
+             material->parts.push_back({1000u * (p + 1), offset(data), 2, 8});
+-            const auto decoder = sp::bind_decoder<u64>(sp::dense_input{
+-                8, sp::geometry::local, std::span<const std::uint8_t>(data, 8), 2});
++            const auto decoder = sp::bind_reader<u64>(sp::dense_input{
++                8, sp::geometry::local, std::as_bytes(std::span<const std::uint8_t>(data, 8)), 2});
+             need(decoder.has_value(), "dictionary plane binding failed");
+             material->dictionaries.emplace_back(*decoder);
+         }
+--- before/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp
++++ after/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp
+@@ -1,5 +1,5 @@
+ #include "phase_plane.h"
+-#include <ikea/seriespack/point.h>
++#include <ikea/seriespack/author/store.h>
+ #include <array>
+ #include <cstdlib>
+ #include <utility>
+@@ -9,11 +9,11 @@
+ namespace sp = ikea::seriespack;
+ using Replace = void(*)(unsigned,std::uint8_t*,std::span<const PlaneEdit>);
+ template<unsigned K> void replace(unsigned rows, std::uint8_t* body, std::span<const PlaneEdit> edits) {
+-    using F=sp::format<K>;
++    using F=sp::layout<K>;
+     const auto bytes=(rows+7)/8*K;
+     // The admitted source and exact private copy already prove this placement.
+-    auto view=sp::view<F,std::uint8_t>::assume_valid(rows,{{{std::span(body,bytes),F::tile_bytes},{},{}}});
+-    for (const auto& e:edits) sp::set_unchecked(view,e.row,e.value);
++    auto view=sp::view<F>::attach_unchecked(rows,{{{std::as_writable_bytes(std::span(body,bytes)),F::tile_bytes},{},{}}});
++    for (const auto& e:edits) sp::author::store_unchecked(view,e.row,e.value);
+ }
+ template<std::size_t... I> constexpr auto entries(std::index_sequence<I...>) {
+     return std::array<Replace,sizeof...(I)>{replace<I+1>...};

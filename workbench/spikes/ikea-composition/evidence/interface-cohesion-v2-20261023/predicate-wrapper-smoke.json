@@ -1,0 +1,39 @@
+{
+  "actual_proc_cmdline": [
+    "ikea_predicate_filters",
+    "-c",
+    "from pathlib import Path; import json; print(json.dumps([x.decode() for x in Path(\"/proc/self/cmdline\").read_bytes().rstrip(b\"\\0\").split(b\"\\0\")]))",
+    "--check",
+    "value with spaces"
+  ],
+  "captured_runner_sha256": "8a89c6d16200765ae8a0d005c326f5cc6a8432047f9b91b50de2e3976c2f3289",
+  "command": [
+    "taskset",
+    "-c",
+    "8",
+    "bash",
+    "-c",
+    "exec -a \"$0\" \"$@\"",
+    "ikea_predicate_filters",
+    "/usr/bin/python3",
+    "-c",
+    "from pathlib import Path; import json; print(json.dumps([x.decode() for x in Path(\"/proc/self/cmdline\").read_bytes().rstrip(b\"\\0\").split(b\"\\0\")]))",
+    "--check",
+    "value with spaces"
+  ],
+  "native_binary_sha256": "cdeab89b481762251305cea099aebaeeb9902c420aa482783f37ec528cf66e2f",
+  "native_command": [
+    "taskset",
+    "-c",
+    "8",
+    "bash",
+    "-c",
+    "exec -a \"$0\" \"$@\"",
+    "ikea_predicate_filters",
+    "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/predicate-tight-address-r4/native-check/check"
+  ],
+  "native_returncode": 0,
+  "native_stdout": "handle-boundaries: raw/checked/stored/crowded commands, rebind refusal, wire/effects, exact-tail and protected-none checks passed\n",
+  "returncode": 0,
+  "scope": "No timing/compile; fixed exec-a argv0 and argument smoke plus existing optimized NEON independent correctness ELF. Workers additionally validate actual filter/block CLI before timing."
+}

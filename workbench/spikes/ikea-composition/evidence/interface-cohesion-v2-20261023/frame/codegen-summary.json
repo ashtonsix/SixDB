@@ -1,0 +1,1093 @@
+{
+  "scope": "Literal object comparison, including every function/data byte and relocation; no timing or linked-placement inference.",
+  "compiler": "Clang21.1.8",
+  "flags": "O3; explicit target/tune; automatic vectorization; strict FP; hidden visibility; function/data sections; identical source prefix maps.",
+  "normalization": "Documented prior/current Ikea API/type role names only. Itanium constructor/destructor ABI entry identities retained; no byte, enum-immediate or relocation omission.",
+  "pairs": [
+    {
+      "profile": "neon-v2",
+      "source": "phase-plane",
+      "functions": {
+        "total": 65,
+        "exact": 65
+      },
+      "constants": {
+        "total": 2,
+        "exact": 2
+      },
+      "unwind": {
+        "total": 1,
+        "exact": 1
+      },
+      "objects": {
+        "before": {
+          "sha256": "4fad8d89dbc2016b7ee65eb7cffa30d1f8ee2ad13a3b523070cfc247a304fbb8",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/phase-plane.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/phase-plane.o"
+          ]
+        },
+        "after": {
+          "sha256": "4fad8d89dbc2016b7ee65eb7cffa30d1f8ee2ad13a3b523070cfc247a304fbb8",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/phase-plane.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/phase-plane.o"
+          ]
+        }
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "source": "phase-plane",
+      "functions": {
+        "total": 65,
+        "exact": 65
+      },
+      "constants": {
+        "total": 4,
+        "exact": 4
+      },
+      "unwind": {
+        "total": 0,
+        "exact": 0
+      },
+      "objects": {
+        "before": {
+          "sha256": "c62a877e2223c3dbfc99817f18e05b37a005dbc7772c427caa127ffd5042bf2d",
+          "command": [
+            "clang++-21",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx2-zen5/before/phase-plane.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx2-zen5/before/phase-plane.o"
+          ]
+        },
+        "after": {
+          "sha256": "c62a877e2223c3dbfc99817f18e05b37a005dbc7772c427caa127ffd5042bf2d",
+          "command": [
+            "clang++-21",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=x86-64-v3",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx2-zen5/after/phase-plane.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx2-zen5/after/phase-plane.o"
+          ]
+        }
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "source": "phase-plane",
+      "functions": {
+        "total": 65,
+        "exact": 65
+      },
+      "constants": {
+        "total": 5,
+        "exact": 5
+      },
+      "unwind": {
+        "total": 0,
+        "exact": 0
+      },
+      "objects": {
+        "before": {
+          "sha256": "69510ca461ae60331a522acce7ee93d8243ac5227460f0c099d721f40a12f157",
+          "command": [
+            "clang++-21",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx512-zen5/before/phase-plane.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx512-zen5/before/phase-plane.o"
+          ]
+        },
+        "after": {
+          "sha256": "69510ca461ae60331a522acce7ee93d8243ac5227460f0c099d721f40a12f157",
+          "command": [
+            "clang++-21",
+            "--target=x86_64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=znver5",
+            "-mtune=znver5",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=1",
+            "-DSIXDB_TUNE_NEOVERSE_V2=0",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx512-zen5/after/phase-plane.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/avx512-zen5/after/phase-plane.o"
+          ]
+        }
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "source": "phase-material",
+      "functions": {
+        "total": 415,
+        "exact": 414
+      },
+      "constants": {
+        "total": 8,
+        "exact": 8
+      },
+      "unwind": {
+        "total": 113,
+        "exact": 113
+      },
+      "difference": {
+        "function_role": "Intervals checked range used by Frame code_count::masked",
+        "size_before": 388,
+        "size_after": 388,
+        "changed_instructions": [
+          {
+            "offset": 16,
+            "before": "mov w0,#5",
+            "after": "mov w0,#7"
+          },
+          {
+            "offset": 28,
+            "before": "mov x0,#5",
+            "after": "mov x0,#7"
+          }
+        ],
+        "reason": "Old coordinate error::rank ordinal5 becomes error::range ordinal7; all other bytes and relocations identical.",
+        "instruction_count": 97,
+        "cost_observation": "Same instruction count/control flow/load-store grant/stack behavior. No hardware timing inferred."
+      },
+      "objects": {
+        "before": {
+          "sha256": "0715139fbc1d87ff26f6527552ff15c5afa7ad01f746d8b60691ee4836dee2e8",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/phase-material.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/workbench/spikes/ikea-frame/lifecycle/phase_material.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/phase-material.o"
+          ]
+        },
+        "after": {
+          "sha256": "a204b7cdbf63720686c1fca7fcf82514dce83a51475157ae1aeb8573ee7c3be7",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/phase-material.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/workbench/spikes/ikea-frame/lifecycle/phase_material.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/phase-material.o"
+          ]
+        }
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "source": "packing",
+      "functions": {
+        "total": 699,
+        "exact": 148
+      },
+      "constants": {
+        "total": 131,
+        "exact": 3
+      },
+      "unwind": {
+        "total": 51,
+        "exact": 49
+      },
+      "objects": {
+        "before": {
+          "sha256": "7d24eea3a2f400403cdef4bf68e645bb40c6ab4f3af7f6ebf43874fa936f5369",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/packing.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/workbench/spikes/ikea-frame/encoding/packing.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/packing.o"
+          ]
+        },
+        "after": {
+          "sha256": "55ab8de5fe290c6f1a24117e81ae96d4ddeb5084a509d9a01eb23939b0b15851",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/packing.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/workbench/spikes/ikea-frame/encoding/packing.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/packing.o"
+          ]
+        }
+      },
+      "comparison_limit": "Raw normalized-name union includes private visitor parameter/signature and mangled constant-label changes; unmatched bodies are not silently discarded or claimed as literal matches.",
+      "difference_presence": {
+        "functions": {
+          "paired": 99,
+          "before_only": 226,
+          "after_only": 226
+        },
+        "constants": {
+          "paired": 0,
+          "before_only": 64,
+          "after_only": 64
+        }
+      },
+      "packing_costs": {
+        "before": {
+          "functions": 473,
+          "function_bytes": 265392,
+          "constant_bytes": 19961,
+          "roles": {
+            "pack": {
+              "instructions": 21,
+              "frame_reservations": [
+                "sp, sp, #0x60"
+              ],
+              "call_instructions": 2,
+              "memory_instructions": 9
+            },
+            "dispatch": {
+              "instructions": 7933,
+              "frame_reservations": [
+                "sp, sp, #0x160"
+              ],
+              "call_instructions": 309,
+              "memory_instructions": 2734
+            },
+            "writer13": {
+              "instructions": 114,
+              "frame_reservations": [
+                "sp, sp, #0x70"
+              ],
+              "call_instructions": 2,
+              "memory_instructions": 26
+            },
+            "raw13": {
+              "instructions": 228,
+              "frame_reservations": [
+                "sp, sp, #0x50"
+              ],
+              "call_instructions": 1,
+              "memory_instructions": 58
+            }
+          }
+        },
+        "after": {
+          "functions": 473,
+          "function_bytes": 263356,
+          "constant_bytes": 19961,
+          "roles": {
+            "pack": {
+              "instructions": 21,
+              "frame_reservations": [
+                "sp, sp, #0x60"
+              ],
+              "call_instructions": 2,
+              "memory_instructions": 9
+            },
+            "dispatch": {
+              "instructions": 7582,
+              "frame_reservations": [
+                "sp, sp, #0x100"
+              ],
+              "call_instructions": 309,
+              "memory_instructions": 2556
+            },
+            "writer13": {
+              "instructions": 103,
+              "frame_reservations": [
+                "16 bytes via stp x29,x30,[sp,#-0x10]!"
+              ],
+              "call_instructions": 2,
+              "memory_instructions": 19
+            },
+            "raw13": {
+              "instructions": 235,
+              "frame_reservations": [
+                "sp, sp, #0xb0"
+              ],
+              "call_instructions": 1,
+              "memory_instructions": 62
+            }
+          }
+        }
+      },
+      "observations": [
+        "Outer pack body is literal-exact. Both arms emit 473 functions; aggregate function bytes decrease265392 to263356; constant bytes19961 unchanged.",
+        "Width dispatch decreases31732 to30328 bytes, stack352 to256 bytes, with309 static call instructions in each. These static totals are not per-operation dynamic counts.",
+        "K13 checked writer decreases114 to103 instructions and frame112 to16 bytes; raw initializer increases228 to235 instructions and frame80 to176 bytes. The96-byte metadata copy moves into the raw helper; combined writer+helper frame stays192 bytes.",
+        "K13 vector-store loop retains its instructions with two new alignment NOPs; scalar tail stores retain their offsets under the new count register. No hardware timing claim."
+      ]
+    },
+    {
+      "profile": "neon-v2",
+      "source": "encoding-material",
+      "functions": {
+        "total": 62,
+        "exact": 62
+      },
+      "constants": {
+        "total": 16,
+        "exact": 16
+      },
+      "unwind": {
+        "total": 12,
+        "exact": 12
+      },
+      "objects": {
+        "before": {
+          "sha256": "04d51c5708f4b07baff85551d53fb5a83ad9bd7493356c45784baccdb0bfd572",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/encoding-material.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/before/workbench/spikes/ikea-frame/encoding/material.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/before/encoding-material.o"
+          ]
+        },
+        "after": {
+          "sha256": "b3c1d963b81cf00677f179f24f3bf4daddd64f6ac430403ec1c77d2dc1c6ac44",
+          "command": [
+            "clang++-21",
+            "--target=aarch64-linux-gnu",
+            "--gcc-toolchain=/usr",
+            "-std=c++23",
+            "-O3",
+            "-fno-fast-math",
+            "-ffp-contract=off",
+            "-fdenormal-fp-math=ieee",
+            "-fvisibility=hidden",
+            "-fvisibility-inlines-hidden",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-march=armv8-a+simd",
+            "-mtune=neoverse-v2",
+            "-DSIXDB_TUNE_GENERIC=0",
+            "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+            "-DSIXDB_TUNE_ZEN4=0",
+            "-DSIXDB_TUNE_ZEN5=0",
+            "-DSIXDB_TUNE_NEOVERSE_V2=1",
+            "-DSIXDB_TUNE_NEOVERSE_V3=0",
+            "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after=/sixdb",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/ikea/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/orbital/include",
+            "-I",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/loom/include",
+            "-MD",
+            "-MF",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/encoding-material.d",
+            "-c",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after/workbench/spikes/ikea-frame/encoding/material.cpp",
+            "-o",
+            "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen/neon-v2/after/encoding-material.o"
+          ]
+        }
+      }
+    }
+  ],
+  "final_cut_status": {
+    "state": "Qualified provisional cut retained; current R3 header candidate has separate NEON reproof. Final freeze is reopened for mechanism research.",
+    "changed_dependency": "ikea/include/ikea/seriespack/author/mutation.h",
+    "provisional_sha256": "7a9b5d8a9fdb4e4044461b2ddfc08a0fe0d528733e8f8a348d080600e2fb79d8",
+    "later_candidate_sha256": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+    "change": "always_inline on visit_writes16 and visit_writes_point; separate R3 reproof records scalar-tail register allocation changes, without native-cohort relabelling.",
+    "r3_proof": "r3-dependency-proof.json"
+  },
+  "native_pairs": [
+    {
+      "job": "20261023T004111Z-67ab5a85",
+      "profile": "neon",
+      "source": "encoding-kernels",
+      "objects": {
+        "before": {
+          "sha256": "b622c7f3e4558b92a46f75f9b00453db97e80ec8efa5f64d3a9f3a097ca803c5",
+          "function_count": 612
+        },
+        "after": {
+          "sha256": "3c56b8700af6f9d8b60497d2204700347cb473e9d30db60c28e1ac13ba89beaa",
+          "function_count": 612
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 612,
+          "exact": 612
+        },
+        "constants": {
+          "total": 3,
+          "exact": 3
+        },
+        "unwind": {
+          "total": 1,
+          "exact": 1
+        }
+      }
+    },
+    {
+      "job": "20261023T004111Z-67ab5a85",
+      "profile": "neon",
+      "source": "phase-plane",
+      "objects": {
+        "before": {
+          "sha256": "4837fe84b57d24fcab66cc8ca52c2bf294e1394e4b8dd234f449fc5cc2716f05",
+          "function_count": 65
+        },
+        "after": {
+          "sha256": "8a6691ccf35597795ab10f756ad539da717bb1faaf0ba2fb699f46e512607ee7",
+          "function_count": 65
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 65,
+          "exact": 65
+        },
+        "constants": {
+          "total": 2,
+          "exact": 2
+        },
+        "unwind": {
+          "total": 1,
+          "exact": 1
+        }
+      }
+    },
+    {
+      "job": "20261023T004111Z-67ab5a85",
+      "profile": "neon",
+      "source": "phase-material",
+      "objects": {
+        "before": {
+          "sha256": "fb7627b60329e0014e3389a9c4575b7c71f634e3bbbb6c7a32394c1e929d65a5",
+          "function_count": 419
+        },
+        "after": {
+          "sha256": "e920ff2f190df3365274546ef4ca0d78f7238b09b9b705015d0627c5ee947d08",
+          "function_count": 419
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 419,
+          "exact": 418
+        },
+        "constants": {
+          "total": 8,
+          "exact": 8
+        },
+        "unwind": {
+          "total": 117,
+          "exact": 117
+        }
+      },
+      "difference": {
+        "role": "Intervals checked range under Frame code_count::masked",
+        "bytes_before": 388,
+        "bytes_after": 388,
+        "changed_byte_offsets": [
+          16,
+          28
+        ],
+        "reason": "Coordinate error::rank ordinal5 becomes error::range ordinal7; all other bytes/relocations exact."
+      }
+    },
+    {
+      "job": "20261023T004111Z-67ab5a85",
+      "profile": "neon",
+      "source": "phase-measure",
+      "objects": {
+        "before": {
+          "sha256": "7c4068d667c03531121353667aa1db5ba0ced277487dedeb39289caab05ac945",
+          "function_count": 138
+        },
+        "after": {
+          "sha256": "772e59dcc581f4bc24445d04ef399d995e4e9df95f78db372a8a34b92e6cf29a",
+          "function_count": 138
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 138,
+          "exact": 138
+        },
+        "constants": {
+          "total": 29,
+          "exact": 29
+        },
+        "unwind": {
+          "total": 66,
+          "exact": 66
+        }
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx2",
+      "source": "encoding-kernels",
+      "objects": {
+        "before": {
+          "sha256": "2b4f93000a127ed05e881cbf27bbc4f9e7733cc84387f3a0d729ea4805afa429",
+          "function_count": 606
+        },
+        "after": {
+          "sha256": "3603733d0506e46ce37f1378554f2c04056d61ace104ea86e0e03243da546b5d",
+          "function_count": 606
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 606,
+          "exact": 606
+        },
+        "constants": {
+          "total": 6,
+          "exact": 6
+        },
+        "unwind": {
+          "total": 0,
+          "exact": 0
+        }
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx2",
+      "source": "phase-plane",
+      "objects": {
+        "before": {
+          "sha256": "a16258d3597afbd7ff4191d2f778b399b10aa6a549a2e540d66eeb7ac48ced83",
+          "function_count": 65
+        },
+        "after": {
+          "sha256": "e19cf1b1c52d63f0244e3c9ab86f3ebac4689561e51672843740c12d90fc6926",
+          "function_count": 65
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 65,
+          "exact": 65
+        },
+        "constants": {
+          "total": 4,
+          "exact": 4
+        },
+        "unwind": {
+          "total": 0,
+          "exact": 0
+        }
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx2",
+      "source": "phase-material",
+      "objects": {
+        "before": {
+          "sha256": "24513805ea1a36343b57fc9ea12ac89a739b38e44412576f15439df78d60f048",
+          "function_count": 418
+        },
+        "after": {
+          "sha256": "a3e0da044b074a9544c4bb5e1ad1e8fb3908c7ad4137bb6239d40415a8c6996e",
+          "function_count": 418
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 418,
+          "exact": 417
+        },
+        "constants": {
+          "total": 23,
+          "exact": 23
+        },
+        "unwind": {
+          "total": 116,
+          "exact": 116
+        }
+      },
+      "difference": {
+        "role": "Intervals checked range under Frame code_count::masked",
+        "bytes_before": 695,
+        "bytes_after": 695,
+        "changed_byte_offsets": [
+          18,
+          30,
+          344
+        ],
+        "reason": "Coordinate error::rank ordinal5 becomes error::range ordinal7; all other bytes/relocations exact."
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx2",
+      "source": "phase-measure",
+      "objects": {
+        "before": {
+          "sha256": "cbfe01471ee970be11f2a3a789889eebe22f9d2e60002f4058717a5c90254f88",
+          "function_count": 139
+        },
+        "after": {
+          "sha256": "67ceed2b77b5549bb990260d7c26529aa3bec185f3de1439cb15f51dac48182d",
+          "function_count": 139
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 139,
+          "exact": 139
+        },
+        "constants": {
+          "total": 25,
+          "exact": 25
+        },
+        "unwind": {
+          "total": 65,
+          "exact": 65
+        }
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx512",
+      "source": "encoding-kernels",
+      "objects": {
+        "before": {
+          "sha256": "7789417682ae5b36bf336e8650ad0e337c4cd2b8376050daf2dc266e111c6b67",
+          "function_count": 583
+        },
+        "after": {
+          "sha256": "dd5528adc316aa60af2c561e00d8d783b45dc4ec38b200b74b7bb6984dfbfa6a",
+          "function_count": 583
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 583,
+          "exact": 583
+        },
+        "constants": {
+          "total": 37,
+          "exact": 37
+        },
+        "unwind": {
+          "total": 0,
+          "exact": 0
+        }
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx512",
+      "source": "phase-plane",
+      "objects": {
+        "before": {
+          "sha256": "0a24bfab263c070af46b350dfe81131236ae534c719977f7aa3da0c5f8a826b0",
+          "function_count": 65
+        },
+        "after": {
+          "sha256": "e80dfbacd85483e9feb6442409782277790e207601bf30c63c83713d360cb065",
+          "function_count": 65
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 65,
+          "exact": 65
+        },
+        "constants": {
+          "total": 5,
+          "exact": 5
+        },
+        "unwind": {
+          "total": 0,
+          "exact": 0
+        }
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx512",
+      "source": "phase-material",
+      "objects": {
+        "before": {
+          "sha256": "d98a1432fe5ccdee47c91c9f158db985150013ab2b44156b62fbd16f51cca29a",
+          "function_count": 418
+        },
+        "after": {
+          "sha256": "575113af59ff8a280d055eb0a5039646cdcd2a12dc53fff693e54c994e14311c",
+          "function_count": 418
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 418,
+          "exact": 417
+        },
+        "constants": {
+          "total": 23,
+          "exact": 23
+        },
+        "unwind": {
+          "total": 116,
+          "exact": 116
+        }
+      },
+      "difference": {
+        "role": "Intervals checked range under Frame code_count::masked",
+        "bytes_before": 695,
+        "bytes_after": 695,
+        "changed_byte_offsets": [
+          18,
+          30,
+          344
+        ],
+        "reason": "Coordinate error::rank ordinal5 becomes error::range ordinal7; all other bytes/relocations exact."
+      }
+    },
+    {
+      "job": "20261023T004115Z-8595ed67",
+      "profile": "avx512",
+      "source": "phase-measure",
+      "objects": {
+        "before": {
+          "sha256": "f2661427a9e28db882d680e3dfdc077cc2d7413c0e19dbffe29fa1fc169a417d",
+          "function_count": 139
+        },
+        "after": {
+          "sha256": "fb5c6187c48e51f3812f31913882ba6dc3dc399d5e6c235563a8222e35ae98cb",
+          "function_count": 139
+        }
+      },
+      "comparison": {
+        "functions": {
+          "total": 139,
+          "exact": 139
+        },
+        "constants": {
+          "total": 25,
+          "exact": 25
+        },
+        "unwind": {
+          "total": 65,
+          "exact": 65
+        }
+      }
+    }
+  ]
+}

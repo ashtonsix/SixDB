@@ -1,0 +1,34 @@
+--- a/ikea/include/ikea/effects.h
++++ b/ikea/include/ikea/effects.h
+@@ -21,18 +21,26 @@
+     template <class Source>
+     void before(const Source& source, unsigned plane, std::size_t offset,
+                 std::size_t size) noexcept {
+-        if (used && storage[used - 1].source == &source && storage[used - 1].plane == plane) {
++        before_span(source, write_span{plane, offset, size});
++    }
++  private:
++    struct write_span { unsigned plane; std::size_t offset, size; };
++    template <class Source>
++    void before_span(const Source& source, write_span bytes) noexcept {
++        if (used && storage[used - 1].source == &source && storage[used - 1].plane == bytes.plane) {
+             auto& previous = storage[used - 1];
+-            const auto end = previous.offset + previous.size, next_end = offset + size;
+-            if (previous.offset <= next_end && offset <= end) {
+-                const auto begin = std::min(previous.offset, offset);
++            const auto end = previous.offset + previous.size, next_end = bytes.offset + bytes.size;
++            if (previous.offset <= next_end && bytes.offset <= end) {
++                const auto begin = std::min(previous.offset, bytes.offset);
++                previous.plane = bytes.plane;
+                 previous.offset = begin;
+                 previous.size = std::max(end, next_end) - begin;
+                 return;
+             }
+         }
+-        storage[used++] = {&source, plane, offset, size};
++        storage[used++] = {&source, bytes.plane, bytes.offset, bytes.size};
+     }
++  public:
+     std::size_t remaining() const noexcept { return storage.size() - used; }
+     std::span<const entry> entries() const noexcept { return storage.first(used); }
+ };

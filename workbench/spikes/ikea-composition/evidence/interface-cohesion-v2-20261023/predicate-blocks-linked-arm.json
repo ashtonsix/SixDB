@@ -1,0 +1,681 @@
+{
+  "format": 1,
+  "scope": "Actual linked ARM four-route checked block-command audit, read-only; no new compilation, execution, fetch or timing analysis.",
+  "job": "20261023T033340Z-bbcf0170",
+  "source": "workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp",
+  "source_sha256": "27cab80683ef7180b4f4686de0b5ce5cfb2ee04b3060e8360dbcdd28a32aaec1",
+  "candidate_header_sha256": "32ad56c26ed8f2d95a2dded82f394787c3c9e2cfdf550ffd826434ccd875b632",
+  "source_manifest_sha256": {
+    "after": "feb18c90459e1892e80d63bee94d031e884d78d813657fbcdf6ed91b9d113f8d",
+    "before": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72"
+  },
+  "receipt_sha256": "4dcb9551a533a623ab69ce903abe06f0fdb4d3d1ba547a6895d5021fc094cc45",
+  "arms": {
+    "before": {
+      "binary_sha256": "f04b4d71a1b86cbb9a2d299f053c0f74979f04e15db722698f0bedcd0075915b",
+      "disassembly_sha256": "f75cd3fc9b93f37482045d2820ab21a2a6c9d092cb3c63d35c47d57a878dd60d",
+      "functions": [
+        {
+          "name": "std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const",
+          "address": "0xe060",
+          "size": 9852,
+          "instructions": 2463,
+          "sha256": "ab0ada9eac8f2395129cda08273eb88a139500a0b0629c47d8824bb9248f9e0a",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/before-0.txt"
+        },
+        {
+          "name": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)3>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "address": "0x106e0",
+          "size": 556,
+          "instructions": 139,
+          "sha256": "aad7aec0e04d82ad1724bed7dcc7f0d82fb98a7f5cf629d8fd39065ac7d10633",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/before-traverse-3.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)0>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x10a80",
+          "size": 2540,
+          "instructions": 635,
+          "sha256": "5cd6d2e8047b9fcca159d92858abbc8cb7331f914ed63208fb3fa3f1f64708fe",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/before-run-0.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)1>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x11b60",
+          "size": 2740,
+          "instructions": 685,
+          "sha256": "a8a7aa0698cb667d4493024c1cf20aa796e4708957eb2aa126d48510aa31941b",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/before-run-1.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)2>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x12660",
+          "size": 2732,
+          "instructions": 683,
+          "sha256": "7f00dba585786a552250ef2f44dd281bdfd442a4674df43335393ef0e0988c7a",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/before-run-2.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)3>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x13140",
+          "size": 2268,
+          "instructions": 567,
+          "sha256": "5fac03191f7cdafac3debda61c7686d0a35977d76cff328ec06ababcc76742a9",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/before-run-3.txt"
+        }
+      ],
+      "compile_command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/predicate-inputs/before/ikea/include -I/opt/sixdb/source/build/ikea-predicate-native/neon/before/_deps/googlebenchmark-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source/predicate-inputs/before=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/ikea_predicate_blocks.dir/opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp",
+      "checked_full_tight_path": {
+        "assumptions": "first=0, rows>=16, active=0xffff, in-domain RHS, unit stride",
+        "instruction_count": 54,
+        "conditional_branches": 7,
+        "vector_payload_loads": 1,
+        "vector_comparisons": 1,
+        "trace": [
+          {
+            "address": "0xe060",
+            "assembly": "mov\tx9, x0"
+          },
+          {
+            "address": "0xe064",
+            "assembly": "mov\tw0, #0x4                // =4"
+          },
+          {
+            "address": "0xe068",
+            "assembly": "lsr\tx10, x3, #16"
+          },
+          {
+            "address": "0xe06c",
+            "assembly": "mov\tx8, xzr"
+          },
+          {
+            "address": "0xe070",
+            "assembly": "cbnz\tx10, 0xe0d0 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x70>"
+          },
+          {
+            "address": "0xe074",
+            "assembly": "stp\tx20, x19, [sp, #-0x10]!"
+          },
+          {
+            "address": "0xe078",
+            "assembly": "ldr\tx13, [x9, #0x8]"
+          },
+          {
+            "address": "0xe07c",
+            "assembly": "ldr\tx10, [x13, #0x10]"
+          },
+          {
+            "address": "0xe080",
+            "assembly": "subs\tx10, x10, x1"
+          },
+          {
+            "address": "0xe084",
+            "assembly": "b.lo\t0xe0cc <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x6c>"
+          },
+          {
+            "address": "0xe088",
+            "assembly": "clz\tx8, x3"
+          },
+          {
+            "address": "0xe08c",
+            "assembly": "mov\tw11, #0x40              // =64"
+          },
+          {
+            "address": "0xe090",
+            "assembly": "sub\tx8, x11, x8"
+          },
+          {
+            "address": "0xe094",
+            "assembly": "cmp\tx10, x8"
+          },
+          {
+            "address": "0xe098",
+            "assembly": "b.hs\t0xe0a8 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x48>"
+          },
+          {
+            "address": "0xe0a8",
+            "assembly": "cbz\tx3, 0xe0c4 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x64>"
+          },
+          {
+            "address": "0xe0ac",
+            "assembly": "ldrb\tw8, [x9, #0x12]"
+          },
+          {
+            "address": "0xe0b0",
+            "assembly": "mov\tw10, #-0x1              // =-1"
+          },
+          {
+            "address": "0xe0b4",
+            "assembly": "lsl\tw8, w10, w8"
+          },
+          {
+            "address": "0xe0b8",
+            "assembly": "mvn\tw8, w8"
+          },
+          {
+            "address": "0xe0bc",
+            "assembly": "cmp\tx2, x8"
+          },
+          {
+            "address": "0xe0c0",
+            "assembly": "b.ls\t0xe0d8 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x78>"
+          },
+          {
+            "address": "0xe0d8",
+            "assembly": "mov\tw10, #0xffff            // =65535"
+          },
+          {
+            "address": "0xe0dc",
+            "assembly": "cmp\tx3, x10"
+          },
+          {
+            "address": "0xe0e0",
+            "assembly": "b.ne\t0xe11c <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0xbc>"
+          },
+          {
+            "address": "0xe0e4",
+            "assembly": "ldr\tx10, [x13, #0x18]"
+          },
+          {
+            "address": "0xe0e8",
+            "assembly": "cmp\tx10, #0x1"
+          },
+          {
+            "address": "0xe0ec",
+            "assembly": "b.ne\t0xe168 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x108>"
+          },
+          {
+            "address": "0xe0f0",
+            "assembly": "ldr\tx10, [x13]"
+          },
+          {
+            "address": "0xe0f4",
+            "assembly": "ldr\tx11, [x13, #0x20]"
+          },
+          {
+            "address": "0xe0f8",
+            "assembly": "ldrb\tw9, [x9, #0x11]"
+          },
+          {
+            "address": "0xe0fc",
+            "assembly": "add\tx10, x10, x11"
+          },
+          {
+            "address": "0xe100",
+            "assembly": "lsl\tw8, w8, w9"
+          },
+          {
+            "address": "0xe104",
+            "assembly": "lsl\tx9, x2, x9"
+          },
+          {
+            "address": "0xe108",
+            "assembly": "ldr\tq0, [x10, x1]"
+          },
+          {
+            "address": "0xe10c",
+            "assembly": "dup\tv1.16b, w8"
+          },
+          {
+            "address": "0xe110",
+            "assembly": "and\tv0.16b, v0.16b, v1.16b"
+          },
+          {
+            "address": "0xe114",
+            "assembly": "dup\tv1.16b, w9"
+          },
+          {
+            "address": "0xe118",
+            "assembly": "b\t0x1056c <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x250c>"
+          },
+          {
+            "address": "0x1056c",
+            "assembly": "adrp\tx8, 0x4b000 <benchmark::internal::BenchmarkInstance::BenchmarkInstance(benchmark::internal::Benchmark*, int, int, std::vector<long, std::allocator<long>> const&, int)+0xa70>"
+          },
+          {
+            "address": "0x10570",
+            "assembly": "cmhs\tv0.16b, v0.16b, v1.16b"
+          },
+          {
+            "address": "0x10574",
+            "assembly": "ldr\tq1, [x8, #0x930]"
+          },
+          {
+            "address": "0x10578",
+            "assembly": "and\tv0.16b, v0.16b, v1.16b"
+          },
+          {
+            "address": "0x1057c",
+            "assembly": "addv\tb1, v0.8b"
+          },
+          {
+            "address": "0x10580",
+            "assembly": "ext\tv0.16b, v0.16b, v0.16b, #0x8"
+          },
+          {
+            "address": "0x10584",
+            "assembly": "addv\tb0, v0.8b"
+          },
+          {
+            "address": "0x10588",
+            "assembly": "fmov\tw0, s1"
+          },
+          {
+            "address": "0x1058c",
+            "assembly": "fmov\tw8, s0"
+          },
+          {
+            "address": "0x10590",
+            "assembly": "bfi\tw0, w8, #8, #8"
+          },
+          {
+            "address": "0x10594",
+            "assembly": "b\t0xe0c8 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x68>"
+          },
+          {
+            "address": "0xe0c8",
+            "assembly": "mov\tw8, #0x1                // =1"
+          },
+          {
+            "address": "0xe0cc",
+            "assembly": "ldp\tx20, x19, [sp], #0x10"
+          },
+          {
+            "address": "0xe0d0",
+            "assembly": "mov\tx1, x8"
+          },
+          {
+            "address": "0xe0d4",
+            "assembly": "ret"
+          }
+        ],
+        "movemask_constant_address": "0x4b930",
+        "movemask_constant_bytes": "01020408102040800102040810204080"
+      }
+    },
+    "after": {
+      "binary_sha256": "dab32a25523c13bad65fc6a4f3b14d416555b79bfe36cfaefb1a55015919634e",
+      "disassembly_sha256": "435e2a4faca237c51605a352b6d2bd8390584fb2ca2b8f2fa2a49e6b8c4973a7",
+      "functions": [
+        {
+          "name": "std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const",
+          "address": "0xdee0",
+          "size": 9848,
+          "instructions": 2462,
+          "sha256": "015bc17518694806f1ae09fdfee9256248739ba6c643bb4d5af68d4b4d69999d",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-0.txt"
+        },
+        {
+          "name": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)1>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "address": "0x10560",
+          "size": 568,
+          "instructions": 142,
+          "sha256": "a8a1caa7f46e663409e8ea3bd7182626ba71899ed374b6723a9898a4780ca8dd",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-traverse-1.txt"
+        },
+        {
+          "name": "unsigned long (anonymous namespace)::traverse<((anonymous namespace)::Route)3>((anonymous namespace)::Fixture const&, unsigned int, unsigned long)",
+          "address": "0x107a0",
+          "size": 564,
+          "instructions": 141,
+          "sha256": "e0b656f5b5f081dab053e66446480d2bb6a68cad81c6a536957a4b05a17edda2",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-traverse-3.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)0>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x10b40",
+          "size": 2540,
+          "instructions": 635,
+          "sha256": "b7a360e385eb6ec1ffba2fb6c616b1297eafc67d9f4188340ae949635947f22a",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-run-0.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)1>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x11c20",
+          "size": 2268,
+          "instructions": 567,
+          "sha256": "7f9f8f33fd4aaf5d34ba3ceca072cfaefc10a2c52b5d4997a5ea50cb1b6ef6e9",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-run-1.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)2>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x12540",
+          "size": 2680,
+          "instructions": 670,
+          "sha256": "5305cbe1c897bdf3728882e84a926bc7b812b1e5a247b6bac1d24505798a8230",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-run-2.txt"
+        },
+        {
+          "name": "benchmark::internal::LambdaBenchmark<void (anonymous namespace)::register_route<((anonymous namespace)::Route)3>(char const*)::'lambda'(benchmark::State&)>::Run(benchmark::State&)",
+          "address": "0x13000",
+          "size": 2268,
+          "instructions": 567,
+          "sha256": "991da5ff9ebac30db92c942019f6f238282c4eb9978fa8f3d5c9789b097d49c2",
+          "file": "build/ikea-cohesion-v2/blocks-linked-arm/after-run-3.txt"
+        }
+      ],
+      "compile_command": "/usr/bin/clang++-21 -DBENCHMARK_STATIC_DEFINE -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -I/opt/sixdb/source/predicate-inputs/after/ikea/include -I/opt/sixdb/source/build/ikea-predicate-native/neon/after/_deps/googlebenchmark-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source/predicate-inputs/after=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/ikea_predicate_blocks.dir/opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp.o -c /opt/sixdb/source/workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp",
+      "checked_full_tight_path": {
+        "assumptions": "first=0, rows>=16, active=0xffff, in-domain RHS, unit stride",
+        "instruction_count": 53,
+        "conditional_branches": 7,
+        "vector_payload_loads": 1,
+        "vector_comparisons": 1,
+        "trace": [
+          {
+            "address": "0xdee0",
+            "assembly": "mov\tx9, x0"
+          },
+          {
+            "address": "0xdee4",
+            "assembly": "mov\tw0, #0x4                // =4"
+          },
+          {
+            "address": "0xdee8",
+            "assembly": "lsr\tx10, x3, #16"
+          },
+          {
+            "address": "0xdeec",
+            "assembly": "mov\tx8, xzr"
+          },
+          {
+            "address": "0xdef0",
+            "assembly": "cbnz\tx10, 0xdf50 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x70>"
+          },
+          {
+            "address": "0xdef4",
+            "assembly": "stp\tx20, x19, [sp, #-0x10]!"
+          },
+          {
+            "address": "0xdef8",
+            "assembly": "ldr\tx10, [x9, #0x8]"
+          },
+          {
+            "address": "0xdefc",
+            "assembly": "ldr\tx11, [x10, #0x10]"
+          },
+          {
+            "address": "0xdf00",
+            "assembly": "subs\tx11, x11, x1"
+          },
+          {
+            "address": "0xdf04",
+            "assembly": "b.lo\t0xdf4c <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x6c>"
+          },
+          {
+            "address": "0xdf08",
+            "assembly": "clz\tx8, x3"
+          },
+          {
+            "address": "0xdf0c",
+            "assembly": "mov\tw12, #0x40              // =64"
+          },
+          {
+            "address": "0xdf10",
+            "assembly": "sub\tx8, x12, x8"
+          },
+          {
+            "address": "0xdf14",
+            "assembly": "cmp\tx11, x8"
+          },
+          {
+            "address": "0xdf18",
+            "assembly": "b.hs\t0xdf28 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x48>"
+          },
+          {
+            "address": "0xdf28",
+            "assembly": "cbz\tx3, 0xdf44 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x64>"
+          },
+          {
+            "address": "0xdf2c",
+            "assembly": "ldrb\tw8, [x9, #0x12]"
+          },
+          {
+            "address": "0xdf30",
+            "assembly": "mov\tw11, #-0x1              // =-1"
+          },
+          {
+            "address": "0xdf34",
+            "assembly": "lsl\tw8, w11, w8"
+          },
+          {
+            "address": "0xdf38",
+            "assembly": "mvn\tw8, w8"
+          },
+          {
+            "address": "0xdf3c",
+            "assembly": "cmp\tx2, x8"
+          },
+          {
+            "address": "0xdf40",
+            "assembly": "b.ls\t0xdf58 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x78>"
+          },
+          {
+            "address": "0xdf58",
+            "assembly": "mov\tw11, #0xffff            // =65535"
+          },
+          {
+            "address": "0xdf5c",
+            "assembly": "cmp\tx3, x11"
+          },
+          {
+            "address": "0xdf60",
+            "assembly": "b.ne\t0xdf98 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0xb8>"
+          },
+          {
+            "address": "0xdf64",
+            "assembly": "ldrb\tw11, [x9, #0x13]"
+          },
+          {
+            "address": "0xdf68",
+            "assembly": "tbz\tw11, #0x0, 0xdfe4 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x104>"
+          },
+          {
+            "address": "0xdf6c",
+            "assembly": "ldr\tx11, [x10]"
+          },
+          {
+            "address": "0xdf70",
+            "assembly": "ldr\tx10, [x10, #0x20]"
+          },
+          {
+            "address": "0xdf74",
+            "assembly": "ldrb\tw9, [x9, #0x11]"
+          },
+          {
+            "address": "0xdf78",
+            "assembly": "add\tx10, x11, x10"
+          },
+          {
+            "address": "0xdf7c",
+            "assembly": "lsl\tw8, w8, w9"
+          },
+          {
+            "address": "0xdf80",
+            "assembly": "lsl\tx9, x2, x9"
+          },
+          {
+            "address": "0xdf84",
+            "assembly": "ldr\tq0, [x10, x1]"
+          },
+          {
+            "address": "0xdf88",
+            "assembly": "dup\tv1.16b, w8"
+          },
+          {
+            "address": "0xdf8c",
+            "assembly": "and\tv0.16b, v0.16b, v1.16b"
+          },
+          {
+            "address": "0xdf90",
+            "assembly": "dup\tv1.16b, w9"
+          },
+          {
+            "address": "0xdf94",
+            "assembly": "b\t0x103e8 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x2508>"
+          },
+          {
+            "address": "0x103e8",
+            "assembly": "adrp\tx8, 0x4b000 <benchmark::internal::BenchmarkInstance::Run(long, int, benchmark::internal::ThreadTimer*, benchmark::internal::ThreadManager*, benchmark::internal::PerfCountersMeasurement*, benchmark::ProfilerManager*) const+0x9c>"
+          },
+          {
+            "address": "0x103ec",
+            "assembly": "cmhs\tv0.16b, v0.16b, v1.16b"
+          },
+          {
+            "address": "0x103f0",
+            "assembly": "ldr\tq1, [x8, #0x7f0]"
+          },
+          {
+            "address": "0x103f4",
+            "assembly": "and\tv0.16b, v0.16b, v1.16b"
+          },
+          {
+            "address": "0x103f8",
+            "assembly": "addv\tb1, v0.8b"
+          },
+          {
+            "address": "0x103fc",
+            "assembly": "ext\tv0.16b, v0.16b, v0.16b, #0x8"
+          },
+          {
+            "address": "0x10400",
+            "assembly": "addv\tb0, v0.8b"
+          },
+          {
+            "address": "0x10404",
+            "assembly": "fmov\tw0, s1"
+          },
+          {
+            "address": "0x10408",
+            "assembly": "fmov\tw8, s0"
+          },
+          {
+            "address": "0x1040c",
+            "assembly": "bfi\tw0, w8, #8, #8"
+          },
+          {
+            "address": "0x10410",
+            "assembly": "b\t0xdf48 <std::expected<unsigned long, ikea::tuplepack::error> ikea::tuplepack::predicate<64u, std::byte const, 16u>::filter<(ikea::comparison)4>(unsigned long, unsigned long, unsigned long) const+0x68>"
+          },
+          {
+            "address": "0xdf48",
+            "assembly": "mov\tw8, #0x1                // =1"
+          },
+          {
+            "address": "0xdf4c",
+            "assembly": "ldp\tx20, x19, [sp], #0x10"
+          },
+          {
+            "address": "0xdf50",
+            "assembly": "mov\tx1, x8"
+          },
+          {
+            "address": "0xdf54",
+            "assembly": "ret"
+          }
+        ],
+        "movemask_constant_address": "0x4b7f0",
+        "movemask_constant_bytes": "01020408102040800102040810204080"
+      }
+    }
+  },
+  "query_loops": {
+    "before": {
+      "retained": {
+        "start": "0x10ba0",
+        "backedge": "0x10c04",
+        "static_instructions_including_call": 26,
+        "checked_filter_call_count_per_executed_iteration": 1
+      },
+      "reprepare": {
+        "start": "0x11d00",
+        "backedge": "0x11d68",
+        "static_instructions_including_call": 27,
+        "checked_filter_call_count_per_executed_iteration": 1
+      },
+      "oneshot": {
+        "start": "0x127a0",
+        "backedge": "0x12858",
+        "static_instructions_including_call": 47,
+        "checked_filter_call_count_per_executed_iteration": 1
+      },
+      "fresh": {
+        "start": "0x10860",
+        "backedge": "0x108c0",
+        "static_instructions_including_call": 25,
+        "checked_filter_call_count_per_executed_iteration": 1
+      }
+    },
+    "after": {
+      "retained": {
+        "start": "0x10c60",
+        "backedge": "0x10cc4",
+        "static_instructions_including_call": 26,
+        "checked_filter_call_count_per_executed_iteration": 1
+      },
+      "reprepare": {
+        "start": "0x1066c",
+        "backedge": "0x106cc",
+        "static_instructions_including_call": 25,
+        "checked_filter_call_count_per_executed_iteration": 1
+      },
+      "oneshot": {
+        "start": "0x12680",
+        "backedge": "0x1274c",
+        "static_instructions_including_call": 52,
+        "checked_filter_call_count_per_executed_iteration": 1
+      },
+      "fresh": {
+        "start": "0x10928",
+        "backedge": "0x10988",
+        "static_instructions_including_call": 25,
+        "checked_filter_call_count_per_executed_iteration": 1
+      }
+    }
+  },
+  "facts": [
+    "Every timed traversal preserves the64-entry trace, dynamic query epoch, q-loop result weighting and ordered rotate/XOR block fold. A single checksum store consumes the full traversal; no per-value benchmark barrier was added.",
+    "Fresh remains an outlined helper in both arms, called once per benchmark iteration. Inside its64-block backedge it selects shared law/plan, checks stride/overflow/exact extent (UDIV), checks plan/view unit bytes and one-code/non-hole admission, builds stack-local48B placement and24B predicate, then executes q queries. No allocation, plan construction or full plan-control copy occurs there.",
+    "Retained loads its24B predicate by block ID. Reprepare repeats map/non-hole checks and pointer/code preparation once per visited block. The candidate outlines the reprepare traversal where R4 inlines it; this real call/frame difference is retained.",
+    "One-shot repeats map/non-hole checks, plan/view pair and3-code-byte copies in each q iteration in both arms. Candidate additionally loads view->stride, compares to1 and stores the cached flag perquery.",
+    "One-shot R4 stores the pointer-pair Q register once to the consumed predicate and separately copies code at offset16 with an aligned8B load/store. Candidate stores the pair to temporary and consumed locations, then LDUR W from temp offset47 (last pointer byte +3code bytes) and STUR W to consumed offset15. This overwrites the view pointer final byte; the shared checked filter immediately loads that pointer as8B. Exact addresses retained below. This creates extra copies and a concrete overlapping-store forwarding hazard; it does not prove the timing loss cause.",
+    "The common outlined checked predicate filter remains real on every query, retaining coordinate/activity/domain checks, SIMD compare and sparse/strided/tail fallbacks. Full-tight path is54\u219253instructions; that count is not the strided path cost and cannot explain native timing by itself."
+  ],
+  "observed_structural_counters": {
+    "blocks": 64.0,
+    "queries_per_block": 1.0,
+    "shared_plan_storage_bytes": 14848.0,
+    "fixture_object_bytes": 26048.0,
+    "retained_predicate_bytes": 1536.0,
+    "payload_grant_bytes": 1000.0,
+    "payload_allocation_bytes": 1000.0,
+    "width_transitions": 7.0
+  },
+  "oneshot_copy_landmarks": {
+    "before": {
+      "pointer_pair_load": "0x12804 LDUR Q0,[block,#0x60]",
+      "consumed_pair_store": "0x12820 STR Q0,[SP+0x6640]",
+      "code_load": "0x12818 LDR X9,[SP+0x6670]",
+      "code_store": "0x12828 STR X9,[SP+0x6650]",
+      "filter_call": "0x1283c"
+    },
+    "after": {
+      "pointer_pair_load": "0x126dc LDUR Q0,[block,#0x60]",
+      "temporary_pair_store": "0x126f0 STR Q0,[SP+0x6660]",
+      "consumed_pair_store": "0x126f4 STR Q0,[SP+0x6640]",
+      "split_overlap_load": "0x12704 LDUR W10,[SP+0x666f]",
+      "overlap_store": "0x12710 STUR W10,[SP+0x664f]",
+      "stride_load": "0x12708 LDR X8,[view,#0x18]",
+      "cached_flag_store": "0x1271c STRB W8,[SP+0x6653]",
+      "filter_call": "0x12730",
+      "consumed_pointer_load": "0xdef8 LDR X10,[predicate,#8]"
+    }
+  },
+  "limits": [
+    "Actual linked ARM/NeoverseV2 cohort only. No claim about Zen code generation or timings.",
+    "Static query-loop instruction counts include one direct checked-filter call but exclude its dynamic path; full caller sizes include setup/counters/cleanup and are not timed-path costs.",
+    "ARM timings are analyzed independently by selection_masks; no static count or store-forwarding hypothesis is asserted as their causal explanation.",
+    "Fixture retains views/readers and prepared plans outside timing. This is not a minimum resident descriptor design, owner publication, write-effects or cold-cache study."
+  ]
+}

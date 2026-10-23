@@ -1,0 +1,517 @@
+{
+  "scope": "Independently audit collected existing Frame qualification; no timing inference.",
+  "status": "bounded cohort passed",
+  "timings": "Qualification fields ending _ns and elapsed_seconds are not interpreted as measurements.",
+  "frame_source_capture_sha256": "a525096b5b8f323e83439f08039c33c896ffe6801375f3e0264c856b0e131e48",
+  "qualified_after_ikea_manifest_sha256": "165af7160ed82ba001530178b53c3ff2da6fb4ab4a1b434f3cfaeb3d4726c28c",
+  "r3_header_reproof": "Separate candidate-specific NEON object diagnostic; not relabelled native qualification.",
+  "jobs": [
+    {
+      "id": "20261023T004111Z-67ab5a85",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 43380822,
+        "files": 215,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/1977a4f0a80f25547fbd69b11a3fe8ca86f8add7414c48f91c2b81e73f9c9c72.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "1977a4f0a80f25547fbd69b11a3fe8ca86f8add7414c48f91c2b81e73f9c9c72",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1977a4f0a80f25547fbd69b11a3fe8ca86f8add7414c48f91c2b81e73f9c9c72.tar.gz"
+      },
+      "instance_type": "c8g.4xlarge",
+      "cpu_model": "Neoverse-V2",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "c66cdc6237393da4da4a259ed7a3325d0f3f9f2a45aaff285b49283fea7fdb2b",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "4ffdadf7a993371c922cb4975f3bb9cac2c0fba201060280ac7dcf1d868213f1"
+      },
+      "source_files_checked": 10601,
+      "source_payload_sha256": "087faf530249a2850cdb3649ce8c4d2c356755385583806a40d1ad0480881406",
+      "input_artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/272311716fedb04f7fbb5931b08e9c4f0980b2610a598075b66784ed50d87da2.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/272311716fedb04f7fbb5931b08e9c4f0980b2610a598075b66784ed50d87da2.tar.gz",
+        "sha256": "272311716fedb04f7fbb5931b08e9c4f0980b2610a598075b66784ed50d87da2",
+        "bytes": 102415300,
+        "files": 170
+      },
+      "inputs": {
+        "p__mbar.u64": "ad8fcc650c1766ce21d03138959d7a345c2bae09fdf5545e1c9ac427a9cf7e42",
+        "EventTime-mid.u64": "410842150e1d890c361b7f6c8cfb89614ec137bb5bed09e54684060ae48cbef8",
+        "UserID.u64": "7f846b363bb59710ccb9207d4fef925be5254bb80459eaf5d20be692bbd3f012",
+        "URLHash.u64": "4c818fbf0e7ec9917ff8bd2c510693c22e7b295c141663896d1f91f2918a2352"
+      },
+      "script_returncode": 0
+    },
+    {
+      "id": "20261023T004115Z-8595ed67",
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 59627462,
+        "files": 415,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/f6bd2901faa217bb58d528a648b17ffd050fa6c9561fa840d20ccdc2a347d377.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "f6bd2901faa217bb58d528a648b17ffd050fa6c9561fa840d20ccdc2a347d377",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/f6bd2901faa217bb58d528a648b17ffd050fa6c9561fa840d20ccdc2a347d377.tar.gz"
+      },
+      "instance_type": "c8a.4xlarge",
+      "cpu_model": "AMD EPYC 9R45",
+      "source": {
+        "checkpoint_sha256": "11e04f46974c12e092ce35ba027e2c19d5d560cad1a8543d19520035f45aa47d",
+        "digest": "c66cdc6237393da4da4a259ed7a3325d0f3f9f2a45aaff285b49283fea7fdb2b",
+        "pool_sha256": "fca66f87b0dd681ce5563b08f2469b4a30a44e6a8524bdf4758861878c53e942",
+        "runtime_sha256": "d2a7cc5faec51013525b7e16b56f7f25a5ba7f5c4a667cd7e8673f6da2b2356c",
+        "setup_sha256": "5383c2ebb4fe87f531be6678d81d1c6ae92969d63855965ad2fa20190dcb0a7f",
+        "sha256": "4ffdadf7a993371c922cb4975f3bb9cac2c0fba201060280ac7dcf1d868213f1"
+      },
+      "source_files_checked": 10601,
+      "source_payload_sha256": "087faf530249a2850cdb3649ce8c4d2c356755385583806a40d1ad0480881406",
+      "input_artifact": {
+        "format": 1,
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/272311716fedb04f7fbb5931b08e9c4f0980b2610a598075b66784ed50d87da2.tar.gz",
+        "bucket": "calico-fleet-artifacts",
+        "region": "us-east-1",
+        "key": "sixdb/artifacts/sha256/272311716fedb04f7fbb5931b08e9c4f0980b2610a598075b66784ed50d87da2.tar.gz",
+        "sha256": "272311716fedb04f7fbb5931b08e9c4f0980b2610a598075b66784ed50d87da2",
+        "bytes": 102415300,
+        "files": 170
+      },
+      "inputs": {
+        "p__mbar.u64": "ad8fcc650c1766ce21d03138959d7a345c2bae09fdf5545e1c9ac427a9cf7e42",
+        "EventTime-mid.u64": "410842150e1d890c361b7f6c8cfb89614ec137bb5bed09e54684060ae48cbef8",
+        "UserID.u64": "7f846b363bb59710ccb9207d4fef925be5254bb80459eaf5d20be692bbd3f012",
+        "URLHash.u64": "4c818fbf0e7ec9917ff8bd2c510693c22e7b295c141663896d1f91f2918a2352"
+      },
+      "script_returncode": 0
+    }
+  ],
+  "profiles": [
+    {
+      "profile": "neon",
+      "arms": [
+        {
+          "arm": "before",
+          "commands": 82,
+          "executables": {
+            "frame_encoding_masked_access_check": "2676e8c5328ef48dc542bb2a1e9c7aedda8f1f978bd70e5012059b3f408baacd",
+            "frame_encoding_null_check": "db439798adb821f4471a02ec42eeea91038c9be6b2763a979e5f71bfae62adde",
+            "frame_phase_material_check": "140d6ea64d0950b8bd6e9f34ad71adb40f30d9d661f35aded576bb3eccd25bfa",
+            "frame_phase_plane_check": "0ef9aa91fed1eb13be03a235d4e63f72e1bb4c86d320c6eb0226b75ebc2ab98c",
+            "frame_phase_repair_check": "fd97315167891eb7b0a8ada071a06a73091eab8fdbe9f7ee84af30483438f3d6",
+            "frame_phase_batch_check": "ea3eaec01aa5c52e319b08de4a048453f9c6d060a31bb653f179c85a0ee89573",
+            "frame_encoding_borrowed_check": "5844e4f1e58b68145ed0c9ddc8befb92ef6f995a2612edf73f37bc729c057f66",
+            "frame_phase_measure": "66be1f58820558a4f9b96f15fd1eb59ea7a8e1c62b4827af568a6c40d65faa64"
+          },
+          "qualification_sha256": "15b9bd6e72e3fe9ac92a989d7109b4c1cee9f7b140fec21201b0491c346d4693",
+          "log_manifest_sha256": "3df19ef668f311bac8af0bfb7e280b15996b37737df15c23f1e2fc02f2960206",
+          "ikea_dependencies": 62,
+          "ikea_dependency_manifest_sha256": "4a5c397f5f004cc86dfc66cec7147e75fa5551bfb20ef82dcdf25d53c26dd9cb",
+          "assertions_enabled": true,
+          "owner_verification": {
+            "p__mbar": {
+              "rows": 800,
+              "semantic_sha256": "764e1beb88c1b4ea70320473833487073b13f91568e785ceb3941a56e06543b4"
+            },
+            "EventTime-mid": {
+              "rows": 800,
+              "semantic_sha256": "bb166bb0b67dabb6463d79bfa64b112fdd56a44673bd8d9842021f36aa9813ab"
+            },
+            "UserID": {
+              "rows": 800,
+              "semantic_sha256": "829e8ec9a0a0b6ab4a633443b3073260be9a8c0e8452087e443a794a2259ad31"
+            },
+            "URLHash": {
+              "rows": 800,
+              "semantic_sha256": "2d4bb0f79a4e70500c6db4353a1f999c9783816dc2b5bd1a1fbf4f848abfa942"
+            }
+          },
+          "borrowed_configurations": 64,
+          "compile_commands_sha256": "3c1c76e755606def0644d959c5a4457ef8a01f63459a11760cbbdb916c5a8b42",
+          "object_records": {
+            "scope": "Inspect already-built complete Frame objects; preserves literal bytes and ABI aliases.",
+            "arm": "before",
+            "objects": [
+              {
+                "source": "encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o",
+                "sha256": "b622c7f3e4558b92a46f75f9b00453db97e80ec8efa5f64d3a9f3a097ca803c5",
+                "function_count": 612
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o",
+                "sha256": "4837fe84b57d24fcab66cc8ca52c2bf294e1394e4b8dd234f449fc5cc2716f05",
+                "function_count": 65
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o",
+                "sha256": "fb7627b60329e0014e3389a9c4575b7c71f634e3bbbb6c7a32394c1e929d65a5",
+                "function_count": 419
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o",
+                "sha256": "7c4068d667c03531121353667aa1db5ba0ced277487dedeb39289caab05ac945",
+                "function_count": 138
+              }
+            ]
+          }
+        },
+        {
+          "arm": "after",
+          "commands": 82,
+          "executables": {
+            "frame_encoding_masked_access_check": "75409a3ad1d5b84e7c26504aa102cd19d8d67efbf851d6c0d4e5a56531b7548e",
+            "frame_encoding_null_check": "e61fc79cf758a73c4b90b317a57df842a71490cf85ea26d78315ec2594cbf7f1",
+            "frame_phase_material_check": "e46a00a62e1e18ebe57288555b86bc6c5a21b5c144ac47b00ba5f841f79af3db",
+            "frame_phase_plane_check": "9521bf38964a6b81defe8ffc5e0287f98a0fc5d9b54e923793510d13f51fb422",
+            "frame_phase_repair_check": "af6976bcf3814faa27fccdab0116d69aad629054c67e748394a9873134d37641",
+            "frame_phase_batch_check": "ce758aeac261989a4477c65dcf2b587738878f25919f0ddccb47c56e6753aee7",
+            "frame_encoding_borrowed_check": "8a429e8a49d3c76d44e8e63e9a7c1738ae8ecf23e3ecaf71fef9d425a76ca709",
+            "frame_phase_measure": "092c06ea380c42035f2af62f61410fbb28d6cc7bfef8af3c6707d2e08416040d"
+          },
+          "qualification_sha256": "0f09d5a37cce2d379b47d223a7a612fc4f2ad31566472c7665845041742e3683",
+          "log_manifest_sha256": "5569fa0fbcfd74f3d6b01154c11a079cdbd6575b4268b9e2e998c942c57e7d29",
+          "ikea_dependencies": 67,
+          "ikea_dependency_manifest_sha256": "408af9b353649872b39fdb2db757dfa1551635e8d17789cd3ec32c64328438ba",
+          "assertions_enabled": true,
+          "owner_verification": {
+            "p__mbar": {
+              "rows": 800,
+              "semantic_sha256": "764e1beb88c1b4ea70320473833487073b13f91568e785ceb3941a56e06543b4"
+            },
+            "EventTime-mid": {
+              "rows": 800,
+              "semantic_sha256": "bb166bb0b67dabb6463d79bfa64b112fdd56a44673bd8d9842021f36aa9813ab"
+            },
+            "UserID": {
+              "rows": 800,
+              "semantic_sha256": "829e8ec9a0a0b6ab4a633443b3073260be9a8c0e8452087e443a794a2259ad31"
+            },
+            "URLHash": {
+              "rows": 800,
+              "semantic_sha256": "2d4bb0f79a4e70500c6db4353a1f999c9783816dc2b5bd1a1fbf4f848abfa942"
+            }
+          },
+          "borrowed_configurations": 64,
+          "compile_commands_sha256": "1fc67f2d6732724773b7370b4a209ea23d75caf42232ab4b444ebefbffb7ed76",
+          "object_records": {
+            "scope": "Inspect already-built complete Frame objects; preserves literal bytes and ABI aliases.",
+            "arm": "after",
+            "objects": [
+              {
+                "source": "encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o",
+                "sha256": "3c56b8700af6f9d8b60497d2204700347cb473e9d30db60c28e1ac13ba89beaa",
+                "function_count": 612
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o",
+                "sha256": "8a6691ccf35597795ab10f756ad539da717bb1faaf0ba2fb699f46e512607ee7",
+                "function_count": 65
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o",
+                "sha256": "e920ff2f190df3365274546ef4ca0d78f7238b09b9b705015d0627c5ee947d08",
+                "function_count": 419
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o",
+                "sha256": "772e59dcc581f4bc24445d04ef399d995e4e9df95f78db372a8a34b92e6cf29a",
+                "function_count": 138
+              }
+            ]
+          }
+        }
+      ],
+      "paired_non_time_owner_fields_equal": true,
+      "paired_other_command_logs_equal": true
+    },
+    {
+      "profile": "avx2",
+      "arms": [
+        {
+          "arm": "before",
+          "commands": 82,
+          "executables": {
+            "frame_encoding_masked_access_check": "6af1af4b11cf441c4c939851b1fe6d3433311bde48359fa19103810111b7c7b8",
+            "frame_encoding_null_check": "f9854a8dd2c0d36dab0cc3dfbcbbc30e4fe771090d06f81d1a12414f850a3145",
+            "frame_phase_material_check": "2b59ae7dd1a498a41e5e70664970189ab701ce416a4dfe63a3c8422492ea14aa",
+            "frame_phase_plane_check": "8de485302be5d7d051a1d9c1545466fd41c4789983f536c0b787ed9c093df19d",
+            "frame_phase_repair_check": "46d18d55d27d5ca2dadcd675724251eec59a64a2eb477ce5987d19da2935cbaf",
+            "frame_phase_batch_check": "f2a08089fd90ed5d79ce81436498dff641ef506eb59ce8a29ad6955a55bf41ab",
+            "frame_encoding_borrowed_check": "ebc7a07310c43c2d5d77ed3b7d4a2371eb1034eb061cf6d59809ed71ca8fae3e",
+            "frame_phase_measure": "716a6b1f2608926cd0605029f460e223a972513271b217f23bd70be141ed9bcc"
+          },
+          "qualification_sha256": "70c86456b45be099071159ee588d549f78c1c83c03e817f35ce199568afb5e06",
+          "log_manifest_sha256": "40136b1ef8df910dcc3ae6f12f6acddba5f2a581108a3fd438864e5473408681",
+          "ikea_dependencies": 61,
+          "ikea_dependency_manifest_sha256": "4b6a37ffe5533cb03770296fe43a686b866af96f872b2907fffe732f488eebdc",
+          "assertions_enabled": true,
+          "owner_verification": {
+            "p__mbar": {
+              "rows": 800,
+              "semantic_sha256": "764e1beb88c1b4ea70320473833487073b13f91568e785ceb3941a56e06543b4"
+            },
+            "EventTime-mid": {
+              "rows": 800,
+              "semantic_sha256": "bb166bb0b67dabb6463d79bfa64b112fdd56a44673bd8d9842021f36aa9813ab"
+            },
+            "UserID": {
+              "rows": 800,
+              "semantic_sha256": "829e8ec9a0a0b6ab4a633443b3073260be9a8c0e8452087e443a794a2259ad31"
+            },
+            "URLHash": {
+              "rows": 800,
+              "semantic_sha256": "2d4bb0f79a4e70500c6db4353a1f999c9783816dc2b5bd1a1fbf4f848abfa942"
+            }
+          },
+          "borrowed_configurations": 64,
+          "compile_commands_sha256": "bd470f70d1ef027de58191a9e0a7cc3b96c04e34e6ecc7f39f31c800c59120cc",
+          "object_records": {
+            "scope": "Inspect already-built complete Frame objects; preserves literal bytes and ABI aliases.",
+            "arm": "before",
+            "objects": [
+              {
+                "source": "encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o",
+                "sha256": "2b4f93000a127ed05e881cbf27bbc4f9e7733cc84387f3a0d729ea4805afa429",
+                "function_count": 606
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o",
+                "sha256": "a16258d3597afbd7ff4191d2f778b399b10aa6a549a2e540d66eeb7ac48ced83",
+                "function_count": 65
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o",
+                "sha256": "24513805ea1a36343b57fc9ea12ac89a739b38e44412576f15439df78d60f048",
+                "function_count": 418
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o",
+                "sha256": "cbfe01471ee970be11f2a3a789889eebe22f9d2e60002f4058717a5c90254f88",
+                "function_count": 139
+              }
+            ]
+          }
+        },
+        {
+          "arm": "after",
+          "commands": 82,
+          "executables": {
+            "frame_encoding_masked_access_check": "3bdce5c18eb3d9ccdfa3f20653f8bdb891caa11b2d77e83de55e478a2c0ef879",
+            "frame_encoding_null_check": "bcc633f28b6972a73984568efed6eda478b38636085dcf165283c50d743694e1",
+            "frame_phase_material_check": "099dfd14a6dedb6da145ca4ab8d256b74e5a41fef950299c3c26336e250c0b8b",
+            "frame_phase_plane_check": "2790702b2fc1d65f4e4897ad06ad70e377884aa2adc4c2c9cb3b69e1ef477be1",
+            "frame_phase_repair_check": "8a259ad2fd9327cd7526b0acadf98f7928f945b2bb8519dd10b5a612947f455a",
+            "frame_phase_batch_check": "f2c8f63d80d51687e153ded6de9338ee2ee4a6de33f4f0d324ceba8940eecca3",
+            "frame_encoding_borrowed_check": "aca1b5ab8e472cdcc59217bd203ed0d452164d622f80f962803568f4b1002ebe",
+            "frame_phase_measure": "b9c791bfb46556e286d8327b7ca82a787a8167d365ee83db1add67d08b073a48"
+          },
+          "qualification_sha256": "c18fef5957645ec1e10d568141dcf493c2872564d2207bb8291c75485953159c",
+          "log_manifest_sha256": "f6848cf17c6c622ea1f7abbab9b0bae9e5a814a07da2e208629cd82b4cb73c39",
+          "ikea_dependencies": 66,
+          "ikea_dependency_manifest_sha256": "7adbdd2d1b9acb77ce3652e37bcd7aec0482d988c7f6f5e2018904230ff56ecf",
+          "assertions_enabled": true,
+          "owner_verification": {
+            "p__mbar": {
+              "rows": 800,
+              "semantic_sha256": "764e1beb88c1b4ea70320473833487073b13f91568e785ceb3941a56e06543b4"
+            },
+            "EventTime-mid": {
+              "rows": 800,
+              "semantic_sha256": "bb166bb0b67dabb6463d79bfa64b112fdd56a44673bd8d9842021f36aa9813ab"
+            },
+            "UserID": {
+              "rows": 800,
+              "semantic_sha256": "829e8ec9a0a0b6ab4a633443b3073260be9a8c0e8452087e443a794a2259ad31"
+            },
+            "URLHash": {
+              "rows": 800,
+              "semantic_sha256": "2d4bb0f79a4e70500c6db4353a1f999c9783816dc2b5bd1a1fbf4f848abfa942"
+            }
+          },
+          "borrowed_configurations": 64,
+          "compile_commands_sha256": "32529712df40593e3c3ca9c9c43327b16f2e98f29b4498f01b435d25a88c0a67",
+          "object_records": {
+            "scope": "Inspect already-built complete Frame objects; preserves literal bytes and ABI aliases.",
+            "arm": "after",
+            "objects": [
+              {
+                "source": "encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o",
+                "sha256": "3603733d0506e46ce37f1378554f2c04056d61ace104ea86e0e03243da546b5d",
+                "function_count": 606
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o",
+                "sha256": "e19cf1b1c52d63f0244e3c9ab86f3ebac4689561e51672843740c12d90fc6926",
+                "function_count": 65
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o",
+                "sha256": "a3e0da044b074a9544c4bb5e1ad1e8fb3908c7ad4137bb6239d40415a8c6996e",
+                "function_count": 418
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o",
+                "sha256": "67ceed2b77b5549bb990260d7c26529aa3bec185f3de1439cb15f51dac48182d",
+                "function_count": 139
+              }
+            ]
+          }
+        }
+      ],
+      "paired_non_time_owner_fields_equal": true,
+      "paired_other_command_logs_equal": true
+    },
+    {
+      "profile": "avx512",
+      "arms": [
+        {
+          "arm": "before",
+          "commands": 82,
+          "executables": {
+            "frame_encoding_masked_access_check": "91e517c686f031528b59ce37d014d76eb3e430c02cdbb225b36787fdeaea197a",
+            "frame_encoding_null_check": "fcd651eb1971f49ac7e8f1391580f030a5285bfff530371a05c2dd8009908e98",
+            "frame_phase_material_check": "d80eafb22495bbf6294e0cacf6375cffa0f929a3477d25638cbbb000900e0950",
+            "frame_phase_plane_check": "71edb4bb7a4fdbd7304681763aa237f954b1d5702c49feacd87790354e9c854c",
+            "frame_phase_repair_check": "efe17f74dad4a54e71eed3efc8fbdcec75aed4d1d8413c037147f6d645e778f5",
+            "frame_phase_batch_check": "f748ae49f0c7dbb1d3f16539be2537d519c6d126bad46019abdab566a6b2b186",
+            "frame_encoding_borrowed_check": "1d4b1a673cb8210f1b7ed7819bb10cf9bff9423d70111ab8b50b9ac325b1dda1",
+            "frame_phase_measure": "97aafbb957eb0e7e828a6dd236b33c9f5817e2fbb77fa644df1c667bd93f63de"
+          },
+          "qualification_sha256": "a1b1a26e097d222893fe3c48fb271567d1bbadb08f9f8ebdcea031aa68852214",
+          "log_manifest_sha256": "e96378f43fe2ab54f20a5fa3d703f8adbbfb76de202b75f39be9f3149dd1b6d9",
+          "ikea_dependencies": 63,
+          "ikea_dependency_manifest_sha256": "80eecc0c7c02951566416ccf0eaa09492c9515de18c445658cb72edfdde7b490",
+          "assertions_enabled": true,
+          "owner_verification": {
+            "p__mbar": {
+              "rows": 800,
+              "semantic_sha256": "764e1beb88c1b4ea70320473833487073b13f91568e785ceb3941a56e06543b4"
+            },
+            "EventTime-mid": {
+              "rows": 800,
+              "semantic_sha256": "bb166bb0b67dabb6463d79bfa64b112fdd56a44673bd8d9842021f36aa9813ab"
+            },
+            "UserID": {
+              "rows": 800,
+              "semantic_sha256": "829e8ec9a0a0b6ab4a633443b3073260be9a8c0e8452087e443a794a2259ad31"
+            },
+            "URLHash": {
+              "rows": 800,
+              "semantic_sha256": "2d4bb0f79a4e70500c6db4353a1f999c9783816dc2b5bd1a1fbf4f848abfa942"
+            }
+          },
+          "borrowed_configurations": 64,
+          "compile_commands_sha256": "98d893ef2284c73d5e4e866559411415d7fd48d7891e6a560b204452c83f2e5c",
+          "object_records": {
+            "scope": "Inspect already-built complete Frame objects; preserves literal bytes and ABI aliases.",
+            "arm": "before",
+            "objects": [
+              {
+                "source": "encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o",
+                "sha256": "7789417682ae5b36bf336e8650ad0e337c4cd2b8376050daf2dc266e111c6b67",
+                "function_count": 583
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o",
+                "sha256": "0a24bfab263c070af46b350dfe81131236ae534c719977f7aa3da0c5f8a826b0",
+                "function_count": 65
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o",
+                "sha256": "d98a1432fe5ccdee47c91c9f158db985150013ab2b44156b62fbd16f51cca29a",
+                "function_count": 418
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o",
+                "sha256": "f2661427a9e28db882d680e3dfdc077cc2d7413c0e19dbffe29fa1fc169a417d",
+                "function_count": 139
+              }
+            ]
+          }
+        },
+        {
+          "arm": "after",
+          "commands": 82,
+          "executables": {
+            "frame_encoding_masked_access_check": "f96b62c9374184e0232dd439890c4698fc62a10b2a86913c7f4ef1663b882010",
+            "frame_encoding_null_check": "c52c0d43835622cccb136efc21eb696d7ff76dad73cf6b5a5693b4868956a292",
+            "frame_phase_material_check": "cfb077b22e9aa44d1bf7f45721efd6ba74f07677512c43851c2a260ac3f678c5",
+            "frame_phase_plane_check": "14a80690d503d772cd7e5dd11f3e2ce5e1db1c277214fcdf83eb0ca5234d8649",
+            "frame_phase_repair_check": "83ff78f54a58b9498bb55c56db8f57c35bbd1b2c55552e317fc184d63d98022e",
+            "frame_phase_batch_check": "62475ed7c20d8adb3eda4d007eebeaeee4ec0e23a180a17230adb6ca347c9b43",
+            "frame_encoding_borrowed_check": "4cae844066d7fc2f1e4ddb8ad57ba8b4019ef7da59ff11745b638d5805108945",
+            "frame_phase_measure": "f2ce434d407c45523dec49f4acbff85365bdbce9e7eef4a81224ae53113d3a1f"
+          },
+          "qualification_sha256": "878bbd025b6fa5a23d8dbc8917e4d0f6cc263739dd9f3f55512ea1485ea2e4d3",
+          "log_manifest_sha256": "a9fbcedb24f77aa0f289c765e257829733e561503151bdb3ce2df9b721275fd8",
+          "ikea_dependencies": 68,
+          "ikea_dependency_manifest_sha256": "7cb4b9a677d0a5f5a99a29cc7d9651b2424c2d502408eb032df7908ebe66d4d8",
+          "assertions_enabled": true,
+          "owner_verification": {
+            "p__mbar": {
+              "rows": 800,
+              "semantic_sha256": "764e1beb88c1b4ea70320473833487073b13f91568e785ceb3941a56e06543b4"
+            },
+            "EventTime-mid": {
+              "rows": 800,
+              "semantic_sha256": "bb166bb0b67dabb6463d79bfa64b112fdd56a44673bd8d9842021f36aa9813ab"
+            },
+            "UserID": {
+              "rows": 800,
+              "semantic_sha256": "829e8ec9a0a0b6ab4a633443b3073260be9a8c0e8452087e443a794a2259ad31"
+            },
+            "URLHash": {
+              "rows": 800,
+              "semantic_sha256": "2d4bb0f79a4e70500c6db4353a1f999c9783816dc2b5bd1a1fbf4f848abfa942"
+            }
+          },
+          "borrowed_configurations": 64,
+          "compile_commands_sha256": "a88e4b9f0ed4263275a8711f79e9c1f01b2ff7a6a542b49ee8b0d91e291b77cc",
+          "object_records": {
+            "scope": "Inspect already-built complete Frame objects; preserves literal bytes and ABI aliases.",
+            "arm": "after",
+            "objects": [
+              {
+                "source": "encoding/CMakeFiles/frame_encoding_material.dir/kernels.cpp.o",
+                "sha256": "dd5528adc316aa60af2c561e00d8d783b45dc4ec38b200b74b7bb6984dfbfa6a",
+                "function_count": 583
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_plane.dir/phase_plane.cpp.o",
+                "sha256": "e80dfbacd85483e9feb6442409782277790e207601bf30c63c83713d360cb065",
+                "function_count": 65
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_material.dir/phase_material.cpp.o",
+                "sha256": "575113af59ff8a280d055eb0a5039646cdcd2a12dc53fff693e54c994e14311c",
+                "function_count": 418
+              },
+              {
+                "source": "lifecycle/CMakeFiles/frame_phase_measure.dir/phase_measure.cpp.o",
+                "sha256": "fb5c6187c48e51f3812f31913882ba6dc3dc399d5e6c235563a8222e35ae98cb",
+                "function_count": 139
+              }
+            ]
+          }
+        }
+      ],
+      "paired_non_time_owner_fields_equal": true,
+      "paired_other_command_logs_equal": true
+    }
+  ],
+  "changed_frame_files": [
+    "workbench/spikes/ikea-frame/encoding/kernels.cpp",
+    "workbench/spikes/ikea-frame/encoding/masked_access_check.cpp",
+    "workbench/spikes/ikea-frame/encoding/material.cpp",
+    "workbench/spikes/ikea-frame/encoding/material.h",
+    "workbench/spikes/ikea-frame/encoding/packing.cpp",
+    "workbench/spikes/ikea-frame/lifecycle/phase_plane.cpp"
+  ]
+}

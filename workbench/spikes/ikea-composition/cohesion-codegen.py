@@ -80,13 +80,29 @@ def object_record(path, source, cxxfilt):
     name_map = dict(zip(demangle_inputs, demangled, strict=True))
 
     def canonical_name(name):
-        return normalize(name_map.get(name, name), source)
+        result = normalize(name_map.get(name, name), source)
+        # Itanium constructors/destructors have ABI-distinct entry symbols that
+        # demangle alike. Preserve each alias and its relocations independently.
+        if name.startswith("_ZN") and (variant := re.search(r"(C[123]|D[012])E", name)):
+            result += " [ABI " + variant.group(1) + "]"
+        return result
 
     def canonical_section(name):
         for prefix in (".text.", ".rodata.", ".data.", ".gcc_except_table."):
             if name.startswith(prefix) and name[len(prefix):] in name_map:
                 return prefix + canonical_name(name[len(prefix):])
         return name
+
+    # Some COMDAT owners emit distinct sections with the same spelling (for
+    # example .init_array). Preserve each physical section, including relocation
+    # targets into it, rather than overwriting or collapsing its records.
+    canonical_sections = [canonical_section(name) for name in section_names]
+    section_counts = {name:canonical_sections.count(name) for name in canonical_sections}
+    section_seen = {}
+    for i, name in enumerate(canonical_sections):
+        section_seen[name] = section_seen.get(name, 0) + 1
+        if section_counts[name] > 1:
+            canonical_sections[i] = name + f" [section {section_seen[name]}]"
 
     relocations = {}
     for section in sections:
@@ -97,7 +113,7 @@ def object_record(path, source, cxxfilt):
         for i in range(0, section[5], section[9]):
             offset, info, addend = struct.unpack_from("<QQq", data, section[4] + i)
             symbol = symbols[info >> 32]
-            target = ("section:" + canonical_section(section_names[symbol[3]])
+            target = ("section:" + canonical_sections[symbol[3]]
                       if symbol[1] & 15 == 3 else canonical_name(raw_names[info >> 32]))
             rows.append([offset, info & 0xffffffff, target, symbol[4], addend])
         relocations[section[7]] = rows
@@ -118,10 +134,15 @@ def object_record(path, source, cxxfilt):
     constants = {}
     unwind = {}
     for i, section in enumerate(sections):
-        if section[1] != 1 or not section[2] & 2 or section[2] & 4:
+        if not section[2] & 2 or section[2] & 4:
             continue
-        key = canonical_section(section_names[i])
-        row = {"bytes": body(section).hex(), "alignment": section[8],
+        key = canonical_sections[i]
+        # NOBITS has no file payload; its zero-initialized extent is still part
+        # of the object's storage law. Other allocated section types include
+        # init arrays and x86's processor-specific unwind section type.
+        row = {"bytes": "" if section[1] == 8 else body(section).hex(),
+               "size": section[5], "type": section[1], "flags": section[2],
+               "alignment": section[8],
                "relocations": relocations.get(i, [])}
         target = unwind if key.startswith((".eh_frame", ".gcc_except_table")) else constants
         assert key not in target, f"normalized section collision: {key}"

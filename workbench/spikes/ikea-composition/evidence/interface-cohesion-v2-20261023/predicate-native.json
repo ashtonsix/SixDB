@@ -1,0 +1,3712 @@
+{
+  "candidate_sha256": "32ad56c26ed8f2d95a2dded82f394787c3c9e2cfdf550ffd826434ccd875b632",
+  "capture": {
+    "path": "build/captures/ikea-predicate-tight-r4-controls",
+    "source_digest": "3f3d1a1514fd2d8ba7d044adbca5b3a021b0468682e6a9d1c67415ed9e06ab14"
+  },
+  "decision": "Keep R4 two-pointer reader and separately prepared predicate. Caching stride==1 in predicate padding loses on complete preparation/one-shot commands; fewer selected hot-path instructions do not establish a performance improvement.",
+  "full_reader_case_metrics": 2052,
+  "limits": [
+    "Five counterbalanced trials of warm complete commands, not cold memory, owner publication or a complete Frame consumer.",
+    "Duplicate is byte-identical before ELF, measured with common argv0/cwd/user args; it is a negative control, never a correction factor.",
+    "Maintained shared decode/compare routes bypass the prepared predicate; their x86 timing changes do not establish direct flag/preparation work in those bodies. Linked layout remains part of these actual executables.",
+    "The ARM overlap-copy/store-forwarding hazard is emitted-code evidence; its causal contribution to the measured one-shot loss is not established by this comparison.",
+    "Only the candidate header differs from frozen R4. Later core writer API corrections and live Frame algorithms retain their separate qualification."
+  ],
+  "reader_sha256": "32d73cfa1edb15d81bd1e86fb31be73608e0777fca98b54e1a933d1808c442a8",
+  "reproduction": "Run handle-boundaries/predicate-results.py on the two recovered results directories. Select metrics wall_ns_per_window and cpu_ns_per_query without merging their units or correcting by duplicate.",
+  "selected_case_metrics": 1404,
+  "selected_cases_sha256": "38605d65f774ed43794bf5318799ee3261c53151c54fa764ff0b45de251a5cd4",
+  "selection": "All filters wall ns/window and all blocks CPU ns/query: 360+108 per profile. Block CPU ns/traversal and ns/block are derivable from retained structural counters and were validated by the full reader; their redundant rows remain in ignored output and original worker records.",
+  "shared_source_sha256": {
+    "workbench/spikes/ikea-composition/cohesion-native/CMakeLists.txt": "55dc63e9383f8cf1b6e2caf04cdedf950d726a2e45d4ffbf8b690ee8bc479f25",
+    "workbench/spikes/ikea-composition/cohesion-v2-native.py": "9073762e5105f67544d34e5dd7c45d958e01258c971117920cdd5c9290b895d3",
+    "workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp": "27cab80683ef7180b4f4686de0b5ce5cfb2ee04b3060e8360dbcdd28a32aaec1",
+    "workbench/spikes/ikea-composition/handle-boundaries/predicate-native.py": "8a89c6d16200765ae8a0d005c326f5cc6a8432047f9b91b50de2e3976c2f3289",
+    "workbench/spikes/ikea-composition/handle-boundaries/predicate-native.sh": "469e09983207f98b27b7cecb88aaa6f66ade5df72d43ea5da6a44b3c6779429a"
+  },
+  "single_candidate_delta": "ikea/include/ikea/tuplepack/filter.h",
+  "source_manifest_sha256": {
+    "after": "feb18c90459e1892e80d63bee94d031e884d78d813657fbcdf6ed91b9d113f8d",
+    "before": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72"
+  },
+  "status": "rejected; candidate header was never applied to live Ikea",
+  "structural_counters": {
+    "avx2": {
+      "blocks/fresh/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 33728.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 22528.0,
+        "width_transitions": 58.0
+      }
+    },
+    "avx512": {
+      "blocks/fresh/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      }
+    },
+    "neon": {
+      "blocks/fresh/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/fresh/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/fresh/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/fresh/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/oneshot/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/oneshot/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/oneshot/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/reprepare/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/reprepare/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/reprepare/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 0.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/bursty/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/bursty/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 31.0
+      },
+      "blocks/retained/clustered/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/clustered/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 7.0
+      },
+      "blocks/retained/shuffled/mixed/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/mixed/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/mixed/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1456.0,
+        "payload_grant_bytes": 1456.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/strided/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1936.0,
+        "payload_grant_bytes": 1936.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q1": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 1.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q64": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 64.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      },
+      "blocks/retained/shuffled/tight/q8": {
+        "blocks": 64.0,
+        "fixture_object_bytes": 26048.0,
+        "payload_allocation_bytes": 1000.0,
+        "payload_grant_bytes": 1000.0,
+        "queries_per_block": 8.0,
+        "retained_predicate_bytes": 1536.0,
+        "shared_plan_storage_bytes": 14848.0,
+        "width_transitions": 58.0
+      }
+    }
+  },
+  "summary": {
+    "avx2": {
+      "blocks": {
+        "after_losses_ge_5_percent": 10,
+        "cases": 108,
+        "duplicate_losses_ge_5_percent": 0,
+        "paired_ratio_range": {
+          "after": [
+            0.9638132575705067,
+            1.183732065882425
+          ],
+          "duplicate": [
+            0.9887690153448573,
+            1.0056992817559665
+          ]
+        }
+      },
+      "filters": {
+        "after_losses_ge_5_percent": 5,
+        "cases": 360,
+        "duplicate_losses_ge_5_percent": 0,
+        "paired_ratio_range": {
+          "after": [
+            0.9031729275385412,
+            1.083750333975892
+          ],
+          "duplicate": [
+            0.9814928808600786,
+            1.0144770796932305
+          ]
+        }
+      }
+    },
+    "avx512": {
+      "blocks": {
+        "after_losses_ge_5_percent": 12,
+        "cases": 108,
+        "duplicate_losses_ge_5_percent": 0,
+        "paired_ratio_range": {
+          "after": [
+            0.9724508947770721,
+            1.2212450913578072
+          ],
+          "duplicate": [
+            0.9919970725163453,
+            1.0102634760502875
+          ]
+        }
+      },
+      "filters": {
+        "after_losses_ge_5_percent": 12,
+        "cases": 360,
+        "duplicate_losses_ge_5_percent": 0,
+        "paired_ratio_range": {
+          "after": [
+            0.9383238599638823,
+            1.1467475364909578
+          ],
+          "duplicate": [
+            0.9862491431288968,
+            1.018643935404966
+          ]
+        }
+      }
+    },
+    "neon": {
+      "blocks": {
+        "after_losses_ge_5_percent": 36,
+        "cases": 108,
+        "duplicate_losses_ge_5_percent": 0,
+        "paired_ratio_range": {
+          "after": [
+            0.9610903135825063,
+            1.9846161569126406
+          ],
+          "duplicate": [
+            0.9929190375306838,
+            1.0014510955008948
+          ]
+        }
+      },
+      "filters": {
+        "after_losses_ge_5_percent": 0,
+        "cases": 360,
+        "duplicate_losses_ge_5_percent": 0,
+        "paired_ratio_range": {
+          "after": [
+            0.9755981671444354,
+            1.0238164062160307
+          ],
+          "duplicate": [
+            0.9922488906679646,
+            1.007822227061987
+          ]
+        }
+      }
+    }
+  },
+  "workers": {
+    "neon": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 180700347,
+        "files": 123,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/1c1654b707c73ad917600282edb7180dc2f68a9caa4c0881512757d6a98ce25f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "1c1654b707c73ad917600282edb7180dc2f68a9caa4c0881512757d6a98ce25f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/1c1654b707c73ad917600282edb7180dc2f68a9caa4c0881512757d6a98ce25f.tar.gz"
+      },
+      "binaries": [
+        {
+          "arm": "before",
+          "bytes": 11723968,
+          "family": "filters",
+          "profile": "neon",
+          "sha256": "e7bc6feab3197b7e353adb5b7946f0a025d85f4f644510e340358b43156fa018"
+        },
+        {
+          "arm": "before",
+          "bytes": 97389568,
+          "family": "oracles",
+          "profile": "neon",
+          "sha256": "0ad0252cad1263f59e20a281dd91790e7faad886b4cd40a2f8cb7f2328981346"
+        },
+        {
+          "arm": "before",
+          "bytes": 5068712,
+          "family": "blocks",
+          "profile": "neon",
+          "sha256": "f04b4d71a1b86cbb9a2d299f053c0f74979f04e15db722698f0bedcd0075915b"
+        },
+        {
+          "arm": "after",
+          "bytes": 11722112,
+          "family": "filters",
+          "profile": "neon",
+          "sha256": "ef5c9a538233700a17ffb373cb8789799523b581ba3ccc5c2464633d72f6a9d4"
+        },
+        {
+          "arm": "after",
+          "bytes": 97408248,
+          "family": "oracles",
+          "profile": "neon",
+          "sha256": "3322022c9568d074230610a6dfb27f26fd181b84325b7eb1bf38b496cf643148"
+        },
+        {
+          "arm": "after",
+          "bytes": 5068032,
+          "family": "blocks",
+          "profile": "neon",
+          "sha256": "dab32a25523c13bad65fc6a4f3b14d416555b79bfe36cfaefb1a55015919634e"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 11723968,
+          "copied_from": "/opt/sixdb/jobs/20261023T033340Z-bbcf0170/results/neon/before/filter_composition_extra",
+          "family": "filters",
+          "no_compilation": true,
+          "profile": "neon",
+          "sha256": "e7bc6feab3197b7e353adb5b7946f0a025d85f4f644510e340358b43156fa018"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 97389568,
+          "copied_from": "/opt/sixdb/jobs/20261023T033340Z-bbcf0170/results/neon/before/ikea_filters_check",
+          "family": "oracles",
+          "no_compilation": true,
+          "profile": "neon",
+          "sha256": "0ad0252cad1263f59e20a281dd91790e7faad886b4cd40a2f8cb7f2328981346"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 5068712,
+          "copied_from": "/opt/sixdb/jobs/20261023T033340Z-bbcf0170/results/neon/before/ikea_predicate_blocks",
+          "family": "blocks",
+          "no_compilation": true,
+          "profile": "neon",
+          "sha256": "f04b4d71a1b86cbb9a2d299f053c0f74979f04e15db722698f0bedcd0075915b"
+        }
+      ],
+      "commands": 58,
+      "common_argv0": {
+        "blocks": "ikea_predicate_blocks",
+        "filters": "ikea_predicate_filters",
+        "oracles": "ikea_predicate_oracles"
+      },
+      "cpu": 0,
+      "job": "20261023T033340Z-bbcf0170",
+      "profiles": [
+        "neon"
+      ],
+      "receipt_sha256": "4dcb9551a533a623ab69ce903abe06f0fdb4d3d1ba547a6895d5021fc094cc45",
+      "source_manifest_file_sha256": "8a6ea938432df802747ad72406af4931eba90032b79db77cc384b1c4f30f080a",
+      "timed_arms": [
+        "before",
+        "after",
+        "duplicate"
+      ],
+      "trial_orders": [
+        [
+          "before",
+          "after",
+          "duplicate"
+        ],
+        [
+          "after",
+          "duplicate",
+          "before"
+        ],
+        [
+          "duplicate",
+          "before",
+          "after"
+        ],
+        [
+          "duplicate",
+          "after",
+          "before"
+        ],
+        [
+          "after",
+          "before",
+          "duplicate"
+        ]
+      ],
+      "trials": 5
+    },
+    "zen": {
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 339145102,
+        "files": 232,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/b6dfd682b427a81cf599d1fa052a9beabc46763495f803cde22afd87adfd2c08.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "b6dfd682b427a81cf599d1fa052a9beabc46763495f803cde22afd87adfd2c08",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b6dfd682b427a81cf599d1fa052a9beabc46763495f803cde22afd87adfd2c08.tar.gz"
+      },
+      "binaries": [
+        {
+          "arm": "before",
+          "bytes": 11475208,
+          "family": "filters",
+          "profile": "avx2",
+          "sha256": "de952ab7468d31595f192db02e7a983595cbde66121d6e47759a0e6380c79dad"
+        },
+        {
+          "arm": "before",
+          "bytes": 83641704,
+          "family": "oracles",
+          "profile": "avx2",
+          "sha256": "ccd8fef4559efc7abe972e68eb4134976d9012a9604ed2adc85ed69f2b365ee1"
+        },
+        {
+          "arm": "before",
+          "bytes": 5091960,
+          "family": "blocks",
+          "profile": "avx2",
+          "sha256": "f51722a987d316051addd35d49afcc894c191b95a4e01dde2548ae300ebb0e23"
+        },
+        {
+          "arm": "after",
+          "bytes": 11456952,
+          "family": "filters",
+          "profile": "avx2",
+          "sha256": "6cebce721f547a7c9c791f8fc5b8ef6ad5558c32a884084f16851278a57e1791"
+        },
+        {
+          "arm": "after",
+          "bytes": 83649320,
+          "family": "oracles",
+          "profile": "avx2",
+          "sha256": "db0c4b2cb74226e0afbc40298d4ba12d8f2f7ee8fdafa80e9bcef85c246bf01d"
+        },
+        {
+          "arm": "after",
+          "bytes": 5088544,
+          "family": "blocks",
+          "profile": "avx2",
+          "sha256": "9aa6dc60b11b3652896b641ac3ede2f22b910428acfb348bf4e2c100f677a404"
+        },
+        {
+          "arm": "before",
+          "bytes": 11201656,
+          "family": "filters",
+          "profile": "avx512",
+          "sha256": "3b5f8c34997f82e92eee765c1d424868a74041cd3c0d65b9afc5201f0f4f5df9"
+        },
+        {
+          "arm": "before",
+          "bytes": 84622288,
+          "family": "oracles",
+          "profile": "avx512",
+          "sha256": "a82444f264ad913aeb506bbcf6445097f1dcd0c6e054a26e88cc740bd6bf9e52"
+        },
+        {
+          "arm": "before",
+          "bytes": 5084608,
+          "family": "blocks",
+          "profile": "avx512",
+          "sha256": "87882bcc0dd1efeab93a0eae55171f3d7910beffac0b7de0752a5fa403e0ab60"
+        },
+        {
+          "arm": "after",
+          "bytes": 11218320,
+          "family": "filters",
+          "profile": "avx512",
+          "sha256": "8a4b4a2a5c4117efc59875d8c7311c93f2a64eb09357a46655a640c6b546ce0f"
+        },
+        {
+          "arm": "after",
+          "bytes": 84629256,
+          "family": "oracles",
+          "profile": "avx512",
+          "sha256": "88a9e18dca616c6d16dc0b28c1994bada2e55ed612e1df838a780bb51fef6a67"
+        },
+        {
+          "arm": "after",
+          "bytes": 5081160,
+          "family": "blocks",
+          "profile": "avx512",
+          "sha256": "ab8c18c485faafe0848d4d3d51dc5939bdb2545b0f9501681906d16d45e6a9c6"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 11475208,
+          "copied_from": "/opt/sixdb/jobs/20261023T033355Z-694f6f1f/results/avx2/before/filter_composition_extra",
+          "family": "filters",
+          "no_compilation": true,
+          "profile": "avx2",
+          "sha256": "de952ab7468d31595f192db02e7a983595cbde66121d6e47759a0e6380c79dad"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 83641704,
+          "copied_from": "/opt/sixdb/jobs/20261023T033355Z-694f6f1f/results/avx2/before/ikea_filters_check",
+          "family": "oracles",
+          "no_compilation": true,
+          "profile": "avx2",
+          "sha256": "ccd8fef4559efc7abe972e68eb4134976d9012a9604ed2adc85ed69f2b365ee1"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 5091960,
+          "copied_from": "/opt/sixdb/jobs/20261023T033355Z-694f6f1f/results/avx2/before/ikea_predicate_blocks",
+          "family": "blocks",
+          "no_compilation": true,
+          "profile": "avx2",
+          "sha256": "f51722a987d316051addd35d49afcc894c191b95a4e01dde2548ae300ebb0e23"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 11201656,
+          "copied_from": "/opt/sixdb/jobs/20261023T033355Z-694f6f1f/results/avx512/before/filter_composition_extra",
+          "family": "filters",
+          "no_compilation": true,
+          "profile": "avx512",
+          "sha256": "3b5f8c34997f82e92eee765c1d424868a74041cd3c0d65b9afc5201f0f4f5df9"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 84622288,
+          "copied_from": "/opt/sixdb/jobs/20261023T033355Z-694f6f1f/results/avx512/before/ikea_filters_check",
+          "family": "oracles",
+          "no_compilation": true,
+          "profile": "avx512",
+          "sha256": "a82444f264ad913aeb506bbcf6445097f1dcd0c6e054a26e88cc740bd6bf9e52"
+        },
+        {
+          "arm": "duplicate",
+          "bytes": 5084608,
+          "copied_from": "/opt/sixdb/jobs/20261023T033355Z-694f6f1f/results/avx512/before/ikea_predicate_blocks",
+          "family": "blocks",
+          "no_compilation": true,
+          "profile": "avx512",
+          "sha256": "87882bcc0dd1efeab93a0eae55171f3d7910beffac0b7de0752a5fa403e0ab60"
+        }
+      ],
+      "commands": 116,
+      "common_argv0": {
+        "blocks": "ikea_predicate_blocks",
+        "filters": "ikea_predicate_filters",
+        "oracles": "ikea_predicate_oracles"
+      },
+      "cpu": 0,
+      "job": "20261023T033355Z-694f6f1f",
+      "profiles": [
+        "avx2",
+        "avx512"
+      ],
+      "receipt_sha256": "2e15b9d713befadf94eeb5afa2babdc519e1ea317b4eb6d8327a289a77d4cb2b",
+      "source_manifest_file_sha256": "8a6ea938432df802747ad72406af4931eba90032b79db77cc384b1c4f30f080a",
+      "timed_arms": [
+        "before",
+        "after",
+        "duplicate"
+      ],
+      "trial_orders": [
+        [
+          "before",
+          "after",
+          "duplicate"
+        ],
+        [
+          "after",
+          "duplicate",
+          "before"
+        ],
+        [
+          "duplicate",
+          "before",
+          "after"
+        ],
+        [
+          "duplicate",
+          "after",
+          "before"
+        ],
+        [
+          "after",
+          "before",
+          "duplicate"
+        ]
+      ],
+      "trials": 5
+    }
+  }
+}

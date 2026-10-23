@@ -1,0 +1,432 @@
+{
+  "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+  "comparisons": [
+    {
+      "all_non_debug_sections_exact": true,
+      "constants": {
+        "differences": [],
+        "equal": 3,
+        "total": 3
+      },
+      "functions": {
+        "differences": [],
+        "equal": 87,
+        "total": 87
+      },
+      "profile": "neon-v2",
+      "raw_changed_sections": [
+        ".debug_abbrev",
+        ".debug_info",
+        ".debug_line",
+        ".debug_line_str",
+        ".rela.debug_line"
+      ],
+      "source": "engine/src/directory.cpp",
+      "unwind": {
+        "differences": [],
+        "equal": 17,
+        "total": 17
+      }
+    },
+    {
+      "all_non_debug_sections_exact": true,
+      "constants": {
+        "differences": [],
+        "equal": 5,
+        "total": 5
+      },
+      "functions": {
+        "differences": [],
+        "equal": 147,
+        "total": 147
+      },
+      "profile": "neon-v2",
+      "raw_changed_sections": [],
+      "source": "engine/src/directory_material.cpp",
+      "unwind": {
+        "differences": [],
+        "equal": 44,
+        "total": 44
+      }
+    },
+    {
+      "all_non_debug_sections_exact": true,
+      "constants": {
+        "differences": [],
+        "equal": 6,
+        "total": 6
+      },
+      "functions": {
+        "differences": [],
+        "equal": 87,
+        "total": 87
+      },
+      "profile": "avx2-zen5",
+      "raw_changed_sections": [
+        ".debug_abbrev",
+        ".debug_info",
+        ".debug_line",
+        ".debug_line_str",
+        ".debug_str",
+        ".rela.debug_line",
+        ".rela.debug_str_offsets"
+      ],
+      "source": "engine/src/directory.cpp",
+      "unwind": {
+        "differences": [],
+        "equal": 17,
+        "total": 17
+      }
+    },
+    {
+      "all_non_debug_sections_exact": true,
+      "constants": {
+        "differences": [],
+        "equal": 5,
+        "total": 5
+      },
+      "functions": {
+        "differences": [],
+        "equal": 147,
+        "total": 147
+      },
+      "profile": "avx2-zen5",
+      "raw_changed_sections": [],
+      "source": "engine/src/directory_material.cpp",
+      "unwind": {
+        "differences": [],
+        "equal": 44,
+        "total": 44
+      }
+    },
+    {
+      "all_non_debug_sections_exact": true,
+      "constants": {
+        "differences": [],
+        "equal": 5,
+        "total": 5
+      },
+      "functions": {
+        "differences": [],
+        "equal": 87,
+        "total": 87
+      },
+      "profile": "avx512-zen5",
+      "raw_changed_sections": [
+        ".debug_abbrev",
+        ".debug_info",
+        ".debug_line",
+        ".debug_line_str",
+        ".debug_str",
+        ".rela.debug_line",
+        ".rela.debug_str_offsets"
+      ],
+      "source": "engine/src/directory.cpp",
+      "unwind": {
+        "differences": [],
+        "equal": 17,
+        "total": 17
+      }
+    },
+    {
+      "all_non_debug_sections_exact": true,
+      "constants": {
+        "differences": [],
+        "equal": 5,
+        "total": 5
+      },
+      "functions": {
+        "differences": [],
+        "equal": 147,
+        "total": 147
+      },
+      "profile": "avx512-zen5",
+      "raw_changed_sections": [],
+      "source": "engine/src/directory_material.cpp",
+      "unwind": {
+        "differences": [],
+        "equal": 44,
+        "total": 44
+      }
+    }
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "configured_commands_sha256": "a295b34bd2c6f4c4a8044a4b7b39dfb6ab30b17460ce9fd953892fe5b64d0201",
+  "control_files": 946,
+  "control_manifest_sha256": "3b31586cc0f4fc0915e82ea51b1910e1ed854b0ab5f5e96fbf30379d450ecef0",
+  "project_dependencies": {
+    "count": 77,
+    "sha256": "63d8a3da75f2250bbb4a7699a17428fca4e2b3af70a4e6214db695bd8ad5bb33"
+  },
+  "runner_sha256": "1d0f57f2d45b92163257fe81711047f449e361b9f6f23ab78ab2152a06f2ff60",
+  "scope": "Compare complete Directory objects while keeping its parent modules fixed.\n\nThe two supplied source roots are frozen cohesion captures. Engine, Orbital and\nLoom are taken from the baseline root for BOTH arms and verified against Git.\nOnly Ikea changes. Commands retain the configured Directory source flags, with\nexplicit pinned cross-target ISA/tuning substitutions. ELF instructions, data,\nunwind records and relocation targets/addends are compared without type renames.\nThis does not measure linked placement or runtime performance.\n",
+  "symbol_identity": "Complete/base constructor aliases retain their distinct raw mangled identities in function and relocation labels; counts include those function symbols.",
+  "system_dependencies": {
+    "count": 782,
+    "sha256": "0283b782699a7717259925cbada5eeae9c39a28bd68ff85e756e1137e46fb7f0"
+  },
+  "command_templates": {
+    "neon-v2": [
+      "clang++-21",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-I{source_root}/engine/include",
+      "-I{source_root}/orbital/include",
+      "-I{source_root}/loom/include",
+      "-I{source_root}/ikea/include",
+      "-O3",
+      "-g",
+      "-std=c++23",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map={source_root}=/sixdb",
+      "-MD",
+      "-MF",
+      "{dependency_file}",
+      "-c",
+      "{source_file}",
+      "-o",
+      "{object_file}"
+    ],
+    "avx2-zen5": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-I{source_root}/engine/include",
+      "-I{source_root}/orbital/include",
+      "-I{source_root}/loom/include",
+      "-I{source_root}/ikea/include",
+      "-O3",
+      "-g",
+      "-std=c++23",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map={source_root}=/sixdb",
+      "-MD",
+      "-MF",
+      "{dependency_file}",
+      "-c",
+      "{source_file}",
+      "-o",
+      "{object_file}"
+    ],
+    "avx512-zen5": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-I{source_root}/engine/include",
+      "-I{source_root}/orbital/include",
+      "-I{source_root}/loom/include",
+      "-I{source_root}/ikea/include",
+      "-O3",
+      "-g",
+      "-std=c++23",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map={source_root}=/sixdb",
+      "-MD",
+      "-MF",
+      "{dependency_file}",
+      "-c",
+      "{source_file}",
+      "-o",
+      "{object_file}"
+    ]
+  },
+  "objects": [
+    {
+      "arm": "before",
+      "object_sha256": "4711cad74611fb074d3d75fa187f1f3a52e6f3b7e73928a55639169dc369ca92",
+      "profile": "neon-v2",
+      "source": "engine/src/directory.cpp",
+      "command_template": "neon-v2",
+      "command_sha256": "de5c8a18ccee4539a710e027c984504817e8979d9d587701130d085321d651b8"
+    },
+    {
+      "arm": "after",
+      "object_sha256": "eb596c283ea26d730f20f059daec6724d0e02352c1be77cef9becf93b301191a",
+      "profile": "neon-v2",
+      "source": "engine/src/directory.cpp",
+      "command_template": "neon-v2",
+      "command_sha256": "e1e92620e594b81d62973be4cc245cf4f13fb3f04db580f2e5a301171c3c4151"
+    },
+    {
+      "arm": "before",
+      "object_sha256": "6b82ee183140377ffbbbf00e333f3cb8f37ad7f21d6f3b990262cf7a6f733359",
+      "profile": "neon-v2",
+      "source": "engine/src/directory_material.cpp",
+      "command_template": "neon-v2",
+      "command_sha256": "9638af8699ee6156028663e206a516888a89910046f5f895e1ffe219b300d5e2"
+    },
+    {
+      "arm": "after",
+      "object_sha256": "6b82ee183140377ffbbbf00e333f3cb8f37ad7f21d6f3b990262cf7a6f733359",
+      "profile": "neon-v2",
+      "source": "engine/src/directory_material.cpp",
+      "command_template": "neon-v2",
+      "command_sha256": "f0679b6426d36c43f2f55c80e8ac6e324dc606121d142f73030a72acc900b482"
+    },
+    {
+      "arm": "before",
+      "object_sha256": "e2ac2693dcd2b7b4d608fe02a6bd38c120bf0d92aef5c0bc1e7f706dca48a31c",
+      "profile": "avx2-zen5",
+      "source": "engine/src/directory.cpp",
+      "command_template": "avx2-zen5",
+      "command_sha256": "1c801aed363e9e3cc85be33f67771656463fe0c30cbbe9137406c89c51afc95b"
+    },
+    {
+      "arm": "after",
+      "object_sha256": "a976e76a3901fbb7dc99dc6f1a4c8ffdffdfbc812fd80d9a372471e51c7c3e9d",
+      "profile": "avx2-zen5",
+      "source": "engine/src/directory.cpp",
+      "command_template": "avx2-zen5",
+      "command_sha256": "ce23ed3d738d3a97f022b2972c6c39c3ad8902f26eba013ab2732fde8f1fdd5a"
+    },
+    {
+      "arm": "before",
+      "object_sha256": "a642e9d12cf4acdda9cb59f83c2e7fb14d0ffc47693ef6efe198264589ff7b58",
+      "profile": "avx2-zen5",
+      "source": "engine/src/directory_material.cpp",
+      "command_template": "avx2-zen5",
+      "command_sha256": "722e3c258d3ca1c5606fba1c838d5b93bb969290834ca7a5a40db47edbc7b8f9"
+    },
+    {
+      "arm": "after",
+      "object_sha256": "a642e9d12cf4acdda9cb59f83c2e7fb14d0ffc47693ef6efe198264589ff7b58",
+      "profile": "avx2-zen5",
+      "source": "engine/src/directory_material.cpp",
+      "command_template": "avx2-zen5",
+      "command_sha256": "c538b881a2ea5a72a362f0b0f5244da49e22abe128eb854fe76b4ec9d56c720f"
+    },
+    {
+      "arm": "before",
+      "object_sha256": "bc94ce8eded911857e72d8f39cb07b77fe4d36148cad99f95733364d68b93b8a",
+      "profile": "avx512-zen5",
+      "source": "engine/src/directory.cpp",
+      "command_template": "avx512-zen5",
+      "command_sha256": "f03382b3f41cd967b871ed7ae07508001ca751f67cefabd3648812182b8dba78"
+    },
+    {
+      "arm": "after",
+      "object_sha256": "18be89cb4275b5ddce41fa8cc7a0a175ad60f94c3179826175c3bf678ac70f9d",
+      "profile": "avx512-zen5",
+      "source": "engine/src/directory.cpp",
+      "command_template": "avx512-zen5",
+      "command_sha256": "ffae78bbb79d9c322e36acf0437b57a8e9c6ffab83227d148a444db7bdb06b8e"
+    },
+    {
+      "arm": "before",
+      "object_sha256": "bb6e186ad0990a911045a3c7883438d00e3ff6ab24ec56cef7822bf2aec079f9",
+      "profile": "avx512-zen5",
+      "source": "engine/src/directory_material.cpp",
+      "command_template": "avx512-zen5",
+      "command_sha256": "dd6478424ae2fff33d75ec692c61ade882d84fe0f783a0322996a2eadeb210f8"
+    },
+    {
+      "arm": "after",
+      "object_sha256": "bb6e186ad0990a911045a3c7883438d00e3ff6ab24ec56cef7822bf2aec079f9",
+      "profile": "avx512-zen5",
+      "source": "engine/src/directory_material.cpp",
+      "command_template": "avx512-zen5",
+      "command_sha256": "33755746545167fcd5f86d4d47b1ee4cbb725e8b7be08d798ba55aa8aa780cb1"
+    }
+  ],
+  "source_cut": {
+    "capture": "build/captures/ikea-cohesion-v2-native-r3",
+    "source_digest": "1a1b80cf51cdd56896b2e6b1d7a95ac453750257388f1981d5ec9c0dc6a9606d",
+    "after_source_manifest_sha256": "f61c0d75ccc73d8642e16c89b693098171bc64c22a8fe5503fdcfccc275cfb19",
+    "status": "diagnostic candidate; later handle research does not enter these Directory/Intervals dependency closures",
+    "r4_closure": {
+      "capture": "build/ikea-cohesion-v2/native-r4-sources/after",
+      "ikea_dependencies": 16,
+      "all_r3_r4_hashes_equal": true,
+      "dependencies": {
+        "ikea/include/ikea/bitset256.h": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af",
+        "ikea/include/ikea/comparison.h": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a",
+        "ikea/include/ikea/detail/filter/compare.h": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9",
+        "ikea/include/ikea/effects.h": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8",
+        "ikea/include/ikea/intervals.h": "07e516ec0dc0aba72fc2abac1655d7cbc9548a93774a47a6f7ea8f9b881223cb",
+        "ikea/include/ikea/intervals/detail/bytes.h": "7c9d303bf981ffe9da63574e4d451a6a0b3c16d7eaf00c8c8bdc344dc9d11835",
+        "ikea/include/ikea/intervals/detail/native.h": "2a4e0cad5dafec45f7de2b5d7f8046023ffe346a99bbf630e8dc6df97956c0b0",
+        "ikea/include/ikea/intervals/detail/prefix.h": "c84f456e0e99615c10d0b75514fec8b42562a347c168a119261c8ca0e7c54e4a",
+        "ikea/include/ikea/intervals/detail/search.h": "81ab913c600adf59702179c80bb77f20136c9266dc37609f4d72ce2cfd0281e1",
+        "ikea/include/ikea/intervals/detail/simd.h": "9ba0675bbfe1ebe2621a974da01a440a4550836b4cbfbc4b40dd77528ccb70dc",
+        "ikea/include/ikea/intervals/edit.h": "aaec0a8e859d7507ddbfc1456fd6ef427b950cf8b086a108de2c5c9803dc56a9",
+        "ikea/include/ikea/intervals/geometry.h": "dbba1916caf1ef1d480e7ee5c90ae137a9f32d4c373dd39d7996b359a3212b0a",
+        "ikea/include/ikea/intervals/projected.h": "63c4efa8e19a25035e95215545f7b4fdfa5ed3556d563c4259556909d921acb2",
+        "ikea/include/ikea/intervals/search.h": "814a0ad87196e7e628f67b6ea724c240f8ea8e18f21bb699b47650bae38f1405",
+        "ikea/include/ikea/intervals/sparse.h": "65605f895f175ece549e5a70072be76628074a514bd371b5f1dacd5c10a565a2",
+        "ikea/include/ikea/intervals/types.h": "cde46145512289673bb8fd9e05724a6b8cbf0d93dbfc85b43a5eb8d9dd1a46f7"
+      }
+    }
+  },
+  "limits": [
+    "Complete unlinked objects on pinned Linux Clang21; no linked code placement or runtime inference.",
+    "directory_material.cpp whole object hashes match; directory.cpp differences are exclusively debug sections, including debug relocations. All non-debug section bytes/metadata match.",
+    "Identical f153 Engine/Orbital/Loom parents isolate Ikea changes; this does not compare later independent parent-module edits.",
+    "Function-symbol counts retain complete/base constructor aliases separately using raw mangled identity; no symbol or type name is normalized away."
+  ],
+  "reproduce": {
+    "runner": "workbench/spikes/ikea-composition/cohesion-directory-codegen.py",
+    "configured_commands": "build/clang/cohesion-caller-config/compile_commands.json",
+    "full_ignored_receipt": "build/ikea-cohesion-v2/directory-codegen-r3/receipt.json",
+    "source_recovery": "Git f153 recovers identical parent controls and before Ikea; R3 diagnostic source capture/receipt recovers after Ikea; project dependency digests validate the consumed headers. Retained command templates substitute frozen source root, relative source, object path and dependency path. R3 immutable source is also retained in native artifact s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe.tar.gz (source.tar.gz within the artifact).",
+    "command": "orb -m ubuntu taskset -c 8 python3 workbench/spikes/ikea-composition/cohesion-directory-codegen.py BEFORE AFTER OUTPUT --configured-commands COMPILE_COMMANDS",
+    "records_only": "Append --reuse --records-only to reparse command/object/dependency-verified existing outputs; any required compilation is refused."
+  },
+  "elf_parser_sha256": "3ca00733fbe15e5d70adccbd3f2ab900d658633299df263e5886d4c61a0e320e",
+  "coverage_categories": {
+    "functions": "Every retained function-symbol extent with bytes and exact relocations; complete/base constructor identities remain distinct.",
+    "constants": "Historical key name: all allocated, non-executable storage except unwind, including PROGBITS, INIT_ARRAY and NOBITS shape/size/type/flags/alignment when present; does not imply immutability.",
+    "unwind": "Includes allocated SHT_X86_64_UNWIND .eh_frame as well as PROGBITS unwind/exception tables. Strict reparse increases total179 to183 without changing an object.",
+    "raw_sections": "Every duplicate-name section occurrence retained independently. Nondebug comparison includes type, flags, link/info, alignment, entry size, storage size (including NOBITS) and content hash; file offsets are excluded."
+  }
+}

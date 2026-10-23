@@ -1,0 +1,2100 @@
+{
+  "scope": "Audit actual callers across the disruptive cohesion revision.\n\nImports the strict ELF64 parser from cohesion-codegen.py. Only documented,\nside-aware demangled API role/type correspondences are normalized. Every emitted\ninstruction/data byte, relocation offset/kind/value/addend remains literal.\nDifferences are findings to inspect, not failures to normalize away.\n",
+  "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+  "runner_sha256": "bb0c73eb631fe5a98ab8a8e46eb1e86dae95c53dff4a79fd65773ed9c6a4b9a8",
+  "elf_parser_sha256": "f7a463ac14ebba905874a0329170f5eacabe7d10c22b9f8c3b139465e5fb21a0",
+  "compiler_version": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "objdump_version": "Ubuntu LLVM version 21.1.8\n  Optimized build.\n\n\n  Registered Targets:\n    aarch64     - AArch64 (little endian)\n    aarch64_32  - AArch64 (little endian ILP32)\n    aarch64_be  - AArch64 (big endian)\n    amdgcn      - AMD GCN GPUs\n    arm         - ARM\n    arm64       - ARM64 (little endian)\n    arm64_32    - ARM64 (little endian ILP32)\n    armeb       - ARM (big endian)\n    avr         - Atmel AVR Microcontroller\n    bpf         - BPF (host endian)\n    bpfeb       - BPF (big endian)\n    bpfel       - BPF (little endian)\n    hexagon     - Hexagon\n    lanai       - Lanai\n    loongarch32 - 32-bit LoongArch\n    loongarch64 - 64-bit LoongArch\n    m68k        - Motorola 68000 family\n    mips        - MIPS (32-bit big endian)\n    mips64      - MIPS (64-bit big endian)\n    mips64el    - MIPS (64-bit little endian)\n    mipsel      - MIPS (32-bit little endian)\n    msp430      - MSP430 [experimental]\n    nvptx       - NVIDIA PTX 32-bit\n    nvptx64     - NVIDIA PTX 64-bit\n    ppc32       - PowerPC 32\n    ppc32le     - PowerPC 32 LE\n    ppc64       - PowerPC 64\n    ppc64le     - PowerPC 64 LE\n    r600        - AMD GPUs HD2XXX-HD6XXX\n    riscv32     - 32-bit RISC-V\n    riscv64     - 64-bit RISC-V\n    sparc       - Sparc\n    sparcel     - Sparc LE\n    sparcv9     - Sparc V9\n    spirv       - SPIR-V Logical\n    spirv32     - SPIR-V 32-bit\n    spirv64     - SPIR-V 64-bit\n    systemz     - SystemZ\n    thumb       - Thumb\n    thumbeb     - Thumb (big endian)\n    ve          - VE\n    wasm32      - WebAssembly 32-bit\n    wasm64      - WebAssembly 64-bit\n    x86         - 32-bit X86: Pentium-Pro and above\n    x86-64      - 64-bit X86: EM64T and AMD64\n    xcore       - XCore\n    xtensa      - Xtensa 32\n",
+  "source_flags": {
+    "ikea/examples/filters/composition.cpp": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ],
+    "ikea/examples/streampack/ordinary.cpp": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ],
+    "ikea/examples/filters/ordinary.cpp": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ]
+  },
+  "normalizations": {
+    "source_roots": "both mapped to /sixdb by compiler; actual assertion strings remain literal",
+    "before_demangled_renames": [
+      [
+        "ikea::block256",
+        "ikea::bitset256"
+      ],
+      [
+        "ikea::bec256::destination",
+        "ikea::bec256::view"
+      ],
+      [
+        "ikea::bec256::source",
+        "ikea::bec256::reader"
+      ],
+      [
+        "ikea::seriespack::composition::prepared_mutation<",
+        "ikea::seriespack::writer<"
+      ],
+      [
+        "ikea::seriespack::composition::mutation_operation<",
+        "ikea::seriespack::erased_writer<"
+      ],
+      [
+        "ikea::seriespack::composition::prepared<",
+        "ikea::seriespack::reader<"
+      ],
+      [
+        "ikea::seriespack::decoder<",
+        "ikea::seriespack::erased_reader<"
+      ],
+      [
+        "ikea::seriespack::bind_decoder<",
+        "ikea::seriespack::bind_reader<"
+      ],
+      [
+        "ikea::seriespack::row_selection",
+        "ikea::seriespack::selection"
+      ],
+      [
+        "ikea::seriespack::format<",
+        "ikea::seriespack::layout<"
+      ],
+      [
+        "ikea::seriespack::view<",
+        "ikea::seriespack::basic_view<"
+      ],
+      [
+        "ikea::seriespack::sum_change",
+        "ikea::seriespack::author::sum_change"
+      ],
+      [
+        "ikea::seriespack::no_summary",
+        "ikea::seriespack::author::no_summary"
+      ],
+      [
+        "ikea::seriespack::filter_values<",
+        "ikea::seriespack::author::filter_values<"
+      ],
+      [
+        "ikea::tuplepack::filter_values<",
+        "ikea::tuplepack::author::filter_values<"
+      ],
+      [
+        "ikea::seriespack::composition::",
+        "ikea::seriespack::author::"
+      ],
+      [
+        "ikea::tuplepack::read_operation<",
+        "ikea::tuplepack::reader<"
+      ],
+      [
+        "ikea::tuplepack::mutation_operation<",
+        "ikea::tuplepack::writer<"
+      ],
+      [
+        "ikea::tuplepack::construction_operation",
+        "ikea::tuplepack::writer<128u, 1u>"
+      ],
+      [
+        "ikea::tuplepack::constructor",
+        "ikea::tuplepack::write_plan<128u, 1u>"
+      ],
+      [
+        "ikea::tuplepack::native_reader<",
+        "ikea::tuplepack::author::native_reader<"
+      ],
+      [
+        "ikea::tuplepack::native_writer<",
+        "ikea::tuplepack::author::native_writer<"
+      ],
+      [
+        "ikea::tuplepack::erased_mutation<",
+        "ikea::tuplepack::erased_writer<"
+      ],
+      [
+        "ikea::tuplepack::field_filter<",
+        "ikea::tuplepack::detail::field_predicate<"
+      ],
+      [
+        "ikea::source_write_journal",
+        "ikea::journal"
+      ],
+      [
+        "ikea::owner_write",
+        "ikea::journal::entry"
+      ],
+      [
+        "ikea::no_coverage",
+        "ikea::no_effects"
+      ],
+      [
+        "ikea::streampack::author::dispatch<",
+        "ikea::streampack::author::visit<"
+      ]
+    ],
+    "before_numeric_only_TP_reader_writer": "read_plan/write_plan, before operation renames",
+    "before_byte_object_template_parameters": [
+      "ikea::seriespack::basic_view<",
+      "ikea::tuplepack::basic_view<",
+      "ikea::tuplepack::reader<",
+      "ikea::tuplepack::author::native_reader<",
+      "ikea::tuplepack::detail::field_predicate<"
+    ],
+    "before_SP_physical_helpers": "ordinary namespace -> author; private helpers not merged",
+    "before_HT_value_payload": "insert_slow second argument std::array<unsigned char,N> -> std::array<std::byte,N>; numeric controls unchanged",
+    "before_shared_chain": "detail::native_chain<Native,Mask,Slots,ModuleError,Sequence> -> author::chain<Native,Mask,Slots,Sequence>; explicit cold error type removed"
+  },
+  "pairs": [
+    {
+      "profile": "neon-v2",
+      "logical": "seriespack-ordinary",
+      "before_source": "ikea/examples/seriespack/ordinary.cpp",
+      "after_source": "ikea/examples/seriespack/ordinary.cpp",
+      "before_object_sha256": "b4c59d948f6d9cdeb1f5401906e93933928edba795e74cb5798ea51aef2f29c1",
+      "after_object_sha256": "d9435381c362e097a838ff62a7771e4060ef816fea7ebc40f6aed170deac018f",
+      "functions": {
+        "total": 35,
+        "equal": 4,
+        "before_only": 10,
+        "after_only": 10,
+        "changed_paired": 11,
+        "paired": 15,
+        "literal_instruction_bytes_equal": 5
+      },
+      "constants": {
+        "total": 6,
+        "equal": 2,
+        "before_only": 2,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 2,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "seriespack-integration",
+      "before_source": "ikea/examples/seriespack/integration.cpp",
+      "after_source": "ikea/examples/seriespack/integration.cpp",
+      "before_object_sha256": "c8207d25754b426b5599bbdebd6994bfff6a2088b56854ce1f04c1fcef1793c9",
+      "after_object_sha256": "40667b5664d9bdf3f7c744288c721268cca9d40db79cdde8d0a57cbf932de303",
+      "functions": {
+        "total": 37,
+        "equal": 9,
+        "before_only": 7,
+        "after_only": 9,
+        "changed_paired": 12,
+        "paired": 21,
+        "literal_instruction_bytes_equal": 11
+      },
+      "constants": {
+        "total": 5,
+        "equal": 2,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 4,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "filters-composition",
+      "before_source": "ikea/examples/filters/composition.cpp",
+      "after_source": "ikea/examples/filters/composition.cpp",
+      "before_object_sha256": "66248e0c3efa24b2bd4ce0b642ebd2bd190fc6fd93376380db501fd31e7c1516",
+      "after_object_sha256": "e6fff24bdc6d7ed2a9fa7445c71f27500a62966c9c10b1159746d2d265b52bea",
+      "functions": {
+        "total": 10,
+        "equal": 8,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2,
+        "paired": 10,
+        "literal_instruction_bytes_equal": 8
+      },
+      "constants": {
+        "total": 7,
+        "equal": 3,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "streampack-ordinary",
+      "before_source": "ikea/examples/streampack/ordinary.cpp",
+      "after_source": "ikea/examples/streampack/ordinary.cpp",
+      "before_object_sha256": "ec2ff837cc626e1fbfc9185524b6874cebe45edc36539f4472254063447b677d",
+      "after_object_sha256": "f33830f60fbff8b863e1a616e2bf57b67d5b4867a41c3d8d85f7f30d0d9cf3e5",
+      "functions": {
+        "total": 122,
+        "equal": 33,
+        "before_only": 44,
+        "after_only": 44,
+        "changed_paired": 1,
+        "paired": 34,
+        "literal_instruction_bytes_equal": 34
+      },
+      "constants": {
+        "total": 3,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-ordinary",
+      "before_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "after_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "before_object_sha256": "1a48c3d825bc43fa22a691fee8fbfe52902816990de1cf60e5025623935bf60d",
+      "after_object_sha256": "6ff1bb12733ed15ca07b510c1e148257dc578602042862efa386b8f34f10cab5",
+      "functions": {
+        "total": 3,
+        "equal": 0,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-words",
+      "before_source": "ikea/examples/tuplepack/words.cpp",
+      "after_source": "ikea/examples/tuplepack/words.cpp",
+      "before_object_sha256": "e58ed2cbabcb4c972fd52c63f2a4a263634daa7b4cc75ded49ba2a19440a7174",
+      "after_object_sha256": "e58ed2cbabcb4c972fd52c63f2a4a263634daa7b4cc75ded49ba2a19440a7174",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 1
+      },
+      "constants": {
+        "total": 5,
+        "equal": 5,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "filters-ordinary",
+      "before_source": "ikea/examples/filters/ordinary.cpp",
+      "after_source": "ikea/examples/filters/ordinary.cpp",
+      "before_object_sha256": "b69783d07b71fff8390a6f5c771cc0d5cb1d4cc9902837f63eab6d0969316c6f",
+      "after_object_sha256": "268ac6978eabc2b23cde7a168cab12d07252912f16c69032e7a2a08a96e9cabf",
+      "functions": {
+        "total": 6,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 3,
+        "paired": 6,
+        "literal_instruction_bytes_equal": 3
+      },
+      "constants": {
+        "total": 7,
+        "equal": 3,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "seriespack-readers",
+      "before_source": "ikea/src/seriespack/readers.cpp",
+      "after_source": "ikea/src/seriespack/readers.cpp",
+      "before_object_sha256": "e60f13e67d3cec03272fb2284af126188e7ec7272e2e74cee7438671eeae258f",
+      "after_object_sha256": "8066a2d66f37ad04e3279b7ab8a576620b079af11c2e586251fe032bef09fc79",
+      "functions": {
+        "total": 490,
+        "equal": 490,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 490,
+        "literal_instruction_bytes_equal": 490
+      },
+      "constants": {
+        "total": 4,
+        "equal": 4,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-initialize",
+      "before_source": "ikea/src/tuplepack/construction.cpp",
+      "after_source": "ikea/src/tuplepack/initialize.cpp",
+      "before_object_sha256": "d22b6b0aaeb85e695f01fb89e4b8cbd49a39e4a221bdfdabae218bef68cf9f99",
+      "after_object_sha256": "51ca092cb25d816114cd8a14e5cd68dc54f38b4f3506996fbcec32aea3ad8c07",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 1
+      },
+      "constants": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "bec256-ordinary",
+      "before_source": "ikea/examples/bec256/ordinary.cpp",
+      "after_source": "ikea/examples/bec256/ordinary.cpp",
+      "before_object_sha256": "921f7362b189599b9c21bbc49602da62e46178537c358c5398166b5946f5a0a4",
+      "after_object_sha256": "879012f7769b6dbfda18dc5a7224c207e9ffbe3d062011b5026548d94035e789",
+      "functions": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 2,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "hashtable-ordinary",
+      "before_source": "ikea/examples/hashtable/ordinary.cpp",
+      "after_source": "ikea/examples/hashtable/ordinary.cpp",
+      "before_object_sha256": "461e07348667bc6624958e72698ee20be8505b191460029bea21bcc3d79cf712",
+      "after_object_sha256": "9c08df3f67b9d94b122a834790def3746e84fc840c33b346291f500b4f299ea5",
+      "functions": {
+        "total": 30,
+        "equal": 28,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2,
+        "paired": 30,
+        "literal_instruction_bytes_equal": 30
+      },
+      "constants": {
+        "total": 6,
+        "equal": 4,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 12,
+        "equal": 12,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "selection",
+      "before_source": null,
+      "after_source": "ikea/test/selection.cpp",
+      "before_object_sha256": null,
+      "after_object_sha256": "9c62a46c489ebaf5487eddc7854c525554b330c1bac7aea6d396c0d4e26721ee",
+      "functions": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0,
+        "paired": 0,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 2,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 1,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "seriespack-ordinary",
+      "before_source": "ikea/examples/seriespack/ordinary.cpp",
+      "after_source": "ikea/examples/seriespack/ordinary.cpp",
+      "before_object_sha256": "e479ea174f1f2ea50205e231fe318cf429c98cc96012228665564b3dd2960785",
+      "after_object_sha256": "048f42d6f22d39745c9b47a0590deb56201c96b1c157c205b7eb31a165589a76",
+      "functions": {
+        "total": 31,
+        "equal": 5,
+        "before_only": 7,
+        "after_only": 10,
+        "changed_paired": 9,
+        "paired": 14,
+        "literal_instruction_bytes_equal": 7
+      },
+      "constants": {
+        "total": 9,
+        "equal": 2,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 5
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "seriespack-integration",
+      "before_source": "ikea/examples/seriespack/integration.cpp",
+      "after_source": "ikea/examples/seriespack/integration.cpp",
+      "before_object_sha256": "0d0bc1fe5c6ebc9fdeb547472781d020f8b1c10e4fe03b057044518c799474e5",
+      "after_object_sha256": "5a44e3124492aa32ccccbf00c909e6cec91e7c904886a13da874d318057f68eb",
+      "functions": {
+        "total": 38,
+        "equal": 7,
+        "before_only": 8,
+        "after_only": 10,
+        "changed_paired": 13,
+        "paired": 20,
+        "literal_instruction_bytes_equal": 10
+      },
+      "constants": {
+        "total": 8,
+        "equal": 4,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 2
+      },
+      "unwind": {
+        "total": 3,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "filters-composition",
+      "before_source": "ikea/examples/filters/composition.cpp",
+      "after_source": "ikea/examples/filters/composition.cpp",
+      "before_object_sha256": "8425d05d802fdfa1a802e343f186193c41d19e10539c24196e56fb1973b5048e",
+      "after_object_sha256": "116fca5ffb5d22acdc08b512dfac3d8a52e6b5233f343b64f6205482c5ebd621",
+      "functions": {
+        "total": 9,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2,
+        "paired": 9,
+        "literal_instruction_bytes_equal": 7
+      },
+      "constants": {
+        "total": 8,
+        "equal": 4,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "streampack-ordinary",
+      "before_source": "ikea/examples/streampack/ordinary.cpp",
+      "after_source": "ikea/examples/streampack/ordinary.cpp",
+      "before_object_sha256": "7bd622ab1122b3f44e6139033835ad6d5b4be553e59cbf798703b18fe9790f95",
+      "after_object_sha256": "7ae78dec584c5b8f5533b1ba6512e438297f98c0bd9cea21322928ac153d09d2",
+      "functions": {
+        "total": 126,
+        "equal": 28,
+        "before_only": 48,
+        "after_only": 48,
+        "changed_paired": 2,
+        "paired": 30,
+        "literal_instruction_bytes_equal": 29
+      },
+      "constants": {
+        "total": 4,
+        "equal": 4,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-ordinary",
+      "before_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "after_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "before_object_sha256": "fabcdc41f1cf763c598fb5851af8b042c31c0f1d61d0965fce6e7e222ef597df",
+      "after_object_sha256": "cf19d1b602dc2887b06d3713bc6fc71f910e9d908881bfcc02fbe954f1952ee4",
+      "functions": {
+        "total": 3,
+        "equal": 0,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-words",
+      "before_source": "ikea/examples/tuplepack/words.cpp",
+      "after_source": "ikea/examples/tuplepack/words.cpp",
+      "before_object_sha256": "f3275842d967f890728659068842fb1c76eb71be3df07ed706491a794545f3ac",
+      "after_object_sha256": "f3275842d967f890728659068842fb1c76eb71be3df07ed706491a794545f3ac",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 1
+      },
+      "constants": {
+        "total": 7,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "filters-ordinary",
+      "before_source": "ikea/examples/filters/ordinary.cpp",
+      "after_source": "ikea/examples/filters/ordinary.cpp",
+      "before_object_sha256": "6dcf929e2f22f4c9bece3066e15c8a4935834161279f138bd3e4fab4d859107c",
+      "after_object_sha256": "29e4f13fb20da65de627335fe1218604d3b63d2905278891b91e26adbb0a7830",
+      "functions": {
+        "total": 6,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 3,
+        "paired": 6,
+        "literal_instruction_bytes_equal": 3
+      },
+      "constants": {
+        "total": 8,
+        "equal": 4,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "seriespack-readers",
+      "before_source": "ikea/src/seriespack/readers.cpp",
+      "after_source": "ikea/src/seriespack/readers.cpp",
+      "before_object_sha256": "b0cb6f6f519a84728c46554eccea8617c9cd9eca8529a7dab4a56d2e71843cc4",
+      "after_object_sha256": "de032798705abdab641a5204f36f57a532d83c1ec84647ec5c12aac52bf2fec5",
+      "functions": {
+        "total": 490,
+        "equal": 490,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 490,
+        "literal_instruction_bytes_equal": 490
+      },
+      "constants": {
+        "total": 9,
+        "equal": 9,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-initialize",
+      "before_source": "ikea/src/tuplepack/construction.cpp",
+      "after_source": "ikea/src/tuplepack/initialize.cpp",
+      "before_object_sha256": "226443e327cee399e13a0aa89febd8aa98b8ab3dd3ff6129d59a0b7e1feab640",
+      "after_object_sha256": "2b00306c20876260782e9f4b396ceeacd5be107e958d0d803e95c3cef6ebd013",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 1
+      },
+      "constants": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "bec256-ordinary",
+      "before_source": "ikea/examples/bec256/ordinary.cpp",
+      "after_source": "ikea/examples/bec256/ordinary.cpp",
+      "before_object_sha256": "110930ee96dda33419d945372a7409c7bd3d6a327d31458bdd45a1fe540bb3e0",
+      "after_object_sha256": "0307902d562dda26eb683df353c425c28f4a08dd2a9794f4710208617febece0",
+      "functions": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "hashtable-ordinary",
+      "before_source": "ikea/examples/hashtable/ordinary.cpp",
+      "after_source": "ikea/examples/hashtable/ordinary.cpp",
+      "before_object_sha256": "6ae44cff1dbf2c4d0990324af4e145b8a1f980ab61a4418b870b9d3e55cb4422",
+      "after_object_sha256": "843ab757194c60b1b0024db85f20d6bb6f569aa3fa35b659bceecceb8d6299db",
+      "functions": {
+        "total": 32,
+        "equal": 30,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2,
+        "paired": 32,
+        "literal_instruction_bytes_equal": 32
+      },
+      "constants": {
+        "total": 6,
+        "equal": 4,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 11,
+        "equal": 11,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "selection",
+      "before_source": null,
+      "after_source": "ikea/test/selection.cpp",
+      "before_object_sha256": null,
+      "after_object_sha256": "731cc93f8b3dc34cd23d91b2a031d9c15d955875ca3abaa268ed60e31ff7b3ed",
+      "functions": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0,
+        "paired": 0,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 5,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 5,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "seriespack-ordinary",
+      "before_source": "ikea/examples/seriespack/ordinary.cpp",
+      "after_source": "ikea/examples/seriespack/ordinary.cpp",
+      "before_object_sha256": "4c3e21bda165801d93bc31ef80c38252b93cd5a5fe5172650a61976650dcc296",
+      "after_object_sha256": "8a17d9e9a557f9ef0f7beb6b9e29e96c6712199e4e699d12f25997410ea376c2",
+      "functions": {
+        "total": 31,
+        "equal": 5,
+        "before_only": 7,
+        "after_only": 10,
+        "changed_paired": 9,
+        "paired": 14,
+        "literal_instruction_bytes_equal": 7
+      },
+      "constants": {
+        "total": 9,
+        "equal": 2,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 5
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "seriespack-integration",
+      "before_source": "ikea/examples/seriespack/integration.cpp",
+      "after_source": "ikea/examples/seriespack/integration.cpp",
+      "before_object_sha256": "e5ff77abeb12cebc7b82c8db2edd4878dd4ed63458600d5f6ba50a40eb9d272b",
+      "after_object_sha256": "b4bd940a3b09230d8840a26572ca97a61aef14aadca8b2c6287474736c7a58ea",
+      "functions": {
+        "total": 38,
+        "equal": 7,
+        "before_only": 8,
+        "after_only": 10,
+        "changed_paired": 13,
+        "paired": 20,
+        "literal_instruction_bytes_equal": 10
+      },
+      "constants": {
+        "total": 9,
+        "equal": 5,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 2
+      },
+      "unwind": {
+        "total": 3,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "filters-composition",
+      "before_source": "ikea/examples/filters/composition.cpp",
+      "after_source": "ikea/examples/filters/composition.cpp",
+      "before_object_sha256": "54bead02b37a421f06f90b5a836309d675592cf8e16c764e4f125c4f7d9ded6f",
+      "after_object_sha256": "eb2cf113d8b96127d98b818724bba977103edb0ccc7ab0407d325ad2903f1754",
+      "functions": {
+        "total": 9,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2,
+        "paired": 9,
+        "literal_instruction_bytes_equal": 7
+      },
+      "constants": {
+        "total": 9,
+        "equal": 5,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "streampack-ordinary",
+      "before_source": "ikea/examples/streampack/ordinary.cpp",
+      "after_source": "ikea/examples/streampack/ordinary.cpp",
+      "before_object_sha256": "70e9529ddc19e4e19a478629f83a747f8514e187441aa667d970f50cd5faabe5",
+      "after_object_sha256": "2b3742ed7cbfeb10560d2a931cbbe41d2665dbc72ed7fde6553a50ddc9569312",
+      "functions": {
+        "total": 130,
+        "equal": 32,
+        "before_only": 48,
+        "after_only": 48,
+        "changed_paired": 2,
+        "paired": 34,
+        "literal_instruction_bytes_equal": 33
+      },
+      "constants": {
+        "total": 4,
+        "equal": 4,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-ordinary",
+      "before_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "after_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "before_object_sha256": "3fad7afe0dc22e2928d702acb317ea3a762d2f4766666173630bdc9626b3d33b",
+      "after_object_sha256": "78af4b3909bc7909a67a7fa6ec3b88c43df5e447fbf880f8139179ddc7bc92ef",
+      "functions": {
+        "total": 3,
+        "equal": 0,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-words",
+      "before_source": "ikea/examples/tuplepack/words.cpp",
+      "after_source": "ikea/examples/tuplepack/words.cpp",
+      "before_object_sha256": "b87e7db64303bddb3fce4521860b8d6bd35936cb8cfe3e5203566655f7a2a00c",
+      "after_object_sha256": "b87e7db64303bddb3fce4521860b8d6bd35936cb8cfe3e5203566655f7a2a00c",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 1
+      },
+      "constants": {
+        "total": 7,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "filters-ordinary",
+      "before_source": "ikea/examples/filters/ordinary.cpp",
+      "after_source": "ikea/examples/filters/ordinary.cpp",
+      "before_object_sha256": "ea4811652ec12ee837f10375c8429f0ab7cb8cdd4548e9576950af9d125b5077",
+      "after_object_sha256": "961e35687eb43207f0bf887eb9b8027e8360f7868239c66e23ddddfc08fcf782",
+      "functions": {
+        "total": 6,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 3,
+        "paired": 6,
+        "literal_instruction_bytes_equal": 3
+      },
+      "constants": {
+        "total": 9,
+        "equal": 5,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "seriespack-readers",
+      "before_source": "ikea/src/seriespack/readers.cpp",
+      "after_source": "ikea/src/seriespack/readers.cpp",
+      "before_object_sha256": "a118ab391f327418e0eff876be945003211be56ba7f3acede9be73e5da9ecd43",
+      "after_object_sha256": "8f4c61c7cf1cff5cd453a9988410411e50d8c46c3d8e2202fa61a8a55ddb09be",
+      "functions": {
+        "total": 490,
+        "equal": 490,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 490,
+        "literal_instruction_bytes_equal": 490
+      },
+      "constants": {
+        "total": 40,
+        "equal": 40,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-initialize",
+      "before_source": "ikea/src/tuplepack/construction.cpp",
+      "after_source": "ikea/src/tuplepack/initialize.cpp",
+      "before_object_sha256": "38522950925c8efcec798b4d32c2dd18991f58839ad4737b4fac70fd0e6548ad",
+      "after_object_sha256": "1e590f54e8bd8286869caa089c9e9c11531c120d737983004b526d875e5b7562",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "bec256-ordinary",
+      "before_source": "ikea/examples/bec256/ordinary.cpp",
+      "after_source": "ikea/examples/bec256/ordinary.cpp",
+      "before_object_sha256": "fb4bbeb330dbfe8dac9d525ef0c95bb5941973212d17b0f8a45d622f88b61234",
+      "after_object_sha256": "58a5bd06a34ca078808e0716b34ad3bc5241d5157b7d00f013e020d0d650b060",
+      "functions": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1,
+        "paired": 1,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "hashtable-ordinary",
+      "before_source": "ikea/examples/hashtable/ordinary.cpp",
+      "after_source": "ikea/examples/hashtable/ordinary.cpp",
+      "before_object_sha256": "b0fbcb7530a70cf9fa4f846870ea5ba2885295880488466cf759b1b9c32b6cd7",
+      "after_object_sha256": "a3b4823530c19bdac554a3d47ee005b38c0ddeda1e76ba8d93a21c237695865a",
+      "functions": {
+        "total": 27,
+        "equal": 25,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2,
+        "paired": 27,
+        "literal_instruction_bytes_equal": 27
+      },
+      "constants": {
+        "total": 10,
+        "equal": 8,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 11,
+        "equal": 11,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "selection",
+      "before_source": null,
+      "after_source": "ikea/test/selection.cpp",
+      "before_object_sha256": null,
+      "after_object_sha256": "d6ffcd671e298883edae364aa83127214ff3c9e91e54dfb8ed96e5fa09cd21ca",
+      "functions": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0,
+        "paired": 0,
+        "literal_instruction_bytes_equal": 0
+      },
+      "constants": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    }
+  ],
+  "dependency_manifest_sha256": "a602a750329691c54089832f3cafc2ef5a09020b731947ea4184562692cffe67",
+  "dependency_paths": 1140,
+  "limits": "Unlinked ELF object audit with assertions enabled, not timings or a linked-placement guarantee. Function names are paired only by the explicit correspondences; literal code/data bytes, immediates, assertion text, relocations and unknown targets are preserved. Full functions include admission/effects, but only the listed callers are sampled. Changed and unmatched work remains visible. Native five-trial counterbalanced cohorts, with per-case dispersion, qualify measured complete consumers separately; neither code size nor one timing sample establishes a general speed claim.",
+  "format": 2,
+  "objects": 69,
+  "comparison_units": {
+    "paired_translation_units": 11,
+    "after_only_selection_translation_units": 1,
+    "profiles": 3
+  },
+  "source_capture": {
+    "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+    "baseline_git_verified": true,
+    "baseline_ikea_files": 369,
+    "before_manifest_sha256": "f6b0aba9d383f8e14c019425056ee7ab4866178cfb2c2f81158ef952ffb737bb",
+    "after_manifest_sha256": "c7b066528539b39947f5a93dcb613b36634bcec76a40c595b5a6039cd7fde7e5",
+    "native_capture_source_digest": "d84c8458e50b0313109efb83aee93614ffcf80d1fd99a837a39af7bbde84c5b4",
+    "native_source_manifest_sha256": {
+      "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327",
+      "after": "a7df81d643c6ebad0ce0d9491ce989a8cc4fdcb9eba295133903c56f1ff23a79"
+    },
+    "note": "The native before adds only its recorded TP point oracle/reset harness patch. All before Ikea files in this object audit are exact Git f1534200. After Ikea is exactly the r2 native capture cut, including the dense AVX512 std::byte boundary fix."
+  },
+  "dependency_digests": {
+    "before": {
+      "count": 151,
+      "sha256": "2ae17b9c27d7466155ffa3fbfb0cbb453280877dc3613400e57432737b845d18"
+    },
+    "after": {
+      "count": 159,
+      "sha256": "d9685a88469fd5f3467d358e0bf7aa2e29a73ddb45c4ced52b0a9af45828c01a"
+    },
+    "system": {
+      "count": 830,
+      "sha256": "3b9192a374c9c0f902bf903855a49051ff0100ba08b185f585a6d8d993513050"
+    },
+    "algorithm": "SHA256 of UTF-8 JSON with sorted keys and compact separators, mapping dependency path to SHA256. Project paths relative to the arm source root; system paths literal. Full system list remains in ignored receipt.json."
+  },
+  "project_dependencies": {
+    "ikea/examples/bec256/ordinary.cpp": {
+      "before": "0d6cb0df950ff2c118b1399fc786225b26735d2704b8b7c5d40cfec66e63e59c",
+      "after": "24fa9e9e0b31e6aa1c9519ae2391c1ea77bb5f3f4fbffd52d81e73332bacbb21"
+    },
+    "ikea/examples/filters/composition.cpp": {
+      "before": "d742eb46c5cf1a7298153726ad2ed4d0cbdaebce73f14fc93f5163adf4466bab",
+      "after": "d6fb422236597cdb53deb324dfa28fafca4e8906fb7d000e19e99b96ad878052"
+    },
+    "ikea/examples/filters/ordinary.cpp": {
+      "before": "124c96e5d477a5fca60c622551a45eea0d0679d24dc0303fa3f4b13b464f907a",
+      "after": "9b60099c3ec69dba2942e70b5abf39a71ddab8aa22d091a3acab136d14f23f32"
+    },
+    "ikea/examples/hashtable/ordinary.cpp": {
+      "both": "7e6a187c9c029528246d458338cbfd3d127dd185fe730d091e25d8d733275b16"
+    },
+    "ikea/examples/seriespack/integration.cpp": {
+      "before": "3ce59c066e9b8ee8682f4474c90f3713d2d8534ae5f92a1124dbd51ff38aeced",
+      "after": "64f1a1ee6efbaaa8d5cc07cc8d9367c07e6a30160f16a15cb7f93b81b7ecd9f5"
+    },
+    "ikea/examples/seriespack/ordinary.cpp": {
+      "before": "73a11f75b400f45e52eedc96c5812e8ed24ef30c75663121304f2eea26a89bc4",
+      "after": "9c57ea3e144b24dcd51a54dc9817ede7c3d883381b2ca66cdd6dd0749298b67b"
+    },
+    "ikea/examples/streampack/ordinary.cpp": {
+      "before": "a1bac3ca062de675dff65b1d216dfe5e7f2852b168b9edccc95a283b60251b73",
+      "after": "22d9469bb9ad02dd418cf190d0dec233a2797616a500ce96284147b546221a51"
+    },
+    "ikea/examples/tuplepack/ordinary.cpp": {
+      "before": "888271b7ffd41d2095ca899a93f64108eb68578cc82bb76b17a29e9711c88e87",
+      "after": "b34b8e4d8372a9f0495b5095a116d4730886b4ecb32dad2329d6d7f8fbd03fed"
+    },
+    "ikea/examples/tuplepack/words.cpp": {
+      "before": "4d3ca5ea6e1c5bed369c36a981f129c2d55284ae1ad23a518a71b7b90871b06e",
+      "after": "b5036f726abe41f7444ba8fcb7794086232d298f6f08317be578fb465fa9f8b7"
+    },
+    "ikea/include/ikea/author/chain.h": {
+      "after": "c0ba7660a7d787b244f0833f942ac9099924380ef3336dce0a7beef4658f5c81"
+    },
+    "ikea/include/ikea/bec256.h": {
+      "both": "3ccd02ece4d59c0373125bdca2f991d8e25383b0de833f4c0b18693b788e89ed"
+    },
+    "ikea/include/ikea/bec256/analysis.h": {
+      "before": "e7fa7884f6a7942c199b2f34adf5942a02ca1276dd9ef2afc0402967471e1424",
+      "after": "fbef6035061a8a5c204a3417b278df11ea546ba93b470e5f060ad8c504540177"
+    },
+    "ikea/include/ikea/bec256/codec.h": {
+      "before": "3ac223257292d6238c8f4aadb133be0ef81606efe5bd784b3560c1c826d97f90",
+      "after": "8c2a7e2e9ccfa9c364dd6f7a1662fe90e5c18b817f6e0154f5ded9786f84f131"
+    },
+    "ikea/include/ikea/bitset256.h": {
+      "after": "d1d3b5124de08e2eff367bb545d55afc735b6724567dff0292ed356680b240af"
+    },
+    "ikea/include/ikea/bytes.h": {
+      "after": "30472394c26ba69348ddd9a270407276954073d0e7e44e0f508d116896858b19"
+    },
+    "ikea/include/ikea/comparison.h": {
+      "both": "f9f5f933116f37db76a1804c017f3fff24602db9cb87108d9d586f247594c50a"
+    },
+    "ikea/include/ikea/config.h": {
+      "after": "b04b0a2c7f317c879fa3e10a66401df47995e4c2dba0d0bb5ddbb398c3744dde"
+    },
+    "ikea/include/ikea/detail/filter/compare.h": {
+      "both": "43e967fc6653fad34182b39e042a2d4d9bc107f1f8c14ff1449a7759cef7bde9"
+    },
+    "ikea/include/ikea/detail/native_chain.h": {
+      "before": "11672b2ccf161079d30a279056c5b79d00c3859f5d41258bca30d91d2b589a86"
+    },
+    "ikea/include/ikea/detail/overlap.h": {
+      "both": "69840846e1ca1ab5fdeb6fdcea21d9705ec566ade7e0abff7a6d94b7ff414e44"
+    },
+    "ikea/include/ikea/effects.h": {
+      "before": "01c2e39782f985541027fe4d8eae6c09a981359847eb9638392cffc8f9c34208",
+      "after": "3bf481cde151bd0529af61789361c92f081f1ac5d9b42237f131aca822e8d9a8"
+    },
+    "ikea/include/ikea/hashtable.h": {
+      "before": "2d68d9f94ac67e4e6eb4d2dab7646976bbf67fded6d64a08c0fb5f293b3c316f",
+      "after": "6b2743274f3beb9f4057e8d9ac04657d59cb2cc3c1ee84371d4147313fe47931"
+    },
+    "ikea/include/ikea/hashtable/accumulate.h": {
+      "both": "1e1c735fb9c886eb1cb7453befb64157a26ce89463f06d094cec22dfa478e58c"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/../geometry.h": {
+      "both": "44d4a7638af4a861d39411d6f03a833fa9b1ece061c630152c29b9b2d3fba0bd"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/../kernel.h": {
+      "both": "5ff1698fb4a5ae12aa13c23e080aa00a2c127dd97efe93c972c846b584ad3e05"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/bits.h": {
+      "before": "c5c5f657e3fc2eced276340fdcf68ca65b8c4cd5e8415c608799c1a5fb970c28",
+      "after": "d10eb6de5b882305759005e0400a344a5863ee8f89eb3789f46a83a29f842cb6"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/bucket-filter.h": {
+      "before": "eacecc84e78f70ab759612a3ccc8ba16558abc86cd08186852ab5aa8e8d863d5",
+      "after": "86861d3a970234285da0bce8966e1b49415f75106d6806a39151855ad6a276e0"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/bucket.h": {
+      "before": "9235a26e43597444e9a0841bd52bc29bbb8ca17511b5fd7fac2bdc91fdf4f765",
+      "after": "9d6ec6245786e45e499f0ce33f63d8148c1721ce01410332e2d74fde43170b87"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/control.h": {
+      "before": "8a9332eeb77a555761627d5a2a5deaf562cf4f69dae10f5ba36a43ebbfdf396c",
+      "after": "d1cfa365a44ca9bb8674f540f5d20df6bb53cae229ef4beca8ed8bdb9daddd66"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/hash.h": {
+      "before": "85c3d4085deb20a909fbf879f1f282374fc13ca91a57c2bde55d7dd8f51abd57",
+      "after": "9a66f5be1791c8e83b6a72ddb3539587ded3e047971f6914d2222b2c4147d9fc"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/packed30.h": {
+      "before": "3011360caaf6ffcde9d21964b25c7ee399c639b995ca46c9046dcf92d8f2a641",
+      "after": "dc13d9393f90e26fd17dcf8a86bbb6a98ae607d963810a3702f34ee087548991"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/read-batch.h": {
+      "before": "bb8e59a28ca9e43a31f670e8bc30ab62cdc70f6b4291cf0cb0e95f9a14301bcf",
+      "after": "53555bcbc405479f8d459e7ef00b02edf7e28c5c3e2beccecf18d3ee72711802"
+    },
+    "ikea/include/ikea/hashtable/author/../detail/representation.h": {
+      "before": "ff9fac232858751d5407a1fb9733ecfd514f35a47fafd14f7e1aa1d3f8c31fb0",
+      "after": "3170e67d58070bcfadf019dacb381b25e0f9c4ef8916f501c481f3fe4f55ebfa"
+    },
+    "ikea/include/ikea/hashtable/author/../lookup.h": {
+      "both": "e26b4c702f11c6b0b079d095929c587764ff54bc215011bd01ab715914f86a69"
+    },
+    "ikea/include/ikea/hashtable/author/../mutation.h": {
+      "before": "b23c253d2a74ca49774add84623a7416ddce60dda30e47b99eb249b6d17cdb68",
+      "after": "658341c0f837a0490d9f8d48d227c2510eaa3a4dfffd6807dd206f3e7adb7ef4"
+    },
+    "ikea/include/ikea/hashtable/author/../storage.h": {
+      "before": "36ab6ee0f31c72592b7ceaea800dd6ce6281fcce9a3cc440a00aeed0b3c84456",
+      "after": "ffe2180179d6dbfcccfe4fb7bb4a58734d4e67f7b6ec2c6541b9d4bfaea9fbc5"
+    },
+    "ikea/include/ikea/hashtable/author/../table.h": {
+      "before": "8314fd7e596d79a5b8623e70398f722f4207354fb1ebb421cfc080fc06ddaa2a",
+      "after": "fa3827301ba63813e4f7c8c9b9bb39bd21980e37e721046a2680467f27fd4fbf"
+    },
+    "ikea/include/ikea/hashtable/author/table.h": {
+      "before": "36f428ad5b7b7debf5926734b8036c4e01df5ed6d5dfd6380dd360e9a6fa44cd",
+      "after": "836111023bec7270d682a55cc444071e420ddc04b89190eef0cb15aa07ef82e7"
+    },
+    "ikea/include/ikea/hashtable/capacity.h": {
+      "before": "bafe013dd6d7efda6168fddfa552d174c38b80672cb54dc81572b20840c60151",
+      "after": "a3a7f103ef40e512d1a7d190f42d3d86564c9b4718937eb94ae781bc5bfb1555"
+    },
+    "ikea/include/ikea/hashtable/descriptor.h": {
+      "before": "41a910ec90aaa94350f78baae55270d0981772a76a6686b03d5bc2049c71a97f"
+    },
+    "ikea/include/ikea/hashtable/detail/../table.h": {
+      "before": "8314fd7e596d79a5b8623e70398f722f4207354fb1ebb421cfc080fc06ddaa2a",
+      "after": "fa3827301ba63813e4f7c8c9b9bb39bd21980e37e721046a2680467f27fd4fbf"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/../../author/table.h": {
+      "before": "36f428ad5b7b7debf5926734b8036c4e01df5ed6d5dfd6380dd360e9a6fa44cd",
+      "after": "836111023bec7270d682a55cc444071e420ddc04b89190eef0cb15aa07ef82e7"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/../bucket-write.h": {
+      "before": "b27c03d5b621fc771e6be5ffb8a3aed3dc1ed5fbf6323832b292a08f6fdf5293",
+      "after": "b0ab22425dcdb6961c465d0f6c605271e31f8fe75909d5eadaef5498ceae7f21"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/../control.h": {
+      "before": "8a9332eeb77a555761627d5a2a5deaf562cf4f69dae10f5ba36a43ebbfdf396c",
+      "after": "d1cfa365a44ca9bb8674f540f5d20df6bb53cae229ef4beca8ed8bdb9daddd66"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/codec.h": {
+      "before": "cf88fcc4d27c4d1e060398db613083c756a924e49f251ba3948207f5916e977f",
+      "after": "5657bbf4029b2988d1229986926eefa929f054f321d8b7c5f34c649851f7472b"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/common.h": {
+      "before": "01d4836359f14a5dd9442e6b327ee7ab0f3695b9ab0bad6ac789f1166e21c2b2",
+      "after": "acc4dfa4a12cc4af087e21dbac7cb9f5fa4e2a950a3112604d5cc334b34adf35"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/engine.h": {
+      "before": "f87dfb0b2b04783615190a5204141cf24f6c39f04eb4e2f03c4b402cc7732f2b",
+      "after": "70cc18b3fba833278c78f9ad0e54e821b244d5e22cbddcd4492a7579f2df54db"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/flat.h": {
+      "before": "ea40adc60f29e9daa5b1adda4b3273a0d0dca3b6f01647134a2b4dff251ef826",
+      "after": "192404278cb1ed8d0628c013152867ebbcbba7fed43e1a7ce9b6e56929dea073"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/packed32.h": {
+      "before": "f7c6f4525fd72479a2cca0b3c21a106c334e4e4cb2e90b9129b4d814ec8fb951",
+      "after": "cb713d28f7f15925478b369d4300e3782b1eaec794122ec3fc9d736b8c07488a"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/points.h": {
+      "before": "8fea2d2de139c8262382eb55bc2a5b2b97f4cd0cda6e10b49c309a623665278d",
+      "after": "c9023f5819ba2d58f796b50b38d67d58f5c4c41dd040647cd5f00ec1e5cb09c8"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/resolve.h": {
+      "before": "9a336ab2963ccd43d825aec9c65c1aa21f03040ae9313bf8748cec9969216208",
+      "after": "d7c8dc880aca723d33d0b2c0e791f5258967c7b807e765d7f26cb11c845d9ae4"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/swiss.h": {
+      "before": "e6353865fec06f4ddf3bad1837eae65ced5c10dbc13cba2e4f044498f8638b13",
+      "after": "9e59fb87c820aaeb946718c7326fbe9356f179ed5e68ab2e457de2f33e92793a"
+    },
+    "ikea/include/ikea/hashtable/detail/accumulation/wide.h": {
+      "before": "ddb4b5b457638c14774a84aae1bfa2820ea1b2ccd3ae522d43f65906f397d9c1",
+      "after": "d65edef5587e516cb6b027ea9ef6979daa09823097ad9db3167c4e3d0217523b"
+    },
+    "ikea/include/ikea/hashtable/detail/bucket-write.h": {
+      "before": "b27c03d5b621fc771e6be5ffb8a3aed3dc1ed5fbf6323832b292a08f6fdf5293",
+      "after": "b0ab22425dcdb6961c465d0f6c605271e31f8fe75909d5eadaef5498ceae7f21"
+    },
+    "ikea/include/ikea/hashtable/detail/control.h": {
+      "before": "8a9332eeb77a555761627d5a2a5deaf562cf4f69dae10f5ba36a43ebbfdf396c",
+      "after": "d1cfa365a44ca9bb8674f540f5d20df6bb53cae229ef4beca8ed8bdb9daddd66"
+    },
+    "ikea/include/ikea/hashtable/encoding-profiles.h": {
+      "both": "4a979637778706291144cd843b04d64b2d4cb3d96f0b15ca998fcbe9455100da"
+    },
+    "ikea/include/ikea/hashtable/encoding-selection.h": {
+      "both": "78ca70af88b722df55649a7fc2659f6757a85dc765b2b744a29742ae9bd64d83"
+    },
+    "ikea/include/ikea/hashtable/erased_table.h": {
+      "after": "115f98da3b0f8be9a1e2a86c92b38f15e6eb18db74e4a542216d468346a67e77"
+    },
+    "ikea/include/ikea/hashtable/geometry.h": {
+      "both": "44d4a7638af4a861d39411d6f03a833fa9b1ece061c630152c29b9b2d3fba0bd"
+    },
+    "ikea/include/ikea/hashtable/kernel.h": {
+      "both": "5ff1698fb4a5ae12aa13c23e080aa00a2c127dd97efe93c972c846b584ad3e05"
+    },
+    "ikea/include/ikea/hashtable/rebuild.h": {
+      "before": "2988feb5eff757912f465dbddc542169c652868c4c2a1b59ce4baa06c280c36d",
+      "after": "a1b192e117ee4e6f523ef14ce7b43de1a28cb97e34d48d708a749af4f3925dbf"
+    },
+    "ikea/include/ikea/hashtable/types.h": {
+      "after": "6abea17797b433e19decee76c6bc706f0dcb3d1b26a1fb64a567c94cdbd61794"
+    },
+    "ikea/include/ikea/intervals/detail/bytes.h": {
+      "both": "7c9d303bf981ffe9da63574e4d451a6a0b3c16d7eaf00c8c8bdc344dc9d11835"
+    },
+    "ikea/include/ikea/intervals/detail/prefix.h": {
+      "both": "c84f456e0e99615c10d0b75514fec8b42562a347c168a119261c8ca0e7c54e4a"
+    },
+    "ikea/include/ikea/intervals/detail/search.h": {
+      "both": "81ab913c600adf59702179c80bb77f20136c9266dc37609f4d72ce2cfd0281e1"
+    },
+    "ikea/include/ikea/intervals/detail/simd.h": {
+      "both": "9ba0675bbfe1ebe2621a974da01a440a4550836b4cbfbc4b40dd77528ccb70dc"
+    },
+    "ikea/include/ikea/intervals/geometry.h": {
+      "before": "4ee0b4fc637713c6208d8718afaa2896d034044fa4a3f2d98a6249898c372f12",
+      "after": "dbba1916caf1ef1d480e7ee5c90ae137a9f32d4c373dd39d7996b359a3212b0a"
+    },
+    "ikea/include/ikea/intervals/search.h": {
+      "before": "e2b15da9d3854772d9387a74629ea8ca5bb50e4b49dfeb03cd66a089ec028a80",
+      "after": "814a0ad87196e7e628f67b6ea724c240f8ea8e18f21bb699b47650bae38f1405"
+    },
+    "ikea/include/ikea/intervals/types.h": {
+      "before": "5b0b78a2466e2fcf9c96e04f9be36d0f9ff20989d9abfd8b6ac8936c92ba9c11",
+      "after": "cde46145512289673bb8fd9e05724a6b8cbf0d93dbfc85b43a5eb8d9dd1a46f7"
+    },
+    "ikea/include/ikea/seriespack.h": {
+      "both": "28217fab4bbebedf8a20e77352fbebc3911cc292473020ae8eb3636945a87ac6"
+    },
+    "ikea/include/ikea/seriespack/author/chain.h": {
+      "before": "3d857ed41d2d93d328bd0b5fda6571684a9357ee9915e8e4c8311199ad3c947a",
+      "after": "255c74b66506da5a252503ae26c9bbaf76fa42b5851a8f136860272c0f571f7e"
+    },
+    "ikea/include/ikea/seriespack/author/expression.h": {
+      "before": "4d5e1c79a203b8a937e876a91fba0ec9d68fb2aba9d2cf1c0f2f8bdf1e638e59",
+      "after": "6894feabe25eeaa2814835d68134decf34a96867b1e339a11c7b6f67c39ad0be"
+    },
+    "ikea/include/ikea/seriespack/author/filter.h": {
+      "before": "61742f03607a2ccdf78aef0ea9d98e08cc9e9a78140e1e7b91773a70144822e1",
+      "after": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329"
+    },
+    "ikea/include/ikea/seriespack/author/indexof.h": {
+      "before": "84801b6c55671aafe35cd6e5137c469b145be43eda264c2d1c04eb7a7c36f7b5",
+      "after": "2643915d39eb19271f0ff42ccf6a8769b51194e95ec69eeb9a1c4d2b9b2f832e"
+    },
+    "ikea/include/ikea/seriespack/author/local_equal.h": {
+      "before": "9647177deb3cafee59d6c52c1cb1edda602d5e0ac48e343b49306289cdf1a01a",
+      "after": "22f7c2c7f1b72edb18ef705000ce72d12c8464975f9952742156b4d5d9a31d81"
+    },
+    "ikea/include/ikea/seriespack/author/mutation.h": {
+      "after": "7a9b5d8a9fdb4e4044461b2ddfc08a0fe0d528733e8f8a348d080600e2fb79d8"
+    },
+    "ikea/include/ikea/seriespack/author/native.h": {
+      "before": "91c79add80d5a2dd318d5d6c8abdeb97ee16ab96aed97c6eed230252922879e8",
+      "after": "fb7feef8a08131536d03f40e25ab312c3f7b8d7e095f1e1b14a7d8aec063822f"
+    },
+    "ikea/include/ikea/seriespack/author/read.h": {
+      "before": "007cdc20db15bfec379906bb5801fc1a40a44e3cb7e26d6b6d95aec9e3f7c4c2"
+    },
+    "ikea/include/ikea/seriespack/author/store.h": {
+      "after": "27eaffcdbba6eac3c197260f56e737cd06f8c8bf23cdc6c5911744e69a78c6d9"
+    },
+    "ikea/include/ikea/seriespack/author/summaries.h": {
+      "before": "119d03ef8404ad3f461518201962c6e8042cae43b0a50dcadf05ca5d2e4438a9",
+      "after": "5fa83c2c583955099fff1a284446306c0b4a3ff47e86743b1509c711b985e3a9"
+    },
+    "ikea/include/ikea/seriespack/author/write.h": {
+      "before": "4ac1daa8fdf759a0c133c83e3a5fc43d94af57e5501f4231864da0739d516d28"
+    },
+    "ikea/include/ikea/seriespack/detail/admission.h": {
+      "both": "f3c04985ba39675ab9481f8e59b41dda90e928d0ec8c6df1ccc16af4c5c7d6a5"
+    },
+    "ikea/include/ikea/seriespack/detail/dense_read.h": {
+      "before": "d0140e4ebc352a57ce7cd0081d27720d53da5cc4a5d57b3ce25737b9c355e858",
+      "after": "6e7fc3da61456a93f881c03959540ba9d3cdb5065c91a807ccbdc88dcb0343ed"
+    },
+    "ikea/include/ikea/seriespack/detail/effects.h": {
+      "after": "b71f7db70cc2132b075d78a6ab1dce3d53be5f4e84a21cf6aeea70b2a66a685d"
+    },
+    "ikea/include/ikea/seriespack/detail/filter8.h": {
+      "before": "0121b020e1431170e06e37b98e27a151fe53736fe99594da360f370d1abee8e0",
+      "after": "b89bd50fcbe6322769ebf9bdfb7e29e5ad979e116a40c9353852d3875b4acf6e"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/admission.h": {
+      "before": "5fae5445b3c15402e8328a1c67acd1728760dc826f26b891d2be9dda5a71aaa9",
+      "after": "dfe17b5a507e3f3e4074a7caa8c7a26604e0584c93b6af04edbde76c756d4a73"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/admission_state.h": {
+      "before": "49f19e40439ffa2dde9dfce51a8f5d627b97d9aa553fd5265683d8a2f8ac93e2",
+      "after": "4dc16d414fb0be164418d92e2efd6956f473621319fb0dfb4c6848bf3cd4eac6"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/assignment.h": {
+      "before": "c0d80a6fbe63af266af95eb38a87f96659ee8a9e85ab1cc11e16da78132118f5",
+      "after": "d5b1b8ed1a4d87f692c8ef1b72386139822ff47cb3e383b9eb9d020460ca2033"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/composed.h": {
+      "before": "b56c4d0c0d0ba2d70b559e331518fc34a98cef4f77e260028f9c1e712658658a",
+      "after": "133bcbccd845e139e1feed108f4747a0156a25e58bf53417687dde0d130e991a"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/composed_construction.h": {
+      "before": "0de20caeb5f339a864b9c18622bd3fc1ae7c1138bcb99da922cf4b9a8f60a2ab",
+      "after": "e5e83a713e9333b6db48f19a3c85963612eb7e1c6d759b71370af38d07e76008"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/construction.h": {
+      "before": "12051f76112d1824e4a36866a660f13e12e3dfc53379a7ecd458f913a8a10b8a"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/fields.h": {
+      "both": "54bcd05be66c76f4d6a1dde87afcd62fdcafa4481c71d9dbac423b8326267d2a"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/footprint.h": {
+      "before": "8ad67182fbf1edd5535289cca5df12d6aa47b3de8942fe12e24838d6078d9a36"
+    },
+    "ikea/include/ikea/seriespack/detail/mutation/physical.h": {
+      "before": "78968c3d7fed29dfbe9eef466fd43208489211ef245c2341e691bd941490bf99"
+    },
+    "ikea/include/ikea/seriespack/detail/native/avx2/read.h": {
+      "before": "d84c2f019a7f84efeb1e729f5e9874fc0b9edecb52daa304b40ab05d94fa64ec",
+      "after": "577a12ff831559d8284d30d1d9d345d090abbf9257749bbe28525d778c6f29fe"
+    },
+    "ikea/include/ikea/seriespack/detail/native/avx2/write.h": {
+      "before": "81b9076d474fcfcb11b495bebf138878ad357449d53e7bfbdaf9362b4face721",
+      "after": "b6fe857d4b6140de65f5ccd419d1a604824d06bc2b1accbb3bee6b15bdc32bb5"
+    },
+    "ikea/include/ikea/seriespack/detail/native/avx512/read.h": {
+      "both": "8e0d5abad1e06b5bcb1f7b9efa9358c02377292d0ff7934aa8281e90e74fbb03"
+    },
+    "ikea/include/ikea/seriespack/detail/native/avx512/write.h": {
+      "both": "6d2dd532222ab80af7119a24af3e1b0d0017b733ad76851486d24e1cbd26318a"
+    },
+    "ikea/include/ikea/seriespack/detail/native/neon/groups.h": {
+      "both": "006b9a203bfcaa35cd6dd55f0c510adb6f79061ea38dacb6a302dfad6bbb5107"
+    },
+    "ikea/include/ikea/seriespack/detail/native/neon/read.h": {
+      "both": "8ec9c361e4e03970695f9f83af094ba494aab6fda9a292e5877cef0abaf57e3d"
+    },
+    "ikea/include/ikea/seriespack/detail/native/neon/write.h": {
+      "before": "2b775818e4fd412c1ee836f1edc2cd2cfa8925b33364b79456fe8290238be3db",
+      "after": "6180c12f403137dde8ae31dbbedb429cb39e3a2143b34802d051aa43776dbee5"
+    },
+    "ikea/include/ikea/seriespack/detail/physical_source.h": {
+      "after": "a79116d85b082e1848f4404e0edf72135877f02d8b291b7eeb4fa472be67e38e"
+    },
+    "ikea/include/ikea/seriespack/detail/placed_read.h": {
+      "before": "50c2339fe23527c578805665a32380f917de34bff208f8bb7a1b0e9e0d2328dc",
+      "after": "0feeea6a0d838f84dd431cb0e20c1498ec93ba61764847a600b499fa648b1903"
+    },
+    "ikea/include/ikea/seriespack/detail/point.h": {
+      "both": "124229fc8516abeba01aa010938386dcb08f8a4a09268b575f380d448df08f94"
+    },
+    "ikea/include/ikea/seriespack/detail/wire.h": {
+      "before": "05b92ca7dcb2864049aae1cf3105426798c46dbcd527f411ee480c3833d92b66",
+      "after": "0e0e002323e319fc5f817bd4fe136435d0722539f7487b998597c971f631288d"
+    },
+    "ikea/include/ikea/seriespack/effects.h": {
+      "before": "14ae2b0f4610970c08876318f88879f210defe427b28d2d229ad4930149be048"
+    },
+    "ikea/include/ikea/seriespack/erased_reader.h": {
+      "after": "1a19db339a91371ed7e8f833749a0eff018ef9d50ca2b7ec9825b6d362a8f259"
+    },
+    "ikea/include/ikea/seriespack/erased_writer.h": {
+      "after": "b334954dbf69c5294a747b8ebe7715b552430003c95d77abe63f8657d078df0a"
+    },
+    "ikea/include/ikea/seriespack/filter.h": {
+      "before": "32a052e3cc0c21e177986213fcc70b2bb1aaf434036e95272fd9ba81b0c89b0b",
+      "after": "a18e402d63fb76c5905deef09b6c9f36d79f7a9e27f19be93bfe17f2ea3d4b1d"
+    },
+    "ikea/include/ikea/seriespack/format.h": {
+      "before": "adf284014207305ffbeb4d726fc93fa4020220beb7d627a26027ec92711f01b9"
+    },
+    "ikea/include/ikea/seriespack/indexof.h": {
+      "before": "ef8c87d8d5e063455c9cb6857101b08788834846325afd008f2fe878fff4358c",
+      "after": "7de4a2ccf853eb99688b5d9c0c66d5c97f841a122dc547a002c7fa18c93bd900"
+    },
+    "ikea/include/ikea/seriespack/layout.h": {
+      "after": "f29d77fa37da523e3c1893426aa8fccf6d2f3a1be9f9a770f902565228c5a09e"
+    },
+    "ikea/include/ikea/seriespack/layout_value.h": {
+      "after": "9a338c94172055dfb5f273d417c68c2b5b17d6eddf21443ab2d115df8cddab24"
+    },
+    "ikea/include/ikea/seriespack/mutation_operation.h": {
+      "before": "0c0cdb03d0c2e99bb3cbcdfe9b8fb17c60cd545cffc5f3a854bb7f87785e90db"
+    },
+    "ikea/include/ikea/seriespack/point.h": {
+      "before": "f109d259212f94f49ad45589dad5382cc02b459f305acd1f088251312cb7da72",
+      "after": "52d736603fa6839086a110335f22b57c49c49080363ce203e51b23c3e82b7d96"
+    },
+    "ikea/include/ikea/seriespack/presets.h": {
+      "before": "a5c8b2061c83da4c40511b7f7797bfd2d2174097fa65d43171a26fe7d044e1e1",
+      "after": "af4c432e840ed72119984d2236dfe68fa8f22748232ccb40e8d64bc6131650d3"
+    },
+    "ikea/include/ikea/seriespack/read.h": {
+      "before": "b8e860e444216912a308fd0ce47b8b38c29553606da1b458174c57e7726d16e4",
+      "after": "60c6873b0b5de71ca11ac2a56b63833c36eaf753d155d30001e0c8c463a9ced9"
+    },
+    "ikea/include/ikea/seriespack/read_operation.h": {
+      "before": "b52426a8019150d16c69d0c25173f16b5a2ac6bfd427d36749f888056bb0bb53"
+    },
+    "ikea/include/ikea/seriespack/reader.h": {
+      "after": "0c75e87eccc3ea07b19c88c31788af9741b22345319235ec09b58e19c8721b09"
+    },
+    "ikea/include/ikea/seriespack/representation.h": {
+      "before": "236c3dfd832fb0151d98571f4334a38bb2e84a5a269bf4adca3f29e26ca42409"
+    },
+    "ikea/include/ikea/seriespack/selection.h": {
+      "before": "7cbf31ee1fd649c6aaaa752f7a51b89eaabcc82944de9131de84f907f401e489",
+      "after": "6dabe389cb5772b0ed2eaa8a8ce0f8a89c9ee54ea064c598db7e49e934a34e87"
+    },
+    "ikea/include/ikea/seriespack/status.h": {
+      "before": "a19b016e4aad84e22e3f68cccd4aa87445f5595e25f4913dabba26133e44c74c",
+      "after": "e0553cbb17aca0d843371cb1fe3baf8a34fc71cc9091f4b23730552203118cbf"
+    },
+    "ikea/include/ikea/seriespack/view.h": {
+      "before": "a4182644ea8da9c36dd7ee31b37167268e48d5b4b4080981c2f6609a8bf53348",
+      "after": "b29c5c35d680c5251d33053b883694de8fb2576982cff95d065d572b78973bf5"
+    },
+    "ikea/include/ikea/seriespack/write.h": {
+      "before": "8ec6830b81fbc70faee7cbb0c0ef0d82e5906fb0e314f72af308cc4426fdd7ec",
+      "after": "a31c5acfaa5e52bd20ed40c8fbfa2d82dd9bf67462d1f324d7ad5f3b518679e5"
+    },
+    "ikea/include/ikea/seriespack/writer.h": {
+      "after": "59d32282cb931b9272b477e2b6a97f0ea25e4999271ddb688e50a06178d5a68d"
+    },
+    "ikea/include/ikea/streampack.h": {
+      "both": "1ff428b0344ad56e1c301f81a63015d5738cfad6cba67bcd6068212100587554"
+    },
+    "ikea/include/ikea/streampack/author/read.h": {
+      "before": "68c98ddcb7d341e36a309e2d44175c2b80370dc20f0d09cb2f5ef349b57cd198",
+      "after": "b69911e45144603b68fe891dabe995d843e0e3de7be852dfadbdf2dbe4810f56"
+    },
+    "ikea/include/ikea/streampack/author/write.h": {
+      "before": "41ca01884887645901f2ebdce963367d49008ee1761607a6fd53dff0c073c4a9",
+      "after": "44099e5780e5bacc2a83f93d8468b22a1e440f6ad68bec690a12377ced2035fc"
+    },
+    "ikea/include/ikea/streampack/description.h": {
+      "before": "72e803484ad129e7c3aa9850ac43ce602e7e9e67e95e401571bbaf489b74b1e2"
+    },
+    "ikea/include/ikea/streampack/detail/compact/author/read.h": {
+      "before": "96c6200616a43a6bb83298098877cd07b5fae27954a6094e5d6309215917689b",
+      "after": "72fd5a1daa64a8f912c35e554246bb46bf9519380aea26708c10ef2a5320f4c1"
+    },
+    "ikea/include/ikea/streampack/detail/compact/author/write.h": {
+      "before": "339991ea85d12b1bc5a130eb5e942b4f9bc19d0d1151f771e01af514e90426ec",
+      "after": "c78536ccc82d794bf01b49ed2b8ae837b1a32adae9380ea839303ecf47fc75fe"
+    },
+    "ikea/include/ikea/streampack/detail/compact/description.h": {
+      "before": "b992b462c49351fdd0f8effb3290c882532d22d07d4b271ddd2ee27dd9e5c87e",
+      "after": "bf4b901f09966a4499421949cfedfb1a5c2ec25f66120fb14dcf2ab449623f91"
+    },
+    "ikea/include/ikea/streampack/detail/compact/detail/extent.h": {
+      "both": "fbbdc4ab1efba3657bb4c020654f7b89f114245d0eb4e87865dd1c33b654737e"
+    },
+    "ikea/include/ikea/streampack/detail/compact/detail/rewrite.h": {
+      "both": "8ebbc8acac17d38a2d5efd66fe9ef9269356a18474ae72a9b2b10c28cbbe96c9"
+    },
+    "ikea/include/ikea/streampack/detail/compact/read.h": {
+      "both": "56d609ed0deaa3f3b9aed0cf975178900806177e7a1ef85358a03df5aa1532be"
+    },
+    "ikea/include/ikea/streampack/detail/compact/view.h": {
+      "before": "01cc81974f8f4e4b79ab9e8e850c65058b429cbf01bcf9ed90e6620a0c7632df",
+      "after": "98441fd11ee1139aee9572ed0f8024845ba2a80758d2bd4da6d3442c715732f8"
+    },
+    "ikea/include/ikea/streampack/detail/compact/write.h": {
+      "before": "c00331b42132f4369bb99e18f5c9d4fea118fe4e7367f897ff2c1fb1c36da5c7",
+      "after": "3d9f75de4fd18e3e7d26fd6a73e89e10b11d626486be96c100db1fcc93b5624d"
+    },
+    "ikea/include/ikea/streampack/layout.h": {
+      "after": "92b7cd5773fb74fd8fd19a9994682d53c7105400c66941e29373da3922e92b37"
+    },
+    "ikea/include/ikea/streampack/read.h": {
+      "before": "a98280b930bb834337015b38ea353f89dc375331b364aadb844e57af51ee27b5",
+      "after": "011ccff9b0a5559403860a81b67926007bf047dfaa50897695ba01f70d2537be"
+    },
+    "ikea/include/ikea/streampack/transfer.h": {
+      "before": "74a4a29303d9163e0638e1e3cc9bcb822fe9acc04dcad5348f9a7040f83d8755",
+      "after": "1a4b66c0728b58544acabe89cc1a8e1baef984dcada7f0e465e35e498dd54434"
+    },
+    "ikea/include/ikea/streampack/types.h": {
+      "before": "fd4f143d224e440b985a7d681f8a560ac2075a442fe032d8a9c19c3ece69b4e7",
+      "after": "472c4edfcfe88e16f74688bc8834e68bce9b9707150be62b649c3675396c66bf"
+    },
+    "ikea/include/ikea/streampack/view.h": {
+      "before": "62d2fa385248ec530c9cfebe8e17ad23dd00e2c08b03e72f93a2c1f95c2c8dbc",
+      "after": "034ad4974ff4c48f9e41e1d9ec674b9b7dbc27353a39b538f568306a0c1ac8e3"
+    },
+    "ikea/include/ikea/streampack/write.h": {
+      "before": "5242c428f5f3198ce027eac60b6138d4510d56d1d46ebd0375d12025522a43f8",
+      "after": "4d79cfd0099200c0c5e5d2644de788a2a4699653e915595ff26367abe6b7e55e"
+    },
+    "ikea/include/ikea/tuplepack.h": {
+      "before": "15e0b362d7014cfd7575d1ed548e4cbab068e2946df53fbc1f5ff329c11f3222",
+      "after": "aefd1e2473322e0e5aaa5660fcd3378f9d4ee2e8204d43889c167e2b41654b95"
+    },
+    "ikea/include/ikea/tuplepack/author/execution.h": {
+      "before": "9e2f1f81d92ac2ed91c808dc80b619e71f01644f4f863447febae0fed4413bc0",
+      "after": "f03389446e98e880c0f6240666bd3e4a4121981dd7049e03527b72d6743f7550"
+    },
+    "ikea/include/ikea/tuplepack/author/filter.h": {
+      "after": "18ba08ad5e8bba57cfd0f12f2346f52f4c381677db7ab8abe877eed4df9df9fe"
+    },
+    "ikea/include/ikea/tuplepack/author/native.h": {
+      "before": "f10d26edaeef6781cb51beebb0d8419a636ea403b7b93a2bf9757da5b02cd3ec",
+      "after": "60173eb6e223227a5cdcdc1d42c99a66218453202c1cac1110aed2e5c4fa07b9"
+    },
+    "ikea/include/ikea/tuplepack/construction.h": {
+      "before": "6fd8db04a4bbe9a818c9931e309d3def87c10cdc0df1dffd7055951a4f0aada8"
+    },
+    "ikea/include/ikea/tuplepack/description.h": {
+      "before": "e12fd70c9234ce01466ce817098f1287893503325d2a48e9a11bf9d94e6dce4a"
+    },
+    "ikea/include/ikea/tuplepack/detail/gpr.h": {
+      "before": "cefe2ee0fbd51b4a4391595d5015e13635331bf241a90f080d6a3ea40ca295d0",
+      "after": "30fcc483704acb4b7212415bf8ae07c92bad7a37c10f3345095a45aa9d2542ff"
+    },
+    "ikea/include/ikea/tuplepack/detail/mutation.h": {
+      "before": "0d0b7a340de2c764355e8392d903fcd5b26f1b14d0ba1bb8f34ea9fbd2c8ba25",
+      "after": "700b304b4de09dc37c3dc0dfcebcedd3f2273b1adf7d03db91fd9269d5fb075c"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/memory.h": {
+      "before": "d44dcd72d6c3dcfb0e160cd4fb568880ee825aacf69c7112e979c544a2fec951",
+      "after": "e91fcd5e9d90e0f960b0004e1c3be17ad07ce0e58eb134038b67c23414354b28"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/packet.h": {
+      "before": "fc8ce06ed221451b17d4330fc543b63a2e844f3f6c89db510d3c2028112593e8",
+      "after": "9cd3657bca9c6a6757a41ee30cdea0234b42b00702b29613a5a654839a69bb6b"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/read.h": {
+      "after": "498b2adc6c9f4641165be5e3e01b286d14056de0ddd0b4ffb3c580288a0fad00"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/selection.h": {
+      "before": "d495e9d02d2837ba26f6244b7e7732ce9a06890c15f35bee5a2f220546fadfc4",
+      "after": "274fce2bc9fd61c8f9f46b7c139f4b559f3095822d4b18b935f40d26a94e3d95"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/shuffle.h": {
+      "both": "c59956d48c1c53e68c255f3a99d98f474f343d7ede10b4cb71d3f491049e516f"
+    },
+    "ikea/include/ikea/tuplepack/detail/native/types.h": {
+      "before": "bf39a6d3ef916f221211d523d881777fb184a5ff6803375f496ad8ff420b8cb0",
+      "after": "79c5d5a71982c4839348958fe9e2a72d98c0dbca321b227e7208f9b20fab40c2"
+    },
+    "ikea/include/ikea/tuplepack/detail/packet_plan.h": {
+      "before": "c32c9c3b3e10e98b66acf8b230d35ac2cabf4f875cadfb9bdb2d804e981e6a48",
+      "after": "d77bb8473c0991d2c0acb6fbfdafadb6bfe25383c89fe6025a3b212a1ce235b1"
+    },
+    "ikea/include/ikea/tuplepack/detail/plan.h": {
+      "before": "18f8059941a2bc648967a7d69b275d9a00de474ae83432c708497cce39264de5",
+      "after": "40d7efaeb771bef9207d89598cfe6c0ecc614e6d4c2edbc010ae19d16c36d5e9"
+    },
+    "ikea/include/ikea/tuplepack/detail/window.h": {
+      "both": "106ba39b37d696e351b0748353e4a2c1d7e1bc493639cd703653ad860377d472"
+    },
+    "ikea/include/ikea/tuplepack/filter.h": {
+      "before": "c09ea31da1b23c6df26b071efcea764e80ac87028212ead726c16154299ce698",
+      "after": "ab487b873b06a75510a988c2c2cd09d792998580aa976ad404628db1658467e7"
+    },
+    "ikea/include/ikea/tuplepack/initialize.h": {
+      "after": "b969db0b09b0c142f24c3eca4c4b9b28453170e39116795a5a2d10f1632b9dfe"
+    },
+    "ikea/include/ikea/tuplepack/layout.h": {
+      "after": "e69b31fc0cbb73b8426dbde3b7e25da1a8d8288f0c63dbde8d5b251e7426e194"
+    },
+    "ikea/include/ikea/tuplepack/packet.h": {
+      "after": "d35afbc37fe37f5c1a4519b4f79468522672b73dd378f343162fe4f119cf67d1"
+    },
+    "ikea/include/ikea/tuplepack/packet_layout.h": {
+      "before": "4f40cec54d800f2b0c84d5019d68141e30faa70d66fc240517320aee57127f1e",
+      "after": "a47daca01d622f150273137e0448d9b2f304694076b78c9ebd08e86c94dfe28c"
+    },
+    "ikea/include/ikea/tuplepack/plan.h": {
+      "before": "490c461bd668e840df31f7f94e74198aaf533694085c85341a1095388717de12",
+      "after": "d9cc1690d0c8e98faa9053188c74ec5a0940f34a8cd618bf7e984ac167d880ca"
+    },
+    "ikea/include/ikea/tuplepack/read.h": {
+      "before": "2fad05c3b36b17c8f7825cbcb017995e2fd1503ecd26a01bf64cc7c6cc0d6252",
+      "after": "e302ec9ecce3647965e0d4549ab3b3ecd11a47b03748f6629dbc1754d0e1deab"
+    },
+    "ikea/include/ikea/tuplepack/selection.h": {
+      "before": "b878acb433ba38f44b4fa386da13fabf3d5a964306e21a17fc0ee28ece2dde2b",
+      "after": "cf43e637c46632ef25e22ab32ee2dc4965c4552d85049abbc8d1cd35fd30cc8f"
+    },
+    "ikea/include/ikea/tuplepack/transfer.h": {
+      "before": "9975377267b3907e38e22ce4ccf5beb920d4a043c8e8a97f128e2caa49d3afb7",
+      "after": "fb5d7f79cb282eb1e806f18792e885603f30720853df7ed6c92a38745533eb39"
+    },
+    "ikea/include/ikea/tuplepack/view.h": {
+      "before": "ef0166a34353706ec51662c99ec8f4c6f1e8fb94c9d0b6ee83355c2ed5914979",
+      "after": "699b413ac19359fd31e031c82eb44b7d81f625ee83b6cf1e19c627a08348f2da"
+    },
+    "ikea/include/ikea/tuplepack/write.h": {
+      "before": "ee29ad753706db8c393e2e77440c15143a28216a5ce52146a84d0dc7ad82de0a",
+      "after": "be994560d803e778e919c6b35d7871ea6632e61d38ea7df67f3034adac22e8da"
+    },
+    "ikea/src/seriespack/readers.cpp": {
+      "before": "54ed941ee8cc194796c95c2dcb68cfa49427c0de4482a73a40ebe7fef4667e5a",
+      "after": "94262616d019a741e1f35c054b76269620dc9603a91597ea26d6a6fa3ae72e02"
+    },
+    "ikea/src/tuplepack/construction.cpp": {
+      "before": "e4f71cddd17f39e383075863c7ada2a251ebf2a6537ec75c5c613a026bcbfe28"
+    },
+    "ikea/src/tuplepack/initialize.cpp": {
+      "after": "448c3fc0e6a8df1d9eb851c984b5f3ddf4a8f8b65f5f7b4b134f53003f35d850"
+    },
+    "ikea/test/selection.cpp": {
+      "after": "6affa26c27839defd87e37b17d494a0adb695e0e7d1c2b8c20b8f0ad0818fc79"
+    }
+  },
+  "command_template_by_profile": {
+    "neon-v2": [
+      "clang++-21",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map={source_root}=/sixdb",
+      "-I",
+      "{source_root}/ikea/include",
+      "-MD",
+      "-MF",
+      "{object}.d",
+      "-c",
+      "{source_root}/{source}",
+      "-o",
+      "{object}.o"
+    ],
+    "avx2-zen5": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map={source_root}=/sixdb",
+      "-I",
+      "{source_root}/ikea/include",
+      "-MD",
+      "-MF",
+      "{object}.d",
+      "-c",
+      "{source_root}/{source}",
+      "-o",
+      "{object}.o"
+    ],
+    "avx512-zen5": [
+      "clang++-21",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map={source_root}=/sixdb",
+      "-I",
+      "{source_root}/ikea/include",
+      "-MD",
+      "-MF",
+      "{object}.d",
+      "-c",
+      "{source_root}/{source}",
+      "-o",
+      "{object}.o"
+    ]
+  },
+  "dense_bridge_fix": {
+    "path": "ikea/include/ikea/seriespack/author/filter.h",
+    "after_sha256": "ae255f3a45780ee200259846cc2552547d5f4ce1390b40f76574d1285028c329",
+    "pre_fix_after_objects_compared": 36,
+    "identical_object_hashes": 36,
+    "meaning": "The cast enables previously failing AVX512 dense-word template instantiations. It changes no emitted byte in these selected actual TUs. Full-scope tiles_1/9/25/57 syntax passes separately; this is not a claim that the previously uninstantiable path had a before object."
+  },
+  "inspected_observations": [
+    {
+      "subject": "SeriesPack compiled physical readers",
+      "finding": "All 490 function bodies, relocations and constants per profile match exactly after the recorded role/type correspondences. This covers compiled dense and placed callbacks; typed caller admission/lifetime code is also inspected in the ordinary examples, but not inferred free from this callback match."
+    },
+    {
+      "subject": "SeriesPack ordinary and owner integration",
+      "finding": "Mutation/admission/effects functions have real differences, plus unmatched private adapter/template signatures. Source-qualified journal identities are the caller-named view while traversal copies metadata. These complete drivers remain runtime qualification subjects; the audit makes no blanket unchanged-code claim."
+    },
+    {
+      "subject": "Filter composition exercise<12> and exercise<15>",
+      "finding": "Complete operation sequences and function sizes match on all profiles; four assertion line immediates advance by one per function. Literal assertion strings, names and targets remain unnormalized differences."
+    },
+    {
+      "subject": "TuplePack words and initialization plan",
+      "finding": "The complete words example main and compiled initialization-plan make function are exact on all three profiles."
+    },
+    {
+      "subject": "TuplePack writer<128>::set_unchecked journal specialization",
+      "finding": "Full example-emitted functions preserve source-qualified effects, copy the first input64, conditionally copy the second input64 when count>=65, memset destination, then issue one and conditionally two existing write_buffered calls. No old destination read occurs before initialization. NEON size280->292 B/static instructions70->73/frame160->176 B, with one more saved register and split mul/add. AVX2 size341->370 B/static instructions86->93; AVX512327->362 B/82->89; both x86 profiles save rbp and spill two coalescing-path temporaries. These are register-pressure/address-arithmetic risks, not measured losses; whole-command64/65/128-code checked/trusted trials assess them."
+    },
+    {
+      "subject": "TuplePack filter integration",
+      "finding": "The actual checked predicate complete bodies retain their native predicate paths but add scalar load/address work: NEON equality and >= examples8676->8692 B each; AVX2 equality9066->9103 B and >=9126->9159 B. The surrounding ordinary example also changes admission. Complete filter consumers, including tight/shifted/strided layouts and active masks, require runtime qualification; no free-wrapper assumption is made."
+    },
+    {
+      "subject": "TuplePack ordinary main",
+      "finding": "Same function size on each profile; the NEON instruction-only difference is the overflow error value7->8 after adding effects to the enum. Changed literal values and relocation/diagnostic labels remain in strict differences."
+    },
+    {
+      "subject": "Hashtable ordinary owner",
+      "finding": "All30 NEON,32 AVX2 and27 AVX512 corresponding functions have identical instruction bytes, including complete main, insert_slow payloads, growth and admission. Two constructor relocation records per profile retain differently named compiler-generated attach.used data targets; constant bytes are equal. Raw mangled fragments are not rewritten."
+    },
+    {
+      "subject": "Bec ordinary and bitset bridge",
+      "finding": "The little-endian bridge introduces no runtime endian-mode branch. Ordinary main grows740->748 B NEON,885->921 B AVX2 and882->908 B AVX512: singleton construction stores differ and bitset256 default-zero initialization clears the decoded output before its complete decode. This setup cost is retained. Maintained recurring decode uses an output buffer created before its timed loop; supplemental native trials assess complete recurring consumers separately."
+    },
+    {
+      "subject": "StreamPack ordinary",
+      "finding": "Complete main instruction bytes are identical on every profile, with changed relocation names. AVX2/AVX512 compact initialize journal specializations add one zero-extension instruction after loading a byte size, with shifted branch offsets; journal coalescing paths and memcpy/memset calls otherwise retain the inspected instruction sequence. Initialization is still part of complete-command cost."
+    },
+    {
+      "subject": "Selection",
+      "finding": "The selection check TU is after-only evidence, never counted as a before/after win. Existing actual Hashtable consumer instruction bytes remain unchanged, supplying a consumer check for the shared selection/bitset bridge."
+    },
+    {
+      "subject": "Unmatched identifiers",
+      "finding": "Clang21 demangles several newly constrained template parameter uses as T/T& while old signatures print the concrete journal type. Stream append visitors and the TP128 journal specialization are left unmatched in strict pairing. SP private physical adapter signatures also genuinely differ; no generic T& substitution or forced100% equality is used."
+    }
+  ],
+  "recovery": {
+    "runner": "workbench/spikes/ikea-composition/cohesion-v2-codegen.py",
+    "parser": "workbench/spikes/ikea-composition/cohesion-codegen.py",
+    "baseline": "git archive f153420002520213e1496a97559f0118bbd1ad94 ikea into before/",
+    "after": "Use the maintained revision containing this receipt, verifying the deduplicated project dependency hashes, or the source cut identified by native_capture_source_digest. Native worker artifacts retain that transported source. Copy Ikea into after/.",
+    "command": "orb -m ubuntu taskset -c 8 python3 workbench/spikes/ikea-composition/cohesion-v2-codegen.py before after build/ikea-cohesion-v2/reproduce --baseline-commit f153420002520213e1496a97559f0118bbd1ad94",
+    "full_working_evidence": "build/ikea-cohesion-v2/codegen/receipt.json, *.record.json, *.s, *.sections, *.compile.json and codegen-source-manifest.json remain ignored; all instruction bytes, relocation targets/addends and dependency paths are retained there."
+  }
+}

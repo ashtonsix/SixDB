@@ -29,7 +29,9 @@ or placement metadata.
 | `tp::constructor` | Owns **two** `writer<64>` values plus code count. Each writer owns `detail::write64`: scalar read/order metadata, store/invalid/footprint arrays, eight ISA-specific shuffle rounds, preserve bytes, round count and dense/needs-old flags. Shuffles retain only this build's ISA operands. | `constructor::make` prepares both halves even for this 23-code law. `accepts` and initialization use only the first half when count is at most 64. The second owned plan is not executed in this consumer. |
 
 Definitions: `ikea/include/ikea/tuplepack/{description,packet_layout,plan,construction}.h`,
-`tuplepack/detail/plan.h`, and `ikea/src/tuplepack/construction.cpp`.
+`tuplepack/detail/plan.h`, and `ikea/src/tuplepack/construction.cpp` in that cut.
+The current [execution survey](../../../ikea-composition/reusable-execution.md)
+maps these historical records to the revised plan/reader/writer interfaces.
 Stored array capacities are source facts, not estimates of padding, aggregate
 size, register passing or how much optimized code loads.
 

@@ -1,5 +1,10 @@
 # Interface cohesion across the maintained packs
 
+**Historical bounded audit.** Its broad naming/byte/schema rejections were
+reopened by Ashton and are superseded by the [broader cohesion decisions](interface-proposal.md).
+The evidence below applies to its recorded source cut, including the old codegen
+receipt; it does not qualify the newer contracts.
+
 Ashton's 2026-10-22 request starts from an external review of Ikea's documentation
 and interfaces, asks us to challenge it seriously, and encourages broader agent
 coverage. This follow-through examines actual headers and consumers rather than

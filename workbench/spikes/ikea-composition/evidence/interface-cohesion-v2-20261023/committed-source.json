@@ -1,0 +1,20 @@
+{
+  "core_commit": "876a8af0e03bcf1811957ec2e4988de20e5aa168",
+  "base_capture": "build/captures/ikea-cohesion-v2-native-r4",
+  "base_capture_sha256": "2d1edc87337c8561b208a3800089b2bdbb73546da9dcb76981a30390230c6120",
+  "code_deltas": {
+    "ikea/include/ikea/tuplepack/initialize.h": "23016ad6ac7ccd9860c74201dd135b56cb31acdb4835883fd0b45b0c100e2694",
+    "ikea/include/ikea/streampack/write.h": "aa98475d49c4c25e8fd94772a6b585622ac592d16e4879bfd10cfcc5b3e452d4",
+    "ikea/test/tuplepack/operations.cpp": "558b381ae1d93cc3e4e9ccc5b89df415745f983db01179026d61dba1e093750c"
+  },
+  "delta_qualification": "tp-api-final.json",
+  "delta_patch": "tp-api-final.patch",
+  "docs_deltas": [
+    "ikea/docs/bec256/usage.md",
+    "ikea/docs/hashtable/usage.md",
+    "ikea/docs/interfaces.md",
+    "ikea/docs/streampack/reference.md",
+    "ikea/docs/streampack/usage.md"
+  ],
+  "limits": "Core commit includes maintained caller/API migrations. Frozen R4 test/native receipts and the explicit final API delta are separate proofs; this mapping does not infer new timings or qualify later peer Frame algorithms."
+}

@@ -1,0 +1,2901 @@
+{
+  "actual_path_annotations": {
+    "configured-release/avx2-zen5/cached24": {
+      "entry": "0x70f8",
+      "instructions": 360,
+      "literal_function_sha256": "83656e4c7586cdd3e02f65d4cef9c61cd7000205e45da2d51a17b161d68418ea"
+    },
+    "configured-release/avx2-zen5/final16": {
+      "entry": "0x7158",
+      "instructions": 352,
+      "literal_function_sha256": "196044e233301530d9fdc7514e58e2b4f9880d9d6a3511eefd0435d1bb7104d5"
+    },
+    "configured-release/avx2-zen5/generic16": {
+      "entry": "0x7058",
+      "instructions": 360,
+      "literal_function_sha256": "3f5d928a0eca86d04288276a1d55c830cb2be465e8c952b0ebecb304d8466b1d"
+    },
+    "configured-release/avx2-zen5/predicate16": {
+      "entry": "0x7158",
+      "instructions": 352,
+      "literal_function_sha256": "196044e233301530d9fdc7514e58e2b4f9880d9d6a3511eefd0435d1bb7104d5"
+    },
+    "configured-release/avx512-zen5/cached24": {
+      "entry": "0x6e8d",
+      "instructions": 311,
+      "literal_function_sha256": "fd0441bc8d8119c3bb69ad834cc1998814b364fe927d72aa8dbe384df091a07d"
+    },
+    "configured-release/avx512-zen5/final16": {
+      "entry": "0x7040",
+      "instructions": 303,
+      "literal_function_sha256": "aa23ebff5559eaeb492a4860ed6e20f91a7b3009f6ae625514d70beaf2ccef61"
+    },
+    "configured-release/avx512-zen5/generic16": {
+      "entry": "0x6f60",
+      "instructions": 303,
+      "literal_function_sha256": "a7c94b431ee55526da69f33099cd01f37e1e37b3f69925511c297e04ff4a5263"
+    },
+    "configured-release/avx512-zen5/predicate16": {
+      "entry": "0x7040",
+      "instructions": 303,
+      "literal_function_sha256": "aa23ebff5559eaeb492a4860ed6e20f91a7b3009f6ae625514d70beaf2ccef61"
+    },
+    "configured-release/neon-v2/cached24": {
+      "entry": "0x51f8",
+      "instructions": 371,
+      "literal_function_sha256": "ce63c8f1d9e002ca0f2b6e8e53375b4d7e32202aca4bff0ca9a79aed4500866d"
+    },
+    "configured-release/neon-v2/final16": {
+      "entry": "0x5238",
+      "instructions": 379,
+      "literal_function_sha256": "c8c8f5171c0179bedbe210d88c1806ddf3fb26fb318da6b8e4a54fb2ccb8eee0"
+    },
+    "configured-release/neon-v2/generic16": {
+      "entry": "0x51f8",
+      "instructions": 379,
+      "literal_function_sha256": "27d247077a813e8c9f2e05a7aeac6965976388908017fafa9edb22f5fe23f741"
+    },
+    "configured-release/neon-v2/predicate16": {
+      "entry": "0x5238",
+      "instructions": 379,
+      "literal_function_sha256": "c8c8f5171c0179bedbe210d88c1806ddf3fb26fb318da6b8e4a54fb2ccb8eee0"
+    }
+  },
+  "actual_path_function": "void runtime::measure<void extras::run_extra<extras::Tuple<5u, (ikea::comparison)2>>(extras::Tuple<5u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<5u, (ikea::comparison)2>, char const*) [symbol:_ZN7runtime7measureIZN6extras9run_extraINS1_5TupleILj5ELN4ikea10comparisonE2EEEEEvRKNT_5InputEPKcEUljjE_EEvRKNS_7FixtureEjSC_tS7_SC_]",
+  "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+  "census": {
+    "cached24": {
+      "checked_filter": [
+        32,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "checked_reader": [
+        32,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "checked_series_reader": [
+        48,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "checked_writer": [
+        24,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "dense_reader": [
+        16,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "erased_series_reader": [
+        40,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "erased_series_writer": [
+        56,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "erased_writer": [
+        24,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "filter_reader": [
+        24,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native_reader": [
+        16,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native_writer": [
+        16,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "predicate": [
+        24,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "read_plan": [
+        96,
+        8,
+        1,
+        1,
+        1,
+        0
+      ],
+      "reader": [
+        24,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "series_reader": [
+        48,
+        8,
+        1,
+        1,
+        1,
+        0
+      ],
+      "series_view": [
+        80,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "series_writer": [
+        48,
+        8,
+        1,
+        1,
+        1,
+        0
+      ],
+      "tuple_view": [
+        48,
+        8,
+        1,
+        1,
+        1,
+        1
+      ],
+      "write_plan": [
+        336,
+        8,
+        1,
+        1,
+        1,
+        0
+      ],
+      "writer": [
+        16,
+        8,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "columns": [
+      "size",
+      "alignment",
+      "trivial_copy",
+      "trivial_move",
+      "trivial_destructor",
+      "standard_layout"
+    ],
+    "deltas": {
+      "final16": {
+        "checked_reader": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "filter_reader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "generic16": {
+        "checked_filter": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "checked_reader": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "filter_reader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "predicate": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "predicate16": {
+        "checked_reader": [
+          24,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "filter_reader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reader": [
+          16,
+          8,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "profiles_agree": [
+      "neon-v2",
+      "avx2-zen5",
+      "avx512-zen5"
+    ],
+    "trait_fields": "size/alignment and actual trivial copy-construction/move-construction/destruction/standard-layout facts; no ABI inferred solely from them."
+  },
+  "checks": {
+    "neon-v2/cached24": {
+      "binary_sha256": "0452cee95d8f188fe2a9e6d6f725734a06b2d14bf5641037d6652dcd3d43d9f7",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "handle-boundaries: raw/checked/stored/crowded commands, rebind refusal, wire/effects, exact-tail and protected-none checks passed\n"
+    },
+    "neon-v2/generic16": {
+      "binary_sha256": "ca9bd33be153b70f97462fcb99971eafd4bbe36c0191712a21f2b6b7caca3234",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "handle-boundaries: raw/checked/stored/crowded commands, rebind refusal, wire/effects, exact-tail and protected-none checks passed\n"
+    },
+    "neon-v2/predicate16": {
+      "binary_sha256": "812233925bb96d524c17106113e6f27c1603b473fc2e13ecc1c6e33a049a66e3",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "handle-boundaries: raw/checked/stored/crowded commands, rebind refusal, wire/effects, exact-tail and protected-none checks passed\n"
+    }
+  },
+  "command_substitution": "SOURCE is the frozen source arm; TU is the listed relative source; OBJECT/DEPFILE are the chosen output paths. PREDICATE_CONTROL=1 for predicate16/final16 and0 otherwise; module source commands do not define it. Full exact argv hashes remain per object.",
+  "command_templates": {
+    "c0": [
+      "clang++-21",
+      "-DFILTER_SEAMS_NO_MAIN=1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c1": [
+      "clang++-21",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c10": [
+      "clang++-21",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c11": [
+      "clang++-21",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c12": [
+      "clang++-21",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c2": [
+      "clang++-21",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c3": [
+      "clang++-21",
+      "-DFILTER_SEAMS_NO_MAIN=1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c4": [
+      "clang++-21",
+      "-DFILTER_SEAMS_NO_MAIN=1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c5": [
+      "clang++-21",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c6": [
+      "clang++-21",
+      "-DFILTER_SEAMS_NO_MAIN=1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=znver5",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c7": [
+      "clang++-21",
+      "-DFILTER_SEAMS_NO_MAIN=1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=x86_64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=x86-64-v3",
+      "-mtune=znver5",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=1",
+      "-DSIXDB_TUNE_NEOVERSE_V2=0",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c8": [
+      "clang++-21",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ],
+    "c9": [
+      "clang++-21",
+      "-DFILTER_SEAMS_NO_MAIN=1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-gline-tables-only",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-DHB_PREPARED_PREDICATE=PREDICATE_CONTROL",
+      "--target=aarch64-linux-gnu",
+      "--gcc-toolchain=/usr",
+      "-std=c++23",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fdenormal-fp-math=ieee",
+      "-fvisibility=hidden",
+      "-fvisibility-inlines-hidden",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-DSIXDB_TUNE_GENERIC=0",
+      "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+      "-DSIXDB_TUNE_ZEN4=0",
+      "-DSIXDB_TUNE_ZEN5=0",
+      "-DSIXDB_TUNE_NEOVERSE_V2=1",
+      "-DSIXDB_TUNE_NEOVERSE_V3=0",
+      "-ffile-prefix-map=SOURCE=/sixdb",
+      "-I",
+      "SOURCE/ikea/include",
+      "-MD",
+      "-MF",
+      "DEPFILE",
+      "-c",
+      "SOURCE/TU",
+      "-o",
+      "OBJECT"
+    ]
+  },
+  "configured_fixture_debug_reproof": [
+    {
+      "arm": "cached24",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 7,
+          "total": 7
+        },
+        "functions": {
+          "different": [],
+          "equal": 17,
+          "total": 17
+        },
+        "unwind": {
+          "different": [],
+          "equal": 6,
+          "total": 6
+        }
+      },
+      "profile": "neon-v2"
+    },
+    {
+      "arm": "generic16",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 7,
+          "total": 7
+        },
+        "functions": {
+          "different": [],
+          "equal": 17,
+          "total": 17
+        },
+        "unwind": {
+          "different": [],
+          "equal": 6,
+          "total": 6
+        }
+      },
+      "profile": "neon-v2"
+    },
+    {
+      "arm": "predicate16",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 7,
+          "total": 7
+        },
+        "functions": {
+          "different": [],
+          "equal": 17,
+          "total": 17
+        },
+        "unwind": {
+          "different": [],
+          "equal": 6,
+          "total": 6
+        }
+      },
+      "profile": "neon-v2"
+    },
+    {
+      "arm": "cached24",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 8,
+          "total": 8
+        },
+        "functions": {
+          "different": [
+            "f3",
+            "f4"
+          ],
+          "equal": 14,
+          "total": 16
+        },
+        "unwind": {
+          "different": [
+            "f0"
+          ],
+          "equal": 5,
+          "total": 6
+        }
+      },
+      "profile": "avx2-zen5"
+    },
+    {
+      "arm": "generic16",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 8,
+          "total": 8
+        },
+        "functions": {
+          "different": [],
+          "equal": 16,
+          "total": 16
+        },
+        "unwind": {
+          "different": [],
+          "equal": 6,
+          "total": 6
+        }
+      },
+      "profile": "avx2-zen5"
+    },
+    {
+      "arm": "predicate16",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 8,
+          "total": 8
+        },
+        "functions": {
+          "different": [
+            "f3",
+            "f4"
+          ],
+          "equal": 14,
+          "total": 16
+        },
+        "unwind": {
+          "different": [
+            "f0"
+          ],
+          "equal": 5,
+          "total": 6
+        }
+      },
+      "profile": "avx2-zen5"
+    },
+    {
+      "arm": "cached24",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 9,
+          "total": 9
+        },
+        "functions": {
+          "different": [
+            "f1",
+            "f2"
+          ],
+          "equal": 14,
+          "total": 16
+        },
+        "unwind": {
+          "different": [
+            "f0"
+          ],
+          "equal": 5,
+          "total": 6
+        }
+      },
+      "profile": "avx512-zen5"
+    },
+    {
+      "arm": "generic16",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 9,
+          "total": 9
+        },
+        "functions": {
+          "different": [
+            "f1",
+            "f3",
+            "f2",
+            "f4"
+          ],
+          "equal": 12,
+          "total": 16
+        },
+        "unwind": {
+          "different": [
+            "f0"
+          ],
+          "equal": 5,
+          "total": 6
+        }
+      },
+      "profile": "avx512-zen5"
+    },
+    {
+      "arm": "predicate16",
+      "kinds": {
+        "constants": {
+          "different": [],
+          "equal": 9,
+          "total": 9
+        },
+        "functions": {
+          "different": [],
+          "equal": 16,
+          "total": 16
+        },
+        "unwind": {
+          "different": [],
+          "equal": 6,
+          "total": 6
+        }
+      },
+      "profile": "avx512-zen5"
+    }
+  ],
+  "debug_reproof_different_functions": {
+    "f0": ".eh_frame",
+    "f1": "void ikea::author::chain<ikea::seriespack::x86::values<8u, 16u>, unsigned short, 4u, std::integer_sequence<unsigned long, 0ul>>::stage<&ikea::author::chain<ikea::seriespack::x86::values<extras::Tuple<5u, (ikea::comparison)2>::B * 8, 16u>, unsigned short, 4u, __make_integer_seq<std::integer_sequence, unsigned long, native::values<extras::Tuple<5u, (ikea::comparison)2>::B * 8>::parts>>::result extras::one<extras::Tuple<5u, (ikea::comparison)2>>(void*, unsigned long, unsigned short, ikea::seriespack::x86::values<extras::Tuple<5u, (ikea::comparison)2>::B * 8, 16u>, unsigned int)>(ikea::author::chain<ikea::seriespack::x86::values<8u, 16u>, unsigned short, 4u, std::integer_sequence<unsigned long, 0ul>>::slot const*, void*, unsigned long, unsigned short, long long vector[2]) [symbol:_ZN4ikea6author5chainINS_10seriespack3x866valuesILj8ELj16EEEtLj4ESt16integer_sequenceImJLm0EEEE5stageITnDaXadL_ZN6extras3oneINSA_5TupleILj5ELNS_10comparisonE2EEEEENS1_INS4_IXmlsrT_1BLi8EELj16EEEtLj4E18__make_integer_seqIS6_mXsr6native6valuesIXmlsrSF_1BLi8EEEE5partsEEE6resultEPvmtSG_jEEEEvPKNS8_4slotESL_mtDv2_x]",
+    "f2": "void ikea::author::chain<ikea::seriespack::x86::values<8u, 16u>, unsigned short, 4u, std::integer_sequence<unsigned long, 0ul>>::stage<&ikea::author::chain<ikea::seriespack::x86::values<extras::Tuple<8u, (ikea::comparison)2>::B * 8, 16u>, unsigned short, 4u, __make_integer_seq<std::integer_sequence, unsigned long, native::values<extras::Tuple<8u, (ikea::comparison)2>::B * 8>::parts>>::result extras::one<extras::Tuple<8u, (ikea::comparison)2>>(void*, unsigned long, unsigned short, ikea::seriespack::x86::values<extras::Tuple<8u, (ikea::comparison)2>::B * 8, 16u>, unsigned int)>(ikea::author::chain<ikea::seriespack::x86::values<8u, 16u>, unsigned short, 4u, std::integer_sequence<unsigned long, 0ul>>::slot const*, void*, unsigned long, unsigned short, long long vector[2]) [symbol:_ZN4ikea6author5chainINS_10seriespack3x866valuesILj8ELj16EEEtLj4ESt16integer_sequenceImJLm0EEEE5stageITnDaXadL_ZN6extras3oneINSA_5TupleILj8ELNS_10comparisonE2EEEEENS1_INS4_IXmlsrT_1BLi8EELj16EEEtLj4E18__make_integer_seqIS6_mXsr6native6valuesIXmlsrSF_1BLi8EEEE5partsEEE6resultEPvmtSG_jEEEEvPKNS8_4slotESL_mtDv2_x]",
+    "f3": "void runtime::measure<void extras::run_extra<extras::Tuple<5u, (ikea::comparison)2>>(extras::Tuple<5u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<5u, (ikea::comparison)2>, char const*) [symbol:_ZN7runtime7measureIZN6extras9run_extraINS1_5TupleILj5ELN4ikea10comparisonE2EEEEEvRKNT_5InputEPKcEUljjE_EEvRKNS_7FixtureEjSC_tS7_SC_]",
+    "f4": "void runtime::measure<void extras::run_extra<extras::Tuple<8u, (ikea::comparison)2>>(extras::Tuple<8u, (ikea::comparison)2>::Input const&, char const*)::'lambda'(unsigned int, unsigned int)>(runtime::Fixture const&, unsigned int, char const*, unsigned short, extras::Tuple<8u, (ikea::comparison)2>, char const*) [symbol:_ZN7runtime7measureIZN6extras9run_extraINS1_5TupleILj8ELN4ikea10comparisonE2EEEEEvRKNT_5InputEPKcEUljjE_EEvRKNS_7FixtureEjSC_tS7_SC_]"
+  },
+  "dependencies": {
+    "full_lists": "Ignored handle-boundaries/receipt.json; dependency digests use compact sorted JSON of relative project paths/hash or absolute system paths/hash.",
+    "project_by_arm": {
+      "cached24": {
+        "files": 100,
+        "sha256": "da1b776c392eaaf8d6e6d14fc29c791cb426066614ae15bec08703425eaf67f3"
+      },
+      "final16": {
+        "files": 86,
+        "sha256": "eeef2a8b31ffb3df9bf89ff30471040739c0967530cde657f1ef72b74a17eaf7"
+      },
+      "generic16": {
+        "files": 99,
+        "sha256": "cd091eda93853058ae9036dd265fb5f9167beee397b4439d17d8626bb446435d"
+      },
+      "predicate16": {
+        "files": 99,
+        "sha256": "107d195f9277ef7b61858bd9563be630d5e5dc74edb3a854f0ec6d9feaca1f45"
+      }
+    },
+    "system": {
+      "files": 711,
+      "sha256": "60ae1de735c74af08bb0684080b4b61bea6a167870a888c35f176fae1fc93662"
+    }
+  },
+  "final_endpoint_literal_bridge": {
+    "all_other_names_bytes_immediates_targets_addends_retained": true,
+    "comparisons": [
+      {
+        "control_flags": "standalone",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 2,
+            "total": 2
+          },
+          "functions": {
+            "equal": 15,
+            "total": 15
+          },
+          "unwind": {
+            "equal": 1,
+            "total": 1
+          }
+        },
+        "profile": "neon-v2",
+        "source": "producer"
+      },
+      {
+        "control_flags": "configured-release",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 0,
+            "total": 0
+          },
+          "functions": {
+            "equal": 7,
+            "total": 7
+          },
+          "unwind": {
+            "equal": 1,
+            "total": 1
+          }
+        },
+        "profile": "neon-v2",
+        "source": "caller"
+      },
+      {
+        "control_flags": "configured-release",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 7,
+            "total": 7
+          },
+          "functions": {
+            "equal": 17,
+            "total": 17
+          },
+          "unwind": {
+            "equal": 6,
+            "total": 6
+          }
+        },
+        "profile": "neon-v2",
+        "source": "extra_tuple_2"
+      },
+      {
+        "control_flags": "standalone",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 4,
+            "total": 4
+          },
+          "functions": {
+            "equal": 15,
+            "total": 15
+          },
+          "unwind": {
+            "equal": 1,
+            "total": 1
+          }
+        },
+        "profile": "avx2-zen5",
+        "source": "producer"
+      },
+      {
+        "control_flags": "standalone",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 0,
+            "total": 0
+          },
+          "functions": {
+            "equal": 7,
+            "total": 7
+          },
+          "unwind": {
+            "equal": 1,
+            "total": 1
+          }
+        },
+        "profile": "avx2-zen5",
+        "source": "caller"
+      },
+      {
+        "control_flags": "configured-release",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 8,
+            "total": 8
+          },
+          "functions": {
+            "equal": 16,
+            "total": 16
+          },
+          "unwind": {
+            "equal": 6,
+            "total": 6
+          }
+        },
+        "profile": "avx2-zen5",
+        "source": "extra_tuple_2"
+      },
+      {
+        "control_flags": "standalone",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 1,
+            "total": 1
+          },
+          "functions": {
+            "equal": 15,
+            "total": 15
+          },
+          "unwind": {
+            "equal": 1,
+            "total": 1
+          }
+        },
+        "profile": "avx512-zen5",
+        "source": "producer"
+      },
+      {
+        "control_flags": "standalone",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 0,
+            "total": 0
+          },
+          "functions": {
+            "equal": 7,
+            "total": 7
+          },
+          "unwind": {
+            "equal": 1,
+            "total": 1
+          }
+        },
+        "profile": "avx512-zen5",
+        "source": "caller"
+      },
+      {
+        "control_flags": "configured-release",
+        "final_flags": "configured-release",
+        "kinds": {
+          "constants": {
+            "equal": 9,
+            "total": 9
+          },
+          "functions": {
+            "equal": 16,
+            "total": 16
+          },
+          "unwind": {
+            "equal": 6,
+            "total": 6
+          }
+        },
+        "profile": "avx512-zen5",
+        "source": "extra_tuple_2"
+      }
+    ],
+    "neon_stored_caller_debug_control": "Old -gline stored-read differs only by independent MOV/LDP scheduling. One old configured -g caller was compiled; all seven configured final caller records match literally.",
+    "type_correspondences": [
+      "ikea::tuplepack::detail::field_predicate -> ikea::tuplepack::predicate",
+      "raw mangled component 6detail15field_predicate -> 9predicate"
+    ]
+  },
+  "flags": {
+    "configured-release": "Configured -O3 -g/-Wall/-Wextra/-Wpedantic, no NDEBUG or -Werror; explicit target/tune/source prefix-map substitutions retained.",
+    "standalone": "Specified O3/-gline-tables-only/-Werror witness; not full configured Release."
+  },
+  "limits": [
+    "Raw by-value boundaries do not establish a copy cost for existing const-reference consumers.",
+    "Only NEON behavior checks execute locally; x86 objects establish emitted code/ABI, not execution.",
+    "No LTO/unity, no timing loop/per-value barriers added. Existing window-index opacity retained.",
+    "Unlinked object equality does not establish linked placement/cache/branch-target behavior or overall performance parity.",
+    "Prepared-predicate endpoint matches the isolated control; f153-to-R4 route and native performance losses remain separately investigated.",
+    "Shared immutable plan/view bytes and lifetimes are separate from small handle bytes; cheap rebinding uses existing plans, not full control reconstruction."
+  ],
+  "native_r4_caveat": {
+    "all_tuple_filter_losses_ratio_of_medians_at_least_1_05": {
+      "columns": [
+        "after_mad",
+        "after_max",
+        "after_median",
+        "after_min",
+        "after_over_before_median",
+        "after_over_before_samples",
+        "after_samples",
+        "before_mad",
+        "before_max",
+        "before_median",
+        "before_min",
+        "before_samples",
+        "case",
+        "family",
+        "member",
+        "metric",
+        "profile",
+        "ratio_of_medians"
+      ],
+      "rows": [
+        [
+          0.004370999999999903,
+          3.796543,
+          3.792172,
+          3.782664,
+          1.061711416855696,
+          [
+            1.062401450348343,
+            1.0610930257021636,
+            1.0644700112487957,
+            1.061711416855696,
+            1.053986960631394
+          ],
+          [
+            3.792668,
+            3.782664,
+            3.796543,
+            3.792172,
+            3.786777
+          ],
+          0.0032970000000003274,
+          3.592812,
+          3.569901,
+          3.564875,
+          [
+            3.569901,
+            3.564875,
+            3.566604,
+            3.571754,
+            3.592812
+          ],
+          "tuple_tight/5/0/65535/one_stage/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.0622625109211712
+        ],
+        [
+          0.002475000000000005,
+          2.493173,
+          2.48981,
+          2.486481,
+          1.1097588634406106,
+          [
+            1.1097588634406106,
+            1.1111066484948933,
+            1.1101699292621914,
+            1.0977593631293445,
+            1.1067445837424588
+          ],
+          [
+            2.490573,
+            2.48981,
+            2.493173,
+            2.487335,
+            2.486481
+          ],
+          0.001510999999999818,
+          2.265829,
+          2.245758,
+          2.240838,
+          [
+            2.244247,
+            2.240838,
+            2.245758,
+            2.265829,
+            2.246662
+          ],
+          "tuple_tight/5/1/65535/bound_fused/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.1086724393278349
+        ],
+        [
+          0.0031210000000001514,
+          3.792526,
+          3.787389,
+          3.784268,
+          1.061069379406255,
+          [
+            1.061069379406255,
+            1.0615278152262446,
+            1.0629315633717276,
+            1.0607855002507118,
+            1.0530371458703776
+          ],
+          [
+            3.792002,
+            3.787389,
+            3.792526,
+            3.784714,
+            3.784268
+          ],
+          0.00014599999999997948,
+          3.59367,
+          3.567987,
+          3.567841,
+          [
+            3.573755,
+            3.567866,
+            3.567987,
+            3.567841,
+            3.59367
+          ],
+          "tuple_tight/5/1/65535/one_stage/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.0614918159735447
+        ],
+        [
+          0.03413299999999975,
+          5.00838,
+          4.974247,
+          4.909113,
+          1.0485004449958424,
+          [
+            1.0657005161914395,
+            1.0596332581359136,
+            1.048481646784105,
+            1.0485004449958424,
+            1.0461815996470896
+          ],
+          [
+            5.00838,
+            4.974247,
+            4.912147,
+            4.984547,
+            4.909113
+          ],
+          0.005303000000000502,
+          4.753977,
+          4.69431,
+          4.68501,
+          [
+            4.699613,
+            4.69431,
+            4.68501,
+            4.753977,
+            4.69241
+          ],
+          "tuple_tight/5/3/65535/inline_fused/dependent/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.0596332581359136
+        ],
+        [
+          0.0017500000000001403,
+          1.455497,
+          1.453747,
+          1.439176,
+          1.0639205958238505,
+          [
+            1.0541830714068583,
+            1.0543121330482272,
+            1.0639205958238505,
+            1.0665624374092548,
+            1.0674907864097252
+          ],
+          [
+            1.439176,
+            1.450588,
+            1.454788,
+            1.453747,
+            1.455497
+          ],
+          0.002178999999999931,
+          1.375862,
+          1.365205,
+          1.363021,
+          [
+            1.365205,
+            1.375862,
+            1.367384,
+            1.363021,
+            1.363475
+          ],
+          "tuple_tight/5/3/65535/inline_fused/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.0648561937584464
+        ],
+        [
+          0.005145999999999873,
+          1.355867,
+          1.345592,
+          1.338337,
+          1.0526804943935197,
+          [
+            1.057103206315174,
+            1.0526804943935197,
+            1.0528308022808397,
+            1.0316416192000049,
+            1.0444750025168787
+          ],
+          [
+            1.355867,
+            1.345592,
+            1.346758,
+            1.340446,
+            1.338337
+          ],
+          0.002171000000000145,
+          1.299333,
+          1.281349,
+          1.278253,
+          [
+            1.282625,
+            1.278253,
+            1.279178,
+            1.299333,
+            1.281349
+          ],
+          "tuple_tight/8/0/65535/inline_fused/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.0501370040480773
+        ],
+        [
+          0.08656699999999962,
+          5.111247,
+          5.02468,
+          4.841413,
+          1.0671561101392233,
+          [
+            1.0671561101392233,
+            1.0731044644321166,
+            1.070456405929247,
+            1.0448032322386533,
+            1.0325241900569642
+          ],
+          [
+            5.02468,
+            5.111247,
+            5.099847,
+            4.911247,
+            4.841413
+          ],
+          0.019567000000000334,
+          4.76418,
+          4.708477,
+          4.68891,
+          [
+            4.708477,
+            4.763047,
+            4.76418,
+            4.700643,
+            4.68891
+          ],
+          "tuple_tight/8/3/65535/inline_fused/dependent/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx2",
+          1.0671561101392233
+        ],
+        [
+          0.00046900000000027475,
+          3.542841,
+          3.541432,
+          3.540758,
+          1.0664323427273739,
+          [
+            1.0657753886776757,
+            1.0670346490102607,
+            1.0582230140360385,
+            1.0664997259481892,
+            1.0664323427273739
+          ],
+          [
+            3.541432,
+            3.542841,
+            3.541901,
+            3.541355,
+            3.540758
+          ],
+          0.0003499999999996284,
+          3.347027,
+          3.32054,
+          3.32019,
+          [
+            3.322869,
+            3.320268,
+            3.347027,
+            3.32054,
+            3.32019
+          ],
+          "tuple_tight/5/0/65535/one_stage/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx512",
+          1.0665229149475688
+        ],
+        [
+          0.002134999999999998,
+          3.553975,
+          3.539767,
+          3.537632,
+          1.0658946914248317,
+          [
+            1.0658946914248317,
+            1.06618028717036,
+            0.9881168024430261,
+            1.0698560079279478,
+            1.0655658105455816
+          ],
+          [
+            3.537632,
+            3.539178,
+            3.54246,
+            3.553975,
+            3.539767
+          ],
+          0.002425999999999817,
+          3.585062,
+          3.321919,
+          3.318932,
+          [
+            3.318932,
+            3.319493,
+            3.585062,
+            3.321919,
+            3.32196
+          ],
+          "tuple_tight/5/3/65535/one_stage/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx512",
+          1.0655789620397127
+        ],
+        [
+          0.0002690000000002968,
+          3.543163,
+          3.542047,
+          3.539229,
+          1.0663745827372435,
+          [
+            1.0670381148092902,
+            1.064869813871958,
+            0.9924538642564162,
+            1.0668312054397155,
+            1.0663745827372435
+          ],
+          [
+            3.541778,
+            3.539229,
+            3.542047,
+            3.543163,
+            3.542121
+          ],
+          0.0019779999999998132,
+          3.568979,
+          3.321648,
+          3.319261,
+          [
+            3.319261,
+            3.323626,
+            3.568979,
+            3.321203,
+            3.321648
+          ],
+          "tuple_tight/5/4/65535/one_stage/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx512",
+          1.066352304639143
+        ],
+        [
+          0.002625999999999795,
+          3.548816,
+          3.542288,
+          3.537575,
+          1.066144799949419,
+          [
+            1.065810722054508,
+            1.068744396631037,
+            0.9936399891916254,
+            1.0674181579523871,
+            1.066144799949419
+          ],
+          [
+            3.537575,
+            3.548816,
+            3.544914,
+            3.542288,
+            3.541104
+          ],
+          0.001406999999999936,
+          3.567604,
+          3.320547,
+          3.318557,
+          [
+            3.31914,
+            3.320547,
+            3.567604,
+            3.318557,
+            3.32141
+          ],
+          "tuple_tight/8/0/65535/one_stage/independent8/0",
+          "filters",
+          "zen",
+          "wall_ns_per_window",
+          "avx512",
+          1.0667784554773656
+        ]
+      ]
+    },
+    "comparison": "Complete cohesion revision vs f153+oracle, five alternating paired trials; not native timing of the three isolated controls.",
+    "other_unresolved": "AVX512 two-code TuplePack body write about+14.7%; root audits actual linked point/placement. Full paired-case reader retains all case results/dispersion, not just thresholded rows.",
+    "reader_summary_sha256": "c315fafeee6685351f723fd40608fc970f62fe39156d3791c9f27a57a11879d4",
+    "source": "build/ikea-cohesion-v2/native-r4-summary/paired-cases.csv",
+    "tuple_filter_records_per_profile": 240
+  },
+  "object_sources": {
+    "s0": "ikea/src/tuplepack/gpr.cpp",
+    "s1": "ikea/src/tuplepack/initialize.cpp",
+    "s10": "workbench/spikes/ikea-composition/handle-boundaries/caller.cpp",
+    "s11": "workbench/spikes/ikea-composition/handle-boundaries/check.cpp",
+    "s12": "workbench/spikes/ikea-composition/handle-boundaries/producer.cpp",
+    "s13": "workbench/spikes/ikea-composition/handle-boundaries/series.cpp",
+    "s2": "ikea/src/tuplepack/kernels.cpp",
+    "s3": "ikea/src/tuplepack/layout.cpp",
+    "s4": "ikea/src/tuplepack/packet.cpp",
+    "s5": "ikea/src/tuplepack/packet_layout.cpp",
+    "s6": "ikea/src/tuplepack/packet_prepare.cpp",
+    "s7": "ikea/src/tuplepack/prepare.cpp",
+    "s8": "ikea/src/tuplepack/routes.cpp",
+    "s9": "workbench/spikes/filter-composition/extra_tuple_2.cpp"
+  },
+  "objects": {
+    "columns": [
+      "mode",
+      "profile",
+      "arm",
+      "source_id",
+      "sha256",
+      "command_template"
+    ],
+    "rows": [
+      [
+        "standalone",
+        "avx2-zen5",
+        "cached24",
+        "s10",
+        "b7a32a73ba34cd39c396071aeceb6084e0ca5aa874070af6b22b99b42a07639d",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "cached24",
+        "s9",
+        "837d1e61acc00507e580863c554df719bd2f662345b579f4f070515c4c85118b",
+        "c7"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "cached24",
+        "s12",
+        "47825066a1728f267d9a6005939df92d269d23a5b648b2f0c4f74ab827966fd9",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "cached24",
+        "s13",
+        "d3002750c8ba3bc186babf063ed8980994fc44759201509c89d727fa71d8ad4c",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "generic16",
+        "s10",
+        "2d36396c128f38f4008d9ae31c6e9d1c1f2632707548a89a2e57860452640a01",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "generic16",
+        "s9",
+        "0d03cfbbc53ad7d857b1130f41146e23896a543c42ae9a42a06953811208792c",
+        "c7"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "generic16",
+        "s12",
+        "4d9fd50883959850fcc3caa34e1a17d59eec3c0a9678d512cd6f5f5f8c6d71f9",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "predicate16",
+        "s10",
+        "3c1a4b83630431c3b513edb71851fc6cf0f200a47653a0402ccd94b83b133195",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "predicate16",
+        "s9",
+        "c58ced2656765de6be881c3e4611212d06e1ef6d0a6de6e7804f9d41a6a4fe75",
+        "c7"
+      ],
+      [
+        "standalone",
+        "avx2-zen5",
+        "predicate16",
+        "s12",
+        "646d14da0f221dcdd5a318777a5d205c322d35c9378863436da529642df1486d",
+        "c10"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "cached24",
+        "s10",
+        "b7a32a73ba34cd39c396071aeceb6084e0ca5aa874070af6b22b99b42a07639d",
+        "c11"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "cached24",
+        "s9",
+        "85e681e6b8db075d3fb45829c1d2aa1bf6328af08149bbca0e2479edb354a51e",
+        "c6"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "cached24",
+        "s12",
+        "bfc356b53a77113733ae67adbacc04c8ac5dcf6bd011c4cdda1533652bf62b10",
+        "c11"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "cached24",
+        "s13",
+        "0462a3d197418bc4d8d2e8ad565e2c389322f9c9b3913de5b7297f5f4bedde87",
+        "c11"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "generic16",
+        "s10",
+        "2d36396c128f38f4008d9ae31c6e9d1c1f2632707548a89a2e57860452640a01",
+        "c11"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "generic16",
+        "s9",
+        "986cb9ff70c82f8bf6b6eb206c693f2508b9b10d9bcb25fc745a9cb1a1e2da9a",
+        "c6"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "generic16",
+        "s12",
+        "76a36c6b24d92954a50d0253e9002c47f61de203ae9d30d469d98d64bbaa6a87",
+        "c11"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "predicate16",
+        "s10",
+        "3c1a4b83630431c3b513edb71851fc6cf0f200a47653a0402ccd94b83b133195",
+        "c11"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "predicate16",
+        "s9",
+        "045694f95134034d55d2c2d5fb9e111617d5ed7e4a4fbd0faf1a568e2fc36b69",
+        "c6"
+      ],
+      [
+        "standalone",
+        "avx512-zen5",
+        "predicate16",
+        "s12",
+        "a35202d12a9b3feea65f080526fb9ff2faa22a2db8ac992ff6cc9a63a9e9335a",
+        "c11"
+      ],
+      [
+        "configured-release",
+        "avx2-zen5",
+        "cached24",
+        "s9",
+        "fddcef7c1a7278160e765b9d126ad56af8ddb1e7b1affe185b1196ec1859324a",
+        "c3"
+      ],
+      [
+        "configured-release",
+        "avx2-zen5",
+        "final16",
+        "s10",
+        "deb6914ed15341a0de71f8b2d120405485f0800a54d5eb63f37f70ea37d61dab",
+        "c12"
+      ],
+      [
+        "configured-release",
+        "avx2-zen5",
+        "final16",
+        "s9",
+        "a2c7051f15138e6ba939c0a28da9ddaa2269d18f8393d3ebe0236a93f60f58ec",
+        "c3"
+      ],
+      [
+        "configured-release",
+        "avx2-zen5",
+        "final16",
+        "s12",
+        "f2faa8b9b337edaab4a9578c2ff6a59d47f954e83f0418392d9690a7e3cb620b",
+        "c12"
+      ],
+      [
+        "configured-release",
+        "avx2-zen5",
+        "generic16",
+        "s9",
+        "fdefffd7eb3532d5cfe50038292b5c7285b92b2e1d41ac28c695b224126b2d8d",
+        "c3"
+      ],
+      [
+        "configured-release",
+        "avx2-zen5",
+        "predicate16",
+        "s9",
+        "228c5d21019d891910c58047a8e4c3306b7cc8e923573c42a4d85c3d583d08de",
+        "c3"
+      ],
+      [
+        "configured-release",
+        "avx512-zen5",
+        "cached24",
+        "s9",
+        "a97be0c50609f105c82db0049e7a054301568c6ab9bd47e57368c053b474e2cc",
+        "c4"
+      ],
+      [
+        "configured-release",
+        "avx512-zen5",
+        "final16",
+        "s10",
+        "eafc1aa8598bbc8c708f112f002c2c78b3ffeccd8dec6377ee52819a3999d355",
+        "c5"
+      ],
+      [
+        "configured-release",
+        "avx512-zen5",
+        "final16",
+        "s9",
+        "99091613d35970d21806174b0ec949fe2020082ef140960e1996e2e24257ed67",
+        "c4"
+      ],
+      [
+        "configured-release",
+        "avx512-zen5",
+        "final16",
+        "s12",
+        "89b89c33ec2b62174e41c865809f5516e0fcc919e1604f67882cb744d9c85a25",
+        "c5"
+      ],
+      [
+        "configured-release",
+        "avx512-zen5",
+        "generic16",
+        "s9",
+        "57c78d4b04539759f351e998743b81fa7a0130356dc11cc1b76da7e4da5bf446",
+        "c4"
+      ],
+      [
+        "configured-release",
+        "avx512-zen5",
+        "predicate16",
+        "s9",
+        "0b0587f060b113c5ae11ef5a4650cf25f05664c639d9ee218f90d3a186a13918",
+        "c4"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "cached24",
+        "s9",
+        "a1a5ebd62917183a18a0405fcb10a88eec893f00f1165d5d14c210d4bda2a219",
+        "c0"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "final16",
+        "s10",
+        "269c17155dab254d660d070c00e34becd460565ed98d50657339189a225c1125",
+        "c1"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "final16",
+        "s9",
+        "027190d749627724c98bad397af9a222a351ff4d1c4669b9e7c1bf0a16c99a58",
+        "c0"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "final16",
+        "s12",
+        "881d9dbd972f7ae332d2f76861699f717952db5b687aac167fa761c239c7ea7b",
+        "c1"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "generic16",
+        "s9",
+        "d39cb4ad60da80a01e360c69be3dc8fde07a0663f37bcf15d64e3897f8c2be31",
+        "c0"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "predicate16",
+        "s10",
+        "4676bc6484a5dde645a155a9bd42a102ae1b113075113d01e6354684b47106be",
+        "c1"
+      ],
+      [
+        "configured-release",
+        "neon-v2",
+        "predicate16",
+        "s9",
+        "ebb2ce3c72d6bb7da1ae0ba3ff9f5fc47101a129260c96d94c0e35181c18ff8b",
+        "c0"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s10",
+        "85ad30d46e44f2f86e7f480f406b1b97205ac9b94c3279a77229ddcf4f855c10",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s11",
+        "dccf6ecc43b419514f67ef5628ffd345797c9ed99933ad8a814ce2c571075a6c",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s9",
+        "5a919ee42f83138b7237e0b5284bd4af0868da8fa06da799f1c1fa252020da5c",
+        "c9"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s12",
+        "efc15b57d3aa070d8f3cd24edc839eab2cac80afb9ce33d8553caf5a14fc9de1",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s13",
+        "449a9fdda2909d1f7cae1438f2a399ff5edb71b7cb7eadf6af40865b8453802b",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s0",
+        "3cd2400b2be1d0b2b82d94b769e8b90c84fbc7e4976e534ea7f1cb41438ab088",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s1",
+        "a72de5eb36e45c914a138597bb55de5eb581ab86db6649587f61715a8c5dcee3",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s2",
+        "6aea3c9d223f4effc2263d4a840a93a5a682bff1598330d2e4b5f0055abd9945",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s3",
+        "4b8ad1ad24cfeb2c2db7627684866f1874938c9385f01b0a6a758efae8a2c2e1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s4",
+        "ecb59de0260ba04e801e91d731bed1da18eda47751f7009455703d4eb39db2b1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s5",
+        "7e3d604f33ca8e7f409c4feaa27978fc4044ecf992c6e935b493ddb2521317d1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s6",
+        "ae5e73a8c2f70ffd356b4194eab615b498280a7732d9827dc552b7646740ecff",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s7",
+        "d811cda39532b641b1228e79f19d9496888dc9791dd8e0790625b4c23abe40c1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "cached24",
+        "s8",
+        "f8ab138a5e14c678aafa7ec1794805235293ac097f6ffcc0f9186ae0b9050919",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s10",
+        "01d301b79900691b52a83828420bd1ca8d3c4864bc04e9d4dfbda8bfff2a8e9c",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s11",
+        "33ed7a02c07e5b717d62b6b26e67339bc850a69c77f6946a6af0f0c0de93bccf",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s9",
+        "b1ad3769f24bd96caa256dcfeb8f69c0b6ed30c3e0a143d4bf9d56e274684831",
+        "c9"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s12",
+        "a0dd15ed978f4f40d9794aa313b6c0fc29367f8a619afcace5c31425489b482f",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s0",
+        "3cd2400b2be1d0b2b82d94b769e8b90c84fbc7e4976e534ea7f1cb41438ab088",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s1",
+        "a72de5eb36e45c914a138597bb55de5eb581ab86db6649587f61715a8c5dcee3",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s2",
+        "6aea3c9d223f4effc2263d4a840a93a5a682bff1598330d2e4b5f0055abd9945",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s3",
+        "4b8ad1ad24cfeb2c2db7627684866f1874938c9385f01b0a6a758efae8a2c2e1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s4",
+        "ecb59de0260ba04e801e91d731bed1da18eda47751f7009455703d4eb39db2b1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s5",
+        "7e3d604f33ca8e7f409c4feaa27978fc4044ecf992c6e935b493ddb2521317d1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s6",
+        "ae5e73a8c2f70ffd356b4194eab615b498280a7732d9827dc552b7646740ecff",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s7",
+        "d811cda39532b641b1228e79f19d9496888dc9791dd8e0790625b4c23abe40c1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "generic16",
+        "s8",
+        "f8ab138a5e14c678aafa7ec1794805235293ac097f6ffcc0f9186ae0b9050919",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s10",
+        "24259320795eb8f8ebd4de51ef9edc365252b7021beef0249c4e228cf2a75492",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s11",
+        "73d749e203eee40ae2b59bacf709da22439d11671773e2fa6a2b2a4991dfc0bc",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s9",
+        "47c0af0f52ecbf05c9381fc9dc352ce477259fa7902a81048951350f14c8a52f",
+        "c9"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s12",
+        "b39875b5fdb9b2347293280c1becc55a6617e4de8b2a2bc5cb077dfa435d53ef",
+        "c8"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s0",
+        "3cd2400b2be1d0b2b82d94b769e8b90c84fbc7e4976e534ea7f1cb41438ab088",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s1",
+        "a72de5eb36e45c914a138597bb55de5eb581ab86db6649587f61715a8c5dcee3",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s2",
+        "6aea3c9d223f4effc2263d4a840a93a5a682bff1598330d2e4b5f0055abd9945",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s3",
+        "4b8ad1ad24cfeb2c2db7627684866f1874938c9385f01b0a6a758efae8a2c2e1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s4",
+        "ecb59de0260ba04e801e91d731bed1da18eda47751f7009455703d4eb39db2b1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s5",
+        "7e3d604f33ca8e7f409c4feaa27978fc4044ecf992c6e935b493ddb2521317d1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s6",
+        "ae5e73a8c2f70ffd356b4194eab615b498280a7732d9827dc552b7646740ecff",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s7",
+        "d811cda39532b641b1228e79f19d9496888dc9791dd8e0790625b4c23abe40c1",
+        "c2"
+      ],
+      [
+        "standalone",
+        "neon-v2",
+        "predicate16",
+        "s8",
+        "f8ab138a5e14c678aafa7ec1794805235293ac097f6ffcc0f9186ae0b9050919",
+        "c2"
+      ]
+    ]
+  },
+  "path_assumptions": "Actual extra_tuple_2.cpp, less_equal, full activity65535, tight stride1, in-domain RHS, one nonterminal independent8 iteration. Every path retains33 explicit conditions/eight SIMD compares; complete traced addresses/operands and branch predicates are ignored, reproduced by paths.py. These are static counts, not issued instructions or runtime costs.",
+  "reproduce": "See handle-boundaries/README.md: run.py freezes controls/ABI/check/fixture; configured-release and final16 are separate modes. analyse.py and paths.py reproduce complete record observations and annotated static paths. Full bulky objects/IR/receipts remain ignored.",
+  "scope": "Actual separate-TU TP/SP handle ABI and three-control complete-caller witness; final public predicate endpoint proof. No timings are produced by this harness.",
+  "source_recovery": {
+    "R3": "Native diagnostic after source, immutable within ARM artifact source.tar.gz; own probe sources and exact control patches below recreate this study.",
+    "R3_artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe.tar.gz",
+    "R3_capture_sha256": "1a1b80cf51cdd56896b2e6b1d7a95ac453750257388f1981d5ec9c0dc6a9606d",
+    "R4_after_manifest_sha256": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72",
+    "R4_artifact": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz",
+    "control_patches": {
+      "generic16": "--- cached24/ikea/include/ikea/tuplepack/read.h\n+++ generic16/ikea/include/ikea/tuplepack/read.h\n@@ -17,10 +17,9 @@\n     // Predicates reuse the projection prepared at binding, avoiding a dependent\n     // plan/control load for each encoded comparison. Generic reads retain the\n     // shared plan rather than copying its larger native controls.\n-    code filter_code_;\n     friend class detail::field_predicate<N, Byte, Rows>;\n     reader(const read_plan<N, Rows>& plan, const basic_view<Byte>& source)\n-        : plan_(&plan), source_(&source), filter_code_(plan.controls().codes[0]) {}\n+        : plan_(&plan), source_(&source) {}\n \n   public:\n     static constexpr unsigned rows = Rows;\n--- cached24/ikea/include/ikea/tuplepack/filter.h\n+++ generic16/ikea/include/ikea/tuplepack/filter.h\n@@ -30,7 +30,7 @@\n                      std::uint64_t active = detail::all_rows<Rows>) const {\n         if (!active)\n             return 0;\n-        const auto& code_ = read_.filter_code_;\n+        const auto& code_ = read_.plan().controls().codes[0];\n         const unsigned limit = (1u << code_.width) - 1;\n         if (rhs > limit)\n             return ikea::compare<Op>(0, rhs) ? active : 0;\n",
+      "predicate16": "--- cached24/ikea/include/ikea/tuplepack/read.h\n+++ predicate16/ikea/include/ikea/tuplepack/read.h\n@@ -17,10 +17,9 @@\n     // Predicates reuse the projection prepared at binding, avoiding a dependent\n     // plan/control load for each encoded comparison. Generic reads retain the\n     // shared plan rather than copying its larger native controls.\n-    code filter_code_;\n     friend class detail::field_predicate<N, Byte, Rows>;\n     reader(const read_plan<N, Rows>& plan, const basic_view<Byte>& source)\n-        : plan_(&plan), source_(&source), filter_code_(plan.controls().codes[0]) {}\n+        : plan_(&plan), source_(&source) {}\n \n   public:\n     static constexpr unsigned rows = Rows;\n--- cached24/ikea/include/ikea/tuplepack/filter.h\n+++ predicate16/ikea/include/ikea/tuplepack/filter.h\n@@ -11,9 +11,10 @@\n namespace detail {\n template <unsigned N, class Byte, unsigned Rows = 1> class field_predicate {\n     reader<N, Byte, Rows> read_;\n+    code filter_code_;\n   public:\n     explicit field_predicate(const reader<N, Byte, Rows>& source)\n-        : read_(source) {}\n+        : read_(source), filter_code_(source.plan().controls().codes[0]) {}\n \n   public:\n     [[nodiscard]] static std::expected<field_predicate, error>\n@@ -30,7 +31,7 @@\n                      std::uint64_t active = detail::all_rows<Rows>) const {\n         if (!active)\n             return 0;\n-        const auto& code_ = read_.filter_code_;\n+        const auto& code_ = filter_code_;\n         const unsigned limit = (1u << code_.width) - 1;\n         if (rhs > limit)\n             return ikea::compare<Op>(0, rhs) ? active : 0;\n--- cached24/workbench/spikes/filter-composition/extra.h\n+++ predicate16/workbench/spikes/filter-composition/extra.h\n@@ -95,7 +95,7 @@\n     static word truth(const Input &in, unsigned i) { return in.truth[i]; }\n };\n using Reader = tp::author::native_reader<64, std::byte, 16>;\n-using Filter = tp::reader<64, std::byte, 16>;\n+using Filter = tp::detail::field_predicate<64, std::byte, 16>;\n struct TupleInput {\n     const Reader *read;\n     const Filter *filter;\n@@ -207,7 +207,7 @@\n     auto plan = *tp::read_plan<64, 16>::make(layout, std::array<std::uint8_t, 1>{0});\n     auto operation = *tp::bind_reader(plan, view);\n     Reader read(operation);\n-    const auto& filter = operation;\n+    const auto filter = *Filter::bind(operation);\n     TupleInput input{&read, &filter, &view, Shift, Width};\n     const char *label = Stride == 1 ? \"tuple_tight\" : \"tuple_strided\";\n     run_extra<Tuple<Width, Op>>(input, label);\n"
+    },
+    "control_source_manifest_sha256": "4523061e442cbf19493962a289c8a9c5cfd92f4b9df2b5a327b7632d0c3846ed",
+    "final_probe_patch": "--- predicate16/probe.h\n+++ final16/probe.h\n@@ -22,7 +22,7 @@\n using native_reader = tp::author::native_reader<8, const std::byte>;\n using native_writer = tp::author::native_writer<8>;\n using filter_reader = tp::reader<64, const std::byte, 16>;\n-using predicate = tp::detail::field_predicate<64, const std::byte, 16>;\n+using predicate = tp::predicate<64, const std::byte, 16>;\n using filter = std::conditional_t<HB_PREPARED_PREDICATE, predicate, filter_reader>;\n using read_plan = tp::read_plan<8>;\n using write_plan = tp::write_plan<8>;\n",
+    "final_source_manifest_sha256": "e40754c0655c08b64e4d7d69a1ef1a4cab209fcfd735012ae4bcdf4acf4aee7c",
+    "probe_sources": {
+      "workbench/spikes/ikea-composition/handle-boundaries/caller.cpp": "c4b0daf136dbd70c6d728e422dc99db2b3cd3cf55d6be946ddbc26bbbe2b708b",
+      "workbench/spikes/ikea-composition/handle-boundaries/check.cpp": "3c45f52056b04c8886869992980d203ddcdcaf5b0d1a6df764b4e7edb183188c",
+      "workbench/spikes/ikea-composition/handle-boundaries/probe.h": "5db351a2315768a529c26f3d1c8153b32d35bdf1647055ef0a77fc0ee3cdab4b",
+      "workbench/spikes/ikea-composition/handle-boundaries/producer.cpp": "6b106e6f99d4389816af0b45eb8f4afaca1e9a2e108d5beb41ab31c339edf4b2",
+      "workbench/spikes/ikea-composition/handle-boundaries/series.cpp": "f8843c439770972b434ca400ed4d3c014ec4b0f9d11a2eab2a3c12aebf33896b"
+    }
+  },
+  "standalone_boundary_observations": {
+    "avx2-zen5/cached24": {
+      "hb::checked_roundtrip": {
+        "bytes": 114,
+        "instructions": 32,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x40, %rsp",
+          "addq\t$0x40, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 359,
+        "instructions": 87,
+        "stack_adjustments": [
+          "pushq\t%rbp",
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%r13",
+          "pushq\t%r12",
+          "pushq\t%rbx",
+          "subq\t$0x28, %rsp",
+          "addq\t$0x28, %rsp",
+          "popq\t%rbx",
+          "popq\t%r12",
+          "popq\t%r13",
+          "popq\t%r14",
+          "popq\t%r15",
+          "popq\t%rbp"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 74,
+        "instructions": 18,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x30, %rsp",
+          "addq\t$0x30, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 87,
+        "instructions": 24,
+        "stack_adjustments": [
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%rbx",
+          "subq\t$0x20, %rsp",
+          "addq\t$0x20, %rsp",
+          "popq\t%rbx",
+          "popq\t%r14",
+          "popq\t%r15"
+        ]
+      }
+    },
+    "avx2-zen5/generic16": {
+      "hb::checked_roundtrip": {
+        "bytes": 98,
+        "instructions": 29,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x20, %rsp",
+          "addq\t$0x20, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 267,
+        "instructions": 73,
+        "stack_adjustments": [
+          "pushq\t%rbp",
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%r13",
+          "pushq\t%r12",
+          "pushq\t%rbx",
+          "subq\t$0x18, %rsp",
+          "addq\t$0x18, %rsp",
+          "popq\t%rbx",
+          "popq\t%r12",
+          "popq\t%r13",
+          "popq\t%r14",
+          "popq\t%r15",
+          "popq\t%rbp"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 24,
+        "instructions": 8,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 45,
+        "instructions": 15,
+        "stack_adjustments": [
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%rbx",
+          "popq\t%rbx",
+          "popq\t%r14",
+          "popq\t%r15"
+        ]
+      }
+    },
+    "avx2-zen5/predicate16": {
+      "hb::checked_roundtrip": {
+        "bytes": 98,
+        "instructions": 29,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x20, %rsp",
+          "addq\t$0x20, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 267,
+        "instructions": 73,
+        "stack_adjustments": [
+          "pushq\t%rbp",
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%r13",
+          "pushq\t%r12",
+          "pushq\t%rbx",
+          "subq\t$0x18, %rsp",
+          "addq\t$0x18, %rsp",
+          "popq\t%rbx",
+          "popq\t%r12",
+          "popq\t%r13",
+          "popq\t%r14",
+          "popq\t%r15",
+          "popq\t%rbp"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 24,
+        "instructions": 8,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 45,
+        "instructions": 15,
+        "stack_adjustments": [
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%rbx",
+          "popq\t%rbx",
+          "popq\t%r14",
+          "popq\t%r15"
+        ]
+      }
+    },
+    "avx512-zen5/cached24": {
+      "hb::checked_roundtrip": {
+        "bytes": 114,
+        "instructions": 32,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x40, %rsp",
+          "addq\t$0x40, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 359,
+        "instructions": 87,
+        "stack_adjustments": [
+          "pushq\t%rbp",
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%r13",
+          "pushq\t%r12",
+          "pushq\t%rbx",
+          "subq\t$0x28, %rsp",
+          "addq\t$0x28, %rsp",
+          "popq\t%rbx",
+          "popq\t%r12",
+          "popq\t%r13",
+          "popq\t%r14",
+          "popq\t%r15",
+          "popq\t%rbp"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 74,
+        "instructions": 18,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x30, %rsp",
+          "addq\t$0x30, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 87,
+        "instructions": 24,
+        "stack_adjustments": [
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%rbx",
+          "subq\t$0x20, %rsp",
+          "addq\t$0x20, %rsp",
+          "popq\t%rbx",
+          "popq\t%r14",
+          "popq\t%r15"
+        ]
+      }
+    },
+    "avx512-zen5/generic16": {
+      "hb::checked_roundtrip": {
+        "bytes": 98,
+        "instructions": 29,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x20, %rsp",
+          "addq\t$0x20, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 267,
+        "instructions": 73,
+        "stack_adjustments": [
+          "pushq\t%rbp",
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%r13",
+          "pushq\t%r12",
+          "pushq\t%rbx",
+          "subq\t$0x18, %rsp",
+          "addq\t$0x18, %rsp",
+          "popq\t%rbx",
+          "popq\t%r12",
+          "popq\t%r13",
+          "popq\t%r14",
+          "popq\t%r15",
+          "popq\t%rbp"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 24,
+        "instructions": 8,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 45,
+        "instructions": 15,
+        "stack_adjustments": [
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%rbx",
+          "popq\t%rbx",
+          "popq\t%r14",
+          "popq\t%r15"
+        ]
+      }
+    },
+    "avx512-zen5/predicate16": {
+      "hb::checked_roundtrip": {
+        "bytes": 98,
+        "instructions": 29,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "subq\t$0x20, %rsp",
+          "addq\t$0x20, %rsp",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 267,
+        "instructions": 73,
+        "stack_adjustments": [
+          "pushq\t%rbp",
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%r13",
+          "pushq\t%r12",
+          "pushq\t%rbx",
+          "subq\t$0x18, %rsp",
+          "addq\t$0x18, %rsp",
+          "popq\t%rbx",
+          "popq\t%r12",
+          "popq\t%r13",
+          "popq\t%r14",
+          "popq\t%r15",
+          "popq\t%rbp"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 24,
+        "instructions": 8,
+        "stack_adjustments": [
+          "pushq\t%rbx",
+          "popq\t%rbx"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 45,
+        "instructions": 15,
+        "stack_adjustments": [
+          "pushq\t%r15",
+          "pushq\t%r14",
+          "pushq\t%rbx",
+          "popq\t%rbx",
+          "popq\t%r14",
+          "popq\t%r15"
+        ]
+      }
+    },
+    "neon-v2/cached24": {
+      "hb::checked_roundtrip": {
+        "bytes": 176,
+        "instructions": 44,
+        "stack_adjustments": [
+          "sub\tsp, sp, #0x60",
+          "add\tsp, sp, #0x60",
+          "add\tsp, sp, #0x60",
+          "add\tsp, sp, #0x60"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 344,
+        "instructions": 86,
+        "stack_adjustments": [
+          "sub\tsp, sp, #0x140",
+          "add\tsp, sp, #0x140"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 76,
+        "instructions": 19,
+        "stack_adjustments": [
+          "sub\tsp, sp, #0x50",
+          "add\tsp, sp, #0x50"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 112,
+        "instructions": 28,
+        "stack_adjustments": [
+          "sub\tsp, sp, #0x70",
+          "add\tsp, sp, #0x70"
+        ]
+      }
+    },
+    "neon-v2/generic16": {
+      "hb::checked_roundtrip": {
+        "bytes": 160,
+        "instructions": 40,
+        "stack_adjustments": [
+          "sub\tsp, sp, #0x40",
+          "add\tsp, sp, #0x40",
+          "add\tsp, sp, #0x40",
+          "add\tsp, sp, #0x40"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 232,
+        "instructions": 58,
+        "stack_adjustments": [
+          "stp\tx29, x30, [sp, #-0x60]!",
+          "ldp\tx29, x30, [sp], #0x60"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 36,
+        "instructions": 9,
+        "stack_adjustments": [
+          "stp\tx29, x30, [sp, #-0x20]!",
+          "ldp\tx29, x30, [sp], #0x20"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 60,
+        "instructions": 15,
+        "stack_adjustments": [
+          "stp\tx29, x30, [sp, #-0x30]!",
+          "ldp\tx29, x30, [sp], #0x30"
+        ]
+      }
+    },
+    "neon-v2/predicate16": {
+      "hb::checked_roundtrip": {
+        "bytes": 160,
+        "instructions": 40,
+        "stack_adjustments": [
+          "sub\tsp, sp, #0x40",
+          "add\tsp, sp, #0x40",
+          "add\tsp, sp, #0x40",
+          "add\tsp, sp, #0x40"
+        ]
+      },
+      "hb::crowded_readers": {
+        "bytes": 232,
+        "instructions": 58,
+        "stack_adjustments": [
+          "stp\tx29, x30, [sp, #-0x60]!",
+          "ldp\tx29, x30, [sp], #0x60"
+        ]
+      },
+      "hb::raw_roundtrip": {
+        "bytes": 36,
+        "instructions": 9,
+        "stack_adjustments": [
+          "stp\tx29, x30, [sp, #-0x20]!",
+          "ldp\tx29, x30, [sp], #0x20"
+        ]
+      },
+      "hb::stored_roundtrip": {
+        "bytes": 60,
+        "instructions": 15,
+        "stack_adjustments": [
+          "stp\tx29, x30, [sp, #-0x30]!",
+          "ldp\tx29, x30, [sp], #0x30"
+        ]
+      }
+    }
+  },
+  "tools": {
+    "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+    "elf_parser_sha256": "3ca00733fbe15e5d70adccbd3f2ab900d658633299df263e5886d4c61a0e320e",
+    "raw_symbol_wrapper_sha256": "1d0f57f2d45b92163257fe81711047f449e361b9f6f23ab78ab2152a06f2ff60",
+    "source_sha256": {
+      "workbench/spikes/ikea-composition/handle-boundaries/README.md": "fa0e2d3aad5a79795de16377151b0da8f146f666a5161914e3743f178817847a",
+      "workbench/spikes/ikea-composition/handle-boundaries/analyse.py": "5b3495c67d088ed28a936e44e2450deab8ffb63e4eec0ce4d601cf5135f77069",
+      "workbench/spikes/ikea-composition/handle-boundaries/archive-local.py": "36b399e5275d2db1eba4757a55399e88a92678cd89ded7baafb3f98aa2405131",
+      "workbench/spikes/ikea-composition/handle-boundaries/blocks.cpp": "27cab80683ef7180b4f4686de0b5ce5cfb2ee04b3060e8360dbcdd28a32aaec1",
+      "workbench/spikes/ikea-composition/handle-boundaries/caller.cpp": "c4b0daf136dbd70c6d728e422dc99db2b3cd3cf55d6be946ddbc26bbbe2b708b",
+      "workbench/spikes/ikea-composition/handle-boundaries/check.cpp": "3c45f52056b04c8886869992980d203ddcdcaf5b0d1a6df764b4e7edb183188c",
+      "workbench/spikes/ikea-composition/handle-boundaries/linked-filter.py": "f4212dba6570da71aafde2fd10d1577289f797ac52e7c3e87ab15efde01704ee",
+      "workbench/spikes/ikea-composition/handle-boundaries/paths.py": "ab2b5931969069a90c93f5f59595fedfc11022a8fd144cb89957b66fe7b50f59",
+      "workbench/spikes/ikea-composition/handle-boundaries/predicate-native.py": "8a89c6d16200765ae8a0d005c326f5cc6a8432047f9b91b50de2e3976c2f3289",
+      "workbench/spikes/ikea-composition/handle-boundaries/predicate-native.sh": "469e09983207f98b27b7cecb88aaa6f66ade5df72d43ea5da6a44b3c6779429a",
+      "workbench/spikes/ikea-composition/handle-boundaries/predicate-results.py": "32d73cfa1edb15d81bd1e86fb31be73608e0777fca98b54e1a933d1808c442a8",
+      "workbench/spikes/ikea-composition/handle-boundaries/predicate-storage.py": "fe0878bb07580e0c1cd1c6444365a711da21f398901e0f90339394cedaa52024",
+      "workbench/spikes/ikea-composition/handle-boundaries/probe.h": "5db351a2315768a529c26f3d1c8153b32d35bdf1647055ef0a77fc0ee3cdab4b",
+      "workbench/spikes/ikea-composition/handle-boundaries/producer.cpp": "6b106e6f99d4389816af0b45eb8f4afaca1e9a2e108d5beb41ab31c339edf4b2",
+      "workbench/spikes/ikea-composition/handle-boundaries/run.py": "3be79dc2a584428ac94aacc9fea84c473b8c7f38931f0d482f54d90a60c94483",
+      "workbench/spikes/ikea-composition/handle-boundaries/series.cpp": "f8843c439770972b434ca400ed4d3c014ec4b0f9d11a2eab2a3c12aebf33896b"
+    }
+  }
+}

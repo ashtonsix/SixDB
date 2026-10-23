@@ -60,7 +60,7 @@ run-domain choice, not a restriction on Directory's ordered sources.
 | `start_unchecked(source,rank)` | Start without rank/selection checks; admitted typed composition only. |
 | `reverse(source,q[,filter])` | Physical containing rank, or n outside `[origin,extent)` or when its owner is excluded. |
 | `overlap(source,low,high[,filter])` | `rank_window{first,limit}` bounding positive-size intervals intersecting `[low,high)`; empty is `{n,n}`. |
-| `range(source,first,count,sink[,filter])` | `expected<void,error>`; visits eligible ranks after preflighting the complete rank interval. Invalid input returns `error::rank` without callbacks. |
+| `range(source,first,count,sink[,filter])` | `expected<void,error>`; visits eligible ranks after preflighting the complete rank interval. Invalid input returns `error::range` without callbacks. |
 | `with_geometry(source,body)` | Invokes a complete typed body, dispatching representation once where the source supports it. |
 
 For `[3,7,7,10]`, lower bound of 7 is 1 and upper bound is 3. For cuts
@@ -87,12 +87,17 @@ flattened compact descriptor is required.
 
 `selection::bits(first,bytes)` borrows a byte-readable bitmap at its original
 rank origin. `selection::complement(first,bytes)` borrows exclusions. A nonempty
-bitmap supplies at least `ceil(n/8)` bytes. Set bits mean eligible for `bits` and ineligible for `complement`. No word padding is required. Unused high bits are ignored.
+bitmap for a complete source supplies at least `ceil(n/8)` bytes at origin zero.
+Set bits mean eligible for `bits` and ineligible for `complement`. No word padding
+is required. Unused high bits are ignored.
 `selection{}` selects none; `selection::all()` selects all.
 
 `selected_source{source,filter}` copies the source projection and intersects the
 filter with any existing selection. Nesting cannot re-enable a rank. It supports
 ordinary endpoint and geometry operations, typed dispatch and prepared completion.
+The owner establishes `filter.covers(0, source.size())` before constructing this
+projection, just as it establishes the source's endpoint backing. Coordinate
+checks on individual operations do not repeat that source-wide admission.
 Operation-local geometry overloads accept the filter as their last argument.
 An empty operation-local range filter returns after rank validation without
 entering geometry. Borrowed filter storage remains coherent with its rank image.

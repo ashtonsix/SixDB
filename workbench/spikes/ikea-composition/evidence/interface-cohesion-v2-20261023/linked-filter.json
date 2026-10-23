@@ -1,0 +1,2747 @@
+{
+  "limits": [
+    "Selected actual R4 linked benchmark functions, not every filter or arbitrary caller.",
+    "Same opcode counts do not establish equal scheduling, dependencies, fetch/branch behavior or timing.",
+    "ELF payload equality verifies initial allocated bytes at addressed targets; it does not prove runtime state.",
+    "Full symbol-sized bodies and explicit path traces remain in ignored output; hashes retain identity.",
+    "Shared route bypasses the prepared encoded predicate; one_stage uses the same predicate as bound/inline."
+  ],
+  "profiles": {
+    "avx2": {
+      "all_changed_shared_payloads_equal": true,
+      "all_changed_timer_payloads_equal": true,
+      "functions": {
+        "columns": [
+          "route",
+          "before_address",
+          "after_address",
+          "before_size",
+          "after_size",
+          "before_instructions",
+          "after_instructions",
+          "before_sha256",
+          "after_sha256",
+          "raw_bytes_equal"
+        ],
+        "rows": [
+          [
+            "common/indirect_timer",
+            "0x1bb0",
+            "0x1bb0",
+            2154,
+            2154,
+            473,
+            473,
+            "2aef440470fad6f853ba1fb0c14c34673a18cd6f8984c42c11addbddf260c3d3",
+            "59ef18b5146a1216e76ba7959f029a58222260a911a5bf26b142ad39b711c5a0",
+            false
+          ],
+          [
+            "common/entry1",
+            "0x3a90",
+            "0x3a90",
+            75,
+            75,
+            31,
+            31,
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            true
+          ],
+          [
+            "shared/native_decode",
+            "0xfc60",
+            "0xfcc0",
+            12163,
+            12163,
+            2871,
+            2871,
+            "6dafb253c530004e02153a39c8b20171e89af493b3707edaabf116a1269c03f2",
+            "2d6a441a826ecb1b03482f236059beb15e2fb38bd92ab56ad86eaca85d68fb87",
+            false
+          ],
+          [
+            "shared/joined/op0",
+            "0x12bf0",
+            "0x12c50",
+            59,
+            59,
+            17,
+            17,
+            "5b623666d2f8379acd132ee63ae01eba4d438a0db765d245056a699e15d16af3",
+            "5b623666d2f8379acd132ee63ae01eba4d438a0db765d245056a699e15d16af3",
+            true
+          ],
+          [
+            "w5/op0/one_stage",
+            "0x12c30",
+            "0x12c90",
+            12994,
+            13004,
+            2989,
+            2992,
+            "5a4fe62f8378ecd4f04576a030f13bd5dc2eb06763bd49eab6a2978bf497a7e5",
+            "a559831473bfc44ac6da48792fd0d6e4e8ad81574da1f54af97dc956ce79f324",
+            false
+          ],
+          [
+            "w5/op0/bound",
+            "0x15f00",
+            "0x15f60",
+            12870,
+            12861,
+            2887,
+            2891,
+            "c849971bdff5ff6696b3969981ad3daa07ad40ccc4829206a82b906fe8220df8",
+            "68dd0e12ffa9e500812d28fa325727b85d351e13933915fe7fe3cc1bc7764461",
+            false
+          ],
+          [
+            "w5/op0/inline_measure",
+            "0x19150",
+            "0x191a0",
+            138391,
+            138943,
+            31251,
+            31178,
+            "5f43383406ed38f949ffcc974f641578b07c814cc872193c8e0a430f125198c8",
+            "e595c4f5cc3b15b11408e2fcbe33aca96abfc3ab43e7e8b86f29ad8d3888789d",
+            false
+          ],
+          [
+            "w8/op0/one_stage",
+            "0x3b990",
+            "0x3bc00",
+            12994,
+            13004,
+            2989,
+            2992,
+            "702b9bb1a7a83de293f4669df4794e644d079eb68b429cde94c75ca469e7dbc1",
+            "9c98795b1dab794b29422a2b4504bc2f93ca824c0ee8a93ca2d183abc873a628",
+            false
+          ],
+          [
+            "w8/op0/bound",
+            "0x3ec60",
+            "0x3eed0",
+            12870,
+            12861,
+            2887,
+            2891,
+            "2cfa21724bed0648309546854d61927db4c7674fe2a895c60ecf6166644f959c",
+            "ba0dc57068578553aaacb45e244394ebe4010871335373637541e83f3164f037",
+            false
+          ],
+          [
+            "w8/op0/inline_measure",
+            "0x41eb0",
+            "0x42110",
+            138391,
+            138943,
+            31251,
+            31178,
+            "8466271a25bdb0f8fe1c4ab0e1ae00f3ff1f82001d0f48605248848abd0551b7",
+            "3a35f69c3c5c72520b0d13102b1ba050de6b700144228198645bd9167ba97376",
+            false
+          ],
+          [
+            "shared/joined/op1",
+            "0x64ef0",
+            "0x653d0",
+            54,
+            54,
+            14,
+            14,
+            "f8e9ad5d747ac013b8c8a4ab874428e869c865c15005a5800961b8bf1690b500",
+            "3fb4b494b88b3d9b2c746e9279e2961faa1a04f1e50c697c602ede7c0c4e277c",
+            false
+          ],
+          [
+            "w5/op1/one_stage",
+            "0x64f30",
+            "0x65410",
+            13157,
+            13167,
+            2988,
+            2991,
+            "e697eae50965bcb73eaeae9a5b437441a2568cb4a218820059d0a9c978a6da8d",
+            "561fde24bc1abffb5be14037aa4b895f8c95daa736d9680b2d2c4e571cd0a5fc",
+            false
+          ],
+          [
+            "w5/op1/bound",
+            "0x682a0",
+            "0x68780",
+            12898,
+            12890,
+            2891,
+            2895,
+            "53a1816b9627a0481378ad9985552f904b744660e96f6220f85258e19b8934aa",
+            "1540c4b897f127ae9fb83152cb8ebb2fec78f4d275b65754745795fae7c61bcf",
+            false
+          ],
+          [
+            "w5/op1/inline_measure",
+            "0x6b510",
+            "0x6b9e0",
+            138234,
+            139493,
+            30903,
+            31087,
+            "65bada1efa1be222ca41d56fb75c2056f0573082472a48def97b904310bdd5fc",
+            "10c8f4877f4a7cda283968cd537df0c8ee5a849b3e765577df9f350b683dba6e",
+            false
+          ],
+          [
+            "w8/op1/one_stage",
+            "0x8dcd0",
+            "0x8e690",
+            13157,
+            13167,
+            2988,
+            2991,
+            "7d81425d904e309a3f312851bb5d2e83ec57cb49f8d324db0ebd1791d6fde74f",
+            "35eadfebfd97c054360aa82fb03e0cd15484af5b673f59f82b5827d8c0fe4188",
+            false
+          ],
+          [
+            "w8/op1/bound",
+            "0x91040",
+            "0x91a00",
+            12898,
+            12890,
+            2891,
+            2895,
+            "d500c4d586c5480618ffeac960dc12b85fbfe0e1ca4b027a356646d392be927d",
+            "8bb268abd6d26da3f636439050633f3f1ffa51319c07f5758c92841c7edf6e75",
+            false
+          ],
+          [
+            "w8/op1/inline_measure",
+            "0x942b0",
+            "0x94c60",
+            138234,
+            139493,
+            30903,
+            31087,
+            "2be9883ee385b3af0593eb73dfefa21e99961fa59fe665e1e82c89542807bef0",
+            "1b7a88dbbfcabb188b7a799a683064eea1032e1333b7c1c9a8c8f2145d805a9d",
+            false
+          ],
+          [
+            "shared/joined/op2",
+            "0xb7250",
+            "0xb8150",
+            57,
+            57,
+            14,
+            14,
+            "8a376d23f45d73c519bffd912bd4085a48cba1f40d0998ef3adef04105660e53",
+            "96262f40621808c0be6de6866713fcc38c7ac6000a4fe6a0b9d81320e64930b9",
+            false
+          ],
+          [
+            "w5/op2/one_stage",
+            "0xb7290",
+            "0xb8190",
+            13162,
+            13172,
+            2989,
+            2992,
+            "af363a11185f5908e210ddc1dc59059de65f086721bbdde5fb3cfe00c02e0538",
+            "fe8798d81f34464f00dcc18baa77c17b2e9705512d6dca48e138b8158745630a",
+            false
+          ],
+          [
+            "w5/op2/bound",
+            "0xba600",
+            "0xbb510",
+            12903,
+            12895,
+            2892,
+            2896,
+            "60e192148043ef4794ae02df227de021e91102a53bde05a587e872e8938377aa",
+            "5a1d286f95efccad317b20e36a645f5fe22b5d7736d5777597c6da66403fc2d7",
+            false
+          ],
+          [
+            "w5/op2/inline_measure",
+            "0xbd870",
+            "0xbe770",
+            138241,
+            139626,
+            30922,
+            31097,
+            "bb62a9e2f0936e5ac20815ef5be43faab39e4c939d332a62795e05149fee9760",
+            "f2742c368122ce70c5ce5742c0c2bc1e63edaee083008aff127fe6cdcd5e46ed",
+            false
+          ],
+          [
+            "w8/op2/one_stage",
+            "0xe0040",
+            "0xe14a0",
+            13162,
+            13172,
+            2989,
+            2992,
+            "601e12d0bacffe84fc796c10354fa09d0d30cc464c9e91fdaf6902bcb217d8d5",
+            "da34c3faa1b4126bc3c745c4a005758febf1ade08c44b095cf4a22259683892c",
+            false
+          ],
+          [
+            "w8/op2/bound",
+            "0xe33b0",
+            "0xe4820",
+            12903,
+            12895,
+            2892,
+            2896,
+            "a0c5f3389f8375848863812f3c866cdc4ad812b91b5d6a4e53b7fb40e08a2e9d",
+            "0c22095b5bcff6a6ad89365f6a6ed423ef025a4794948206a9b66ebf2035dc3e",
+            false
+          ],
+          [
+            "w8/op2/inline_measure",
+            "0xe6620",
+            "0xe7a80",
+            138241,
+            139626,
+            30922,
+            31097,
+            "f55b2cec8acdbea0bfb04fe3290b65e91282471c47f108f56200e7995b0da7dc",
+            "40cc7bd0315485036fad17b8de2ab39a47e382c65d36cf6bc41ee942206c9fb7",
+            false
+          ],
+          [
+            "shared/joined/op3",
+            "0x1095d0",
+            "0x10aff0",
+            69,
+            69,
+            19,
+            19,
+            "1bdb1cb1de2eba28e7e7a14d9f4b1bc907300d3d7462ea3ba487f12266dc21db",
+            "fdf7b95b3ec14aa4857d1059e8a884af8c83ddc0c35198b194cbc9d34d04e245",
+            false
+          ],
+          [
+            "w5/op3/one_stage",
+            "0x109620",
+            "0x10b040",
+            13157,
+            13167,
+            2989,
+            2992,
+            "889b544acfd032bf1089dbf7799f5f4aeb833dabbe3b1e49abec1708c9ad0908",
+            "4a7f87e0e2496325f44c46c158ff122ac94b3a6b31a5a6a3affcf1ecfa542f9a",
+            false
+          ],
+          [
+            "w5/op3/bound",
+            "0x10c990",
+            "0x10e3b0",
+            12902,
+            12894,
+            2893,
+            2897,
+            "6f38a588dc1f4cc8fb6cb8807207f3d286299891116775ee13b3f11218c477e0",
+            "788fcb58109e9463c905fe6afa41ce4321e03891bec9e49bed8f6674189378c7",
+            false
+          ],
+          [
+            "w5/op3/inline_measure",
+            "0x10fc00",
+            "0x111610",
+            138615,
+            139163,
+            30977,
+            30954,
+            "b4b818f9da635ecdaf97778f8ad80b020b351066b74852dcb1b6dc201cb72928",
+            "9b88e98f3ee737eea2813417872565b7737543d77ba61af7473cd602b52a0489",
+            false
+          ],
+          [
+            "w8/op3/one_stage",
+            "0x132540",
+            "0x134170",
+            13157,
+            13167,
+            2989,
+            2992,
+            "e511c2af90296ea247bb2ceed41b6bbf6ad0676ba47806952925eedbdc741afe",
+            "8873df89bdc4ea07abba10028f161933f358cf08202b624682303051343608ef",
+            false
+          ],
+          [
+            "w8/op3/bound",
+            "0x1358b0",
+            "0x1374e0",
+            12902,
+            12894,
+            2893,
+            2897,
+            "86684d971acd9dc4f57e77456d5a9de337cc05085d51811fd8eca9ded441fb2d",
+            "61ff9840a891320294b8cfd0d8aa92d2c5ae75c3b30336c4b5daf468071ac455",
+            false
+          ],
+          [
+            "w8/op3/inline_measure",
+            "0x138b20",
+            "0x13a740",
+            138615,
+            139163,
+            30977,
+            30954,
+            "bcfff55666bcb1e3152cba0dcec184951584e0930dab70578d1b24002eff265b",
+            "cff64ba7e1cede9f62b102e7b44954fff71d3263d3e7b331d7b5fbc9c38dfae3",
+            false
+          ],
+          [
+            "shared/joined/op4",
+            "0x15bc40",
+            "0x15dae0",
+            72,
+            72,
+            19,
+            19,
+            "cfa6bccb57cca03ba2dbc22b2755d454ec35408c37cf5e9297ead389bc7d51dd",
+            "27e2984981dbb032bf919acbeb32b0ca0bf06f4228b2c4fcee1b9e4d81888e75",
+            false
+          ],
+          [
+            "w5/op4/one_stage",
+            "0x15bc90",
+            "0x15db30",
+            13162,
+            13172,
+            2990,
+            2993,
+            "4ef2629ac93c2464eb36fc98dfae943f3add1065e77a0b887cc46f109bd24ee8",
+            "1653dd22446c9de8a09adf1028a99577ca93f011ea61467ce069df0e9f22e202",
+            false
+          ],
+          [
+            "w5/op4/bound",
+            "0x15f000",
+            "0x160eb0",
+            12807,
+            12801,
+            2889,
+            2893,
+            "e2c267feb9a3808cb143e98be22d0dc55522249fb8aaad8db1c2b789e68c331e",
+            "69b9afc66344c134dbec03b6d0f137efcfb2214b4b944e40d2f0ffb90190fdf6",
+            false
+          ],
+          [
+            "w5/op4/inline_measure",
+            "0x162210",
+            "0x1640c0",
+            138677,
+            139267,
+            30999,
+            30964,
+            "3619c95282625c8b572011cd7cf5259425b5b763b5a692c913d0971256fa8bd2",
+            "5cae459bfd90472bee8c2a82fb77b0412f0bd23dc77579dfbbd8d63826cdd5c0",
+            false
+          ],
+          [
+            "w8/op4/one_stage",
+            "0x184b90",
+            "0x186c90",
+            13162,
+            13172,
+            2990,
+            2993,
+            "fb9a4685d7919c3f8f0467da4712ac119080fb0e9586786d466939ee6810aaf0",
+            "b987c51af731fd8b4213ebf577edf3c7553db060d68f9a476da98a2accaba693",
+            false
+          ],
+          [
+            "w8/op4/bound",
+            "0x187f00",
+            "0x18a010",
+            12807,
+            12801,
+            2889,
+            2893,
+            "cd4612900a78190d34d0e04f55063743bedf86f386e02b50fe1c103930551cef",
+            "6b4cf2016f5b4b865aeb4e655592707bb0adace5a2aa99eff39d759dfdf50356",
+            false
+          ],
+          [
+            "w8/op4/inline_measure",
+            "0x18b110",
+            "0x18d220",
+            138677,
+            139267,
+            30999,
+            30964,
+            "234ef612138b9bbe59f3e07648b6227fe1a39ec8ad06184b73d9dd6de9271cea",
+            "4625d72f6ae13e803619b0f888689c3ee430caa9d7b8642aa261a2fb74440d36",
+            false
+          ]
+        ]
+      },
+      "inputs": {
+        "after": {
+          "disassembly_sha256": "8101cb205a8fbe1dc65afff6918591999e85b65a1d1aac11572dad6d7bd6746d",
+          "elf_sha256": "9a48f9679a0ca78f3df46a15a197fbb2824aea037108ce3ac243856fe7e269a6"
+        },
+        "before": {
+          "disassembly_sha256": "d48250121e513bb3a9ff2e01940f63941bc8408292bbe54168f795abfc09f402",
+          "elf_sha256": "9a338f2e1c2c065ea4e8f8158f2fe61248fc6dd646f74c01e724f6b9a8297495"
+        }
+      },
+      "path_payloads": {
+        "after/0x1b28e0": {
+          "address": "0x1b28e0",
+          "bytes": "80808080808080808080808080808080",
+          "kind": "full vector operand",
+          "section": ".rodata",
+          "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+          "size": 16,
+          "symbols": []
+        },
+        "before/0x1b08e0": {
+          "address": "0x1b08e0",
+          "bytes": "80808080808080808080808080808080",
+          "kind": "full vector operand",
+          "section": ".rodata",
+          "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+          "size": 16,
+          "symbols": []
+        }
+      },
+      "paths": {
+        "columns": [
+          "route",
+          "kind",
+          "before_instructions",
+          "after_instructions",
+          "before_conditions",
+          "after_conditions",
+          "opcode_differences",
+          "before_trace_sha256",
+          "after_trace_sha256"
+        ],
+        "rows": [
+          [
+            "w5/op0/one_stage",
+            "full_tight_in_domain_path",
+            38,
+            38,
+            4,
+            4,
+            {},
+            "3c89602dc183d40d68bdbad02a195261577a7304f657fdfd41253eb2f98a645a",
+            "34f001ef6216e14c9a768bb1a148d43f26b4d908dc0c53aaa00e2f449cf3b8be"
+          ],
+          [
+            "w5/op0/bound",
+            "full_tight_in_domain_path",
+            44,
+            44,
+            4,
+            4,
+            {},
+            "e10a0142544f47897af58a2e5b42afff9628546cd61e7032137dd962d2f7e8c3",
+            "4001d34a935df9227880c459b30d57795d047fd98748c1d792feccbc96ff2d0d"
+          ],
+          [
+            "w5/op0/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            335,
+            342,
+            33,
+            33,
+            {
+              "addl": [
+                0,
+                6
+              ],
+              "leal": [
+                8,
+                2
+              ],
+              "movl": [
+                27,
+                25
+              ],
+              "movq": [
+                49,
+                58
+              ]
+            },
+            "b0a7f13bda735fc69ce7911ed649f80634b99928bbccb90d2e23ec8b4944af67",
+            "e794e37f36fce020921ae629ef0a6b1cd8790eec23a8046c853a3827f2d8c9da"
+          ],
+          [
+            "w8/op0/one_stage",
+            "full_tight_in_domain_path",
+            38,
+            38,
+            4,
+            4,
+            {},
+            "72307265a1aac89810cf252be524afe2d1165d91a966267dc8fc086896d95788",
+            "bf3dcf9f147c2fadfa098408300d41ce8980c79df8796c9832072276fd631fc8"
+          ],
+          [
+            "w8/op0/bound",
+            "full_tight_in_domain_path",
+            44,
+            44,
+            4,
+            4,
+            {},
+            "d66bc7a6182b7cff6471d6fce4a65a41222e8ab86a49b58fbfbf9a0c06e887d1",
+            "f7b3c1ed326781fbae3a34c1e457d8ef38ae90e2ced30ee40a03e1bceaffe6c6"
+          ],
+          [
+            "w8/op0/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            335,
+            342,
+            33,
+            33,
+            {
+              "addl": [
+                0,
+                6
+              ],
+              "leal": [
+                8,
+                2
+              ],
+              "movl": [
+                27,
+                25
+              ],
+              "movq": [
+                49,
+                58
+              ]
+            },
+            "43044f615b960bb978cbc3847a12a8941d00ae4124cc7335d255001fdb70db73",
+            "e6bdab0b977cd0efbce19a03a774d4f47a95af1c6ad367db49d257b9dbc3fd4f"
+          ],
+          [
+            "w5/op1/one_stage",
+            "full_tight_in_domain_path",
+            40,
+            40,
+            4,
+            4,
+            {},
+            "8527b5a86498e2af479713b37541f1da34d67951f64aab0b18433dc41a36b386",
+            "e79823d8c7a1bc77dbf6be0b6cacffa90db2e634c7522a5be77b5d86734ac89a"
+          ],
+          [
+            "w5/op1/bound",
+            "full_tight_in_domain_path",
+            47,
+            47,
+            4,
+            4,
+            {},
+            "31b53d8c26771fe4904aafa2796b3d48e1eeab5bd80ac822f2423831ce82cf41",
+            "14e61dbc208955b96d6e7b6c3695e2a7e290bdd819407819de72158483b1e79f"
+          ],
+          [
+            "w5/op1/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            344,
+            344,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movl": [
+                35,
+                27
+              ]
+            },
+            "b05c0c90b263c230ad75c3c13bc3855f6eb791bfae8dac8018ea40207c1890d9",
+            "ac59210ee255e11babcc4e3b9c3a0eb76dd1cf8b2b161271a603709810a531bf"
+          ],
+          [
+            "w8/op1/one_stage",
+            "full_tight_in_domain_path",
+            40,
+            40,
+            4,
+            4,
+            {},
+            "3acafd86a6b12cb1dd4c932f548af189bc258dde834089f32803465530b591d9",
+            "4423702c563a67de764d5f35475232fba6dc1da3181094ec8a87dab73d077952"
+          ],
+          [
+            "w8/op1/bound",
+            "full_tight_in_domain_path",
+            47,
+            47,
+            4,
+            4,
+            {},
+            "ae79f3d050c8f033ab247c22fc2facc2c0929cf6288b967f39b5ef656576dd1e",
+            "9f795bb47d1602ded440a81db1c3e606d233872855e7b29336f8def2bc49355b"
+          ],
+          [
+            "w8/op1/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            344,
+            344,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movl": [
+                35,
+                27
+              ]
+            },
+            "ce2f706c25d603c13c63fe97f13d78715ae386a763de2dae00147ee3d971f7af",
+            "1b26b8f224bf5a95c853ae506d8376cba658adc21d16d6b88272f0448c7d97e5"
+          ],
+          [
+            "w5/op2/one_stage",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "19ab61419f7117ea13924490afcba87e4aded0f7eb9e69101703e6256ff1f00d",
+            "1f491ec5d1ac0f2982f8d5d4a4f1862e7b3da991e9546a4633f5248c81d4435d"
+          ],
+          [
+            "w5/op2/bound",
+            "full_tight_in_domain_path",
+            48,
+            48,
+            4,
+            4,
+            {},
+            "48d2a11dd1d8fe5bf3b79a87706ed6df4fb81c2a3c515f68d9a824b8bd73dc4b",
+            "59cdb209cde5b92f13ba84325e7e5992746544fc2e7c94c688c3ad579fc53e73"
+          ],
+          [
+            "w5/op2/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            352,
+            352,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movl": [
+                35,
+                27
+              ]
+            },
+            "f6db431124759ebe209e2e423a6965bd398084b178592ba21bde238e4f655936",
+            "b2607d0a258cc4e669bab9be281b2b1ec79d168004dc13ce5fa3cd770c20782a"
+          ],
+          [
+            "w8/op2/one_stage",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "4120fd7087ac39c89f95b5ef9cef3a50b5d22a9497c7c88b0682a12e2e9d582f",
+            "70c7903514cd32a9a30c6f7f301541805d6bddd03f88f86eff9ff17431129d58"
+          ],
+          [
+            "w8/op2/bound",
+            "full_tight_in_domain_path",
+            48,
+            48,
+            4,
+            4,
+            {},
+            "ef6651833eb1711386bea678a9ac9250e6facab2c8a600ffb18548027508d1f0",
+            "0bfda04f81a3205b011f4924f3bb55fb6e64bdbb02f55b4699bb55434d163f5c"
+          ],
+          [
+            "w8/op2/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            352,
+            352,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movl": [
+                35,
+                27
+              ]
+            },
+            "04e8eee1dd8f85b1831880b328a60e581ad9970f8dfe2d1ab222e46a5ae4448a",
+            "622bfead1f2d4c19ec76ecfbc7e259373c0c8c0ee470cd866e8a30bd4402556a"
+          ],
+          [
+            "w5/op3/one_stage",
+            "full_tight_in_domain_path",
+            40,
+            40,
+            4,
+            4,
+            {},
+            "d31976c72a2cb06a62024a14457c27fd905613f18510595406660996b28457d4",
+            "5799f5036d88dd0027b2bb19c04d0aa337f2ead190724ce5cc0c71c46b1e3f58"
+          ],
+          [
+            "w5/op3/bound",
+            "full_tight_in_domain_path",
+            46,
+            46,
+            4,
+            4,
+            {},
+            "ab25665136f6a2fea2350e721a0e778583f52057865c295ecac5710c3fea566d",
+            "336f565ab3e433a0010e349ed4a747b5d20dd0bff1d668022b3cb5747cd7042c"
+          ],
+          [
+            "w5/op3/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            352,
+            352,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movabsq": [
+                8,
+                0
+              ]
+            },
+            "c72bdb06c8cc1fb76a196c5396ee1b8a61e090f14fcace3c00ce03e923d2e870",
+            "7209dc1035ef9b94a4839820c52349845a696998c6bf37862eef84f91e1fd020"
+          ],
+          [
+            "w8/op3/one_stage",
+            "full_tight_in_domain_path",
+            40,
+            40,
+            4,
+            4,
+            {},
+            "3f6488b144858a12970544509517d35cc69dfd6f91a6ebe710545467c0d9b76f",
+            "ec68e961959be569abbb2eee038263c63994aae26c5da1df252629fd2c3f8aaf"
+          ],
+          [
+            "w8/op3/bound",
+            "full_tight_in_domain_path",
+            46,
+            46,
+            4,
+            4,
+            {},
+            "32a004eaa1cc70e121fdaf864140f4b4158f0aba75145dbf11f9d67fa89671d9",
+            "878a1645e213c09229543802f157c560e4e8c43f35c414057f6474ed838ea353"
+          ],
+          [
+            "w8/op3/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            352,
+            352,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movabsq": [
+                8,
+                0
+              ]
+            },
+            "d7fca4480017013f08916ade4039eadb93723f7b3fa16d06fa146e2cde792575",
+            "e4ae7cf6b766ae1136d2b16ea143d5cff84d5f4c3c78610320bb9fe9851c4c1e"
+          ],
+          [
+            "w5/op4/one_stage",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "668d4dc61b75d2b67f9a15effce19a8bef8468628b9308037177fccf4194da51",
+            "53e6fc15fb52d414a08d36fe1fb3ac180c82c1299d523d141699c5c9d8059322"
+          ],
+          [
+            "w5/op4/bound",
+            "full_tight_in_domain_path",
+            47,
+            47,
+            4,
+            4,
+            {},
+            "a1d1378a4c511b4e012285b1ea47a61688f0c2639987f4ffae4a8fbe7188a7d8",
+            "de0d607ce900fc12c35cd5329c2003e128ba22c723423e73b09c3b9e8e09b71e"
+          ],
+          [
+            "w5/op4/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            360,
+            360,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movabsq": [
+                8,
+                0
+              ]
+            },
+            "28748e37a9d04330dddfbdd041c91874c11f74256b855666386b58c79e14bd02",
+            "4825b650a8647e4f1995e5bd60760258c85f9d81f4eadc91ee86b90e74d05135"
+          ],
+          [
+            "w8/op4/one_stage",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "107ee755ad8103a6b321919ed7bb6bc76a3ba4a1dd92bd92d56b216dda6b6366",
+            "d68a09621fffc4661cc643a48f5e43b8faa0786c8f307507f51bf8459b3d2e35"
+          ],
+          [
+            "w8/op4/bound",
+            "full_tight_in_domain_path",
+            47,
+            47,
+            4,
+            4,
+            {},
+            "726ed0777be520d803c7ba73ea7637fee0ef302e109c0cb6587f9115440ea2e2",
+            "bb4f42652d48a3c340652c8f135d4e33b2926f69f40256026eff37c4c700340c"
+          ],
+          [
+            "w8/op4/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            360,
+            360,
+            33,
+            33,
+            {
+              "jmp": [
+                8,
+                16
+              ],
+              "movabsq": [
+                8,
+                0
+              ]
+            },
+            "5c833e33559c78769101e73a455b5aa6da25beefdd7d110e24af90007765ed25",
+            "c9dd0ac14639f81d9b229cf7a0bf1debad5a24e5b2e55ed8ebe7653a1b9a23a0"
+          ]
+        ]
+      },
+      "shared_payloads": [
+        {
+          "after": {
+            "address": "0x1b2b20",
+            "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+            "size": 32,
+            "symbols": []
+          },
+          "after_instruction": "vpand\t0x1a29cd(%rip), %ymm0, %ymm1 # 0x1b2b20 <strlen@GLIBC_2.2.5+0x1b2b20>",
+          "before": {
+            "address": "0x1b0b20",
+            "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+            "size": 32,
+            "symbols": []
+          },
+          "before_instruction": "vpand\t0x1a0a2d(%rip), %ymm0, %ymm1 # 0x1b0b20 <strlen@GLIBC_2.2.5+0x1b0b20>",
+          "function": "shared/native_decode",
+          "offset": 1163,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2b40",
+            "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+            "size": 32,
+            "symbols": []
+          },
+          "after_instruction": "vpand\t0x1a29d0(%rip), %ymm0, %ymm0 # 0x1b2b40 <strlen@GLIBC_2.2.5+0x1b2b40>",
+          "before": {
+            "address": "0x1b0b40",
+            "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+            "size": 32,
+            "symbols": []
+          },
+          "before_instruction": "vpand\t0x1a0a30(%rip), %ymm0, %ymm0 # 0x1b0b40 <strlen@GLIBC_2.2.5+0x1b0b40>",
+          "function": "shared/native_decode",
+          "offset": 1192,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2b20",
+            "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+            "size": 32,
+            "symbols": []
+          },
+          "after_instruction": "vpand\t0x1a052a(%rip), %ymm0, %ymm1 # 0x1b2b20 <strlen@GLIBC_2.2.5+0x1b2b20>",
+          "before": {
+            "address": "0x1b0b20",
+            "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+            "size": 32,
+            "symbols": []
+          },
+          "before_instruction": "vpand\t0x19e58a(%rip), %ymm0, %ymm1 # 0x1b0b20 <strlen@GLIBC_2.2.5+0x1b0b20>",
+          "function": "shared/native_decode",
+          "offset": 10542,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2b40",
+            "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+            "size": 32,
+            "symbols": []
+          },
+          "after_instruction": "vpand\t0x1a052d(%rip), %ymm0, %ymm0 # 0x1b2b40 <strlen@GLIBC_2.2.5+0x1b2b40>",
+          "before": {
+            "address": "0x1b0b40",
+            "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+            "size": 32,
+            "symbols": []
+          },
+          "before_instruction": "vpand\t0x19e58d(%rip), %ymm0, %ymm0 # 0x1b0b40 <strlen@GLIBC_2.2.5+0x1b0b40>",
+          "function": "shared/native_decode",
+          "offset": 10571,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2b20",
+            "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+            "size": 32,
+            "symbols": []
+          },
+          "after_instruction": "vpand\t0x1a04b2(%rip), %ymm0, %ymm1 # 0x1b2b20 <strlen@GLIBC_2.2.5+0x1b2b20>",
+          "before": {
+            "address": "0x1b0b20",
+            "bytes": "ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "baffcd215de983f19567ff94e047f03d430dd635f9751d2f46f1077e7e3dda0c",
+            "size": 32,
+            "symbols": []
+          },
+          "before_instruction": "vpand\t0x19e512(%rip), %ymm0, %ymm1 # 0x1b0b20 <strlen@GLIBC_2.2.5+0x1b0b20>",
+          "function": "shared/native_decode",
+          "offset": 10662,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2b40",
+            "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+            "size": 32,
+            "symbols": []
+          },
+          "after_instruction": "vpand\t0x1a04b5(%rip), %ymm0, %ymm0 # 0x1b2b40 <strlen@GLIBC_2.2.5+0x1b2b40>",
+          "before": {
+            "address": "0x1b0b40",
+            "bytes": "00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "6bd25f5d5bc8ca90d74d76e96509d85351800e38ce101abf0ffa81c8a7e755a7",
+            "size": 32,
+            "symbols": []
+          },
+          "before_instruction": "vpand\t0x19e515(%rip), %ymm0, %ymm0 # 0x1b0b40 <strlen@GLIBC_2.2.5+0x1b0b40>",
+          "function": "shared/native_decode",
+          "offset": 10691,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b28e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "after_instruction": "vpxor\t0x14d4fc(%rip), %xmm0, %xmm2 # 0x1b28e0 <strlen@GLIBC_2.2.5+0x1b28e0>",
+          "before": {
+            "address": "0x1b08e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "before_instruction": "vpxor\t0x14b9dc(%rip), %xmm0, %xmm2 # 0x1b08e0 <strlen@GLIBC_2.2.5+0x1b08e0>",
+          "function": "shared/joined/op1",
+          "offset": 12,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b28e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "after_instruction": "vpxor\t0xfa77c(%rip), %xmm0, %xmm1 # 0x1b28e0 <strlen@GLIBC_2.2.5+0x1b28e0>",
+          "before": {
+            "address": "0x1b08e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "before_instruction": "vpxor\t0xf967c(%rip), %xmm0, %xmm1 # 0x1b08e0 <strlen@GLIBC_2.2.5+0x1b08e0>",
+          "function": "shared/joined/op2",
+          "offset": 12,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b28e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "after_instruction": "vpxor\t0xa78cd(%rip), %xmm0, %xmm1 # 0x1b28e0 <strlen@GLIBC_2.2.5+0x1b28e0>",
+          "before": {
+            "address": "0x1b08e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "before_instruction": "vpxor\t0xa72ed(%rip), %xmm0, %xmm1 # 0x1b08e0 <strlen@GLIBC_2.2.5+0x1b08e0>",
+          "function": "shared/joined/op3",
+          "offset": 27,
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b28e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "after_instruction": "vpxor\t0x54ddd(%rip), %xmm0, %xmm2 # 0x1b28e0 <strlen@GLIBC_2.2.5+0x1b28e0>",
+          "before": {
+            "address": "0x1b08e0",
+            "bytes": "80808080808080808080808080808080",
+            "kind": "full vector operand",
+            "section": ".rodata",
+            "sha256": "4e972baaee2ad54f78153134ef6484cd1a8e383d21582a21a481d4d214161916",
+            "size": 16,
+            "symbols": []
+          },
+          "before_instruction": "vpxor\t0x54c7d(%rip), %xmm0, %xmm2 # 0x1b08e0 <strlen@GLIBC_2.2.5+0x1b08e0>",
+          "function": "shared/joined/op4",
+          "offset": 27,
+          "payload_equal": true
+        }
+      ],
+      "timer_payloads": [
+        {
+          "after": {
+            "address": "0x1b70d8",
+            "bytes": "00",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+            "size": 1,
+            "symbols": [
+              "_ZN7runtime10check_onlyE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b5510(%rip), %rax    # 0x1b70d8 <runtime::check_only>",
+          "before": {
+            "address": "0x1b50d8",
+            "bytes": "00",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+            "size": 1,
+            "symbols": [
+              "_ZN7runtime10check_onlyE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b3510(%rip), %rax    # 0x1b50d8 <runtime::check_only>",
+          "instruction_address": "0x1bc1",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b54b0(%rip), %rax    # 0x1b70a4 <runtime::repeats>",
+          "before": {
+            "address": "0x1b50a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b34b0(%rip), %rax    # 0x1b50a4 <runtime::repeats>",
+          "instruction_address": "0x1bed",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2010",
+            "bytes": "000000000000f03f",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+            "size": 8,
+            "symbols": []
+          },
+          "after_instruction": "vmovsd\t0x1b0333(%rip), %xmm0   # 0x1b2010 <strlen@GLIBC_2.2.5+0x1b2010>",
+          "before": {
+            "address": "0x1b0010",
+            "bytes": "000000000000f03f",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+            "size": 8,
+            "symbols": []
+          },
+          "before_instruction": "vmovsd\t0x1ae333(%rip), %xmm0   # 0x1b0010 <strlen@GLIBC_2.2.5+0x1b0010>",
+          "instruction_address": "0x1cd5",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2018",
+            "bytes": "0000000000002040",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35",
+            "size": 8,
+            "symbols": []
+          },
+          "after_instruction": "vmovsd\t0x1b0320(%rip), %xmm0   # 0x1b2018 <strlen@GLIBC_2.2.5+0x1b2018>",
+          "before": {
+            "address": "0x1b0018",
+            "bytes": "0000000000002040",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35",
+            "size": 8,
+            "symbols": []
+          },
+          "before_instruction": "vmovsd\t0x1ae320(%rip), %xmm0   # 0x1b0018 <strlen@GLIBC_2.2.5+0x1b0018>",
+          "instruction_address": "0x1cf0",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2140",
+            "bytes": "696e646570656e64656e743800",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a",
+            "size": 13,
+            "symbols": []
+          },
+          "after_instruction": "leaq\t0x1b043b(%rip), %rcx    # 0x1b2140 <strlen@GLIBC_2.2.5+0x1b2140>",
+          "before": {
+            "address": "0x1b0140",
+            "bytes": "696e646570656e64656e743800",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a",
+            "size": 13,
+            "symbols": []
+          },
+          "before_instruction": "leaq\t0x1ae43b(%rip), %rcx    # 0x1b0140 <strlen@GLIBC_2.2.5+0x1b0140>",
+          "instruction_address": "0x1cfe",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b2136",
+            "bytes": "646570656e64656e7400",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d",
+            "size": 10,
+            "symbols": []
+          },
+          "after_instruction": "leaq\t0x1b042a(%rip), %rax    # 0x1b2136 <strlen@GLIBC_2.2.5+0x1b2136>",
+          "before": {
+            "address": "0x1b0136",
+            "bytes": "646570656e64656e7400",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d",
+            "size": 10,
+            "symbols": []
+          },
+          "before_instruction": "leaq\t0x1ae42a(%rip), %rax    # 0x1b0136 <strlen@GLIBC_2.2.5+0x1b0136>",
+          "instruction_address": "0x1d05",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70d0",
+            "bytes": "0000000000000000",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+            "size": 8,
+            "symbols": [
+              "_ZN7runtime8observedE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b538b(%rip), %rdi    # 0x1b70d0 <runtime::observed>",
+          "before": {
+            "address": "0x1b50d0",
+            "bytes": "0000000000000000",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+            "size": 8,
+            "symbols": [
+              "_ZN7runtime8observedE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b338b(%rip), %rdi    # 0x1b50d0 <runtime::observed>",
+          "instruction_address": "0x1d3e",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b5309(%rip), %rsi    # 0x1b70a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1b50a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b3309(%rip), %rsi    # 0x1b50a0 <runtime::iterations>",
+          "instruction_address": "0x1d90",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b211b",
+            "bytes": "25732c25752c25752c25752c25732c25732c25752c252e36660a00",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e",
+            "size": 27,
+            "symbols": []
+          },
+          "after_instruction": "leaq\t0x1b0376(%rip), %rdi    # 0x1b211b <strlen@GLIBC_2.2.5+0x1b211b>",
+          "before": {
+            "address": "0x1b011b",
+            "bytes": "25732c25752c25752c25752c25732c25732c25752c252e36660a00",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e",
+            "size": 27,
+            "symbols": []
+          },
+          "before_instruction": "leaq\t0x1ae376(%rip), %rdi    # 0x1b011b <strlen@GLIBC_2.2.5+0x1b011b>",
+          "instruction_address": "0x1d9e",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b52c2(%rip), %rax    # 0x1b70a4 <runtime::repeats>",
+          "before": {
+            "address": "0x1b50a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b32c2(%rip), %rax    # 0x1b50a4 <runtime::repeats>",
+          "instruction_address": "0x1ddb",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b4fbd(%rip), %rcx    # 0x1b70a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1b50a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b2fbd(%rip), %rcx    # 0x1b50a0 <runtime::iterations>",
+          "instruction_address": "0x20dc",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b4f48(%rip), %rcx    # 0x1b70a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1b50a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b2f48(%rip), %rcx    # 0x1b50a0 <runtime::iterations>",
+          "instruction_address": "0x2151",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b70a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1b4cb0(%rip), %rax    # 0x1b70a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1b50a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1b2cb0(%rip), %rax    # 0x1b50a0 <runtime::iterations>",
+          "instruction_address": "0x23e9",
+          "payload_equal": true
+        }
+      ]
+    },
+    "avx512": {
+      "all_changed_shared_payloads_equal": true,
+      "all_changed_timer_payloads_equal": true,
+      "functions": {
+        "columns": [
+          "route",
+          "before_address",
+          "after_address",
+          "before_size",
+          "after_size",
+          "before_instructions",
+          "after_instructions",
+          "before_sha256",
+          "after_sha256",
+          "raw_bytes_equal"
+        ],
+        "rows": [
+          [
+            "common/indirect_timer",
+            "0x1bb0",
+            "0x1bb0",
+            2151,
+            2151,
+            470,
+            470,
+            "4e0eb7d685161a85a01961158fceacec63cd6859f9da5328ce10978d47ccc095",
+            "1d5b72da5d9ead315271c10066dcf32dd309890ee167bf0447269e35f4975321",
+            false
+          ],
+          [
+            "common/entry1",
+            "0x3790",
+            "0x3790",
+            75,
+            75,
+            31,
+            31,
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            "2e0e774190196ac6effb32118e3d12a9800c8432eb4bcb49edccfc9f3724837f",
+            true
+          ],
+          [
+            "shared/native_decode",
+            "0xdba0",
+            "0xdc00",
+            12154,
+            12154,
+            2874,
+            2874,
+            "195034df0779beb6f5b6000b0e9dbc2bc564e6c91a9d5253a915fe347fd7bff7",
+            "195034df0779beb6f5b6000b0e9dbc2bc564e6c91a9d5253a915fe347fd7bff7",
+            true
+          ],
+          [
+            "shared/joined/op0",
+            "0x10b20",
+            "0x10b80",
+            58,
+            58,
+            16,
+            16,
+            "aad5eb06bd599f8db398ae4c1227c9c8ebd6cf59599c5e54398c500c55ed9d6e",
+            "aad5eb06bd599f8db398ae4c1227c9c8ebd6cf59599c5e54398c500c55ed9d6e",
+            true
+          ],
+          [
+            "w5/op0/one_stage",
+            "0x10b60",
+            "0x10bc0",
+            12296,
+            12307,
+            2906,
+            2909,
+            "d6c146d55ce1be250ef38aa401e066c6c0d3c0618c7ed75a68ab0a82483c903a",
+            "3fa5fb8d6f3b6c2f81496b2b796575c7c239d905fdeb9cf67e56e8676170eae2",
+            false
+          ],
+          [
+            "w5/op0/bound",
+            "0x13b70",
+            "0x13be0",
+            12024,
+            12014,
+            2783,
+            2787,
+            "7da317cc704539b785b14e2501036e4698fdd7c18b856baab18e715fbc01df55",
+            "432dff474163340d8ef9476bf4e6a9af307844e0ae7d4668cb73dee7a8825f6c",
+            false
+          ],
+          [
+            "w5/op0/inline_measure",
+            "0x16a70",
+            "0x16ad0",
+            137881,
+            138620,
+            30700,
+            30663,
+            "7df6ecf4919fa971f6fbb39bca32ca190aeed288f46856d6c9cca83bdc79809c",
+            "4c5e03d34b4be1d311b720721e76e23d471abb08740ed0ff6697601c1486d7c4",
+            false
+          ],
+          [
+            "w8/op0/one_stage",
+            "0x390b0",
+            "0x393f0",
+            12296,
+            12307,
+            2906,
+            2909,
+            "d6c146d55ce1be250ef38aa401e066c6c0d3c0618c7ed75a68ab0a82483c903a",
+            "3fa5fb8d6f3b6c2f81496b2b796575c7c239d905fdeb9cf67e56e8676170eae2",
+            false
+          ],
+          [
+            "w8/op0/bound",
+            "0x3c0c0",
+            "0x3c410",
+            12024,
+            12014,
+            2783,
+            2787,
+            "7da317cc704539b785b14e2501036e4698fdd7c18b856baab18e715fbc01df55",
+            "432dff474163340d8ef9476bf4e6a9af307844e0ae7d4668cb73dee7a8825f6c",
+            false
+          ],
+          [
+            "w8/op0/inline_measure",
+            "0x3efc0",
+            "0x3f300",
+            137881,
+            138620,
+            30700,
+            30663,
+            "6750e570a344116bae171a688c93ceca5fa25ce7fe1b6375d8dbd0272f833c4d",
+            "65aeca99b920f51db0d7f90672c6777553713f8a8a24ab72289fb0f6671204b2",
+            false
+          ],
+          [
+            "shared/joined/op1",
+            "0x61fe0",
+            "0x62660",
+            44,
+            44,
+            11,
+            11,
+            "fb855ab788d6820f6e412f0089d53ad9bc3a4d544e3c798795c3a769f98f8058",
+            "fb855ab788d6820f6e412f0089d53ad9bc3a4d544e3c798795c3a769f98f8058",
+            true
+          ],
+          [
+            "w5/op1/one_stage",
+            "0x62010",
+            "0x62690",
+            12281,
+            12291,
+            2898,
+            2901,
+            "e04f54b8f63745c717886e0aefd8ebb8870d0c747c6a5780fc4e63789758a5e6",
+            "24b22d37b6831830bfde83d74311dd9b0018f4dcc097f14d4d8085980117bbb9",
+            false
+          ],
+          [
+            "w5/op1/bound",
+            "0x65010",
+            "0x656a0",
+            12029,
+            12020,
+            2782,
+            2786,
+            "b129d5ca0f0d3e914545db3a4ea5e8b816349a364fd23a1b7cedb7c54ca70973",
+            "0731f53edb56fd8b537245f99fe30633b4121778662d263fe8eb18e27f44e5af",
+            false
+          ],
+          [
+            "w5/op1/inline_measure",
+            "0x67f10",
+            "0x685a0",
+            137991,
+            138650,
+            30716,
+            30680,
+            "9353aee1a00dd2a80d1386d43576576ec92f24187b81c8ac57ce656515e2e4d7",
+            "faeaf464d9269195d191666a71f9200bd7622c56f283ac00020fb58e6b4ec57e",
+            false
+          ],
+          [
+            "w8/op1/one_stage",
+            "0x8a5e0",
+            "0x8af00",
+            12281,
+            12291,
+            2898,
+            2901,
+            "e04f54b8f63745c717886e0aefd8ebb8870d0c747c6a5780fc4e63789758a5e6",
+            "24b22d37b6831830bfde83d74311dd9b0018f4dcc097f14d4d8085980117bbb9",
+            false
+          ],
+          [
+            "w8/op1/bound",
+            "0x8d5e0",
+            "0x8df10",
+            12029,
+            12020,
+            2782,
+            2786,
+            "b129d5ca0f0d3e914545db3a4ea5e8b816349a364fd23a1b7cedb7c54ca70973",
+            "0731f53edb56fd8b537245f99fe30633b4121778662d263fe8eb18e27f44e5af",
+            false
+          ],
+          [
+            "w8/op1/inline_measure",
+            "0x904e0",
+            "0x90e10",
+            137991,
+            138650,
+            30716,
+            30680,
+            "619417f63ca818603cb3791a2e424ee0374bc5f470e493903a2203bf0cd624ef",
+            "c7b69f53eeb08e0e606354d79641bf5d8156faa778824d8206255d503c2c65b5",
+            false
+          ],
+          [
+            "shared/joined/op2",
+            "0xb3570",
+            "0xb4190",
+            44,
+            44,
+            11,
+            11,
+            "71b12e255f0df3b8f07304da91748bc6a788fa9783eabf04a1a045c57c46f005",
+            "71b12e255f0df3b8f07304da91748bc6a788fa9783eabf04a1a045c57c46f005",
+            true
+          ],
+          [
+            "w5/op2/one_stage",
+            "0xb35a0",
+            "0xb41c0",
+            12281,
+            12291,
+            2898,
+            2901,
+            "d51e4d524e5165a50dc88fd2ffc6359c349d6276c1aaa5cabdec17c6ae8dab82",
+            "fb2051bd42b5b5253e03d6174cc861f26ff004f4f463b356675834d2519bed22",
+            false
+          ],
+          [
+            "w5/op2/bound",
+            "0xb65a0",
+            "0xb71d0",
+            12029,
+            12020,
+            2782,
+            2786,
+            "1a282053e08d3010819e276812238db25fdda9a3af1d2334e5b5604ae58d6301",
+            "e34983a19e5abe138cee5d89976a3f29b3c6817eb40265b8dad8d2b68f68ed75",
+            false
+          ],
+          [
+            "w5/op2/inline_measure",
+            "0xb94a0",
+            "0xba0d0",
+            137991,
+            138650,
+            30716,
+            30680,
+            "7023ff7f92c8e7a71ef5662b36a82424e236b4c2af433fbbf47a64a638a1f14e",
+            "468bc10045cf3d9acc178a1627174697bf6b9ab29d2d2a45c76dc3dbfaddd70e",
+            false
+          ],
+          [
+            "w8/op2/one_stage",
+            "0xdbb70",
+            "0xdca30",
+            12281,
+            12291,
+            2898,
+            2901,
+            "d51e4d524e5165a50dc88fd2ffc6359c349d6276c1aaa5cabdec17c6ae8dab82",
+            "fb2051bd42b5b5253e03d6174cc861f26ff004f4f463b356675834d2519bed22",
+            false
+          ],
+          [
+            "w8/op2/bound",
+            "0xdeb70",
+            "0xdfa40",
+            12029,
+            12020,
+            2782,
+            2786,
+            "1a282053e08d3010819e276812238db25fdda9a3af1d2334e5b5604ae58d6301",
+            "e34983a19e5abe138cee5d89976a3f29b3c6817eb40265b8dad8d2b68f68ed75",
+            false
+          ],
+          [
+            "w8/op2/inline_measure",
+            "0xe1a70",
+            "0xe2940",
+            137991,
+            138650,
+            30716,
+            30680,
+            "36edeb7503f493dc2ca28f954193bdc0125e69cdeb8fd191e832c13c9ad91a90",
+            "2706884da1bc406f5eac03e9d9793e0f369bcc8b09b60ee442cf466774704236",
+            false
+          ],
+          [
+            "shared/joined/op3",
+            "0x104b00",
+            "0x105cc0",
+            59,
+            59,
+            16,
+            16,
+            "f5e2a30d30f25d15bdaf753186f25344593f8001fa16dfed07bd8916f090481f",
+            "f5e2a30d30f25d15bdaf753186f25344593f8001fa16dfed07bd8916f090481f",
+            true
+          ],
+          [
+            "w5/op3/one_stage",
+            "0x104b40",
+            "0x105d00",
+            12299,
+            12310,
+            2906,
+            2909,
+            "b865611edd5d3dd436dd58c7fd530cd49ed6f92503afd3ef1b25c06f163d1fe4",
+            "992043229ab44f40cf9c468b3c817a5f7f6c4065ad62ff2f74f091d153a01ff1",
+            false
+          ],
+          [
+            "w5/op3/bound",
+            "0x107b50",
+            "0x108d20",
+            12027,
+            12017,
+            2783,
+            2787,
+            "4658e2ef5468fd87dee3ac759aacb3462542a90229fdb67de7c9e22924916845",
+            "4fa60692f620b3fa6b212e37faca3822cf53531febc070f562fc3d0378b30cb0",
+            false
+          ],
+          [
+            "w5/op3/inline_measure",
+            "0x10aa50",
+            "0x10bc20",
+            137885,
+            138640,
+            30699,
+            30663,
+            "f72c341488fe7a9549204863f44d335c591f0a70cf2c2cff699830b006cd1838",
+            "012dd81855819a2e9d7e2ef02325c55f12d17cea1b91348ff9351344857776b7",
+            false
+          ],
+          [
+            "w8/op3/one_stage",
+            "0x12d0b0",
+            "0x12e570",
+            12299,
+            12310,
+            2906,
+            2909,
+            "b865611edd5d3dd436dd58c7fd530cd49ed6f92503afd3ef1b25c06f163d1fe4",
+            "992043229ab44f40cf9c468b3c817a5f7f6c4065ad62ff2f74f091d153a01ff1",
+            false
+          ],
+          [
+            "w8/op3/bound",
+            "0x1300c0",
+            "0x131590",
+            12027,
+            12017,
+            2783,
+            2787,
+            "4658e2ef5468fd87dee3ac759aacb3462542a90229fdb67de7c9e22924916845",
+            "4fa60692f620b3fa6b212e37faca3822cf53531febc070f562fc3d0378b30cb0",
+            false
+          ],
+          [
+            "w8/op3/inline_measure",
+            "0x132fc0",
+            "0x134490",
+            137885,
+            138640,
+            30699,
+            30663,
+            "8b49605f62857ce6d499f28aaf34f636311869112c35d71fe2437de96d6852ca",
+            "005c682ed4fb404354e7fee5c06bb37fd391720c2e63d094427b1bf9e0519e4f",
+            false
+          ],
+          [
+            "shared/joined/op4",
+            "0x155fe0",
+            "0x157800",
+            59,
+            59,
+            16,
+            16,
+            "13351ae044cc108bea8e99e339bf1e8a2647d34a5523b3fa9b1a801c27d10bbd",
+            "13351ae044cc108bea8e99e339bf1e8a2647d34a5523b3fa9b1a801c27d10bbd",
+            true
+          ],
+          [
+            "w5/op4/one_stage",
+            "0x156020",
+            "0x157840",
+            12299,
+            12310,
+            2906,
+            2909,
+            "e65eaf388f9ecedc23bb9ec49d11782119c73a35d647ab9d4a99a3ebaf9ac767",
+            "ae93704de247030670661adbc863f93aec5dda9331b31b565560a866b4c86679",
+            false
+          ],
+          [
+            "w5/op4/bound",
+            "0x159030",
+            "0x15a860",
+            12027,
+            12017,
+            2783,
+            2787,
+            "b7d06588a832105cef56ed1c641752ed5df39bbd54c8c562f2c4bf589dd234c5",
+            "28d7a0c8c96398168d2b144011548c08f8b6f0a26ddddcc39649c2d79328fbdf",
+            false
+          ],
+          [
+            "w5/op4/inline_measure",
+            "0x15bf30",
+            "0x15d760",
+            137885,
+            138640,
+            30699,
+            30663,
+            "e1d5b246addb60f9a74bbd912bba78690bf40cdf22a9df1ebbdfb4adc05e53a4",
+            "73e7ff792485ab29f09c60f3e49e88288095fefd4fa8bd4fb17d6b40e9ce627b",
+            false
+          ],
+          [
+            "w8/op4/one_stage",
+            "0x17e590",
+            "0x1800b0",
+            12299,
+            12310,
+            2906,
+            2909,
+            "e65eaf388f9ecedc23bb9ec49d11782119c73a35d647ab9d4a99a3ebaf9ac767",
+            "ae93704de247030670661adbc863f93aec5dda9331b31b565560a866b4c86679",
+            false
+          ],
+          [
+            "w8/op4/bound",
+            "0x1815a0",
+            "0x1830d0",
+            12027,
+            12017,
+            2783,
+            2787,
+            "b7d06588a832105cef56ed1c641752ed5df39bbd54c8c562f2c4bf589dd234c5",
+            "28d7a0c8c96398168d2b144011548c08f8b6f0a26ddddcc39649c2d79328fbdf",
+            false
+          ],
+          [
+            "w8/op4/inline_measure",
+            "0x1844a0",
+            "0x185fd0",
+            137885,
+            138640,
+            30699,
+            30663,
+            "d25c7fb7548d7918ef886ed7a4901ad337648de5114d951b02c14c8ec6f44fa1",
+            "ed91002deb338e924ef3c9ea20b335d8c4558646003cea7e01b75a635e4532bf",
+            false
+          ]
+        ]
+      },
+      "inputs": {
+        "after": {
+          "disassembly_sha256": "113785867b21346e3a995b9cc75e081c4fabdde38caa7e9df6af85a3df772480",
+          "elf_sha256": "348cedc4bc3ba7ccaf290fc99b0dce7c78ac2019c4eb819eda06325d7699304c"
+        },
+        "before": {
+          "disassembly_sha256": "2d6e0b11d7e0988675ff838a8b8aec6484709d2c08b9a8ed75944446442139cf",
+          "elf_sha256": "8feb72a473fc40039310eba1b8c1d7e188841f8484cf04dc9cfe5ac11104b772"
+        }
+      },
+      "path_payloads": {},
+      "paths": {
+        "columns": [
+          "route",
+          "kind",
+          "before_instructions",
+          "after_instructions",
+          "before_conditions",
+          "after_conditions",
+          "opcode_differences",
+          "before_trace_sha256",
+          "after_trace_sha256"
+        ],
+        "rows": [
+          [
+            "w5/op0/one_stage",
+            "full_tight_in_domain_path",
+            35,
+            35,
+            4,
+            4,
+            {},
+            "f9b2d683f28f6c8b2364fed1cde47a2a1606f1da1af4e07d9b566f5bb623c86d",
+            "dc9cf8729e9a3c01bf6260cfe0e9d51615b5fffab5d3a62f1037abf6c1e0982e"
+          ],
+          [
+            "w5/op0/bound",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "9d58ed808631c7aae48012e1393bca6f689754bb5617a968f0d7cfecc642880c",
+            "deb38c11ecaf5fbbc6202f28a601fc95b6210f180edd7e1d0dc16b9096eef4ec"
+          ],
+          [
+            "w5/op0/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "c93db3ee51479a27c66881f1bacbe52279ca45452dd4e8aaaaca085d725d56cd",
+            "db1890a58125e94aaa1c5b675d73e30b5960b7c6a6c33a35c9aa2bb1f5b2f4d7"
+          ],
+          [
+            "w8/op0/one_stage",
+            "full_tight_in_domain_path",
+            35,
+            35,
+            4,
+            4,
+            {},
+            "a3207cb0b730e50dc131a592f1bdade27edabced92a822833b03c110b50bc8d1",
+            "dbda8b33139dda3cadf70b95a29bae7fc931d7d3dbd604b38eead7b92fe3a3c9"
+          ],
+          [
+            "w8/op0/bound",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "60400f8fee006fec12dd1bd27d8d8dba317cf20a674549959737683f2a953759",
+            "d7951e5e18bfb316ce35a001c41c860ecae9d2816dae583a0c04d7c566610a0c"
+          ],
+          [
+            "w8/op0/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "650dbf0eba025fac4fcc7fb2149e872c89ee207b1d9a4e1556e81d9df48437af",
+            "4677492e80f4a9ec5994d28f20d47bc6c619dd9f8ac7712878672eb4ef3e1e42"
+          ],
+          [
+            "w5/op1/one_stage",
+            "full_tight_in_domain_path",
+            36,
+            36,
+            4,
+            4,
+            {},
+            "99374a33ba5be5504c5927ca9ffeaf9ce084b9dc0410b39d75ab0afb975c005e",
+            "1641ee245d9a2e71eba0562f944c192ae43009698361a9c6308469e993460de4"
+          ],
+          [
+            "w5/op1/bound",
+            "full_tight_in_domain_path",
+            42,
+            42,
+            4,
+            4,
+            {},
+            "40ac6b1c985c73685e0bc2dc8ed5beb763f0334c6b30bc77557ec1c002904bf0",
+            "53ad9866f7d22aa2e86e85f45a0d59bbf9eef4ff49aeecb45d92fcfcebb52651"
+          ],
+          [
+            "w5/op1/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "a58026ac990a4818c5d850963bacb3885477cc8a8c315c4b06e13f0e82279902",
+            "824953e6231f268219e7ac685ff2b881904aa856a7a0b64df84671dd985f5d47"
+          ],
+          [
+            "w8/op1/one_stage",
+            "full_tight_in_domain_path",
+            36,
+            36,
+            4,
+            4,
+            {},
+            "913f1aad8a9ac690a80bd2c166a128f37bf05356dd79ecf74443d5d2cef6d8f5",
+            "12867490c84c9cda729b89dabb2ed031592d8b19d7ae33a0a7267a5e526085ff"
+          ],
+          [
+            "w8/op1/bound",
+            "full_tight_in_domain_path",
+            42,
+            42,
+            4,
+            4,
+            {},
+            "f7768c5bff22ff9485d81581ad8deb568dd6b4284730519e01f0973fb83d4912",
+            "7b1c9a9fbf284fdf4d1a5eb81cdcf78252efa306f4379136f57b84f2a01ef826"
+          ],
+          [
+            "w8/op1/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "d1136c3c95b446d11e7e5177d403b290e2f942ec4094a797555c7a217c5bf0b8",
+            "cd1f1ff0d52503b7b1039068d8998caac682ce9c40cfb4f07ed22687459ea835"
+          ],
+          [
+            "w5/op2/one_stage",
+            "full_tight_in_domain_path",
+            36,
+            36,
+            4,
+            4,
+            {},
+            "52ba1cb10c32f734d32d8d2ca3a3c68f2bcd942e4aea4785b337e4919a98f120",
+            "96c0910e5d966f16476a6fac8f45a0753e6fc2b473e554885fa36e672ec2e0d1"
+          ],
+          [
+            "w5/op2/bound",
+            "full_tight_in_domain_path",
+            42,
+            42,
+            4,
+            4,
+            {},
+            "5edef6a8c881b07bcd7e20a4d757af9fe00c52c66503efda5e18f054f3812828",
+            "8190489b90ffa809d34f9bf6982c14a23900ff71bba734a7689c398a1997c7d1"
+          ],
+          [
+            "w5/op2/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "2a579b214dff89f671842426a61566ac55a3995ecd5870b6bfd464eab5ee4ebf",
+            "7662bb7140b6e69a6e11817351a7cfcab79490c2fe374ecc956c54e3047ea7cd"
+          ],
+          [
+            "w8/op2/one_stage",
+            "full_tight_in_domain_path",
+            36,
+            36,
+            4,
+            4,
+            {},
+            "5a801d03bd33638b35dd8b04afe0013a8f0f6a59b3f4ab235108d3de4923495a",
+            "8635ff071a917071b2caf2eb1dd666a92cd01ab37b80e415c6b147cffbd48817"
+          ],
+          [
+            "w8/op2/bound",
+            "full_tight_in_domain_path",
+            42,
+            42,
+            4,
+            4,
+            {},
+            "37c4056f5f4568ea0617628eb6f26eb26cbae4a7adea50e8535b9449e108492f",
+            "35f62f20aad9757083d402c46ce4720b524da5915dbeb3f7386274bf0d76965a"
+          ],
+          [
+            "w8/op2/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "cc1ff1d10a5ac4277b556b5aa274ee8a0e42cfc9fc18095fa0eb788524a7ded1",
+            "3bb998dad668cc1a170fa692ff0891933873ba461ad54b29e547b68b237f40df"
+          ],
+          [
+            "w5/op3/one_stage",
+            "full_tight_in_domain_path",
+            35,
+            35,
+            4,
+            4,
+            {},
+            "91544e67f8b510232fe3c06a3fdb5031e182035907664c0de06728bb1c2108b4",
+            "d118b353ec8d9a6d0e15ebe8ef9865ede7c5484eb0aa54bceb21d5ff254408fb"
+          ],
+          [
+            "w5/op3/bound",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "5acc4f9f8fc79c3637cf244903a4925cfd0c3026d563fe3bf16a02b149635341",
+            "d4c59c7105a10751fee5de94f7013e0eef7a4de4ef27bf02b547cfff0a117fe4"
+          ],
+          [
+            "w5/op3/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "fa264e2cc812993b613a932c947acf1cda2796f15db1f8789c8400e50013876b",
+            "dd57ebc841015bd653486062dcec9822aa71c59b5472ff98ba5689c58a429af3"
+          ],
+          [
+            "w8/op3/one_stage",
+            "full_tight_in_domain_path",
+            35,
+            35,
+            4,
+            4,
+            {},
+            "5726f69b1a1dbdfa47a06de8844372cadb33d6353132dbb3568ab79bffcd8ec4",
+            "f935e5d3d75d00a47c301eccdd44ef7e1dfaa096b4ac1d5b1b9d88719dc3d29d"
+          ],
+          [
+            "w8/op3/bound",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "f2289acd509526630b8eb1e7cfd48d3c98f2ba8407c2649d2e23553bdf91907b",
+            "e2abbcdeb7141757705a93f3d16882bd60bbbec3f57eed5dc5d7640a0f0277f4"
+          ],
+          [
+            "w8/op3/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "2b887bf202705a32f0ee34c7a52241ae9e00696eab23dbd4bbe0157709488eda",
+            "56e4ccbeb0f6c83942923781f3ae1c973adc20318c35726d49bc4d90d6945575"
+          ],
+          [
+            "w5/op4/one_stage",
+            "full_tight_in_domain_path",
+            35,
+            35,
+            4,
+            4,
+            {},
+            "cc7056f6ef4ce5d307f7078e465d338b69a31a19e70749813ac06e85c25408ba",
+            "7acf3a5b1788093075a8e5dcdf7840ac196c5c255d2959c69d8aa9766560b8e6"
+          ],
+          [
+            "w5/op4/bound",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "29e14a709df7032a0709c6c2cb13c03fe9f025f927d9a5c4bc13c7e8791c5579",
+            "e97e10a43ec3c342393c3e5c1dd5ea8f893a5fa391836b7fac90354c4280a941"
+          ],
+          [
+            "w5/op4/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "7270b0d5899dea8ed00b3e4b6982ee9871d3cd6ceb73bda85a74565946c1a9b6",
+            "bd9f2894468ff3b2352b2d193a1d6572e8e187685261247328468009dff37786"
+          ],
+          [
+            "w8/op4/one_stage",
+            "full_tight_in_domain_path",
+            35,
+            35,
+            4,
+            4,
+            {},
+            "ee185c1f6ff9220a87feed65eba1e260412153a14a0d65bd34893213db153625",
+            "738a81c007be940e0207c5ffe90599e455ebd8fcab576e0e967a45e50a44eb64"
+          ],
+          [
+            "w8/op4/bound",
+            "full_tight_in_domain_path",
+            41,
+            41,
+            4,
+            4,
+            {},
+            "b79b3698ad1be93f5dcf0b7143c5261e089eb822b4f35c96fbd3f9e1322d98ce",
+            "2298ecf3bdcc26a455104e05027ff903fe3b0393d5c42fd2ec96710aa1fbbb24"
+          ],
+          [
+            "w8/op4/inline_measure",
+            "full_tight_in_domain_independent8_path",
+            303,
+            303,
+            33,
+            33,
+            {},
+            "ebeb18fc9e79deee95bd61ed5ef99a9cbcbb3e573c93743ca94d4d5e2b370957",
+            "2786bd15aa1a7e5b398a73ce7f48516c51e3ef92110e041b1bb622c556aefab0"
+          ]
+        ]
+      },
+      "shared_payloads": [],
+      "timer_payloads": [
+        {
+          "after": {
+            "address": "0x1b00d8",
+            "bytes": "00",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+            "size": 1,
+            "symbols": [
+              "_ZN7runtime10check_onlyE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1ae510(%rip), %rax    # 0x1b00d8 <runtime::check_only>",
+          "before": {
+            "address": "0x1ae0d8",
+            "bytes": "00",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+            "size": 1,
+            "symbols": [
+              "_ZN7runtime10check_onlyE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1ac510(%rip), %rax    # 0x1ae0d8 <runtime::check_only>",
+          "instruction_address": "0x1bc1",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1ae4b0(%rip), %rax    # 0x1b00a4 <runtime::repeats>",
+          "before": {
+            "address": "0x1ae0a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1ac4b0(%rip), %rax    # 0x1ae0a4 <runtime::repeats>",
+          "instruction_address": "0x1bed",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1ab010",
+            "bytes": "0000000000002040",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35",
+            "size": 8,
+            "symbols": []
+          },
+          "after_instruction": "vmovsd\t0x1a9333(%rip), %xmm0   # 0x1ab010 <strlen@GLIBC_2.2.5+0x1ab010>",
+          "before": {
+            "address": "0x1a9010",
+            "bytes": "0000000000002040",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "2d311251337c35e4d3628720f349d4133233ed476372432e57314e0ab316bc35",
+            "size": 8,
+            "symbols": []
+          },
+          "before_instruction": "vmovsd\t0x1a7333(%rip), %xmm0   # 0x1a9010 <strlen@GLIBC_2.2.5+0x1a9010>",
+          "instruction_address": "0x1cd5",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1ab160",
+            "bytes": "696e646570656e64656e743800",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a",
+            "size": 13,
+            "symbols": []
+          },
+          "after_instruction": "leaq\t0x1a947c(%rip), %rcx    # 0x1ab160 <strlen@GLIBC_2.2.5+0x1ab160>",
+          "before": {
+            "address": "0x1a9160",
+            "bytes": "696e646570656e64656e743800",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "65a0a97a1358563d971036c6533a7c5ac8768cd18cdee9f470b36a1226ea5a7a",
+            "size": 13,
+            "symbols": []
+          },
+          "before_instruction": "leaq\t0x1a747c(%rip), %rcx    # 0x1a9160 <strlen@GLIBC_2.2.5+0x1a9160>",
+          "instruction_address": "0x1cdd",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1ab156",
+            "bytes": "646570656e64656e7400",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d",
+            "size": 10,
+            "symbols": []
+          },
+          "after_instruction": "leaq\t0x1a945c(%rip), %rax    # 0x1ab156 <strlen@GLIBC_2.2.5+0x1ab156>",
+          "before": {
+            "address": "0x1a9156",
+            "bytes": "646570656e64656e7400",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "542cf202103ad5d765051b58bb88f66f4e7c1718aed775cc06a02cdfcd965c9d",
+            "size": 10,
+            "symbols": []
+          },
+          "before_instruction": "leaq\t0x1a745c(%rip), %rax    # 0x1a9156 <strlen@GLIBC_2.2.5+0x1a9156>",
+          "instruction_address": "0x1cf3",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1ab018",
+            "bytes": "000000000000f03f",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+            "size": 8,
+            "symbols": []
+          },
+          "after_instruction": "vmovsd\t0x1a9314(%rip), %xmm0 {%k1} # 0x1ab018 <strlen@GLIBC_2.2.5+0x1ab018>",
+          "before": {
+            "address": "0x1a9018",
+            "bytes": "000000000000f03f",
+            "kind": "scalar double operand",
+            "section": ".rodata",
+            "sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+            "size": 8,
+            "symbols": []
+          },
+          "before_instruction": "vmovsd\t0x1a7314(%rip), %xmm0 {%k1} # 0x1a9018 <strlen@GLIBC_2.2.5+0x1a9018>",
+          "instruction_address": "0x1cfa",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00d0",
+            "bytes": "0000000000000000",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+            "size": 8,
+            "symbols": [
+              "_ZN7runtime8observedE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1ae38b(%rip), %rdi    # 0x1b00d0 <runtime::observed>",
+          "before": {
+            "address": "0x1ae0d0",
+            "bytes": "0000000000000000",
+            "kind": "complete object initial bytes",
+            "section": ".bss",
+            "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+            "size": 8,
+            "symbols": [
+              "_ZN7runtime8observedE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1ac38b(%rip), %rdi    # 0x1ae0d0 <runtime::observed>",
+          "instruction_address": "0x1d3e",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1ae324(%rip), %rax    # 0x1b00a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1ae0a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1ac324(%rip), %rax    # 0x1ae0a0 <runtime::iterations>",
+          "instruction_address": "0x1d75",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1ab13b",
+            "bytes": "25732c25752c25752c25752c25732c25732c25752c252e36660a00",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e",
+            "size": 27,
+            "symbols": []
+          },
+          "after_instruction": "leaq\t0x1a9373(%rip), %rdi    # 0x1ab13b <strlen@GLIBC_2.2.5+0x1ab13b>",
+          "before": {
+            "address": "0x1a913b",
+            "bytes": "25732c25752c25752c25752c25732c25732c25752c252e36660a00",
+            "kind": "complete nul-terminated string",
+            "section": ".rodata",
+            "sha256": "00350cc83ab02d2681f546a00b03bdd82866fc07e832df5b84f006a5e8a4969e",
+            "size": 27,
+            "symbols": []
+          },
+          "before_instruction": "leaq\t0x1a7373(%rip), %rdi    # 0x1a913b <strlen@GLIBC_2.2.5+0x1a913b>",
+          "instruction_address": "0x1dc1",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1ae2c0(%rip), %rax    # 0x1b00a4 <runtime::repeats>",
+          "before": {
+            "address": "0x1ae0a4",
+            "bytes": "05000000",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime7repeatsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1ac2c0(%rip), %rax    # 0x1ae0a4 <runtime::repeats>",
+          "instruction_address": "0x1ddd",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1adfc0(%rip), %rcx    # 0x1b00a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1ae0a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1abfc0(%rip), %rcx    # 0x1ae0a0 <runtime::iterations>",
+          "instruction_address": "0x20d9",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1adf48(%rip), %rcx    # 0x1b00a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1ae0a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1abf48(%rip), %rcx    # 0x1ae0a0 <runtime::iterations>",
+          "instruction_address": "0x2151",
+          "payload_equal": true
+        },
+        {
+          "after": {
+            "address": "0x1b00a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "after_instruction": "leaq\t0x1adcb3(%rip), %rax    # 0x1b00a0 <runtime::iterations>",
+          "before": {
+            "address": "0x1ae0a0",
+            "bytes": "a0860100",
+            "kind": "complete object initial bytes",
+            "section": ".data",
+            "sha256": "1fce70c028536c62aaa3e70132da38a719f84da916015c1fb278f3dba0587176",
+            "size": 4,
+            "symbols": [
+              "_ZN7runtime10iterationsE"
+            ]
+          },
+          "before_instruction": "leaq\t0x1abcb3(%rip), %rax    # 0x1ae0a0 <runtime::iterations>",
+          "instruction_address": "0x23e6",
+          "payload_equal": true
+        }
+      ]
+    }
+  },
+  "runner_sha256": "f4212dba6570da71aafde2fd10d1577289f797ac52e7c3e87ab15efde01704ee",
+  "scope": "Inspect complete linked R4 Tuple filter routes and their addressed payloads.\n\nThis is a static audit of the maintained benchmark ELFs, not a timing model.\nELF symbol extents exclude inter-function padding. The explicitly selected\nbound/stage path has nonempty full activity, an in-domain RHS and unit stride.\nAll its conditions remain recorded; unknown control flow fails the audit.\n"
+}

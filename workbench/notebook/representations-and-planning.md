@@ -8,7 +8,15 @@ formats and proposed analysers are not additional production contracts.
 [Interface cohesion](../spikes/ikea-composition/interface-cohesion.md) checks shared
 vocabulary against actual consumers: selection grain versus storage words,
 row/packet coordinates, source-qualified effects, public point leaves and
-module-owned errors. It retains the cases against generic masks and descriptors.
+module-owned errors. The [broader cohesion decisions](../spikes/ikea-composition/interface-proposal.md)
+replace its overly conservative vocabulary, byte and schema conclusions while
+retaining coordinate, exact-access and owner-lifetime requirements. Those findings
+do not establish that coherent boundary types are slow.
+
+The follow-up [reusable execution survey](../spikes/ikea-composition/reusable-execution.md)
+examines small bindings, shared controls and cheap updates across blocks. It
+retains checked admission, exact grants and content/owner identity while testing
+actual caller ABI and complete mixed commands; its mechanisms remain candidates.
 
 ## Match the representation to useful work
 

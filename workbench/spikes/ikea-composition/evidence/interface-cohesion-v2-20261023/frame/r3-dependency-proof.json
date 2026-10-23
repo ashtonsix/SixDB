@@ -1,0 +1,205 @@
+{
+  "scope": "Included-header-only reproof of current R3 candidate against the qualified provisional Frame port; NEON only. No native rerun or final-freeze claim.",
+  "compiler": "Clang21.1.8; same O3/ISA/tune/strictFP command as local prior/current objects",
+  "qualified_header_sha256": "7a9b5d8a9fdb4e4044461b2ddfc08a0fe0d528733e8f8a348d080600e2fb79d8",
+  "r3_header_sha256": "4fed570e4b04786140ed173c102b66eeadb4c4a5a772d35b4956cbb75d5623ff",
+  "header_patch": "r3-mutation-attributes.patch",
+  "objects": [
+    {
+      "source": "encoding-material",
+      "profile": "neon-v2",
+      "qualified_object_sha256": "b3c1d963b81cf00677f179f24f3bf4daddd64f6ac430403ec1c77d2dc1c6ac44",
+      "r3_object_sha256": "b3c1d963b81cf00677f179f24f3bf4daddd64f6ac430403ec1c77d2dc1c6ac44",
+      "ikea_dependencies": 60,
+      "changed_ikea_dependencies": [
+        "ikea/include/ikea/seriespack/author/mutation.h"
+      ],
+      "command": [
+        "clang++-21",
+        "--target=aarch64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/ikea/include",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/orbital/include",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/loom/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen-r3/neon-v2/after/encoding-material.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/workbench/spikes/ikea-frame/encoding/material.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen-r3/neon-v2/after/encoding-material.o"
+      ],
+      "comparison": {
+        "functions": {
+          "total": 62,
+          "exact": 62
+        },
+        "constants": {
+          "total": 16,
+          "exact": 16
+        },
+        "unwind": {
+          "total": 12,
+          "exact": 12
+        }
+      }
+    },
+    {
+      "source": "phase-material",
+      "profile": "neon-v2",
+      "qualified_object_sha256": "a204b7cdbf63720686c1fca7fcf82514dce83a51475157ae1aeb8573ee7c3be7",
+      "r3_object_sha256": "a204b7cdbf63720686c1fca7fcf82514dce83a51475157ae1aeb8573ee7c3be7",
+      "ikea_dependencies": 60,
+      "changed_ikea_dependencies": [
+        "ikea/include/ikea/seriespack/author/mutation.h"
+      ],
+      "command": [
+        "clang++-21",
+        "--target=aarch64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/ikea/include",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/orbital/include",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/loom/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen-r3/neon-v2/after/phase-material.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/workbench/spikes/ikea-frame/lifecycle/phase_material.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen-r3/neon-v2/after/phase-material.o"
+      ],
+      "comparison": {
+        "functions": {
+          "total": 415,
+          "exact": 415
+        },
+        "constants": {
+          "total": 8,
+          "exact": 8
+        },
+        "unwind": {
+          "total": 113,
+          "exact": 113
+        }
+      }
+    },
+    {
+      "source": "packing",
+      "profile": "neon-v2",
+      "qualified_object_sha256": "55ab8de5fe290c6f1a24117e81ae96d4ddeb5084a509d9a01eb23939b0b15851",
+      "r3_object_sha256": "632e64af5cfac442bafca187e68570872b72048a153aa801f3ae63cb4c81e899",
+      "ikea_dependencies": 48,
+      "changed_ikea_dependencies": [
+        "ikea/include/ikea/seriespack/author/mutation.h"
+      ],
+      "command": [
+        "clang++-21",
+        "--target=aarch64-linux-gnu",
+        "--gcc-toolchain=/usr",
+        "-std=c++23",
+        "-O3",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fdenormal-fp-math=ieee",
+        "-fvisibility=hidden",
+        "-fvisibility-inlines-hidden",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-march=armv8-a+simd",
+        "-mtune=neoverse-v2",
+        "-DSIXDB_TUNE_GENERIC=0",
+        "-DSIXDB_TUNE_GRANITE_RAPIDS=0",
+        "-DSIXDB_TUNE_ZEN4=0",
+        "-DSIXDB_TUNE_ZEN5=0",
+        "-DSIXDB_TUNE_NEOVERSE_V2=1",
+        "-DSIXDB_TUNE_NEOVERSE_V3=0",
+        "-ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3=/sixdb",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/ikea/include",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/orbital/include",
+        "-I",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/loom/include",
+        "-MD",
+        "-MF",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen-r3/neon-v2/after/packing.d",
+        "-c",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/after-r3/workbench/spikes/ikea-frame/encoding/packing.cpp",
+        "-o",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/ikea-cohesion-v2/frame-port/codegen-r3/neon-v2/after/packing.o"
+      ],
+      "comparison": {
+        "functions": {
+          "total": 473,
+          "exact": 433
+        },
+        "constants": {
+          "total": 67,
+          "exact": 67
+        },
+        "unwind": {
+          "total": 51,
+          "exact": 51
+        }
+      }
+    }
+  ],
+  "packing_inspection": {
+    "changed_functions": 40,
+    "identical_instruction_count_and_mnemonic_sequence": 40,
+    "identical_function_sizes": 473,
+    "identical_relocations": 473,
+    "identical_constants": 67,
+    "identical_unwind": 51,
+    "consistent_gpr_permutation_within_affected_span": 36,
+    "merge_widths": {
+      "24": "Same body+tile*stride+3*lane address, merge returns to x12.",
+      "40": "Same body+tile*stride+5*lane address, merge returns to x12.",
+      "48": "Same body+tile*stride+6*lane address, merge returns to x13.",
+      "56": "Same body+tile*stride+7*lane address, merge returns to x12."
+    },
+    "limits": "Literal byte differences remain. No instruction/call/branch/stack/memory grant change observed; no timing claim."
+  }
+}

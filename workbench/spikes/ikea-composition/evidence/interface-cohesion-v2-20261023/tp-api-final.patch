@@ -1,0 +1,53 @@
+--- frozen-r4/ikea/include/ikea/tuplepack/initialize.h
++++ tp-api-correction/ikea/include/ikea/tuplepack/initialize.h
+@@ -44,8 +44,9 @@
+             second_.set_unchecked(destination, hi);
+     }
+ };
+-template <> class writer<128>
+-    : public detail::mutation_commands<writer<128>, packet<128>, 1> {
++/// Complete initialization only: unlike mapped writers this clears spare bits
++/// and needs no prior contents. It does not expose preserving set/replace commands.
++template <> class writer<128> {
+     const write_plan<128>* plan_;
+     const view* destination_;
+     writer(const write_plan<128>& plan, const view& destination)
+--- frozen-r4/ikea/include/ikea/streampack/write.h
++++ tp-api-correction/ikea/include/ikea/streampack/write.h
+@@ -135,9 +135,10 @@
+ 
+ /// Checked commands accept exactly journal; the constrained template keeps
+ /// schema bodies lazy and visible for caller inlining. They preserve supplied
+-/// bytes and effects on refusal. Contents
+-/// have been admitted; effect storage and source/view/format controls are disjoint
+-/// from outputs. The owner establishes exclusive authority before entry.
++/// bytes and effects on refusal. Existing-content mutations require admitted
++/// contents; initialize establishes contents in fresh storage. Effect storage
++/// and source/view/format controls are disjoint from outputs. The owner
++/// establishes exclusive authority before entry.
+ template <class Effects> requires std::same_as<Effects, journal>
+ [[nodiscard]] std::expected<void, error> initialize(const view &dst, Effects &effects) {
+     if (!detail::room(effects, effect_capacity_initialize(dst)))
+--- frozen-r4/ikea/test/tuplepack/operations.cpp
++++ tp-api-correction/ikea/test/tuplepack/operations.cpp
+@@ -28,6 +28,20 @@
+     }
+ };
+ namespace tp = ikea::tuplepack;
++
++template <class Writer>
++concept has_preserving_set = requires(const Writer& writer, const typename Writer::input_type& input,
++                                      ikea::journal& effects) {
++    writer.set(0, input, effects);
++};
++template <class Writer>
++concept has_preserving_replace = requires(const Writer& writer,
++                                          std::span<const typename Writer::input_type> input,
++                                          ikea::journal& effects) {
++    writer.replace(0, input, effects);
++};
++static_assert(has_preserving_set<tp::writer<8>> && has_preserving_replace<tp::writer<8>>);
++static_assert(!has_preserving_set<tp::writer<128>> && !has_preserving_replace<tp::writer<128>>);
+ 
+ void check_construction_packets(unsigned count) {
+     const unsigned unit = (count + 1) / 2, stride = unit + 5;

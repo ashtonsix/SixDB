@@ -1,0 +1,34 @@
+--- a/ikea/include/ikea/seriespack/detail/mutation/composed.h
++++ b/ikea/include/ikea/seriespack/detail/mutation/composed.h
+@@ -50,12 +50,28 @@
+         return {};
+     }
+     template <class S, field_kind Field>
++        requires(Field == field_kind::tail && std::is_same_v<S, Target>)
++    [[gnu::always_inline]] void write(const leaf<S, Field>& destination, std::size_t row,
++                                      write_token) const {
++        static_assert(ikea::effects<Coverage, S>);
++        // A batched tail is covered once by the enclosing tile. Keep this
++        // identity test visible before paying for an unmatched footprint call.
++        if (&destination.source != &target)
++            write_other_tail(destination, row);
++    }
++    template <class S, field_kind Field>
++        requires(!(Field == field_kind::tail && std::is_same_v<S, Target>))
+     void write(const leaf<S, Field>& destination, std::size_t row, write_token) const {
+         static_assert(ikea::effects<Coverage, S>);
+-        if constexpr (Field == field_kind::tail && std::is_same_v<S, Target>)
+-            if (&destination.source == &target)
+-                return;
+         visit_writes16<typename S::layout_type, write_field<Field>>(
++            destination.source, row,
++            [&](ikea::detail::write_span bytes) { coverage.before(destination.source, bytes.plane, bytes.offset, bytes.size); });
++    }
++
++  private:
++    void write_other_tail(const leaf<Target, field_kind::tail>& destination,
++                          std::size_t row) const {
++        visit_writes16<typename Target::layout_type, write_field<field_kind::tail>>(
+             destination.source, row,
+             [&](ikea::detail::write_span bytes) { coverage.before(destination.source, bytes.plane, bytes.offset, bytes.size); });
+     }

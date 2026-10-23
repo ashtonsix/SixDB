@@ -1,0 +1,1773 @@
+{
+  "scope": "Audit actual callers across the disruptive cohesion revision.\n\nImports the strict ELF64 parser from cohesion-codegen.py. Only documented,\nside-aware demangled API role/type correspondences are normalized. Every emitted\ninstruction/data byte, relocation offset/kind/value/addend remains literal.\nDifferences are findings to inspect, not failures to normalize away.\n",
+  "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+  "runner_sha256": "e3328dde7f3242cbea46735d125608f4cfb15de3a3312c1fb2d695b14613c21f",
+  "elf_parser_sha256": "3ca00733fbe15e5d70adccbd3f2ab900d658633299df263e5886d4c61a0e320e",
+  "compiler_version": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "objdump_version": "Ubuntu LLVM version 21.1.8\n  Optimized build.\n\n\n  Registered Targets:\n    aarch64     - AArch64 (little endian)\n    aarch64_32  - AArch64 (little endian ILP32)\n    aarch64_be  - AArch64 (big endian)\n    amdgcn      - AMD GCN GPUs\n    arm         - ARM\n    arm64       - ARM64 (little endian)\n    arm64_32    - ARM64 (little endian ILP32)\n    armeb       - ARM (big endian)\n    avr         - Atmel AVR Microcontroller\n    bpf         - BPF (host endian)\n    bpfeb       - BPF (big endian)\n    bpfel       - BPF (little endian)\n    hexagon     - Hexagon\n    lanai       - Lanai\n    loongarch32 - 32-bit LoongArch\n    loongarch64 - 64-bit LoongArch\n    m68k        - Motorola 68000 family\n    mips        - MIPS (32-bit big endian)\n    mips64      - MIPS (64-bit big endian)\n    mips64el    - MIPS (64-bit little endian)\n    mipsel      - MIPS (32-bit little endian)\n    msp430      - MSP430 [experimental]\n    nvptx       - NVIDIA PTX 32-bit\n    nvptx64     - NVIDIA PTX 64-bit\n    ppc32       - PowerPC 32\n    ppc32le     - PowerPC 32 LE\n    ppc64       - PowerPC 64\n    ppc64le     - PowerPC 64 LE\n    r600        - AMD GPUs HD2XXX-HD6XXX\n    riscv32     - 32-bit RISC-V\n    riscv64     - 64-bit RISC-V\n    sparc       - Sparc\n    sparcel     - Sparc LE\n    sparcv9     - Sparc V9\n    spirv       - SPIR-V Logical\n    spirv32     - SPIR-V 32-bit\n    spirv64     - SPIR-V 64-bit\n    systemz     - SystemZ\n    thumb       - Thumb\n    thumbeb     - Thumb (big endian)\n    ve          - VE\n    wasm32      - WebAssembly 32-bit\n    wasm64      - WebAssembly 64-bit\n    x86         - 32-bit X86: Pentium-Pro and above\n    x86-64      - 64-bit X86: EM64T and AMD64\n    xcore       - XCore\n    xtensa      - Xtensa 32\n",
+  "configured_release": true,
+  "source_flags": {
+    "ikea/examples/filters/composition.cpp": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ],
+    "ikea/examples/streampack/ordinary.cpp": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ],
+    "ikea/examples/filters/ordinary.cpp": [
+      "-fno-vectorize",
+      "-fno-slp-vectorize"
+    ]
+  },
+  "normalizations": {
+    "source_roots": "both mapped to /sixdb by compiler; actual assertion strings remain literal",
+    "before_demangled_renames": [
+      [
+        "ikea::block256",
+        "ikea::bitset256"
+      ],
+      [
+        "ikea::bec256::destination",
+        "ikea::bec256::view"
+      ],
+      [
+        "ikea::bec256::source",
+        "ikea::bec256::reader"
+      ],
+      [
+        "ikea::seriespack::composition::prepared_mutation<",
+        "ikea::seriespack::writer<"
+      ],
+      [
+        "ikea::seriespack::composition::mutation_operation<",
+        "ikea::seriespack::erased_writer<"
+      ],
+      [
+        "ikea::seriespack::composition::prepared<",
+        "ikea::seriespack::reader<"
+      ],
+      [
+        "ikea::seriespack::decoder<",
+        "ikea::seriespack::erased_reader<"
+      ],
+      [
+        "ikea::seriespack::bind_decoder<",
+        "ikea::seriespack::bind_reader<"
+      ],
+      [
+        "ikea::seriespack::row_selection",
+        "ikea::seriespack::selection"
+      ],
+      [
+        "ikea::seriespack::format<",
+        "ikea::seriespack::layout<"
+      ],
+      [
+        "ikea::seriespack::view<",
+        "ikea::seriespack::basic_view<"
+      ],
+      [
+        "ikea::seriespack::sum_change",
+        "ikea::seriespack::author::sum_change"
+      ],
+      [
+        "ikea::seriespack::no_summary",
+        "ikea::seriespack::author::no_summary"
+      ],
+      [
+        "ikea::seriespack::filter_values<",
+        "ikea::seriespack::author::filter_values<"
+      ],
+      [
+        "ikea::tuplepack::filter_values<",
+        "ikea::tuplepack::author::filter_values<"
+      ],
+      [
+        "ikea::seriespack::composition::",
+        "ikea::seriespack::author::"
+      ],
+      [
+        "ikea::tuplepack::read_operation<",
+        "ikea::tuplepack::reader<"
+      ],
+      [
+        "ikea::tuplepack::mutation_operation<",
+        "ikea::tuplepack::writer<"
+      ],
+      [
+        "ikea::tuplepack::construction_operation",
+        "ikea::tuplepack::writer<128u, 1u>"
+      ],
+      [
+        "ikea::tuplepack::constructor",
+        "ikea::tuplepack::write_plan<128u, 1u>"
+      ],
+      [
+        "ikea::tuplepack::native_reader<",
+        "ikea::tuplepack::author::native_reader<"
+      ],
+      [
+        "ikea::tuplepack::native_writer<",
+        "ikea::tuplepack::author::native_writer<"
+      ],
+      [
+        "ikea::tuplepack::erased_mutation<",
+        "ikea::tuplepack::erased_writer<"
+      ],
+      [
+        "ikea::tuplepack::field_filter<",
+        "ikea::tuplepack::predicate<"
+      ],
+      [
+        "ikea::source_write_journal",
+        "ikea::journal"
+      ],
+      [
+        "ikea::owner_write",
+        "ikea::journal::entry"
+      ],
+      [
+        "ikea::no_coverage",
+        "ikea::no_effects"
+      ],
+      [
+        "ikea::streampack::author::dispatch<",
+        "ikea::streampack::author::visit<"
+      ]
+    ],
+    "before_numeric_only_TP_reader_writer": "read_plan/write_plan, before operation renames",
+    "before_byte_object_template_parameters": [
+      "ikea::seriespack::basic_view<",
+      "ikea::tuplepack::basic_view<",
+      "ikea::tuplepack::reader<",
+      "ikea::tuplepack::author::native_reader<",
+      "ikea::tuplepack::predicate<",
+      "ikea::tuplepack::detail::field_predicate<"
+    ],
+    "before_SP_physical_helpers": "ordinary namespace -> author; private helpers not merged",
+    "before_HT_value_payload": "insert_slow second argument std::array<unsigned char,N> -> std::array<std::byte,N>; numeric controls unchanged",
+    "before_shared_chain": "detail::native_chain<Native,Mask,Slots,ModuleError,Sequence> -> author::chain<Native,Mask,Slots,Sequence>; explicit cold error type removed"
+  },
+  "pairs": [
+    {
+      "profile": "neon-v2",
+      "logical": "seriespack-ordinary",
+      "before_source": "ikea/examples/seriespack/ordinary.cpp",
+      "after_source": "ikea/examples/seriespack/ordinary.cpp",
+      "before_object_sha256": "a301de085790c1da92ee91ae8391a63641b2cf69cf1591ef84dedb3276bf5456",
+      "after_object_sha256": "29e0039f3e470195e5ff3283f940bc482848a15f295bff26cb85b42d650b6237",
+      "functions": {
+        "total": 37,
+        "equal": 4,
+        "before_only": 14,
+        "after_only": 12,
+        "changed_paired": 7
+      },
+      "constants": {
+        "total": 6,
+        "equal": 2,
+        "before_only": 2,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 2,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "seriespack-integration",
+      "before_source": "ikea/examples/seriespack/integration.cpp",
+      "after_source": "ikea/examples/seriespack/integration.cpp",
+      "before_object_sha256": "ab31534c51dd2cb630487b0f6940020cb08c81d3ed5732fc040ce9a536763ba1",
+      "after_object_sha256": "5ee5787ec3fab2dacfd45b110cf7e515e761a232e6c1f5596373ac9646c484c6",
+      "functions": {
+        "total": 46,
+        "equal": 5,
+        "before_only": 17,
+        "after_only": 18,
+        "changed_paired": 6
+      },
+      "constants": {
+        "total": 5,
+        "equal": 2,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 4,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "filters-composition",
+      "before_source": "ikea/examples/filters/composition.cpp",
+      "after_source": "ikea/examples/filters/composition.cpp",
+      "before_object_sha256": "6a99e22e25c292aeddcef5e23160c71313cb75def261fdee3fe85f21c6f077d0",
+      "after_object_sha256": "0c350d9c675b3c63431d3f976dda87b570e4735e014d1b8b24b2eb2eafab58d3",
+      "functions": {
+        "total": 10,
+        "equal": 8,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 7,
+        "equal": 3,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "streampack-ordinary",
+      "before_source": "ikea/examples/streampack/ordinary.cpp",
+      "after_source": "ikea/examples/streampack/ordinary.cpp",
+      "before_object_sha256": "f95999c8151ee354d59075f5fad93d31106bf17ee5c73560215fee3b87e2253d",
+      "after_object_sha256": "cb02275897a62605cf5fadd60a8d1caf392e9d9f7b90f2795348f14484316ab7",
+      "functions": {
+        "total": 122,
+        "equal": 33,
+        "before_only": 44,
+        "after_only": 44,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-ordinary",
+      "before_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "after_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "before_object_sha256": "b24efb0bdf887f63ccf03d813b0660074157f6c0fa3fa61a8bc02617b3979516",
+      "after_object_sha256": "99358766cd73087f87050fef4ac169d329c97e8f1ff3bcc86c23a2062d7d0dff",
+      "functions": {
+        "total": 3,
+        "equal": 0,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-words",
+      "before_source": "ikea/examples/tuplepack/words.cpp",
+      "after_source": "ikea/examples/tuplepack/words.cpp",
+      "before_object_sha256": "c3f492b7d171baa0addd64e78ba01e9c32874ddd51e1900212aa16487fc465cf",
+      "after_object_sha256": "050945f06ee3391f1697f55bca64786855c848c7d41284650dc5dcaf1f04b841",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 5,
+        "equal": 5,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "filters-ordinary",
+      "before_source": "ikea/examples/filters/ordinary.cpp",
+      "after_source": "ikea/examples/filters/ordinary.cpp",
+      "before_object_sha256": "d1526c63b9f0ea23cb9ae723200cf20de64006d681d187dc09e4f6ee9ca79f6e",
+      "after_object_sha256": "04590daac049ee8ee29fbc68fc970fb6b1c09c97e777d3f18ff18b2f5d3fbbaa",
+      "functions": {
+        "total": 6,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 3
+      },
+      "constants": {
+        "total": 7,
+        "equal": 3,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "seriespack-readers",
+      "before_source": "ikea/src/seriespack/readers.cpp",
+      "after_source": "ikea/src/seriespack/readers.cpp",
+      "before_object_sha256": "e739e19dbf173f4d74c894e01d18529117d802e5194e6da6fa925957b64b7474",
+      "after_object_sha256": "ba7bb91b6fbd5aecbc6425891f800d381781897d7a5e3e13114c55889b787a33",
+      "functions": {
+        "total": 490,
+        "equal": 490,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 4,
+        "equal": 4,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "tuplepack-initialize",
+      "before_source": "ikea/src/tuplepack/construction.cpp",
+      "after_source": "ikea/src/tuplepack/initialize.cpp",
+      "before_object_sha256": "1bcadfd669c6cc3214e4abbd0039f052edec268d0062597fc94414bd65524130",
+      "after_object_sha256": "38fb813ee6bd0901dd3504f4327200c2148297aaa795afabf7ab5995aad9951d",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "bec256-ordinary",
+      "before_source": "ikea/examples/bec256/ordinary.cpp",
+      "after_source": "ikea/examples/bec256/ordinary.cpp",
+      "before_object_sha256": "45de7714a7dd3992dbc0ab47a03aced6466a022a45161e45507af067dafb0807",
+      "after_object_sha256": "94d6b8268e1824919dc91543c48b06db61cbe5bfbc4ec086c6a70be0f3d1d397",
+      "functions": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 2,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "hashtable-ordinary",
+      "before_source": "ikea/examples/hashtable/ordinary.cpp",
+      "after_source": "ikea/examples/hashtable/ordinary.cpp",
+      "before_object_sha256": "76c0ad03944ab58700832c96acd766620dac5cd15f06dca492ba71da5150dd64",
+      "after_object_sha256": "2d2aeaab00c3600ca715a26907d89110df337ded1c4d2a1f36bb507592015404",
+      "functions": {
+        "total": 30,
+        "equal": 28,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 12,
+        "equal": 10,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 12,
+        "equal": 12,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "neon-v2",
+      "logical": "selection",
+      "before_source": null,
+      "after_source": "ikea/test/selection.cpp",
+      "before_object_sha256": null,
+      "after_object_sha256": "5f903dc906b280216b779bbdd52b6e4b8a4806ca02e993dd343c2ee7bdd30deb",
+      "functions": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 2,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 1,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "seriespack-ordinary",
+      "before_source": "ikea/examples/seriespack/ordinary.cpp",
+      "after_source": "ikea/examples/seriespack/ordinary.cpp",
+      "before_object_sha256": "15d2d0d1d3d792a4a0a89d50615128a77ca13826849bf398715b831b5646ea99",
+      "after_object_sha256": "8e9911cb9b2d605e9df158a288fa9f1ae1a98a9e8a9fbea31a90b04444f7551f",
+      "functions": {
+        "total": 32,
+        "equal": 5,
+        "before_only": 10,
+        "after_only": 11,
+        "changed_paired": 6
+      },
+      "constants": {
+        "total": 9,
+        "equal": 2,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 5
+      },
+      "unwind": {
+        "total": 2,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "seriespack-integration",
+      "before_source": "ikea/examples/seriespack/integration.cpp",
+      "after_source": "ikea/examples/seriespack/integration.cpp",
+      "before_object_sha256": "792738f2e653c31516983f528484e3a0969999d68f7f9afaa4abbafd001197bb",
+      "after_object_sha256": "c8a40bf00a6d65609c5b8cce978c7839a65dfbb86afa365687343996bbab506d",
+      "functions": {
+        "total": 45,
+        "equal": 5,
+        "before_only": 17,
+        "after_only": 17,
+        "changed_paired": 6
+      },
+      "constants": {
+        "total": 8,
+        "equal": 5,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 4,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "filters-composition",
+      "before_source": "ikea/examples/filters/composition.cpp",
+      "after_source": "ikea/examples/filters/composition.cpp",
+      "before_object_sha256": "5edf9eb5707de43144ae94dddc8bebf588a524057d7702fa4aa84423b70a46e8",
+      "after_object_sha256": "2d031c4f86e125a5f74a982e0fc7e7bbe2370cb428324e72ed1f7c9dc12446bc",
+      "functions": {
+        "total": 9,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 8,
+        "equal": 4,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "streampack-ordinary",
+      "before_source": "ikea/examples/streampack/ordinary.cpp",
+      "after_source": "ikea/examples/streampack/ordinary.cpp",
+      "before_object_sha256": "020a44c867416455ef7b3c8f67517225bd5d05eba110e239113cae13a6140155",
+      "after_object_sha256": "3f9a74df309633865a03d232857828472f5b078f4683b74240b82da26b949ed8",
+      "functions": {
+        "total": 126,
+        "equal": 28,
+        "before_only": 48,
+        "after_only": 48,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 4,
+        "equal": 4,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-ordinary",
+      "before_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "after_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "before_object_sha256": "620e39ce24dcb8fdb2600cb4e4d1580d8437afe898dc5abb88db1a65c2cd3b7d",
+      "after_object_sha256": "564ea0733887a6e9d751cad68903ce4c2225ecc7943ae935ea7ef1280fbbd1ab",
+      "functions": {
+        "total": 3,
+        "equal": 0,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-words",
+      "before_source": "ikea/examples/tuplepack/words.cpp",
+      "after_source": "ikea/examples/tuplepack/words.cpp",
+      "before_object_sha256": "b1e94452a83c0aee13fb88d65a7e7f9def7ecede674877735d5710b5d30017df",
+      "after_object_sha256": "3515933bcf39f4dacfbda91fb76c9b51c35a0dd07a79c983a4009ad0ef87cf78",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 7,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "filters-ordinary",
+      "before_source": "ikea/examples/filters/ordinary.cpp",
+      "after_source": "ikea/examples/filters/ordinary.cpp",
+      "before_object_sha256": "7542b171fa619fc891d6c1d909da39befd926c2fd1f93266755744d614edec80",
+      "after_object_sha256": "24698600921e978c61a104fab697ea50149ff3a82d9abd469d5abb6b4600a5ed",
+      "functions": {
+        "total": 6,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 3
+      },
+      "constants": {
+        "total": 8,
+        "equal": 4,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "seriespack-readers",
+      "before_source": "ikea/src/seriespack/readers.cpp",
+      "after_source": "ikea/src/seriespack/readers.cpp",
+      "before_object_sha256": "f8e652786c310b2fb006879cc45abc00376eb5a80b235e1695dfc3e3544dcd85",
+      "after_object_sha256": "fabce5c38887089c7d18bec2324889de2f3866efe72acf43998e80e0ba3c50a1",
+      "functions": {
+        "total": 490,
+        "equal": 490,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 9,
+        "equal": 9,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "tuplepack-initialize",
+      "before_source": "ikea/src/tuplepack/construction.cpp",
+      "after_source": "ikea/src/tuplepack/initialize.cpp",
+      "before_object_sha256": "23db8f3425e4974bd515f5611c387c42d089dba965b02c97e1abf84edb664186",
+      "after_object_sha256": "1ef57abcdee3ac1ca6d3487e4fc9b552fb226ef2c4e331b588ed03142a62b080",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 0,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "bec256-ordinary",
+      "before_source": "ikea/examples/bec256/ordinary.cpp",
+      "after_source": "ikea/examples/bec256/ordinary.cpp",
+      "before_object_sha256": "b93c4a1d579e3199988da5f9ee2e038fd1ff3a0659cdd770321af04833286f58",
+      "after_object_sha256": "ef6e37cf0cdf26c0aa53a76677ddb5683e69773da35f0a15c0367533e131a842",
+      "functions": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "hashtable-ordinary",
+      "before_source": "ikea/examples/hashtable/ordinary.cpp",
+      "after_source": "ikea/examples/hashtable/ordinary.cpp",
+      "before_object_sha256": "7c0060e4278a8220ac4575302ba471d4c2fa3dbee9315b73325aebaa3d474b35",
+      "after_object_sha256": "74dd7fb385b461f954b0a578468ea0e7056cc060db6fd058570806099b79d393",
+      "functions": {
+        "total": 32,
+        "equal": 30,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 12,
+        "equal": 10,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 12,
+        "equal": 12,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx2-zen5",
+      "logical": "selection",
+      "before_source": null,
+      "after_source": "ikea/test/selection.cpp",
+      "before_object_sha256": null,
+      "after_object_sha256": "d6273d2333fbb571aa08ebd2a79bf25b9770c65593a928e831a8964b712358e8",
+      "functions": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 5,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 5,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 1,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "seriespack-ordinary",
+      "before_source": "ikea/examples/seriespack/ordinary.cpp",
+      "after_source": "ikea/examples/seriespack/ordinary.cpp",
+      "before_object_sha256": "bb21dd78112d0ad0029fcfe5652b826b872a49f24ede3f8a7592115492bd1b05",
+      "after_object_sha256": "2a298f4cf7f8f8f24aa75f5de3d2516eb320c3100c15ddbc35064043e1107218",
+      "functions": {
+        "total": 32,
+        "equal": 5,
+        "before_only": 10,
+        "after_only": 11,
+        "changed_paired": 6
+      },
+      "constants": {
+        "total": 9,
+        "equal": 2,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 5
+      },
+      "unwind": {
+        "total": 2,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "seriespack-integration",
+      "before_source": "ikea/examples/seriespack/integration.cpp",
+      "after_source": "ikea/examples/seriespack/integration.cpp",
+      "before_object_sha256": "950ad3f073152d1fbcecf03b83dbff4b68b4dc73d4a14400a1bb055a405b5f7d",
+      "after_object_sha256": "85c1a98fb71236bdf4aa9a4d41be0ecc0a69d942ab323ea991d080e7c6337a7d",
+      "functions": {
+        "total": 45,
+        "equal": 5,
+        "before_only": 17,
+        "after_only": 17,
+        "changed_paired": 6
+      },
+      "constants": {
+        "total": 9,
+        "equal": 5,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 2
+      },
+      "unwind": {
+        "total": 4,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "filters-composition",
+      "before_source": "ikea/examples/filters/composition.cpp",
+      "after_source": "ikea/examples/filters/composition.cpp",
+      "before_object_sha256": "b39c5891f5b13847651a7816bc24c7688b47e350a1a951acfce6e2b8922f4094",
+      "after_object_sha256": "fca3edd84cdc415ad708846f91b379faa3ac72f0e6fd773d58a87e1bc21247df",
+      "functions": {
+        "total": 9,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 9,
+        "equal": 5,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "streampack-ordinary",
+      "before_source": "ikea/examples/streampack/ordinary.cpp",
+      "after_source": "ikea/examples/streampack/ordinary.cpp",
+      "before_object_sha256": "abf7d70844e4905d6e15c2cc3defc6b45460ee6e9aef72fe12a600d9d3075d8f",
+      "after_object_sha256": "5b83993119f7a1e258d746a3b0a5487a134b3b3bf62b6fd1a0e79d4fca0833af",
+      "functions": {
+        "total": 130,
+        "equal": 32,
+        "before_only": 48,
+        "after_only": 48,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 4,
+        "equal": 4,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-ordinary",
+      "before_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "after_source": "ikea/examples/tuplepack/ordinary.cpp",
+      "before_object_sha256": "9d425f33a2e0367c48815bcd8ffa7a33f7dc07adb75cb6b0934251b95a4fc52e",
+      "after_object_sha256": "ed5258147d9fa9138cef99df4d721fd3e6e6708164b700e86296519162978aed",
+      "functions": {
+        "total": 3,
+        "equal": 0,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-words",
+      "before_source": "ikea/examples/tuplepack/words.cpp",
+      "after_source": "ikea/examples/tuplepack/words.cpp",
+      "before_object_sha256": "53b3584f7f6e77e5498ce58fd5d3138be50e08dc12e6c3e3d2bfb9e7aee69c2d",
+      "after_object_sha256": "51bb8c33a95e527b1d5adc4abc20c402eb9064cc35cc240783d052484efc554a",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 7,
+        "equal": 7,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "filters-ordinary",
+      "before_source": "ikea/examples/filters/ordinary.cpp",
+      "after_source": "ikea/examples/filters/ordinary.cpp",
+      "before_object_sha256": "c9fd012a9a150778e9d0c641d38b2ed0d4d55289445aca251d3c603e978621b2",
+      "after_object_sha256": "64e393f6dab4c731b92b4a1483d5cb5b0ab0ec888f151358b80e2ed6cdcd4796",
+      "functions": {
+        "total": 6,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 3
+      },
+      "constants": {
+        "total": 9,
+        "equal": 5,
+        "before_only": 2,
+        "after_only": 2,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "seriespack-readers",
+      "before_source": "ikea/src/seriespack/readers.cpp",
+      "after_source": "ikea/src/seriespack/readers.cpp",
+      "before_object_sha256": "3f8d61bba97d51cb2dd5e1d887a2c64314c952551475e43a7fead15e26da0fd2",
+      "after_object_sha256": "a17c201af18dd7a03f7d7c436988977e1544538c9e070b79fe5ad9ec7450f246",
+      "functions": {
+        "total": 490,
+        "equal": 490,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 40,
+        "equal": 40,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "tuplepack-initialize",
+      "before_source": "ikea/src/tuplepack/construction.cpp",
+      "after_source": "ikea/src/tuplepack/initialize.cpp",
+      "before_object_sha256": "2e0b84b5b933e341c51399c632bb705f44e6c86a366886aee71a04f4874ea07c",
+      "after_object_sha256": "bc26df15135baac007d1dbe27e51344bca9a5d2fc5353220be0e3bcfe0d5fba4",
+      "functions": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 3,
+        "equal": 3,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 1,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "bec256-ordinary",
+      "before_source": "ikea/examples/bec256/ordinary.cpp",
+      "after_source": "ikea/examples/bec256/ordinary.cpp",
+      "before_object_sha256": "f8758d41bf932909aefa0432cef7503b260135b5f027b799955d0d521bf0f195",
+      "after_object_sha256": "1ee132ee1dc075c9b500a096c523b1949f20990bd615a2416e1cd8c1ddfe0702",
+      "functions": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "constants": {
+        "total": 3,
+        "equal": 2,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 1
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "hashtable-ordinary",
+      "before_source": "ikea/examples/hashtable/ordinary.cpp",
+      "after_source": "ikea/examples/hashtable/ordinary.cpp",
+      "before_object_sha256": "9356db81669484e36efe0bf2719f5c814d27020657df30b2dca364ea1e9b282e",
+      "after_object_sha256": "d2f1e556ec88b66c43833a938695e0310dc95c20247c411b59370702968ffedc",
+      "functions": {
+        "total": 27,
+        "equal": 25,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 2
+      },
+      "constants": {
+        "total": 16,
+        "equal": 14,
+        "before_only": 1,
+        "after_only": 1,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 12,
+        "equal": 12,
+        "before_only": 0,
+        "after_only": 0,
+        "changed_paired": 0
+      }
+    },
+    {
+      "profile": "avx512-zen5",
+      "logical": "selection",
+      "before_source": null,
+      "after_source": "ikea/test/selection.cpp",
+      "before_object_sha256": null,
+      "after_object_sha256": "16db03cc8b8d179d7a6f32231ed820ad344ae2c9ecea6c35b5932edd400898a6",
+      "functions": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0
+      },
+      "constants": {
+        "total": 4,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 4,
+        "changed_paired": 0
+      },
+      "unwind": {
+        "total": 1,
+        "equal": 0,
+        "before_only": 0,
+        "after_only": 1,
+        "changed_paired": 0
+      }
+    }
+  ],
+  "dependency_manifest_sha256": "07c8ee8985580d0be1b11f7a2791086e07e0a2918aedd527cc7cfb5a05daf807",
+  "dependency_paths": 1140,
+  "limits": "Literal ELF object comparison, not linked placement or timings. Source/contract changes are real; unmatched or changed bodies require inspection. No body match is inferred merely from a renamed API.",
+  "final_source_identity": {
+    "capture_sha256": "2d1edc87337c8561b208a3800089b2bdbb73546da9dcb76981a30390230c6120",
+    "capture_reference": "Root supplied exact frozen R4 capture; local frozen manifest, every manifest source file and every actual compiler dependency independently verified here.",
+    "pair_manifest_sha256": "054472e7d34517099ed6bfc191c503a87e4afbaad3966ff1ba7e7eb59cc45d9c",
+    "source_manifest_sha256": {
+      "after": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72",
+      "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+    },
+    "verified_manifest_files": {
+      "before": 3477,
+      "after": 3565
+    },
+    "actual_owned_dependency_files": {
+      "before": 144,
+      "after": 152
+    },
+    "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+    "after_source_head": "1493ded471aee279778c2c969ab05c9ac5c92bc9",
+    "historical_codegen_summary_sha256": "d9cc0093cc21aa88d288e2dd3e8740a5c6e7c9a96a8bbde677942b8171f433e4"
+  },
+  "completion": {
+    "objects": 69,
+    "fresh_compile_cache_reuses": 0,
+    "subsequent_verified_record_only_reuses": 69,
+    "profiles": {
+      "neon-v2": {
+        "before": 11,
+        "after": 12
+      },
+      "avx2-zen5": {
+        "before": 11,
+        "after": 12
+      },
+      "avx512-zen5": {
+        "before": 11,
+        "after": 12
+      }
+    },
+    "paired_logical_sources_per_profile": 11,
+    "after_only_logical_source": "selection",
+    "unrecorded_allocated_sections": [],
+    "executable_bytes_outside_retained_function_extents": 0,
+    "allocated_non_executable_section_kinds": {
+      "1": 519,
+      "8": 24,
+      "14": 12,
+      "1879048193": 46
+    },
+    "fresh_compilation_receipt_sha256": "1877213e6ecaa0ff8c7967bdfd21c6bcd8a90dfdd79794a76adb61a9f5f5bf81",
+    "full_receipt_sha256": "2323eaf6ab3ae3587c90721052152de711f9964d710a34f67f48688d0d56e281",
+    "compile_commands_sha256": "bb657976c5adff239d0df63ac17ed8bdddaa48b2789b3acea065e958d331d589",
+    "objects_and_records": [
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "seriespack-ordinary",
+        "object_sha256": "a301de085790c1da92ee91ae8391a63641b2cf69cf1591ef84dedb3276bf5456",
+        "strict_record_sha256": "9348f8a79bc465ce711912127c0ae60f7574ca92c9a41f780cd6718f7437fac3"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "seriespack-ordinary",
+        "object_sha256": "29e0039f3e470195e5ff3283f940bc482848a15f295bff26cb85b42d650b6237",
+        "strict_record_sha256": "d9c4abd8ff8a1cb1667b21c3c49373be845be4cfcfc2a0d875241172c302d045"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "seriespack-integration",
+        "object_sha256": "ab31534c51dd2cb630487b0f6940020cb08c81d3ed5732fc040ce9a536763ba1",
+        "strict_record_sha256": "b95987769f5eab60412f0a805a50d25bec4b6150e72e9aed4784252ac4db9cf2"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "seriespack-integration",
+        "object_sha256": "5ee5787ec3fab2dacfd45b110cf7e515e761a232e6c1f5596373ac9646c484c6",
+        "strict_record_sha256": "1e7d2e3c9560715daff29e984383a02943593d20008b30b1cb21236661e2aaf3"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "filters-composition",
+        "object_sha256": "6a99e22e25c292aeddcef5e23160c71313cb75def261fdee3fe85f21c6f077d0",
+        "strict_record_sha256": "3a4b8dcb43edcbe20facaf9f4bd88190cfaae8c37accfc2309cc155c45f48774"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "filters-composition",
+        "object_sha256": "0c350d9c675b3c63431d3f976dda87b570e4735e014d1b8b24b2eb2eafab58d3",
+        "strict_record_sha256": "b15956f85ef7e6cdbce2209e79d7a49935b5ac216715960d1579283e9cde6e88"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "streampack-ordinary",
+        "object_sha256": "f95999c8151ee354d59075f5fad93d31106bf17ee5c73560215fee3b87e2253d",
+        "strict_record_sha256": "098872f811ffb734bb57a7726a871832f18f31295b7f65e7728c90fc89ffddbd"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "streampack-ordinary",
+        "object_sha256": "cb02275897a62605cf5fadd60a8d1caf392e9d9f7b90f2795348f14484316ab7",
+        "strict_record_sha256": "80b2d65c55cdb5f8a466693b33274878dccec7ee6c188f48137b34062540b73b"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "tuplepack-ordinary",
+        "object_sha256": "b24efb0bdf887f63ccf03d813b0660074157f6c0fa3fa61a8bc02617b3979516",
+        "strict_record_sha256": "c026f862a12a8bc2786fa385235bcc90da14694739f93ffae20cb79aaee24f90"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "tuplepack-ordinary",
+        "object_sha256": "99358766cd73087f87050fef4ac169d329c97e8f1ff3bcc86c23a2062d7d0dff",
+        "strict_record_sha256": "52d0ee71c780c9cfa7d7b71fa4fac8809384dc930cabf26f8e073d384bdf74f6"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "tuplepack-words",
+        "object_sha256": "c3f492b7d171baa0addd64e78ba01e9c32874ddd51e1900212aa16487fc465cf",
+        "strict_record_sha256": "dd3c906fcede51a3e449fd4984117e546f68b1dadc4644e45bb78ba8d740b95c"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "tuplepack-words",
+        "object_sha256": "050945f06ee3391f1697f55bca64786855c848c7d41284650dc5dcaf1f04b841",
+        "strict_record_sha256": "d2d706a1f499bd9e8a09b0db364ac78f14a417833b4de21d9909ba552cd7ac01"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "filters-ordinary",
+        "object_sha256": "d1526c63b9f0ea23cb9ae723200cf20de64006d681d187dc09e4f6ee9ca79f6e",
+        "strict_record_sha256": "d045b1e534b663b97e22fab7adf61a87ede3323907121c5745fcc32b7f94c9b7"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "filters-ordinary",
+        "object_sha256": "04590daac049ee8ee29fbc68fc970fb6b1c09c97e777d3f18ff18b2f5d3fbbaa",
+        "strict_record_sha256": "d3486edba1233af350c3fb6091d231ec4ef83588d93623fb70a063ecbd43dfcb"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "seriespack-readers",
+        "object_sha256": "e739e19dbf173f4d74c894e01d18529117d802e5194e6da6fa925957b64b7474",
+        "strict_record_sha256": "87cacf972cf4163b06b2fbcfdbdd9cda81c767296e9f8b3ac54c21b894dd57aa"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "seriespack-readers",
+        "object_sha256": "ba7bb91b6fbd5aecbc6425891f800d381781897d7a5e3e13114c55889b787a33",
+        "strict_record_sha256": "09cdeda66aa81dba68b691a2f17d6fcf6b40ecd17f4f9a03b576f0372fa01cca"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "tuplepack-initialize",
+        "object_sha256": "1bcadfd669c6cc3214e4abbd0039f052edec268d0062597fc94414bd65524130",
+        "strict_record_sha256": "46b505ba0780f9b6414b271d6d2a222142fa22eaa0660978dad68c5bf1d79154"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "tuplepack-initialize",
+        "object_sha256": "38fb813ee6bd0901dd3504f4327200c2148297aaa795afabf7ab5995aad9951d",
+        "strict_record_sha256": "c03480ec30de753b053380df6d4e9bff2a96db0916e7036b6dbfe3d8e0f2778b"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "bec256-ordinary",
+        "object_sha256": "45de7714a7dd3992dbc0ab47a03aced6466a022a45161e45507af067dafb0807",
+        "strict_record_sha256": "760c99e52bee8021480c6127520c48281c577f1b10413bfa7ab98a942692e5b4"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "bec256-ordinary",
+        "object_sha256": "94d6b8268e1824919dc91543c48b06db61cbe5bfbc4ec086c6a70be0f3d1d397",
+        "strict_record_sha256": "2dd6e55fde18cc8477835d9fb76067ab702535ad2fdc04ab76cc13203cc45012"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "before",
+        "logical": "hashtable-ordinary",
+        "object_sha256": "76c0ad03944ab58700832c96acd766620dac5cd15f06dca492ba71da5150dd64",
+        "strict_record_sha256": "1e1af585be066c54d27e4807bce91c2c46085f3b748d550f566525acd8bd5ed0"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "hashtable-ordinary",
+        "object_sha256": "2d2aeaab00c3600ca715a26907d89110df337ded1c4d2a1f36bb507592015404",
+        "strict_record_sha256": "84b430c11d3f6b8ac1ee697aa5dadf4f2c0099ab821a1dba92d3ae52612fbee1"
+      },
+      {
+        "profile": "neon-v2",
+        "arm": "after",
+        "logical": "selection",
+        "object_sha256": "5f903dc906b280216b779bbdd52b6e4b8a4806ca02e993dd343c2ee7bdd30deb",
+        "strict_record_sha256": "26bca3b042d0a7a1613b68a8210c6ced0fbc166d587b18b0de4b7b43a29a362b"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "seriespack-ordinary",
+        "object_sha256": "15d2d0d1d3d792a4a0a89d50615128a77ca13826849bf398715b831b5646ea99",
+        "strict_record_sha256": "f4f09267ec77f1a9c16e3ee653a5878225984285db217fb76aa65bfc094a9865"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "seriespack-ordinary",
+        "object_sha256": "8e9911cb9b2d605e9df158a288fa9f1ae1a98a9e8a9fbea31a90b04444f7551f",
+        "strict_record_sha256": "553d4cb161f72262d6345d8965262d8e3e0bc2a8af46270cb2fad8d8d70b9071"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "seriespack-integration",
+        "object_sha256": "792738f2e653c31516983f528484e3a0969999d68f7f9afaa4abbafd001197bb",
+        "strict_record_sha256": "05e20d495d6496c5b4fa19ba1c381326367b1c9d032ce2adc30d242c59e6b178"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "seriespack-integration",
+        "object_sha256": "c8a40bf00a6d65609c5b8cce978c7839a65dfbb86afa365687343996bbab506d",
+        "strict_record_sha256": "672b267afd162481e60e5b9a51ebf59e63615510ecf89c06ad8f40f677dab9a4"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "filters-composition",
+        "object_sha256": "5edf9eb5707de43144ae94dddc8bebf588a524057d7702fa4aa84423b70a46e8",
+        "strict_record_sha256": "b9d670bf6b3abdf54f5e7c1051f97698b9bb052f91bd1d3db3480843d0f9c96f"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "filters-composition",
+        "object_sha256": "2d031c4f86e125a5f74a982e0fc7e7bbe2370cb428324e72ed1f7c9dc12446bc",
+        "strict_record_sha256": "dc30334f7c6583b8aed1f741776df6e2eb5bc3c1498d52658653b63ffcdfbb5e"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "streampack-ordinary",
+        "object_sha256": "020a44c867416455ef7b3c8f67517225bd5d05eba110e239113cae13a6140155",
+        "strict_record_sha256": "4924e2fa99e4026852ebf58acb14f04db51047a53044d8a41dbe72626248afe0"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "streampack-ordinary",
+        "object_sha256": "3f9a74df309633865a03d232857828472f5b078f4683b74240b82da26b949ed8",
+        "strict_record_sha256": "283845e2bc45dc973057edfbd8ccff277835a42003a3d4a22c2f8f0e6261047c"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "tuplepack-ordinary",
+        "object_sha256": "620e39ce24dcb8fdb2600cb4e4d1580d8437afe898dc5abb88db1a65c2cd3b7d",
+        "strict_record_sha256": "898f2009f5d410458cdcf8382948ec16a62601ade09c9cfeaf73d6cd61e95fcb"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "tuplepack-ordinary",
+        "object_sha256": "564ea0733887a6e9d751cad68903ce4c2225ecc7943ae935ea7ef1280fbbd1ab",
+        "strict_record_sha256": "aa3858ac1fd9498ffbc9df8b1211886308db7fef499f1d4bd1c805d05d95ef07"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "tuplepack-words",
+        "object_sha256": "b1e94452a83c0aee13fb88d65a7e7f9def7ecede674877735d5710b5d30017df",
+        "strict_record_sha256": "879b994bf4d23298419da4e716ee3d74faf7b17bbb99752741c9422ff3da8d41"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "tuplepack-words",
+        "object_sha256": "3515933bcf39f4dacfbda91fb76c9b51c35a0dd07a79c983a4009ad0ef87cf78",
+        "strict_record_sha256": "84778cd5251b6ac2867a393f71b7394bb5357ec175b0a728ec0a3daba1633ab3"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "filters-ordinary",
+        "object_sha256": "7542b171fa619fc891d6c1d909da39befd926c2fd1f93266755744d614edec80",
+        "strict_record_sha256": "6531910d85241affdd2d8d86ecd013b862f9cdacd86866e79456d604bfab8051"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "filters-ordinary",
+        "object_sha256": "24698600921e978c61a104fab697ea50149ff3a82d9abd469d5abb6b4600a5ed",
+        "strict_record_sha256": "16268f4e3fb217fd4362941646423f780f0e824ad0c4bb6771d31a8a92e7bc52"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "seriespack-readers",
+        "object_sha256": "f8e652786c310b2fb006879cc45abc00376eb5a80b235e1695dfc3e3544dcd85",
+        "strict_record_sha256": "5064fafd73994605c7763d8bfb91912d697c0322249c76a7403c887ea25de3ff"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "seriespack-readers",
+        "object_sha256": "fabce5c38887089c7d18bec2324889de2f3866efe72acf43998e80e0ba3c50a1",
+        "strict_record_sha256": "76a2915c4308d884eb0601a3567aea27c1028308b5d1c52dc54d759c3d734e3a"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "tuplepack-initialize",
+        "object_sha256": "23db8f3425e4974bd515f5611c387c42d089dba965b02c97e1abf84edb664186",
+        "strict_record_sha256": "3d2e5b9ea93180b52fc79be904d1912f01066e231e44a1b1433570f756ff6c21"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "tuplepack-initialize",
+        "object_sha256": "1ef57abcdee3ac1ca6d3487e4fc9b552fb226ef2c4e331b588ed03142a62b080",
+        "strict_record_sha256": "895103ab96c0b748bd487114ba63e226b2b489c2e242039a76d642d19f87c1d4"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "bec256-ordinary",
+        "object_sha256": "b93c4a1d579e3199988da5f9ee2e038fd1ff3a0659cdd770321af04833286f58",
+        "strict_record_sha256": "b3d30899c65550257a81702e02d049eb6d85312d3ff7a09570ee3dcf592b5c7c"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "bec256-ordinary",
+        "object_sha256": "ef6e37cf0cdf26c0aa53a76677ddb5683e69773da35f0a15c0367533e131a842",
+        "strict_record_sha256": "95d50eeb15f2c3617e81e2793d4424d6b962aff1eac92dddeb0be87bbeff770b"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "before",
+        "logical": "hashtable-ordinary",
+        "object_sha256": "7c0060e4278a8220ac4575302ba471d4c2fa3dbee9315b73325aebaa3d474b35",
+        "strict_record_sha256": "5f48ea22185026e444b0ba7818592c200f1f8c40d37dcf99326c5f4a5c26648d"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "hashtable-ordinary",
+        "object_sha256": "74dd7fb385b461f954b0a578468ea0e7056cc060db6fd058570806099b79d393",
+        "strict_record_sha256": "66fec6408f0fa7f35dc01472b81e665fe8eb7f83334598d8a8130db2514132be"
+      },
+      {
+        "profile": "avx2-zen5",
+        "arm": "after",
+        "logical": "selection",
+        "object_sha256": "d6273d2333fbb571aa08ebd2a79bf25b9770c65593a928e831a8964b712358e8",
+        "strict_record_sha256": "90f99c6abe80d5dc6b94bd53a3c500f3a6f146e2da7dfe8d33e76f4c87ef387b"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "seriespack-ordinary",
+        "object_sha256": "bb21dd78112d0ad0029fcfe5652b826b872a49f24ede3f8a7592115492bd1b05",
+        "strict_record_sha256": "7d9b53e372bb78e941e0bad7beb9cd79fd40d423618171a793ebff84036bcbb5"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "seriespack-ordinary",
+        "object_sha256": "2a298f4cf7f8f8f24aa75f5de3d2516eb320c3100c15ddbc35064043e1107218",
+        "strict_record_sha256": "52e9eaff498543a0db428182cc3e62926bd3fef123f2c7ff8f0f4702dc369304"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "seriespack-integration",
+        "object_sha256": "950ad3f073152d1fbcecf03b83dbff4b68b4dc73d4a14400a1bb055a405b5f7d",
+        "strict_record_sha256": "7872c719175705fffbda0105e901becfe4c3160baef2e728c5604db9ad51c3bc"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "seriespack-integration",
+        "object_sha256": "85c1a98fb71236bdf4aa9a4d41be0ecc0a69d942ab323ea991d080e7c6337a7d",
+        "strict_record_sha256": "e76495354451b0c8a8e6e3b245af46b6144400871e91096954ba1ab241637f63"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "filters-composition",
+        "object_sha256": "b39c5891f5b13847651a7816bc24c7688b47e350a1a951acfce6e2b8922f4094",
+        "strict_record_sha256": "f0ba5bc7650221a995d52a259c7a1a26ecaa0b20cc3c00bf6354484c4d3252ab"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "filters-composition",
+        "object_sha256": "fca3edd84cdc415ad708846f91b379faa3ac72f0e6fd773d58a87e1bc21247df",
+        "strict_record_sha256": "2877cc31ec2401fbaca971e0b234747f5a7700a840fc98d7100b15e61cf67304"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "streampack-ordinary",
+        "object_sha256": "abf7d70844e4905d6e15c2cc3defc6b45460ee6e9aef72fe12a600d9d3075d8f",
+        "strict_record_sha256": "92999e43e2740e17a69a06340e3f248d90cdadd93425e760d48e6b2719a8f666"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "streampack-ordinary",
+        "object_sha256": "5b83993119f7a1e258d746a3b0a5487a134b3b3bf62b6fd1a0e79d4fca0833af",
+        "strict_record_sha256": "fe6d3aaf37d8d8a0ab8decbd24dbcd6af7688214dab4c60417ff18d5a8081d5a"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "tuplepack-ordinary",
+        "object_sha256": "9d425f33a2e0367c48815bcd8ffa7a33f7dc07adb75cb6b0934251b95a4fc52e",
+        "strict_record_sha256": "8032891f2f65a0a0e9cfc0dc964db69cd5ac0dea58ba3e64a0c73dcdf99ece7c"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "tuplepack-ordinary",
+        "object_sha256": "ed5258147d9fa9138cef99df4d721fd3e6e6708164b700e86296519162978aed",
+        "strict_record_sha256": "f456354d0a7ad04889e30983be598bad1162d87b70913698696d5e20bd1395ed"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "tuplepack-words",
+        "object_sha256": "53b3584f7f6e77e5498ce58fd5d3138be50e08dc12e6c3e3d2bfb9e7aee69c2d",
+        "strict_record_sha256": "e882ffa84c95102bd1e66a106de5a9f77af38a86e5c7ec28f43c4986a9f23da3"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "tuplepack-words",
+        "object_sha256": "51bb8c33a95e527b1d5adc4abc20c402eb9064cc35cc240783d052484efc554a",
+        "strict_record_sha256": "0c1d3270f40389d28ddae58771e753678909d4bdb58958cc43de0f59d0f6d7a6"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "filters-ordinary",
+        "object_sha256": "c9fd012a9a150778e9d0c641d38b2ed0d4d55289445aca251d3c603e978621b2",
+        "strict_record_sha256": "b2aa4659cabcf2a3c00f90823c64659920022631fd1a41594844c16073eb3fa2"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "filters-ordinary",
+        "object_sha256": "64e393f6dab4c731b92b4a1483d5cb5b0ab0ec888f151358b80e2ed6cdcd4796",
+        "strict_record_sha256": "d993b9e5dc99fc38fedc11dd7b6c880b082f0da17c2e4cf0e592c79b3d6efd63"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "seriespack-readers",
+        "object_sha256": "3f8d61bba97d51cb2dd5e1d887a2c64314c952551475e43a7fead15e26da0fd2",
+        "strict_record_sha256": "667021c723055854f96e407fa9de5555aa2c3c9a871ad931320f44cc245905dc"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "seriespack-readers",
+        "object_sha256": "a17c201af18dd7a03f7d7c436988977e1544538c9e070b79fe5ad9ec7450f246",
+        "strict_record_sha256": "0bed040b088eb67d849ca5bed94025bb727f9c9916a4f6c18bd38e36275bd8fc"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "tuplepack-initialize",
+        "object_sha256": "2e0b84b5b933e341c51399c632bb705f44e6c86a366886aee71a04f4874ea07c",
+        "strict_record_sha256": "575fb9a55c1b9c6e371c0fb5dea900b6269b72f2513d0724c59388c8b80fc189"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "tuplepack-initialize",
+        "object_sha256": "bc26df15135baac007d1dbe27e51344bca9a5d2fc5353220be0e3bcfe0d5fba4",
+        "strict_record_sha256": "e9beaf62799b51353417f3eff5caf707a9a0030d3eab5e60cefe317b8c1e49a4"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "bec256-ordinary",
+        "object_sha256": "f8758d41bf932909aefa0432cef7503b260135b5f027b799955d0d521bf0f195",
+        "strict_record_sha256": "c2088bb130826c15d3fb45f8499be71c6f606fa2c35417b18eb91ba2ba952825"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "bec256-ordinary",
+        "object_sha256": "1ee132ee1dc075c9b500a096c523b1949f20990bd615a2416e1cd8c1ddfe0702",
+        "strict_record_sha256": "880fe9dfdeb3e4ffaef9658301aed9dc2ffe9d44664f430452c42c4a21dcd9f4"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "before",
+        "logical": "hashtable-ordinary",
+        "object_sha256": "9356db81669484e36efe0bf2719f5c814d27020657df30b2dca364ea1e9b282e",
+        "strict_record_sha256": "9fc73b08d075dd23826ba823b090f885fb4e0232afde06261eef7bf426aac3f1"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "hashtable-ordinary",
+        "object_sha256": "d2f1e556ec88b66c43833a938695e0310dc95c20247c411b59370702968ffedc",
+        "strict_record_sha256": "75dd40f345aa85874f65d3c17a1715515086b7d88ad27e56357aa2b4fd76ffda"
+      },
+      {
+        "profile": "avx512-zen5",
+        "arm": "after",
+        "logical": "selection",
+        "object_sha256": "16db03cc8b8d179d7a6f32231ed820ad344ae2c9ecea6c35b5932edd400898a6",
+        "strict_record_sha256": "471c5937e5a5b85823e78a78294cd4a6eb8b19de8b2e5669042692b3862c508c"
+      }
+    ]
+  },
+  "recording_contract": {
+    "instructions": "Literal bytes, function size and section alignment; no instruction/register/immediate normalization.",
+    "relocations": "Every offset, kind, canonical target, target-symbol value and addend retained.",
+    "data": "Every non-executable allocated section, including x86 processor-specific unwind, initialization arrays and zero-initialized NOBITS storage; size/type/flags/alignment/relocations retained. Duplicate section spellings retain separate occurrence identities. Coverage independently checked against every ELF section header.",
+    "function_aliases": "Every nonempty STT_FUNC symbol retained. ABI-distinct C1/C2/C3 and D0/D1/D2 entry names retain a variant suffix; aliases are never deduplicated.",
+    "normalizations": "Only documented before-side semantic API/type role names plus declared compiler source-root prefix mapping. Unmatched and changed labels/bodies remain findings.",
+    "final_TP_role": "Before field_filter maps to public predicate; historical private field_predicate remains an accepted byte-object template for older probe inputs.",
+    "configured_flags": "Actual Release -O3 -g, warning flags, C++23, hidden visibility, function/data sections, strict FP, per-target vectorization disables and per-profile march/mtune/tune macros. No NDEBUG.",
+    "diagnostic_differences": "Explicit cross target/toolchain selection; compiler source-root prefix map uses /sixdb rather than CMake dot. Dependency/output paths and debug-only sections are not compared as runtime payload.",
+    "limits": "Object code is not linked placement, runtime qualification or a speed comparison. Ordinary example program and effects-contract changes can change bodies; a type-role correspondence does not assert semantic equality."
+  },
+  "reproduce": "orb -m ubuntu taskset -c 8 python3 workbench/spikes/ikea-composition/cohesion-v2-codegen.py build/ikea-cohesion-v2/native-r4-sources/before build/ikea-cohesion-v2/native-r4-sources/after build/ikea-cohesion-v2/codegen-final-r4 --baseline-commit f153420002520213e1496a97559f0118bbd1ad94 --configured-release",
+  "abi_variant_function_symbols": {
+    "neon-v2/before/seriespack-integration": 1,
+    "neon-v2/after/seriespack-integration": 1,
+    "neon-v2/before/hashtable-ordinary": 7,
+    "neon-v2/after/hashtable-ordinary": 7,
+    "avx2-zen5/before/seriespack-integration": 1,
+    "avx2-zen5/after/seriespack-integration": 1,
+    "avx2-zen5/before/hashtable-ordinary": 7,
+    "avx2-zen5/after/hashtable-ordinary": 7,
+    "avx512-zen5/before/seriespack-integration": 1,
+    "avx512-zen5/after/seriespack-integration": 1,
+    "avx512-zen5/before/hashtable-ordinary": 7,
+    "avx512-zen5/after/hashtable-ordinary": 7
+  },
+  "inspected_findings": {
+    "unchanged_primitives": "All490 compiled SeriesPack readers, the TuplePack word-reader body and TuplePack initializer body match per profile, including every constant and unwind record.",
+    "changed_consumers": "SeriesPack ordinary/integration and filter composition retain initialization, source-identity/effects and writer-call changes. StreamPack keeps constrained-effect/type-label differences and changed capacity admission. Bec ordinary uses the new block/proof boundary. Unmatched symbols are retained, not interpreted as eliminated work.",
+    "tuplepack_ordinary_main": "Same byte length on all3 profiles. The only differing instruction bytes are the overflow error ordinal7\u21928 after adding effects: NEON offset0x740 (mov w8,#7\u2192#8), AVX2 offset0x9b9 and AVX512 offset0x96c. Relocation/type labels and diagnostic strings still differ and remain literal.",
+    "hashtable_constructors": "Both changed constructor records per profile have identical machine bytes. Their literal relocation labels point at renamed local SeriesPack attach used-array constants; those old/new constants have equal bytes. These remain strict mismatches, not a speed cost or an extra role normalization.",
+    "prepared_predicate": "Before field_filter now compares to the final public predicate role. Its two actual filter bodies remain changed: NEON8676\u21928692B each; AVX2 9066\u21929103B and9126\u21929159B; AVX5128692\u21928716B and8695\u21928719B. No instruction, register, immediate or relocation difference is normalized away.",
+    "new_selection_check": "After-only source; no baseline body and no before/after performance inference.",
+    "parser_correction": "Historical parser omitted non-PROGBITS allocated sections. Final records additionally include46 x86 unwind sections,24 zero-initialized storage sections and12 initialization-array sections. The historical receipt is unchanged."
+  }
+}

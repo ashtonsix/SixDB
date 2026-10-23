@@ -1,0 +1,10 @@
+--- a/ikea/include/ikea/effects.h
++++ b/ikea/include/ikea/effects.h
+@@ -26,6 +26,7 @@
+             const auto end = previous.offset + previous.size, next_end = offset + size;
+             if (previous.offset <= next_end && offset <= end) {
+                 const auto begin = std::min(previous.offset, offset);
++                previous.plane = plane;
+                 previous.offset = begin;
+                 previous.size = std::max(end, next_end) - begin;
+                 return;

@@ -1,0 +1,521 @@
+{
+  "llvm_version": "Ubuntu LLVM version 21.1.8",
+  "commands": [
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "llvm-objdump-21",
+        "--section-headers",
+        "--syms",
+        "--demangle",
+        "{repo}/build/workers/20261023T004329Z-decd9aa2/results/avx512/before/streampack_implementation_bench"
+      ],
+      "stdout": "build/ikea-cohesion-v2/stream-layout-followup/before-sections.txt",
+      "stdout_sha256": "29d8ec5d5e7c627777db731e044c4f721e4268d7f77088cae2ca2c327b4c4c0a",
+      "binary_sha256": "ec4992a6b52fe35cf5c8b63ce4134410293d06c58dc8b28a28393c5381bca01c",
+      "receipt_binary_sha256": "ec4992a6b52fe35cf5c8b63ce4134410293d06c58dc8b28a28393c5381bca01c"
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "llvm-objdump-21",
+        "-d",
+        "-r",
+        "--demangle",
+        "{repo}/build/workers/20261023T004329Z-decd9aa2/results/avx512/before/streampack_implementation_bench"
+      ],
+      "stdout": "build/ikea-cohesion-v2/stream-layout-followup/before-disassembly.txt",
+      "stdout_sha256": "6e6403998f589e090f26dd0095694574bf949a84d007ac5448aaad9b97405e38",
+      "binary_sha256": "ec4992a6b52fe35cf5c8b63ce4134410293d06c58dc8b28a28393c5381bca01c",
+      "receipt_binary_sha256": "ec4992a6b52fe35cf5c8b63ce4134410293d06c58dc8b28a28393c5381bca01c"
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "llvm-objdump-21",
+        "--section-headers",
+        "--syms",
+        "--demangle",
+        "{repo}/build/workers/20261023T004329Z-decd9aa2/results/avx512/after/streampack_implementation_bench"
+      ],
+      "stdout": "build/ikea-cohesion-v2/stream-layout-followup/after-sections.txt",
+      "stdout_sha256": "b65fd25b8f3fdc44b7484d37e74e193ffcd8a1c488015925a1ff948167a8c7c2",
+      "binary_sha256": "e7b5658ef46e1c6cae318db5620decec43f2607ec632cd72d5ba0209bbfbd587",
+      "receipt_binary_sha256": "e7b5658ef46e1c6cae318db5620decec43f2607ec632cd72d5ba0209bbfbd587"
+    },
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "llvm-objdump-21",
+        "-d",
+        "-r",
+        "--demangle",
+        "{repo}/build/workers/20261023T004329Z-decd9aa2/results/avx512/after/streampack_implementation_bench"
+      ],
+      "stdout": "build/ikea-cohesion-v2/stream-layout-followup/after-disassembly.txt",
+      "stdout_sha256": "b2a4445636ba33f02c19b7463a76e359b7d4109a9d9a7a9842ea4d546870d212",
+      "binary_sha256": "e7b5658ef46e1c6cae318db5620decec43f2607ec632cd72d5ba0209bbfbd587",
+      "receipt_binary_sha256": "e7b5658ef46e1c6cae318db5620decec43f2607ec632cd72d5ba0209bbfbd587"
+    }
+  ],
+  "layout": {
+    "before": {
+      "default": {
+        "binary_bytes": 9552504,
+        "text_bytes": 1294930,
+        "text_nop_bytes": 25349,
+        "text_nop_instructions": 3571,
+        "unclaimed_text_bytes": 4570
+      },
+      "align64": {
+        "binary_bytes": 9573000,
+        "text_bytes": 1315778,
+        "text_nop_bytes": 46197,
+        "text_nop_instructions": 5680,
+        "unclaimed_text_bytes": 25418
+      },
+      "align64_minus_default": {
+        "binary_bytes": 20496,
+        "text_bytes": 20848,
+        "text_nop_bytes": 20848,
+        "text_nop_instructions": 2109,
+        "unclaimed_text_bytes": 20848
+      }
+    },
+    "after": {
+      "default": {
+        "binary_bytes": 9804800,
+        "text_bytes": 1323090,
+        "text_nop_bytes": 25253,
+        "text_nop_instructions": 3563,
+        "unclaimed_text_bytes": 4486
+      },
+      "align64": {
+        "binary_bytes": 9825296,
+        "text_bytes": 1344002,
+        "text_nop_bytes": 46165,
+        "text_nop_instructions": 5677,
+        "unclaimed_text_bytes": 25398
+      },
+      "align64_minus_default": {
+        "binary_bytes": 20496,
+        "text_bytes": 20912,
+        "text_nop_bytes": 20912,
+        "text_nop_instructions": 2114,
+        "unclaimed_text_bytes": 20912
+      }
+    }
+  },
+  "ordinary_emissions": {
+    "default": [
+      {
+        "name": "decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)",
+        "before_address": 1153664,
+        "after_address": 1153744,
+        "before_mod64": 0,
+        "after_mod64": 16,
+        "before_instructions": 61,
+        "after_instructions": 61,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()::operator()<(ikea::streampack::geometry)2, unsigned char, unsigned char>() const",
+        "before_address": 1153872,
+        "after_address": 1153952,
+        "before_mod64": 16,
+        "after_mod64": 32,
+        "before_instructions": 99,
+        "after_instructions": 99,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()::operator()<(ikea::streampack::geometry)2, unsigned char, unsigned short>() const",
+        "before_address": 1154208,
+        "after_address": 1154288,
+        "before_mod64": 32,
+        "after_mod64": 48,
+        "before_instructions": 95,
+        "after_instructions": 95,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned short, std::byte, unsigned char>>(std::byte) const",
+        "before_address": 1154528,
+        "after_address": 1154608,
+        "before_mod64": 32,
+        "after_mod64": 48,
+        "before_instructions": 96,
+        "after_instructions": 96,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned short, std::byte, unsigned short>>(std::byte) const",
+        "before_address": 1154864,
+        "after_address": 1154944,
+        "before_mod64": 48,
+        "after_mod64": 0,
+        "before_instructions": 93,
+        "after_instructions": 93,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()::operator()<(ikea::streampack::geometry)2, unsigned char, unsigned int>() const",
+        "before_address": 1155184,
+        "after_address": 1155264,
+        "before_mod64": 48,
+        "after_mod64": 0,
+        "before_instructions": 97,
+        "after_instructions": 97,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned int, std::byte, unsigned char>>(std::byte) const",
+        "before_address": 1155504,
+        "after_address": 1155584,
+        "before_mod64": 48,
+        "after_mod64": 0,
+        "before_instructions": 97,
+        "after_instructions": 97,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned int, std::byte, unsigned short>>(std::byte) const",
+        "before_address": 1155824,
+        "after_address": 1155904,
+        "before_mod64": 48,
+        "after_mod64": 0,
+        "before_instructions": 92,
+        "after_instructions": 92,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned int, unsigned int, std::byte, unsigned short>>(std::byte) const",
+        "before_address": 1156144,
+        "after_address": 1156224,
+        "before_mod64": 48,
+        "after_mod64": 0,
+        "before_instructions": 94,
+        "after_instructions": 94,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)0, unsigned char>() const",
+        "before_address": 1156464,
+        "after_address": 1156544,
+        "before_mod64": 48,
+        "after_mod64": 0,
+        "before_instructions": 133,
+        "after_instructions": 133,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)0, unsigned short>() const",
+        "before_address": 1156896,
+        "after_address": 1156976,
+        "before_mod64": 32,
+        "after_mod64": 48,
+        "before_instructions": 138,
+        "after_instructions": 138,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)1, unsigned char>() const",
+        "before_address": 1157344,
+        "after_address": 1157424,
+        "before_mod64": 32,
+        "after_mod64": 48,
+        "before_instructions": 157,
+        "after_instructions": 157,
+        "normalized_diff_count": 4,
+        "normalized_differences": [
+          {
+            "index": 38,
+            "before": "vpcmpgtb\t0x24696(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2b646(%rip), %xmm0, %k1"
+          },
+          {
+            "index": 82,
+            "before": "vpcmpgtb\t0x245e5(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2b595(%rip), %xmm0, %k1"
+          },
+          {
+            "index": 117,
+            "before": "vpcmpgtb\t0x2455e(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2b50e(%rip), %xmm0, %k1"
+          },
+          {
+            "index": 143,
+            "before": "vpcmpgtb\t0x244f8(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2b4a8(%rip), %xmm0, %k1"
+          }
+        ]
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)1, unsigned short>() const",
+        "before_address": 1157968,
+        "after_address": 1158048,
+        "before_mod64": 16,
+        "after_mod64": 32,
+        "before_instructions": 195,
+        "after_instructions": 195,
+        "normalized_diff_count": 4,
+        "normalized_differences": [
+          {
+            "index": 73,
+            "before": "vpcmpgtw\t0x243b5(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2b365(%rip), %ymm0, %ymm0"
+          },
+          {
+            "index": 115,
+            "before": "vpcmpgtw\t0x2430e(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2b2be(%rip), %ymm0, %ymm0"
+          },
+          {
+            "index": 146,
+            "before": "vpcmpgtw\t0x2428d(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2b23d(%rip), %ymm0, %ymm0"
+          },
+          {
+            "index": 174,
+            "before": "vpcmpgtw\t0x24211(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2b1c1(%rip), %ymm0, %ymm0"
+          }
+        ]
+      },
+      {
+        "name": "unsigned long projection<run(population&, unsigned int)::$_4::operator()() const::'lambda'(unsigned int)>(unsigned int, unsigned int, bool, run(population&, unsigned int)::$_4::operator()() const::'lambda'(unsigned int))",
+        "before_address": 1159840,
+        "after_address": 1159920,
+        "before_mod64": 32,
+        "after_mod64": 48,
+        "before_instructions": 120,
+        "after_instructions": 120,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      }
+    ],
+    "align64": [
+      {
+        "name": "decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)",
+        "before_address": 1172032,
+        "after_address": 1172096,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 65,
+        "after_instructions": 65,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()::operator()<(ikea::streampack::geometry)2, unsigned char, unsigned char>() const",
+        "before_address": 1172288,
+        "after_address": 1172352,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 104,
+        "after_instructions": 104,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()::operator()<(ikea::streampack::geometry)2, unsigned char, unsigned short>() const",
+        "before_address": 1172672,
+        "after_address": 1172736,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 95,
+        "after_instructions": 95,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned short, std::byte, unsigned char>>(std::byte) const",
+        "before_address": 1172992,
+        "after_address": 1173056,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 101,
+        "after_instructions": 101,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned short, std::byte, unsigned short>>(std::byte) const",
+        "before_address": 1173376,
+        "after_address": 1173440,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 93,
+        "after_instructions": 93,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()::operator()<(ikea::streampack::geometry)2, unsigned char, unsigned int>() const",
+        "before_address": 1173696,
+        "after_address": 1173760,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 97,
+        "after_instructions": 97,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned int, std::byte, unsigned char>>(std::byte) const",
+        "before_address": 1174016,
+        "after_address": 1174080,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 97,
+        "after_instructions": 97,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned short, unsigned int, std::byte, unsigned short>>(std::byte) const",
+        "before_address": 1174336,
+        "after_address": 1174400,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 92,
+        "after_instructions": 92,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "auto std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)::operator()<ikea::streampack::author::access<(ikea::streampack::geometry)2, unsigned int, unsigned int, std::byte, unsigned short>>(std::byte) const",
+        "before_address": 1174656,
+        "after_address": 1174720,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 94,
+        "after_instructions": 94,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)0, unsigned char>() const",
+        "before_address": 1174976,
+        "after_address": 1175040,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 135,
+        "after_instructions": 135,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)0, unsigned short>() const",
+        "before_address": 1175424,
+        "after_address": 1175488,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 138,
+        "after_instructions": 138,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)1, unsigned char>() const",
+        "before_address": 1175872,
+        "after_address": 1175936,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 158,
+        "after_instructions": 158,
+        "normalized_diff_count": 4,
+        "normalized_differences": [
+          {
+            "index": 38,
+            "before": "vpcmpgtb\t0x24e36(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2bdf6(%rip), %xmm0, %k1"
+          },
+          {
+            "index": 82,
+            "before": "vpcmpgtb\t0x24d85(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2bd45(%rip), %xmm0, %k1"
+          },
+          {
+            "index": 117,
+            "before": "vpcmpgtb\t0x24cfe(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2bcbe(%rip), %xmm0, %k1"
+          },
+          {
+            "index": 143,
+            "before": "vpcmpgtb\t0x24c98(%rip), %xmm0, %k1",
+            "after": "vpcmpgtb\t0x2bc58(%rip), %xmm0, %k1"
+          }
+        ]
+      },
+      {
+        "name": "decltype(auto) decltype(auto) ikea::streampack::detail::compact::detail::dispatch<ikea::streampack::layout, decltype(auto) ikea::streampack::author::dispatch<std::byte, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)>(ikea::streampack::basic_view<std::byte> const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N, typename $T, typename $T0>()>(std::byte const&, std::expected<std::span<std::byte const, 18446744073709551615ul>, ikea::streampack::error> ikea::streampack::value<std::byte>(ikea::streampack::basic_view<std::byte> const&, unsigned int)::'lambda'(std::byte)&&)::'lambda'<ikea::streampack::geometry $N0, typename $T1>()::operator()<(ikea::streampack::geometry)1, unsigned short>() const",
+        "before_address": 1176512,
+        "after_address": 1176576,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 199,
+        "after_instructions": 199,
+        "normalized_diff_count": 4,
+        "normalized_differences": [
+          {
+            "index": 73,
+            "before": "vpcmpgtw\t0x24b45(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2bb05(%rip), %ymm0, %ymm0"
+          },
+          {
+            "index": 115,
+            "before": "vpcmpgtw\t0x24a9e(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2ba5e(%rip), %ymm0, %ymm0"
+          },
+          {
+            "index": 146,
+            "before": "vpcmpgtw\t0x24a1d(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2b9dd(%rip), %ymm0, %ymm0"
+          },
+          {
+            "index": 174,
+            "before": "vpcmpgtw\t0x249a1(%rip), %ymm0, %ymm0",
+            "after": "vpcmpgtw\t0x2b961(%rip), %ymm0, %ymm0"
+          }
+        ]
+      },
+      {
+        "name": "unsigned long projection<run(population&, unsigned int)::$_4::operator()() const::'lambda'(unsigned int)>(unsigned int, unsigned int, bool, run(population&, unsigned int)::$_4::operator()() const::'lambda'(unsigned int))",
+        "before_address": 1178432,
+        "after_address": 1178496,
+        "before_mod64": 0,
+        "after_mod64": 0,
+        "before_instructions": 125,
+        "after_instructions": 125,
+        "normalized_diff_count": 0,
+        "normalized_differences": []
+      }
+    ]
+  },
+  "limits": "Normalization removes linked branch/call addresses and RIP comments; actual opcodes/operands and complete linked disassemblies remain recoverable. Unclaimed text can include unsized code; NOPs include interior padding. Global alignment moves callees as well as caller entries.",
+  "parser_note": "Includes complete encoded instruction columns even when a10-byte instruction has no separator space before the tab.",
+  "default_worker": "20261023T004329Z-decd9aa2",
+  "align64_worker": "20261023T010259Z-1bf3e14c",
+  "normalization": "Only author::visit\u2192author::dispatch role correspondence, linked branch/call destination addresses and RIP comments are normalized. Registers, opcodes, memory operands and immediates remain. Four remaining RIP literal displacements are retained explicitly.",
+  "finding": "All14 complete ordinary functions retain instruction counts;12 normalized op sequences match. The remaining two functions each differ only in four RIP-relative literal displacements. Common64B function alignment adds20,848/20,912B of NOPs and text before/after and slows the previously faster baseline."
+}

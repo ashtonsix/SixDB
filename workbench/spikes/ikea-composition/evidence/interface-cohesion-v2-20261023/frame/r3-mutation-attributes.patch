@@ -1,0 +1,20 @@
+--- qualified/ikea/include/ikea/seriespack/author/mutation.h
++++ r3/ikea/include/ikea/seriespack/author/mutation.h
+@@ -21,7 +21,7 @@
+ /// Masks suppress an empty region; nonempty selected writes preserve inactive
+ /// values in native lanes and may issue stores covering those neighbors.
+ template <class F, unsigned Fields = 15, class Emit>
+-inline void visit_writes16(const basic_view<F, ikea::byte>& v, std::size_t i, Emit&& emit) {
++[[gnu::always_inline]] inline void visit_writes16(const basic_view<F, ikea::byte>& v, std::size_t i, Emit&& emit) {
+     const auto lane = i % F::tile_rows, tile = i / F::tile_rows;
+     if constexpr (F::payload) {
+         const auto offset = tile * v.stream(0).stride;
+@@ -62,7 +62,7 @@
+ /// Exact scalar-store footprint, including bytes with preserved neighboring
+ /// bits. A physical point update does not imply exclusive ownership of a byte.
+ template <class F, unsigned Fields = 15, class Emit>
+-inline void visit_writes_point(const basic_view<F, ikea::byte>& v, std::size_t i, Emit&& emit) {
++[[gnu::always_inline]] inline void visit_writes_point(const basic_view<F, ikea::byte>& v, std::size_t i, Emit&& emit) {
+     const auto lane = i % F::tile_rows, tile = i / F::tile_rows;
+     if constexpr (F::payload) {
+         const auto offset = tile * v.stream(0).stride;

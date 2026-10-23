@@ -1,0 +1,1382 @@
+{
+  "scope": "Literal linked AVX-512 R4 point/2/write/body caller path and selected word_write<1,2> kernel. No instruction normalization or native retiming.",
+  "job": "20261023T014343Z-22c72eab",
+  "recovery": "worker.py fetch 20261023T014343Z-22c72eab --file avx512/before/tuplepack-disassembly.txt --file avx512/after/tuplepack-disassembly.txt",
+  "files_sha256": {
+    "before": "eb049c4ec5bf5b39458788012cb056e134263807e8ccee382278f4776ce695ab",
+    "after": "97e230494c0c161bbb9e992f273a2694dd0b7b7e8988eeecbddc3039c2961b29"
+  },
+  "binaries_sha256": {
+    "before": "d3b51a9bc591b6ca8db2146689934b5885056c86cc05990158dbc5681f64463d",
+    "after": "55bcc83f0e176d28afb423e036d2ec4725ee821541ca0cf2a587dfc1bd0851c2"
+  },
+  "symbol_extents": "Instruction lists are trimmed to the actual STT_FUNC extents in each linked ELF; inter-symbol padding is excluded.",
+  "caller": {
+    "symbol": "benchmark::internal::LambdaBenchmark<main::$_1>::Run(benchmark::State&)",
+    "instruction_records_per_arm": 1267,
+    "start": "0xc630",
+    "bytes": 6746,
+    "stack_allocation": "0x86b8 plus six saved GPR pushes, equal; includes 8192-entry trace and setup, not handle overhead",
+    "whole_function_exact": false,
+    "whole_function_differences": "Cold setup call displacements, error ordinals, journal-merge register assignment and diagnostic literal displacements differ. No assertion of whole function equivalence.",
+    "timed_body_loop": {
+      "first": "0xd870",
+      "past_last": "0xd8c1",
+      "instruction_records": 16,
+      "bytes": 81,
+      "raw_sha256": "c46fc82d218d93851ae51531b05028807dc1d892037277126d66106cdd25b4cf",
+      "equal": true,
+      "instructions": [
+        {
+          "address": 55408,
+          "bytes": [
+            "49",
+            "ff",
+            "c5"
+          ],
+          "asm": "incq\t%r13"
+        },
+        {
+          "address": 55411,
+          "bytes": [
+            "49",
+            "81",
+            "fd",
+            "00",
+            "20",
+            "00",
+            "00"
+          ],
+          "asm": "cmpq\t$0x2000, %r13           # imm = 0x2000"
+        },
+        {
+          "address": 55418,
+          "bytes": [
+            "0f",
+            "84",
+            "08",
+            "04",
+            "00",
+            "00"
+          ],
+          "asm": "je\t0xdc88 <benchmark::internal::LambdaBenchmark<main::$_1>::Run(benchmark::State&)+0x1658>"
+        },
+        {
+          "address": 55424,
+          "bytes": [
+            "8b",
+            "84",
+            "24",
+            "98",
+            "00",
+            "00",
+            "00"
+          ],
+          "asm": "movl\t0x98(%rsp), %eax"
+        },
+        {
+          "address": 55431,
+          "bytes": [
+            "41",
+            "f6",
+            "c5",
+            "01"
+          ],
+          "asm": "testb\t$0x1, %r13b"
+        },
+        {
+          "address": 55435,
+          "bytes": [
+            "b9",
+            "01",
+            "02",
+            "03",
+            "01"
+          ],
+          "asm": "movl\t$0x1030201, %ecx        # imm = 0x1030201"
+        },
+        {
+          "address": 55440,
+          "bytes": [
+            "41",
+            "0f",
+            "44",
+            "cf"
+          ],
+          "asm": "cmovel\t%r15d, %ecx"
+        },
+        {
+          "address": 55444,
+          "bytes": [
+            "c4",
+            "e2",
+            "78",
+            "f2",
+            "d1"
+          ],
+          "asm": "andnl\t%ecx, %eax, %edx"
+        },
+        {
+          "address": 55449,
+          "bytes": [
+            "85",
+            "94",
+            "24",
+            "18",
+            "05",
+            "00",
+            "00"
+          ],
+          "asm": "testl\t%edx, 0x518(%rsp)"
+        },
+        {
+          "address": 55456,
+          "bytes": [
+            "75",
+            "ce"
+          ],
+          "asm": "jne\t0xd870 <benchmark::internal::LambdaBenchmark<main::$_1>::Run(benchmark::State&)+0x1240>"
+        },
+        {
+          "address": 55458,
+          "bytes": [
+            "42",
+            "8b",
+            "b4",
+            "ac",
+            "b8",
+            "06",
+            "00",
+            "00"
+          ],
+          "asm": "movl\t0x6b8(%rsp,%r13,4), %esi"
+        },
+        {
+          "address": 55466,
+          "bytes": [
+            "c1",
+            "e6",
+            "04"
+          ],
+          "asm": "shll\t$0x4, %esi"
+        },
+        {
+          "address": 55469,
+          "bytes": [
+            "48",
+            "01",
+            "de"
+          ],
+          "asm": "addq\t%rbx, %rsi"
+        },
+        {
+          "address": 55472,
+          "bytes": [
+            "48",
+            "8d",
+            "bc",
+            "24",
+            "e0",
+            "03",
+            "00",
+            "00"
+          ],
+          "asm": "leaq\t0x3e0(%rsp), %rdi"
+        },
+        {
+          "address": 55480,
+          "bytes": [
+            "ff",
+            "94",
+            "24",
+            "28",
+            "05",
+            "00",
+            "00"
+          ],
+          "asm": "callq\t*0x528(%rsp)"
+        },
+        {
+          "address": 55487,
+          "bytes": [
+            "eb",
+            "af"
+          ],
+          "asm": "jmp\t0xd870 <benchmark::internal::LambdaBenchmark<main::$_1>::Run(benchmark::State&)+0x1240>"
+        }
+      ]
+    }
+  },
+  "selected_kernel": {
+    "symbol": "std::conditional<1u == 1, void (*)(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long), void (*)(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long, unsigned long, unsigned long)>::type ikea::tuplepack::detail::(anonymous namespace)::write_entry<1u, &void ikea::tuplepack::detail::(anonymous namespace)::word_write<1u, 2u>(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long, unsigned long, unsigned long)>()::'lambda'(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long)::__invoke(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long)",
+    "selection_reason": "prepare_write8 for the two code map{0,2} creates a two-byte word transfer; select_gpr_writer<1> selects word_write<1,2>. The non-full preserve mask takes the existing-word load/AND path.",
+    "instructions": 15,
+    "bytes": 61,
+    "raw_sha256": "00596e2b6c8c1a15523403ea30c59532a941d833f5b0fa15bd25c4c831d68bda",
+    "equal": true,
+    "placement": {
+      "before": {
+        "address": "0xccac0",
+        "modulo64": 0,
+        "spans_64_byte_boundaries": 0
+      },
+      "after": {
+        "address": "0xccdf0",
+        "modulo64": 48,
+        "spans_64_byte_boundaries": 1
+      }
+    },
+    "tail_padding_bytes": 3,
+    "instructions_after": [
+      {
+        "address": 839152,
+        "bytes": [
+          "48",
+          "8b",
+          "8f",
+          "28",
+          "01",
+          "00",
+          "00"
+        ],
+        "asm": "movq\t0x128(%rdi), %rcx"
+      },
+      {
+        "address": 839159,
+        "bytes": [
+          "44",
+          "0f",
+          "b6",
+          "87",
+          "31",
+          "01",
+          "00",
+          "00"
+        ],
+        "asm": "movzbl\t0x131(%rdi), %r8d"
+      },
+      {
+        "address": 839167,
+        "bytes": [
+          "0f",
+          "b6",
+          "87",
+          "30",
+          "01",
+          "00",
+          "00"
+        ],
+        "asm": "movzbl\t0x130(%rdi), %eax"
+      },
+      {
+        "address": 839174,
+        "bytes": [
+          "c4",
+          "62",
+          "b9",
+          "f7",
+          "c9"
+        ],
+        "asm": "shlxq\t%r8, %rcx, %r9"
+      },
+      {
+        "address": 839179,
+        "bytes": [
+          "66",
+          "41",
+          "83",
+          "f9",
+          "ff"
+        ],
+        "asm": "cmpw\t$-0x1, %r9w"
+      },
+      {
+        "address": 839184,
+        "bytes": [
+          "75",
+          "04"
+        ],
+        "asm": "jne\t0xcce16 <std::conditional<1u == 1, void (*)(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long), void (*)(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long, unsigned long, unsigned long)>::type ikea::tuplepack::detail::(anonymous namespace)::write_entry<1u, &void ikea::tuplepack::detail::(anonymous namespace)::word_write<1u, 2u>(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long, unsigned long, unsigned long)>()::'lambda'(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long)::__invoke(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long)+0x26>"
+      },
+      {
+        "address": 839186,
+        "bytes": [
+          "31",
+          "ff"
+        ],
+        "asm": "xorl\t%edi, %edi"
+      },
+      {
+        "address": 839188,
+        "bytes": [
+          "eb",
+          "09"
+        ],
+        "asm": "jmp\t0xcce1f <std::conditional<1u == 1, void (*)(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long), void (*)(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long, unsigned long, unsigned long)>::type ikea::tuplepack::detail::(anonymous namespace)::write_entry<1u, &void ikea::tuplepack::detail::(anonymous namespace)::word_write<1u, 2u>(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long, unsigned long, unsigned long)>()::'lambda'(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long)::__invoke(ikea::tuplepack::detail::gpr_write const&, unsigned char*, unsigned long)+0x2f>"
+      },
+      {
+        "address": 839190,
+        "bytes": [
+          "0f",
+          "b7",
+          "3c",
+          "06"
+        ],
+        "asm": "movzwl\t(%rsi,%rax), %edi"
+      },
+      {
+        "address": 839194,
+        "bytes": [
+          "c4",
+          "e2",
+          "30",
+          "f2",
+          "ff"
+        ],
+        "asm": "andnl\t%edi, %r9d, %edi"
+      },
+      {
+        "address": 839199,
+        "bytes": [
+          "21",
+          "d1"
+        ],
+        "asm": "andl\t%edx, %ecx"
+      },
+      {
+        "address": 839201,
+        "bytes": [
+          "c4",
+          "e2",
+          "b9",
+          "f7",
+          "c9"
+        ],
+        "asm": "shlxq\t%r8, %rcx, %rcx"
+      },
+      {
+        "address": 839206,
+        "bytes": [
+          "09",
+          "cf"
+        ],
+        "asm": "orl\t%ecx, %edi"
+      },
+      {
+        "address": 839208,
+        "bytes": [
+          "66",
+          "89",
+          "3c",
+          "06"
+        ],
+        "asm": "movw\t%di, (%rsi,%rax)"
+      },
+      {
+        "address": 839212,
+        "bytes": [
+          "c3"
+        ],
+        "asm": "retq"
+      }
+    ]
+  },
+  "paired_native_cases": [
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "composition/128/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        8.189836770371148,
+        8.193133982899708,
+        8.195708232740524,
+        8.192884130598637,
+        8.203731655123823
+      ],
+      "before_median": "8.193133982899708",
+      "before_min": "8.189836770371148",
+      "before_max": "8.203731655123823",
+      "before_mad": "0.0025742498408156678",
+      "after_samples": [
+        8.195982390382426,
+        8.193540263270293,
+        8.200687397930901,
+        8.195218713468917,
+        8.195545254615752
+      ],
+      "after_median": "8.195545254615752",
+      "after_min": "8.193540263270293",
+      "after_max": "8.200687397930901",
+      "after_mad": "0.000437135766674146",
+      "after_over_before_samples": [
+        1.0007503959094168,
+        1.0000495879075617,
+        1.000607533241665,
+        1.00028495250672,
+        0.9990021125931199
+      ],
+      "after_over_before_median": "1.00028495250672",
+      "after_over_before_min": "0.9990021125931199",
+      "after_over_before_max": "1.0007503959094168",
+      "after_over_before_mad": "0.00032258073494517703",
+      "ratio_of_medians": "1.0002943039526848"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "composition/128/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        12.50227760297483,
+        12.536678891769133,
+        12.508656867978171,
+        12.523725191723052,
+        12.520950102430715
+      ],
+      "before_median": "12.520950102430715",
+      "before_min": "12.50227760297483",
+      "before_max": "12.536678891769133",
+      "before_mad": "0.012293234452544155",
+      "after_samples": [
+        12.603868372300091,
+        12.519943226109687,
+        12.534202535783098,
+        12.533427315694855,
+        12.538010308437846
+      ],
+      "after_median": "12.534202535783098",
+      "after_min": "12.519943226109687",
+      "after_max": "12.603868372300091",
+      "after_mad": "0.00380777265474741",
+      "after_over_before_samples": [
+        1.0081257809617896,
+        0.998665063865484,
+        1.0020422390728714,
+        1.0007746995261613,
+        1.0013625328643245
+      ],
+      "after_over_before_median": "1.0013625328643245",
+      "after_over_before_min": "0.998665063865484",
+      "after_over_before_max": "1.0081257809617896",
+      "after_over_before_mad": "0.0006797062085468486",
+      "ratio_of_medians": "1.0010584207463467"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/read/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.3272029815706983,
+        1.3280987146481946,
+        1.3292767733226547,
+        1.3267903178421385,
+        1.32693642562961
+      ],
+      "before_median": "1.3272029815706983",
+      "before_min": "1.3267903178421385",
+      "before_max": "1.3292767733226547",
+      "before_mad": "0.00041266372855974787",
+      "after_samples": [
+        1.3274595238846387,
+        1.1063674380141861,
+        1.1070311235432166,
+        1.327446694412296,
+        1.3268269904139989
+      ],
+      "after_median": "1.3268269904139989",
+      "after_min": "1.1063674380141861",
+      "after_max": "1.3274595238846387",
+      "after_mad": "0.0006325334706398511",
+      "after_over_before_samples": [
+        1.000193295462339,
+        0.8330460874719363,
+        0.8328070916157561,
+        1.0004947100995016,
+        0.9999175279135478
+      ],
+      "after_over_before_median": "0.9999175279135478",
+      "after_over_before_min": "0.8328070916157561",
+      "after_over_before_max": "1.0004947100995016",
+      "after_over_before_mad": "0.0005771821859538173",
+      "ratio_of_medians": "0.9997167041048578"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/read/control",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.3278941099609824,
+        1.3277692864627957,
+        1.3283201151072848,
+        1.3276681951070517,
+        1.3280327408621544
+      ],
+      "before_median": "1.3278941099609824",
+      "before_min": "1.3276681951070517",
+      "before_max": "1.3283201151072848",
+      "before_mad": "0.00013863090117194332",
+      "after_samples": [
+        1.328350933077028,
+        1.3275033230093911,
+        1.3269687739703084,
+        1.3277521548063853,
+        1.3280124306891963
+      ],
+      "after_median": "1.3277521548063853",
+      "after_min": "1.3269687739703084",
+      "after_max": "1.328350933077028",
+      "after_mad": "0.0002602758828109675",
+      "after_over_before_samples": [
+        1.0003440207412766,
+        0.9997996915155998,
+        0.9989826690708006,
+        1.0000632384654864,
+        0.9999847065721099
+      ],
+      "after_over_before_median": "0.9999847065721099",
+      "after_over_before_min": "0.9989826690708006",
+      "after_over_before_max": "1.0003440207412766",
+      "after_over_before_mad": "0.0001850150565101405",
+      "ratio_of_medians": "0.9998930975342595"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/read/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.1066609911350385,
+        1.107604355643383,
+        1.1082530327768367,
+        1.1075448310260922,
+        1.1080792973567222
+      ],
+      "before_median": "1.107604355643383",
+      "before_min": "1.1066609911350385",
+      "before_max": "1.1082530327768367",
+      "before_mad": "0.000474941713339172",
+      "after_samples": [
+        1.1061031584077186,
+        1.1065262026565754,
+        1.1079919320455796,
+        1.1076182228259552,
+        1.108015592840416
+      ],
+      "after_median": "1.1076182228259552",
+      "after_min": "1.1061031584077186",
+      "after_max": "1.108015592840416",
+      "after_mad": "0.0003973700144608294",
+      "after_over_before_samples": [
+        0.9994959316974318,
+        0.999026590152599,
+        0.9997644033234875,
+        1.0000662653084615,
+        0.9999425090636942
+      ],
+      "after_over_before_median": "0.9997644033234875",
+      "after_over_before_min": "0.999026590152599",
+      "after_over_before_max": "1.0000662653084615",
+      "after_over_before_mad": "0.00026847162605569963",
+      "ratio_of_medians": "1.0000125199783674"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/write/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.1372443066107525,
+        1.1375655790933252,
+        1.1416087431066169,
+        1.137774486227404,
+        1.1360774711457786
+      ],
+      "before_median": "1.1375655790933252",
+      "before_min": "1.1360774711457786",
+      "before_max": "1.1416087431066169",
+      "before_mad": "0.0003212724825727431",
+      "after_samples": [
+        1.1645792044845285,
+        1.16397344638873,
+        1.1641473433138139,
+        1.165094332716456,
+        1.164765148830946
+      ],
+      "after_median": "1.1645792044845285",
+      "after_min": "1.16397344638873",
+      "after_max": "1.165094332716456",
+      "after_mad": "0.00043186117071458696",
+      "after_over_before_samples": [
+        1.0240360824098036,
+        1.0232143691587896,
+        1.0197428412696485,
+        1.0240116532931216,
+        1.0252515153356883
+      ],
+      "after_over_before_median": "1.0240116532931216",
+      "after_over_before_min": "1.0197428412696485",
+      "after_over_before_max": "1.0252515153356883",
+      "after_over_before_mad": "0.0007972841343319992",
+      "ratio_of_medians": "1.0237468730486148"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/write/control",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.7691470046556323,
+        1.7711772711273321,
+        1.7700133373540583,
+        1.769194909345898,
+        1.7696416945684494
+      ],
+      "before_median": "1.7696416945684494",
+      "before_min": "1.7691470046556323",
+      "before_max": "1.7711772711273321",
+      "before_mad": "0.0004467852225513713",
+      "after_samples": [
+        1.7691632662571286,
+        1.7698902714118023,
+        1.7693886514604644,
+        1.7696859119620865,
+        1.7697572209625008
+      ],
+      "after_median": "1.7696859119620865",
+      "after_min": "1.7691632662571286",
+      "after_max": "1.7698902714118023",
+      "after_mad": "0.00020435944971586295",
+      "after_over_before_samples": [
+        1.0000091917751626,
+        0.9992733648198237,
+        0.9996470727760008,
+        1.0002775288429753,
+        1.0000652823644502
+      ],
+      "after_over_before_median": "1.0000091917751626",
+      "after_over_before_min": "0.9992733648198237",
+      "after_over_before_max": "1.0002775288429753",
+      "after_over_before_mad": "0.0002683370678127073",
+      "ratio_of_medians": "1.000024986636432"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/write/control_effects",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.5483421884909896,
+        1.3280333618885023,
+        1.328198530617278,
+        1.3287663461631898,
+        1.3287655416071233
+      ],
+      "before_median": "1.3287655416071233",
+      "before_min": "1.3280333618885023",
+      "before_max": "1.5483421884909896",
+      "before_mad": "0.0005670109898452402",
+      "after_samples": [
+        1.3267891272603933,
+        1.3275603287479607,
+        1.3288893992268351,
+        1.3278722967012409,
+        1.3286748859411455
+      ],
+      "after_median": "1.3278722967012409",
+      "after_min": "1.3267891272603933",
+      "after_max": "1.3288893992268351",
+      "after_mad": "0.0008025892399046164",
+      "after_over_before_samples": [
+        0.8569094978633106,
+        0.9996438092941664,
+        1.0005201546257063,
+        0.9993271582588388,
+        0.9999317745206816
+      ],
+      "after_over_before_median": "0.9996438092941664",
+      "after_over_before_min": "0.8569094978633106",
+      "after_over_before_max": "1.0005201546257063",
+      "after_over_before_mad": "0.00031665103532763084",
+      "ratio_of_medians": "0.9993277633428076"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/1/write/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.9951640324098385,
+        1.9964884620611245,
+        1.9942847733736897,
+        1.993940534473772,
+        1.9944929086433312
+      ],
+      "before_median": "1.9944929086433312",
+      "before_min": "1.993940534473772",
+      "before_max": "1.9964884620611245",
+      "before_mad": "0.0005523741695592221",
+      "after_samples": [
+        1.9943382897705682,
+        1.9931100544176596,
+        1.994732792845628,
+        1.9951991096725692,
+        2.001452455461536
+      ],
+      "after_median": "1.994732792845628",
+      "after_min": "1.9931100544176596",
+      "after_max": "2.001452455461536",
+      "after_mad": "0.00046631682694120435",
+      "after_over_before_samples": [
+        0.9995861279444412,
+        0.9983078251101051,
+        1.0002246517036684,
+        1.0006311999666175,
+        1.003489381580674
+      ],
+      "after_over_before_median": "1.0002246517036684",
+      "after_over_before_min": "0.9983078251101051",
+      "after_over_before_max": "1.003489381580674",
+      "after_over_before_mad": "0.0006385237592271276",
+      "ratio_of_medians": "1.0001202732791163"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/read/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.3273234659720075,
+        1.327782353148314,
+        1.328623261662586,
+        1.3279855752503602,
+        1.3282679208317163
+      ],
+      "before_median": "1.3279855752503602",
+      "before_min": "1.3273234659720075",
+      "before_max": "1.328623261662586",
+      "before_mad": "0.00028234558135609156",
+      "after_samples": [
+        1.3273826946586698,
+        1.1068305198791923,
+        1.1060469411711726,
+        1.3277898118278586,
+        1.3279090578730215
+      ],
+      "after_median": "1.3273826946586698",
+      "after_min": "1.1060469411711726",
+      "after_max": "1.3279090578730215",
+      "after_mad": "0.0005263632143517327",
+      "after_over_before_samples": [
+        1.0000446226471398,
+        0.8335933349729937,
+        0.8324759719975923,
+        0.9998525861830504,
+        0.9997298263753369
+      ],
+      "after_over_before_median": "0.9997298263753369",
+      "after_over_before_min": "0.8324759719975923",
+      "after_over_before_max": "1.0000446226471398",
+      "after_over_before_mad": "0.00031479627180286407",
+      "ratio_of_medians": "0.9995460187196862"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/read/control",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.3275764087920816,
+        1.328042690490756,
+        1.3286766712162614,
+        1.3268704726732292,
+        1.3278445758902562
+      ],
+      "before_median": "1.3278445758902562",
+      "before_min": "1.3268704726732292",
+      "before_max": "1.3286766712162614",
+      "before_mad": "0.0002681670981745654",
+      "after_samples": [
+        1.3268155227765444,
+        1.3283967945852446,
+        1.327482993558327,
+        1.3274738190703756,
+        1.3273992175359368
+      ],
+      "after_median": "1.3274738190703756",
+      "after_min": "1.3268155227765444",
+      "after_max": "1.3283967945852446",
+      "after_mad": "7.4601534438834e-05",
+      "after_over_before_samples": [
+        0.9994268608492151,
+        1.0002666360780599,
+        0.9991016041119758,
+        1.000454713862108,
+        0.9996646005395468
+      ],
+      "after_over_before_median": "0.9996646005395468",
+      "after_over_before_min": "0.9991016041119758",
+      "after_over_before_max": "1.000454713862108",
+      "after_over_before_mad": "0.0005629964275709609",
+      "ratio_of_medians": "0.9997207829691724"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/read/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.327259853438278,
+        1.327958181668778,
+        1.3276928197136835,
+        1.3270228854275956,
+        1.3278046554939908
+      ],
+      "before_median": "1.3276928197136835",
+      "before_min": "1.3270228854275956",
+      "before_max": "1.327958181668778",
+      "before_mad": "0.000265361955094523",
+      "after_samples": [
+        1.3264731984730413,
+        1.106465861727096,
+        1.107162948037109,
+        1.3276041148844293,
+        1.3272204733991413
+      ],
+      "after_median": "1.3264731984730413",
+      "after_min": "1.106465861727096",
+      "after_max": "1.3276041148844293",
+      "after_mad": "0.001130916411387961",
+      "after_over_before_samples": [
+        0.9994073090034338,
+        0.8332083622819026,
+        0.8338999289578657,
+        1.0004379950513411,
+        0.999560039127418
+      ],
+      "after_over_before_median": "0.9994073090034338",
+      "after_over_before_min": "0.8332083622819026",
+      "after_over_before_max": "1.0004379950513411",
+      "after_over_before_mad": "0.0010306860479073476",
+      "ratio_of_medians": "0.9990813980293234"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/write/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.136740113725146,
+        1.136349215265294,
+        1.1358104975372665,
+        1.135762688105639,
+        1.1357068338472764
+      ],
+      "before_median": "1.1358104975372665",
+      "before_min": "1.1357068338472764",
+      "before_max": "1.136740113725146",
+      "before_mad": "0.00010366368999004116",
+      "after_samples": [
+        1.3021648566195427,
+        1.3019064765356718,
+        1.3038927899383759,
+        1.303979238263325,
+        1.3021775153412969
+      ],
+      "after_median": "1.3021775153412969",
+      "after_min": "1.3019064765356718",
+      "after_max": "1.303979238263325",
+      "after_mad": "0.0002710388056250679",
+      "after_over_before_samples": [
+        1.1455255611173012,
+        1.145692238834984,
+        1.1479844505448362,
+        1.1481088892242601,
+        1.1465789203099983
+      ],
+      "after_over_before_median": "1.1465789203099983",
+      "after_over_before_min": "1.1455255611173012",
+      "after_over_before_max": "1.1481088892242601",
+      "after_over_before_mad": "0.001053359192697112",
+      "ratio_of_medians": "1.1464742738025027"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/write/control",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        2.0695572841770824,
+        2.0718097339808654,
+        2.0713612501611403,
+        2.0694275937840865,
+        2.069684105575707
+      ],
+      "before_median": "2.069684105575707",
+      "before_min": "2.0694275937840865",
+      "before_max": "2.0718097339808654",
+      "before_mad": "0.0002565117916204507",
+      "after_samples": [
+        2.0693294925186208,
+        2.07519472035684,
+        2.0710489450332483,
+        2.0707119598333272,
+        2.0716300843254016
+      ],
+      "after_median": "2.0710489450332483",
+      "after_min": "2.0693294925186208",
+      "after_max": "2.07519472035684",
+      "after_mad": "0.0005811392921533098",
+      "after_over_before_samples": [
+        0.9998899321800835,
+        1.001633830713533,
+        0.9998492271071173,
+        1.0006206383123037,
+        1.000940229837226
+      ],
+      "after_over_before_median": "1.0006206383123037",
+      "after_over_before_min": "0.9998492271071173",
+      "after_over_before_max": "1.001633830713533",
+      "after_over_before_mad": "0.0007307061322202602",
+      "ratio_of_medians": "1.0006594433681277"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/write/control_effects",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        2.087094113976314,
+        2.0902607501872166,
+        2.0862521376120298,
+        2.0869123471913578,
+        2.0882648684507203
+      ],
+      "before_median": "2.087094113976314",
+      "before_min": "2.0862521376120298",
+      "before_max": "2.0902607501872166",
+      "before_mad": "0.0008419763642844025",
+      "after_samples": [
+        2.0855585532336764,
+        2.088359869129648,
+        2.0865260676701634,
+        2.0887931485205895,
+        2.0907388626253534
+      ],
+      "after_median": "2.088359869129648",
+      "after_min": "2.0855585532336764",
+      "after_max": "2.0907388626253534",
+      "after_mad": "0.0018338014594845298",
+      "after_over_before_samples": [
+        0.999264258984607,
+        0.999090600989662,
+        1.0001313024697231,
+        1.0009012363800343,
+        1.0011847128264282
+      ],
+      "after_over_before_median": "1.0001313024697231",
+      "after_over_before_min": "0.999090600989662",
+      "after_over_before_max": "1.0011847128264282",
+      "after_over_before_mad": "0.0008670434851161257",
+      "ratio_of_medians": "1.0006064676934583"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/2/write/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.9935541010614677,
+        1.9941923709587956,
+        1.9937885784894345,
+        1.99355165604213,
+        1.9965851064992994
+      ],
+      "before_median": "1.9937885784894345",
+      "before_min": "1.99355165604213",
+      "before_max": "1.9965851064992994",
+      "before_mad": "0.000236922447304444",
+      "after_samples": [
+        1.994285587947836,
+        2.1000929109899764,
+        2.1007807097994737,
+        1.9961188653538853,
+        1.9958084588788942
+      ],
+      "after_median": "1.9961188653538853",
+      "after_min": "1.994285587947836",
+      "after_max": "2.1007807097994737",
+      "after_mad": "0.0018332774060492163",
+      "after_over_before_samples": [
+        1.000366926027229,
+        1.0531044755628387,
+        1.0536627265620613,
+        1.001287756604638,
+        0.999611012013524
+      ],
+      "after_over_before_median": "1.001287756604638",
+      "after_over_before_min": "0.999611012013524",
+      "after_over_before_max": "1.0536627265620613",
+      "after_over_before_mad": "0.00167674459111411",
+      "ratio_of_medians": "1.0011687733040462"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/read/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.7173057999525567,
+        1.721591711332371,
+        1.7186037564966528,
+        1.7170447720123325,
+        1.7183397043672748
+      ],
+      "before_median": "1.7183397043672748",
+      "before_min": "1.7170447720123325",
+      "before_max": "1.721591711332371",
+      "before_mad": "0.0010339044147180676",
+      "after_samples": [
+        1.7177447295069088,
+        1.7697382486844324,
+        1.771915535792922,
+        1.719847551239052,
+        1.7194818555948106
+      ],
+      "after_median": "1.719847551239052",
+      "after_min": "1.7177447295069088",
+      "after_max": "1.771915535792922",
+      "after_mad": "0.0021028217321432674",
+      "after_over_before_samples": [
+        1.000255591959431,
+        1.0279662924926607,
+        1.0310204019365956,
+        1.0016323273990315,
+        1.0006646830220083
+      ],
+      "after_over_before_median": "1.0016323273990315",
+      "after_over_before_min": "1.000255591959431",
+      "after_over_before_max": "1.0310204019365956",
+      "after_over_before_mad": "0.001376735439600596",
+      "ratio_of_medians": "1.0008775022004932"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/read/control",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.5521384289754683,
+        1.5537600584872544,
+        1.5548225248940912,
+        1.5517831043515644,
+        1.5523272891880837
+      ],
+      "before_median": "1.5523272891880837",
+      "before_min": "1.5517831043515644",
+      "before_max": "1.5548225248940912",
+      "before_mad": "0.0005441848365193014",
+      "after_samples": [
+        1.552459722336462,
+        1.5530865222307726,
+        1.5538562730301266,
+        1.5551865358551886,
+        1.5542295754465096
+      ],
+      "after_median": "1.5538562730301266",
+      "after_min": "1.552459722336462",
+      "after_max": "1.5551865358551886",
+      "after_mad": "0.0007697507993540409",
+      "after_over_before_samples": [
+        1.0002070004549826,
+        0.9995665120539026,
+        0.9993785452368396,
+        1.0021932391801922,
+        1.0012254414849724
+      ],
+      "after_over_before_median": "1.0002070004549826",
+      "after_over_before_min": "0.9993785452368396",
+      "after_over_before_max": "1.0021932391801922",
+      "after_over_before_mad": "0.0008284552181430094",
+      "ratio_of_medians": "1.0009849622902929"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/read/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        1.7174322540436553,
+        1.7213867040012711,
+        1.7224210779064126,
+        1.722325880044526,
+        1.7207896262947435
+      ],
+      "before_median": "1.7213867040012711",
+      "before_min": "1.7174322540436553",
+      "before_max": "1.7224210779064126",
+      "before_mad": "0.0009391760432548857",
+      "after_samples": [
+        1.7178691678146747,
+        1.7185977650734185,
+        1.7203375548515432,
+        1.7253278719444738,
+        1.7210634352577434
+      ],
+      "after_median": "1.7203375548515432",
+      "after_min": "1.7178691678146747",
+      "after_max": "1.7253278719444738",
+      "after_mad": "0.0017397897781246119",
+      "after_over_before_samples": [
+        1.0002543994209907,
+        0.9983798300978102,
+        0.998790352091254,
+        1.0017429871633063,
+        1.0001591182087664
+      ],
+      "after_over_before_median": "1.0001591182087664",
+      "after_over_before_min": "0.9983798300978102",
+      "after_over_before_max": "1.0017429871633063",
+      "after_over_before_mad": "0.0013687661175123544",
+      "ratio_of_medians": "0.9993905209403039"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/write/body",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        3.5409305303423273,
+        3.5430212612591387,
+        3.5434509530601703,
+        3.54435253420197,
+        3.543976349041501
+      ],
+      "before_median": "3.5434509530601703",
+      "before_min": "3.5409305303423273",
+      "before_max": "3.54435253420197",
+      "before_mad": "0.0005253959813305009",
+      "after_samples": [
+        3.53981488782673,
+        3.540503609264651,
+        3.5484083253225993,
+        3.5789193260410186,
+        3.5491643893743614
+      ],
+      "after_median": "3.5484083253225993",
+      "after_min": "3.53981488782673",
+      "after_max": "3.5789193260410186",
+      "after_mad": "0.007904716057948402",
+      "after_over_before_samples": [
+        0.9996849295669493,
+        0.9992894053383148,
+        1.0013990238126897,
+        1.0097526393059069,
+        1.0014639037685067
+      ],
+      "after_over_before_median": "1.0013990238126897",
+      "after_over_before_min": "0.9992894053383148",
+      "after_over_before_max": "1.0097526393059069",
+      "after_over_before_mad": "0.0017140942457404273",
+      "ratio_of_medians": "1.0013990238126897"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/write/control",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        2.7035611687919414,
+        2.7013761258972497,
+        2.7069616332814994,
+        2.699750422904998,
+        2.70065905424595
+      ],
+      "before_median": "2.7013761258972497",
+      "before_min": "2.699750422904998",
+      "before_max": "2.7069616332814994",
+      "before_mad": "0.0016257029922517319",
+      "after_samples": [
+        2.6996184352526904,
+        2.7037755536679464,
+        2.700427011120923,
+        2.706260103167908,
+        2.698687838574555
+      ],
+      "after_median": "2.700427011120923",
+      "after_min": "2.698687838574555",
+      "after_max": "2.706260103167908",
+      "after_mad": "0.0017391725463680174",
+      "after_over_before_samples": [
+        0.9985416518091903,
+        1.0008882242453,
+        0.9975859938019681,
+        1.0024112155729956,
+        0.9992700982864551
+      ],
+      "after_over_before_median": "0.9992700982864551",
+      "after_over_before_min": "0.9975859938019681",
+      "after_over_before_max": "1.0024112155729956",
+      "after_over_before_mad": "0.0016181259588450292",
+      "ratio_of_medians": "0.9996486550809317"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/write/control_effects",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        2.771892535309881,
+        2.776800398259763,
+        2.7496630171654917,
+        2.752090029222995,
+        2.754531039561219
+      ],
+      "before_median": "2.754531039561219",
+      "before_min": "2.7496630171654917",
+      "before_max": "2.776800398259763",
+      "before_mad": "0.004868022395727145",
+      "after_samples": [
+        2.781075568522108,
+        2.755407270053123,
+        2.7690113491890376,
+        2.748000558932881,
+        2.7774538356566416
+      ],
+      "after_median": "2.7690113491890376",
+      "after_min": "2.748000558932881",
+      "after_max": "2.781075568522108",
+      "after_mad": "0.012064219333070447",
+      "after_over_before_samples": [
+        1.0033129109787802,
+        0.9922957630587897,
+        1.0070366193612668,
+        0.9985140492328776,
+        1.0083218507129528
+      ],
+      "after_over_before_median": "1.0033129109787802",
+      "after_over_before_min": "0.9922957630587897",
+      "after_over_before_max": "1.0083218507129528",
+      "after_over_before_mad": "0.004798861745902605",
+      "ratio_of_medians": "1.0052569055929481"
+    },
+    {
+      "member": "zen",
+      "profile": "avx512",
+      "family": "tuplepack",
+      "case": "point/4/write/ordinary",
+      "threads": "1",
+      "metric": "ns_per_item",
+      "trials": "5",
+      "before_samples": [
+        4.431078639726128,
+        4.433295855383654,
+        4.428240876643896,
+        4.4286517998097406,
+        4.43080176338128
+      ],
+      "before_median": "4.43080176338128",
+      "before_min": "4.428240876643896",
+      "before_max": "4.433295855383654",
+      "before_mad": "0.002149963571539182",
+      "after_samples": [
+        4.430258405675045,
+        4.430265941065882,
+        4.432253953887196,
+        4.458235082912332,
+        4.436730212893154
+      ],
+      "after_median": "4.432253953887196",
+      "after_min": "4.430258405675045",
+      "after_max": "4.458235082912332",
+      "after_mad": "0.001995548212151199",
+      "after_over_before_samples": [
+        0.9998148906580602,
+        0.9993165549025804,
+        1.0009062463752743,
+        1.0066799749539719,
+        1.0013380082947674
+      ],
+      "after_over_before_median": "1.0009062463752743",
+      "after_over_before_min": "0.9993165549025804",
+      "after_over_before_max": "1.0066799749539719",
+      "after_over_before_mad": "0.001091355717214082",
+      "ratio_of_medians": "1.000327748922987"
+    }
+  ],
+  "interpretation": [
+    "The loop performs the same accept test, trace access, value generation and indirect call; the selected kernel has the same controls loads, packed preservation work and stores.",
+    "The kernel moves from a 64-byte boundary to offset48 and now crosses it. This supports an instruction-delivery/target-placement hypothesis; it does not isolate the cause or prove a cache/front-end event.",
+    "The remaining roughly15% measured loss is not dismissed. The unchanged ordinary two-field command is a useful independent control, not proof that the body timing is irrelevant.",
+    "A backend scheduling model would see the same instruction dependency/port work in both copies; it cannot resolve linked fetch placement, indirect target prediction or complete consumer cost.",
+    "No global alignment flag or benchmark-address-specific production patch is adopted."
+  ]
+}

@@ -1,0 +1,586 @@
+{
+  "scope": "SeriesPack R2/R3/R4 all canonical ns_per_item cases. Each cohort contains 96 cases per profile on NEON, Zen5 AVX2 and Zen5 AVX512; five paired before/after process trials. No speed-score aggregation.",
+  "metric": "CPU ns per logical value = 1e9/items_per_second = cpu_time_ns/8192; partial selections still divide by all 8192 logical rows.",
+  "method": "Every raw JSON entry independently checked for iteration, ns, threads1, logical_values8192, error absence, unique name, matching96-case sets and item-counter equality; all samples and five paired ratios verified against generic reader CSV.",
+  "paired_median": "median(after[i]/before[i]) for i0..4; arm medians and ratio of medians retained separately. Cross-cohort after/after comparisons are unpaired historical context, not isolated causal timings.",
+  "rows": 864,
+  "r4_rows": 288,
+  "csv_sha256": "a71efbed59597786f200838e97b16fbe28f365fc605836dc3da37c52ed79c268",
+  "summary_proofs": [
+    {
+      "cohort": "R2",
+      "summary": "build/ikea-cohesion-v2/native-r2-neon-summary/paired-cases.csv",
+      "sha256": "5344a405ad43b12fef457bee6180947d81075b19e8a691042012216f5a180418",
+      "provenance_sha256": "7e094ee6f7bd4964bec83749957d606a0ed8ca174638d52bffb8fb9c5a6619a8"
+    },
+    {
+      "cohort": "R2",
+      "summary": "build/ikea-cohesion-v2/native-r2-zen-summary/paired-cases.csv",
+      "sha256": "57ff6680f80630b6a44c89b63f746583735a5659e2d7e3cabaf0d0733a9c627d",
+      "provenance_sha256": "50bd5d24962fde544db52144605dfe126888dc5ce7de05665d0996be790007f5"
+    },
+    {
+      "cohort": "R3",
+      "summary": "build/ikea-cohesion-v2/native-r3-summary/paired-cases.csv",
+      "sha256": "774fe773af0e098c3c1306ad8108e7917251e9d92a9ab5c38d5e9841263274fc",
+      "provenance_sha256": "7c77c01189f80f78ebc25730c00cbd2ecc45a5c768f455c7cd44a3f7a699107f"
+    },
+    {
+      "cohort": "R4",
+      "summary": "build/ikea-cohesion-v2/native-r4-summary/paired-cases.csv",
+      "sha256": "c315fafeee6685351f723fd40608fc970f62fe39156d3791c9f27a57a11879d4",
+      "provenance_sha256": "826174f31320e03a7cbf83fa3c88c4d3f6258cf375a69b1fb3e32448ea6a94df"
+    }
+  ],
+  "workers": {
+    "20261023T000121Z-79d91ce8": {
+      "cohort": "R2",
+      "cpu": 0,
+      "trials": 5,
+      "minimum_time_seconds": 0.1,
+      "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+      "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+      "source_manifest_sha256": {
+        "after": "a7df81d643c6ebad0ce0d9491ce989a8cc4fdcb9eba295133903c56f1ff23a79",
+        "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+      },
+      "receipt_sha256": "164775ab1120e89190b22c5e5d6c4771345548cbac0b0eceaaec860188db63d2",
+      "worker_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 80629753,
+        "files": 134,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9bb6abb5e266c830fc7e0d18488107395d3f7e4d923490f51a7dfbd72d58ff6f.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9bb6abb5e266c830fc7e0d18488107395d3f7e4d923490f51a7dfbd72d58ff6f",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9bb6abb5e266c830fc7e0d18488107395d3f7e4d923490f51a7dfbd72d58ff6f.tar.gz"
+      },
+      "seriespack_binaries": [
+        {
+          "arm": "before",
+          "bytes": 24420552,
+          "family": "seriespack",
+          "profile": "neon",
+          "sha256": "a46142f67b93c23f0577e7d80f2e51ab9194f0c54d210de97efb063f77bc76f2"
+        },
+        {
+          "arm": "after",
+          "bytes": 24600552,
+          "family": "seriespack",
+          "profile": "neon",
+          "sha256": "e1b2b3159574eee14bebcac2495ef4fadbc56f9f948faf05c0e5d3f1537110f9"
+        }
+      ],
+      "raw_trial_sha256": {
+        "neon/before/seriespack-trial-0.json": "7124eb1093efb42521931f179ba18842565340a22afa64b801bcf0de4a0667de",
+        "neon/before/seriespack-trial-1.json": "dcfc89f18e8eee6cc9ce8671a362f8a5e15396d0c7c572d53cbdd9239062a787",
+        "neon/before/seriespack-trial-2.json": "d6c781b2756b7fca026598da04ae5879dd1cdb8e2708413fde98500b270f1312",
+        "neon/before/seriespack-trial-3.json": "51d061378e5c89882287f85073b35f8f6fdd7afff13c0d3d2d5d4785f8bf35fa",
+        "neon/before/seriespack-trial-4.json": "a903e597ffdfc4fdb0d40d410e54d88c5d60441c7b67179ed1c15240dcddc209",
+        "neon/after/seriespack-trial-0.json": "12c929c61eb9d719b6417a3f4af1c0fc9647946cc8c4c7e37c57be947c0d9cad",
+        "neon/after/seriespack-trial-1.json": "d35c7d132a40cedf10d61b7584781f45e0c38cb3426735f486c705f78649f8a1",
+        "neon/after/seriespack-trial-2.json": "280762a2b7777aef5c3f3b7e121b5788baf97ca155c20848e8e836c86cf9dbc6",
+        "neon/after/seriespack-trial-3.json": "64ad269784254cc60585aec8cae02e4462a26c0f7d472a1922bb32bfe67437be",
+        "neon/after/seriespack-trial-4.json": "7fbed97c642147f01dea1f29fe83b7059458159b567ee2441da143ca14ea8550"
+      }
+    },
+    "20261023T000134Z-884590fc": {
+      "cohort": "R2",
+      "cpu": 0,
+      "trials": 5,
+      "minimum_time_seconds": 0.1,
+      "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+      "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+      "source_manifest_sha256": {
+        "after": "a7df81d643c6ebad0ce0d9491ce989a8cc4fdcb9eba295133903c56f1ff23a79",
+        "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+      },
+      "receipt_sha256": "83769fa45c370a07c086bc31be9d10cf94df33503b842175cae16af33fbce0ca",
+      "worker_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 137574850,
+        "files": 253,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/3edc3bf53e530113ec03406f3109c59c3c0bad52a72be67c509b86a5229be6ad.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "3edc3bf53e530113ec03406f3109c59c3c0bad52a72be67c509b86a5229be6ad",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/3edc3bf53e530113ec03406f3109c59c3c0bad52a72be67c509b86a5229be6ad.tar.gz"
+      },
+      "seriespack_binaries": [
+        {
+          "arm": "before",
+          "bytes": 22814960,
+          "family": "seriespack",
+          "profile": "avx2",
+          "sha256": "c2a8a6febb4cb3ea5ac55275cec4290095e13a5dcad81484172286eb1c02a43c"
+        },
+        {
+          "arm": "after",
+          "bytes": 22935416,
+          "family": "seriespack",
+          "profile": "avx2",
+          "sha256": "46c41262579965b0d13bd62040e1b94c8d5cbe9412718494f2a577950d8c110e"
+        },
+        {
+          "arm": "before",
+          "bytes": 22464912,
+          "family": "seriespack",
+          "profile": "avx512",
+          "sha256": "6dc9eea793bd067bfdc987d56945393818758f246f0aaa075fffab645e343155"
+        },
+        {
+          "arm": "after",
+          "bytes": 22581800,
+          "family": "seriespack",
+          "profile": "avx512",
+          "sha256": "4a6576595acc427f26dba4ae5b071762a9949b6d7a7d5836736e7cbae7a8074c"
+        }
+      ],
+      "raw_trial_sha256": {
+        "avx2/before/seriespack-trial-0.json": "a1edbb0be228cf5b856541138db1680b105689e4171dae5dd636ef006289fa8f",
+        "avx2/before/seriespack-trial-1.json": "eb1e1dfff01532fbe1a75b94840408ea169e56c1ad0950e3c3f2faa9138fe24b",
+        "avx2/before/seriespack-trial-2.json": "9feb6c25c42686b36c263bc73113a5bbcf592757b612fe70100fd4f2c5cfaae3",
+        "avx2/before/seriespack-trial-3.json": "c1d8df4cf27b5296b56259af43800110c2782a728aa1fa8ddc140ef4f470d56d",
+        "avx2/before/seriespack-trial-4.json": "6d8bb96f8a76d6094f8da787d3e830434b910fca7e8731ee6dd13fb0af9a9f53",
+        "avx2/after/seriespack-trial-0.json": "64da555fa7da7212428440ca4a9c2aacb5adb09ce850e48311c093d6dfea3983",
+        "avx2/after/seriespack-trial-1.json": "bc8e21c0680ccde118fd48f17c707c3bf80d2dd7678b3215ffa8403c3367ee59",
+        "avx2/after/seriespack-trial-2.json": "6125732f0988b73cef9c8960ec35b52eb4500c0bf7541c449b32ce9dd752a786",
+        "avx2/after/seriespack-trial-3.json": "e1575a4f215f0f77329d54c9879d156f94a364b9280cabccde0f43686da0cb76",
+        "avx2/after/seriespack-trial-4.json": "d800403372f49f79d1efbe367833bfd3cb86eafede8c06079a6687497fd3f39d",
+        "avx512/before/seriespack-trial-0.json": "aa3d81972faa0638d79a5b26ad9c1e30615419e3389a8479d83c84ea24f535a4",
+        "avx512/before/seriespack-trial-1.json": "9fd4c0dea111fc185f1be8ec20ff3603569084768eef4744480bd0de243d1b5e",
+        "avx512/before/seriespack-trial-2.json": "159921d18b42eb423b95236e1800a4b793cd8fb0d135181a573f9c0f2ea1de70",
+        "avx512/before/seriespack-trial-3.json": "bdf4cb7c5d8b80f67fa1b00172d3131cf9f3273c0e967a6f1e82cfbe8676849c",
+        "avx512/before/seriespack-trial-4.json": "4f7a07b32c0d0092a63a799afd8a2ae3cb17ad7ca84aca0291e2dfb705862427",
+        "avx512/after/seriespack-trial-0.json": "e70acbcf12ca2996dcbb87a4982b2e88100a0da7e4e24682a529591f449a2ea0",
+        "avx512/after/seriespack-trial-1.json": "7400921cb72c9b87ab2593bb7e63457caa6587eb8bd0b961447a809ae147b8cc",
+        "avx512/after/seriespack-trial-2.json": "835a9b6a55de327a2fd1d82fd0423150909c5a14a695d6c698d2dd7c0ed6b14c",
+        "avx512/after/seriespack-trial-3.json": "344d00694f891c9ac4520d4aa0c793b5c5f183a246b1bdbbb17850f98dd6d97e",
+        "avx512/after/seriespack-trial-4.json": "37ab4ae18e5be040b6f250f0a3ad3546fe5e916b46ffe682d7278b54529f9f43"
+      }
+    },
+    "20261023T010259Z-e4ef0184": {
+      "cohort": "R3",
+      "cpu": 0,
+      "trials": 5,
+      "minimum_time_seconds": 0.1,
+      "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+      "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+      "source_manifest_sha256": {
+        "after": "f61c0d75ccc73d8642e16c89b693098171bc64c22a8fe5503fdcfccc275cfb19",
+        "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+      },
+      "receipt_sha256": "6fe49ab4c3932a9d7fb1211b30c7e10b7a452c38d121426b039534a6572f77aa",
+      "worker_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 80814595,
+        "files": 133,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/aa034538ead1c0524dec9401e5237877bd8c3d5e77c79c889c8933ca8ba986fe.tar.gz"
+      },
+      "seriespack_binaries": [
+        {
+          "arm": "before",
+          "bytes": 24420552,
+          "family": "seriespack",
+          "profile": "neon",
+          "sha256": "a46142f67b93c23f0577e7d80f2e51ab9194f0c54d210de97efb063f77bc76f2"
+        },
+        {
+          "arm": "after",
+          "bytes": 24689976,
+          "family": "seriespack",
+          "profile": "neon",
+          "sha256": "3db7554876815f2681a7b5d9e6e6e16fa96859793c5525b8ce123ab47e1efca4"
+        }
+      ],
+      "raw_trial_sha256": {
+        "neon/before/seriespack-trial-0.json": "aea80d221ad5c1c72af0423e007c22fe5bbc6799b05158d91721bd9318425279",
+        "neon/before/seriespack-trial-1.json": "352147bbd765235a5c64c780e61c8134a63f650b7ebb5130c200d45bb85f0915",
+        "neon/before/seriespack-trial-2.json": "0f592a2775699d197cfbe6c20625ab14a02e3e9593ed1ee6e265e91aa3710e69",
+        "neon/before/seriespack-trial-3.json": "08fa21e42584942ff14ff24654b51966154482ee83fdd950202b15a55849e27f",
+        "neon/before/seriespack-trial-4.json": "a7b98515699af31212680c1ad0bac633dc83fec97acf68fce296417830c701ee",
+        "neon/after/seriespack-trial-0.json": "cd6de8f7850890817f0f323090500a2fa21a05a186621c183481a6207902374b",
+        "neon/after/seriespack-trial-1.json": "438bea6a4dcee5edbb643d05dcca6a1afff526fe9b052f97569bbb785df4d166",
+        "neon/after/seriespack-trial-2.json": "03ae11df7c9282347fefdbd1b26df15e24e61426995df2712d949681f8ee19e2",
+        "neon/after/seriespack-trial-3.json": "f4a1e0ee035c714d46406c0b20a1067e80099fdf61b2848f09ee6cd177e5d345",
+        "neon/after/seriespack-trial-4.json": "3ffdd9c825981def46a1ea149a19f359ca151da673bfa63c854c7806087a7001"
+      }
+    },
+    "20261023T010308Z-4dac16f5": {
+      "cohort": "R3",
+      "cpu": 0,
+      "trials": 5,
+      "minimum_time_seconds": 0.1,
+      "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+      "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+      "source_manifest_sha256": {
+        "after": "f61c0d75ccc73d8642e16c89b693098171bc64c22a8fe5503fdcfccc275cfb19",
+        "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+      },
+      "receipt_sha256": "e3005a6962497079091778ceb4feb39777c2941563c2c22f787c7083c3b75235",
+      "worker_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 138006971,
+        "files": 254,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/9db9b2474abfe55b9701658f0f04d7cee0e601904a45d1477aaeb2ca1c7e1f48.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "9db9b2474abfe55b9701658f0f04d7cee0e601904a45d1477aaeb2ca1c7e1f48",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/9db9b2474abfe55b9701658f0f04d7cee0e601904a45d1477aaeb2ca1c7e1f48.tar.gz"
+      },
+      "seriespack_binaries": [
+        {
+          "arm": "before",
+          "bytes": 22814960,
+          "family": "seriespack",
+          "profile": "avx2",
+          "sha256": "c2a8a6febb4cb3ea5ac55275cec4290095e13a5dcad81484172286eb1c02a43c"
+        },
+        {
+          "arm": "after",
+          "bytes": 23039112,
+          "family": "seriespack",
+          "profile": "avx2",
+          "sha256": "77b4e1c0f6b4f5698f7b6a0ef4a9fd3009f913353ba651047ddd2103c6936e42"
+        },
+        {
+          "arm": "before",
+          "bytes": 22464912,
+          "family": "seriespack",
+          "profile": "avx512",
+          "sha256": "6dc9eea793bd067bfdc987d56945393818758f246f0aaa075fffab645e343155"
+        },
+        {
+          "arm": "after",
+          "bytes": 22695096,
+          "family": "seriespack",
+          "profile": "avx512",
+          "sha256": "9bb2ce1e12e5b3e366437f85aab76a198b51b04a42b17eef0bfdc77ed398a2fb"
+        }
+      ],
+      "raw_trial_sha256": {
+        "avx2/before/seriespack-trial-0.json": "9c67dd76cb372fe9a7483aa219982c4c785ce1931455a7db3ccc11d6241da6e3",
+        "avx2/before/seriespack-trial-1.json": "30b5fefa754b49de61ac97e41fccac89733db918b98002759c251ed5b4af81c8",
+        "avx2/before/seriespack-trial-2.json": "131895c56b3d5c4418d67162e863a5203b30d9b935ae0c596fa1203a79ae1e2b",
+        "avx2/before/seriespack-trial-3.json": "e66215bc15f6e4891747d20a09bec560a341390147a714219579de11b353256a",
+        "avx2/before/seriespack-trial-4.json": "8d4631d2b2bac57cdd0d83a1cf34c68b4e0c8ebade0d2cd102b1025add19158c",
+        "avx2/after/seriespack-trial-0.json": "74c87b987dc1a3b2da976bbce8dba0eed1c4436ed9e36bcc41cd972cde89d699",
+        "avx2/after/seriespack-trial-1.json": "73fc932b76b727ba3c77cb2624435736e2da8a549f517d6d8efc5be6c7930fda",
+        "avx2/after/seriespack-trial-2.json": "e68acee2f19560ce53b64702cd7f088db903e85a2d64c30cf36ba7cc032475d9",
+        "avx2/after/seriespack-trial-3.json": "ca384bea8c62f08dccaba560fc9c4e85b9e9034f4cefe06aa3a3b10d8edfc517",
+        "avx2/after/seriespack-trial-4.json": "d47e2f64d689c1219e062f36bb8415ffd946a9ac8ec7eeb03fc8040b50a23e83",
+        "avx512/before/seriespack-trial-0.json": "9bb1d5190fd566c6bbda913a7940e9cc3ff04e82a2d110808c5fbbdf7c34283a",
+        "avx512/before/seriespack-trial-1.json": "57e7c4c785c67c73f699aab8927092bef47f5cf16ca7fc97d982fe2586f9f101",
+        "avx512/before/seriespack-trial-2.json": "02ed4f5c52ce11bd02e47dc6db5f8110b9a6d6d8f34b9ddf300821745527c60c",
+        "avx512/before/seriespack-trial-3.json": "e27413e157901169611783b0ff9afcf620dd06b5822f1e8b4c964efa853dd5b3",
+        "avx512/before/seriespack-trial-4.json": "85c9a72bd5201651a13f3f4a819aa1e731c4e0f4a5030a39298efa272bfd20f3",
+        "avx512/after/seriespack-trial-0.json": "e5e8f49140cf5d8d00243110847574b32b25d57d749a62eb3ca00c84464c043c",
+        "avx512/after/seriespack-trial-1.json": "39ceb28e80c7c0852ecf9a4ee06673b5589c21e6de88a2e4ee5121849e593044",
+        "avx512/after/seriespack-trial-2.json": "c2a8ba35b884bf520ba20486d3638b898f73434a2c6a2a43eb9db61facefa282",
+        "avx512/after/seriespack-trial-3.json": "c03b4bbda5e4aab50057a1012d9f0eb896e442a40a89b1b184c9e36e83a4ab10",
+        "avx512/after/seriespack-trial-4.json": "8bf446308c62a0567323d069f7f8074db134ceff8998865fb632f47d53ebda62"
+      }
+    },
+    "20261023T014337Z-deb17649": {
+      "cohort": "R4",
+      "cpu": 0,
+      "trials": 5,
+      "minimum_time_seconds": 0.1,
+      "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+      "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+      "source_manifest_sha256": {
+        "after": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72",
+        "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+      },
+      "receipt_sha256": "c2c63d4ba02a54738468f52eb71d7f18f006f19bdfdab4f9faec8722795cba1a",
+      "worker_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 80879157,
+        "files": 134,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/6dae1c314b03d67ea7b6f4bba7d22da3763e5a9d6977fd88c1ae959a35e673f5.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "6dae1c314b03d67ea7b6f4bba7d22da3763e5a9d6977fd88c1ae959a35e673f5",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6dae1c314b03d67ea7b6f4bba7d22da3763e5a9d6977fd88c1ae959a35e673f5.tar.gz"
+      },
+      "seriespack_binaries": [
+        {
+          "arm": "before",
+          "bytes": 24420552,
+          "family": "seriespack",
+          "profile": "neon",
+          "sha256": "a46142f67b93c23f0577e7d80f2e51ab9194f0c54d210de97efb063f77bc76f2"
+        },
+        {
+          "arm": "after",
+          "bytes": 24704776,
+          "family": "seriespack",
+          "profile": "neon",
+          "sha256": "34ef70859995563acfc8e5a63740f254f266d2f67340672a17a9aff7214acdba"
+        }
+      ],
+      "raw_trial_sha256": {
+        "neon/before/seriespack-trial-0.json": "d4795f4ebe2dba415fb8cffd31a8df5636e945a7ca4a12cbe89d9a40d3a5e930",
+        "neon/before/seriespack-trial-1.json": "c6c0859ff71cac9dbbe5c159e1ad844be1939067d0266617d4cc5581698da5f1",
+        "neon/before/seriespack-trial-2.json": "7cd9b4ab971fbdc04137a6160a36810b21078ee704126136ddc1a0f6e74ac025",
+        "neon/before/seriespack-trial-3.json": "7866d87481e4a06f98f572a105bddcbc1c848a72a10dcd97a07c7066d0d1cd53",
+        "neon/before/seriespack-trial-4.json": "8db588fd90c678285bdf07508942e656f2ec062f0f3dfccc34dbdad91f0a6832",
+        "neon/after/seriespack-trial-0.json": "47ae06ea1d1085192055062ee290f8fde6818ce32f194c433e32b5d43d2cf549",
+        "neon/after/seriespack-trial-1.json": "385be4891fed5955a2e15f78a10f424f6226e1a8c1dc2d9e9123e5cb199991eb",
+        "neon/after/seriespack-trial-2.json": "4461668d90474ee7f9e95e560ab172f3a4986a9b7f8b58d8e77ada582db52ef1",
+        "neon/after/seriespack-trial-3.json": "301ced52f8379a5014b9973e7c3e88db2b43faba9a93dd5995525596c87c2446",
+        "neon/after/seriespack-trial-4.json": "b63aae472bf33889d688b4ea375bed0cd0d2c2f317f2eafa96ffc0b1ffa4032f"
+      }
+    },
+    "20261023T014343Z-22c72eab": {
+      "cohort": "R4",
+      "cpu": 0,
+      "trials": 5,
+      "minimum_time_seconds": 0.1,
+      "baseline_commit": "f153420002520213e1496a97559f0118bbd1ad94",
+      "before_label": "f153420002520213e1496a97559f0118bbd1ad94 + TP point oracle-only harness patch",
+      "source_manifest_sha256": {
+        "after": "288ff39e2c0d1e4396f34dac1b59262f9e49bfe15fa3b8928ad8c51fb855bd72",
+        "before": "43a76cbee7f8a90df28368de83cccc506f5102c7d2c9e75c6c900cb2b29a8327"
+      },
+      "receipt_sha256": "c93721e5de1de113d0d988d34cc83aec9efe84f230aa36ea0d43d7aa89b8c138",
+      "worker_artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 138015924,
+        "files": 254,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/5e6792cd78b5512e570484a6474f7f5706b19ded26b70f9c682be4d4e678cdf9.tar.gz"
+      },
+      "seriespack_binaries": [
+        {
+          "arm": "before",
+          "bytes": 22814960,
+          "family": "seriespack",
+          "profile": "avx2",
+          "sha256": "c2a8a6febb4cb3ea5ac55275cec4290095e13a5dcad81484172286eb1c02a43c"
+        },
+        {
+          "arm": "after",
+          "bytes": 23045088,
+          "family": "seriespack",
+          "profile": "avx2",
+          "sha256": "e1a53717d2047306705871f1e0605127ae25aa81069a79b29815571a8476f707"
+        },
+        {
+          "arm": "before",
+          "bytes": 22464912,
+          "family": "seriespack",
+          "profile": "avx512",
+          "sha256": "6dc9eea793bd067bfdc987d56945393818758f246f0aaa075fffab645e343155"
+        },
+        {
+          "arm": "after",
+          "bytes": 22700048,
+          "family": "seriespack",
+          "profile": "avx512",
+          "sha256": "d6b0cf02a647295dca2928f3edbb91571fa15859029fc3bb79299ad0f656933a"
+        }
+      ],
+      "raw_trial_sha256": {
+        "avx2/before/seriespack-trial-0.json": "7358b37c6f15c1d02145c3e8bdf6a1fe9fcdd06a3b111df1fda844a5ca727fb2",
+        "avx2/before/seriespack-trial-1.json": "faf7a485f7853ff7202e845809ccca15b49546e3d88e0076ae38011c897e9883",
+        "avx2/before/seriespack-trial-2.json": "d35c4ddadd049a4e528dbb3ad8546ab222548f2598ee51ecdeb6117983a42c8a",
+        "avx2/before/seriespack-trial-3.json": "40e0488b4580047efaa02c01edadcde37e4526372f24ae63b3ad27b8601d1777",
+        "avx2/before/seriespack-trial-4.json": "ea27431b9c7b784353e6f77880b4026a9fdc29187aa6f0310dff55b5af98f327",
+        "avx2/after/seriespack-trial-0.json": "1a925cd185fd4bb1ecc53789cb287ded420a0d3eff8cdc9121c399d3ede2276e",
+        "avx2/after/seriespack-trial-1.json": "ae81571e258da17fb8bd8a529ba1ce2081da587e52e30533a853a79725675445",
+        "avx2/after/seriespack-trial-2.json": "5fdecf956f6b6d8ab598773909c04cbf6ead5bb7f70bf3b06594236adb04489d",
+        "avx2/after/seriespack-trial-3.json": "73e03dc67b7bfe140a51a96cab496b43e81cdff37beb8050f061003202f9300d",
+        "avx2/after/seriespack-trial-4.json": "66a2c4e0200b891bd15a3f4c6abbfe0b0514cf117f851d7ef4fbe35c45db9905",
+        "avx512/before/seriespack-trial-0.json": "0184490ada8bea6eba0e53efe4927afc7fbca859bd70051e60db3a42852a662e",
+        "avx512/before/seriespack-trial-1.json": "3a58c7c9c90841417b36c25ffb8cda34e7ac32e1a59302a5b3e5d1a337431ea0",
+        "avx512/before/seriespack-trial-2.json": "7329ad82ee3cd55b44358f3c74c3a3fbdcf5debb9494e133a34762c704dd6419",
+        "avx512/before/seriespack-trial-3.json": "93b6b47e00fe77e75aba184323292e8e18203a12e0ea22eebc77d1d88bf4ac0d",
+        "avx512/before/seriespack-trial-4.json": "8c8906713b90e144d2aa838d9ba1b1f862a6a03cb69835c72126ea6e59c9c53d",
+        "avx512/after/seriespack-trial-0.json": "c192b455f00ead5b600e22b8af955a5b10fd8d7016cd622e11d54e22ec7d1d6a",
+        "avx512/after/seriespack-trial-1.json": "d58e33df921e0e45f89c792fa453e5d76b62f2ba0786c35911794f4e7067135a",
+        "avx512/after/seriespack-trial-2.json": "d6f6902af679e2e3a7bdf5dba8d99bfa6d8c759a42ee27b6c679c5f0a61d49cb",
+        "avx512/after/seriespack-trial-3.json": "0eadf122711c289b02b243c5e92f654a514838fb046f044c68a0abe8ee2025b6",
+        "avx512/after/seriespack-trial-4.json": "690b374880610b09a43dacd56fd7716950b1ec962c94c21fe899e036a397ee0a"
+      }
+    }
+  },
+  "r4_at_least_5_percent_losses": [
+    {
+      "cohort": "R4",
+      "profile": "avx2",
+      "case": "placed/k31h8/substituted/all/mutation-bound",
+      "before_median_ns_per_logical_value": 0.7045997499136638,
+      "after_median_ns_per_logical_value": 0.749466451968915,
+      "paired_median_after_over_before": 1.0530632418075283,
+      "ratio_of_arm_medians": 1.0636768634401996,
+      "before_samples": [
+        0.7045997499136638,
+        0.7028576279485867,
+        0.7070404352692385,
+        0.7138280561304203,
+        0.7035789124260431
+      ],
+      "after_samples": [
+        0.7403796138991136,
+        0.737431407005679,
+        0.749466451968915,
+        0.7517060868818667,
+        0.7569505915483027
+      ],
+      "paired_ratios": [
+        1.0507804097146414,
+        1.0491903021071307,
+        1.0600050783283996,
+        1.0530632418075283,
+        1.0758574172415518
+      ]
+    },
+    {
+      "cohort": "R4",
+      "profile": "avx2",
+      "case": "placed/k63h16/substituted/all/mutation-bound",
+      "before_median_ns_per_logical_value": 1.8729233291122904,
+      "after_median_ns_per_logical_value": 1.9991564437551175,
+      "paired_median_after_over_before": 1.067351949364861,
+      "ratio_of_arm_medians": 1.0673989760716247,
+      "before_samples": [
+        1.8703383090755847,
+        1.8731439045616813,
+        1.872031235031909,
+        1.8763752055016008,
+        1.8729233291122904
+      ],
+      "after_samples": [
+        1.9963092401636036,
+        2.000091423847353,
+        2.010633680555569,
+        1.9991564437551175,
+        1.9952610866552294
+      ],
+      "paired_ratios": [
+        1.067351949364861,
+        1.0677724327407603,
+        1.0740385325468662,
+        1.0654353339851848,
+        1.0653191487560376
+      ]
+    },
+    {
+      "cohort": "R4",
+      "profile": "avx512",
+      "case": "ordinary/k12/striped/point/bound",
+      "before_median_ns_per_logical_value": 1.3280103100654246,
+      "after_median_ns_per_logical_value": 1.548644975286845,
+      "paired_median_after_over_before": 1.166191562502236,
+      "ratio_of_arm_medians": 1.1661392713212828,
+      "before_samples": [
+        1.3282577449414592,
+        1.327950763049596,
+        1.3275578822663974,
+        1.3285189007052152,
+        1.3280103100654246
+      ],
+      "after_samples": [
+        1.1072001964514215,
+        1.548644975286845,
+        1.5488228984771835,
+        1.1084781672187873,
+        1.5499411151218188
+      ],
+      "paired_ratios": [
+        0.8335733035761215,
+        1.166191562502236,
+        1.1666707110601038,
+        0.834371394061745,
+        1.1671152726558733
+      ]
+    },
+    {
+      "cohort": "R4",
+      "profile": "avx512",
+      "case": "ordinary/k7/local/point/bound",
+      "before_median_ns_per_logical_value": 1.1066333988169936,
+      "after_median_ns_per_logical_value": 1.3274024521558654,
+      "paired_median_after_over_before": 1.1994033593132534,
+      "ratio_of_arm_medians": 1.1994961055530016,
+      "before_samples": [
+        1.1067253273333804,
+        1.1065769492035697,
+        1.5482996365159862,
+        1.1066333988169936,
+        1.1066065601166273
+      ],
+      "after_samples": [
+        1.3274024521558654,
+        1.3272911755006698,
+        1.3275055019314403,
+        1.3272998160693454,
+        1.3284333091977951
+      ],
+      "paired_ratios": [
+        1.1993964711679632,
+        1.1994567358880495,
+        0.857395733114437,
+        1.1994033593132534,
+        1.2004567450402508
+      ]
+    }
+  ],
+  "r4_near_threshold_control": [
+    {
+      "cohort": "R4",
+      "profile": "avx2",
+      "case": "placed/k63h16/substituted/partial/mutation-bound",
+      "before_median_ns_per_logical_value": 2.1174060134413915,
+      "after_median_ns_per_logical_value": 2.2219613393974225,
+      "paired_median_after_over_before": 1.0488393223054442,
+      "ratio_of_arm_medians": 1.0493789690273423,
+      "before_samples": [
+        2.1171245671818895,
+        2.118912869448596,
+        2.1171835383473394,
+        2.1219206016236685,
+        2.1174060134413915
+      ],
+      "after_samples": [
+        2.2117833970218204,
+        2.22239913801675,
+        2.229118651386231,
+        2.2219613393974225,
+        2.2211417397649065
+      ],
+      "paired_ratios": [
+        1.0447110346303012,
+        1.0488393223054442,
+        1.0528698202170357,
+        1.0471463153226392,
+        1.04899189180771
+      ]
+    }
+  ],
+  "r4_max_paired_ratio_by_profile": {
+    "neon": 1.0275818421951948,
+    "avx2": 1.067351949364861,
+    "avx512": 1.1994033593132534
+  },
+  "boundaries": [
+    "Warm repeated bound/trusted actual callers; fixture setup and admission occur outside timing.",
+    "Replacement repeatedly supplies same installed input after an independent pre-timing oracle; full read/store/effects/summary work still runs.",
+    "Partial selection is 0xb6db =11/16 lanes. No per-selected-row, cold, one-shot or owner-publication claim.",
+    "R4 primary has no PMU counters. Function/static instruction equality cannot establish equal dynamic work or explain bimodal timings."
+  ]
+}

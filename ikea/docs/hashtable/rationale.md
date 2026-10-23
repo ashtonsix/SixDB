@@ -364,7 +364,7 @@ owner last, allowing newly available primary rows to absorb them.
 ![An eight-position parent tile splits into two children. Each live row keeps its position, and its top quotient bit selects the child rather than remaining in the stored quotient.](images/growth.svg)
 
 Growth constructs an independent owner. Allocation failure leaves the source
-unchanged, and a descriptor replaces its owner only after construction succeeds.
+unchanged, and an erased table replaces its owner only after construction succeeds.
 A captured reader can keep the old owner alive across replacement. That lifetime
 guarantee does not freeze an owner that is subsequently modified in place.
 
