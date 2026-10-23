@@ -359,6 +359,13 @@ inline void values_into(totals &t, u64 *v, unsigned take, const row_selection *s
 // Runs: one Intervals pass writes each run's weight (its size, or its
 // selected rows through two per-word prefix ranks); reductions then loop over
 // the value and weight arrays, branch free.
+// The same weights straight off the u8 ends (the narrow programs).
+inline void walk_weights(const borrowed_block &k, const row_selection *s, std::uint32_t *w) {
+    if (!s)
+        return walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) { w[rank] = limit - first; });
+    const selection_rank ranks(*s);
+    walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) { w[rank] = ranks.between(first, limit); });
+}
 inline void run_weights(const borrowed_block &k, const row_selection *s, std::uint32_t *w) {
     if (!s)
         return each_run(k, [&](unsigned rank, unsigned size) { w[rank] = size; });
@@ -442,7 +449,7 @@ inline void stored_into(fused_result &r, const borrowed_block &k, const row_sele
         add_value(t, q, plan_for(q, d.base, 0), 0, s ? selected_count(*s) : block_rows);
         return finish(r, q, d.base, t);
     case kind::runs: {
-        const plan p = plan_for(q, d.base, d.width);
+        const plan p = plan_for(q, d.base, bound_width(k));
         if (rows_only(q, p)) {
             decided(t, q, p, s ? selected_count(*s) : block_rows);
             return finish(r, q, d.base, t);
@@ -461,14 +468,7 @@ inline void stored_into(fused_result &r, const borrowed_block &k, const row_sele
         alignas(64) std::uint32_t weights[block_rows];
         if (run_values_program != run_program::wide) {
             // Weights straight off the u8 ends, values in their narrowest lane.
-            if (!s) {
-                walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) { weights[rank] = limit - first; });
-            } else {
-                const selection_rank ranks(*s);
-                walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) {
-                    weights[rank] = ranks.between(first, limit);
-                });
-            }
+            walk_weights(k, s, weights);
             with_run_values(k, run_values_program,
                             [&](const auto &v) { weighted_into(t, v, weights, d.count, q, p, d.width); });
             return finish(r, q, d.base, t);
@@ -479,7 +479,7 @@ inline void stored_into(fused_result &r, const borrowed_block &k, const row_sele
         return finish(r, q, d.base, t);
     }
     case kind::packed:
-        plane_into(t, k, s, q, plan_for(q, d.base, d.width));
+        plane_into(t, k, s, q, plan_for(q, d.base, bound_width(k)));
         return finish(r, q, d.base, t);
     case kind::patched: {
         // Inliers S' = S AND NOT E over the plane (exception slots hold 0),
@@ -488,7 +488,7 @@ inline void stored_into(fused_result &r, const borrowed_block &k, const row_sele
         const row_selection exceptions = exception_rows(pv);
         const row_selection inliers = and_not(s ? *s : row_selection{~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}}, exceptions);
         if (!selection_empty(inliers))
-            plane_into(t, k, &inliers, q, plan_for(q, d.base, d.width));
+            plane_into(t, k, &inliers, q, plan_for(q, d.base, bound_width(k)));
         finish(r, q, d.base, t);
         totals e;
         const plan absolute = plan_for(q, 0, 64);
@@ -602,11 +602,19 @@ struct fused_codes {
             if (d.type == kind::constant) {
                 add_value(t, q, pl, e[d.base], n);
             } else if (d.type == kind::runs) {
-                read_plane(k, 0, d.count, buffer);
                 alignas(64) std::uint32_t weights[block_rows];
-                run_weights(k, s, weights);
-                for (unsigned i = 0; i < d.count; ++i)
-                    buffer[i] = e[d.base + buffer[i]];
+                if (run_values_program != run_program::wide) {
+                    walk_weights(k, s, weights);
+                    with_run_values(k, run_values_program, [&](const auto &v) {
+                        for (unsigned i = 0; i < d.count; ++i)
+                            buffer[i] = e[d.base + v[i]];
+                    });
+                } else {
+                    read_plane(k, 0, d.count, buffer);
+                    run_weights(k, s, weights);
+                    for (unsigned i = 0; i < d.count; ++i)
+                        buffer[i] = e[d.base + buffer[i]];
+                }
                 weighted_into(t, buffer, weights, d.count, q, pl, p.width);
             } else {
                 decode_stored(k, buffer);
@@ -662,8 +670,16 @@ struct fused_codes {
         if (d.type == kind::constant)
             return weigh(d.base, n);
         if (d.type == kind::runs) {
-            read_plane(k, 0, d.count, buffer);
             alignas(64) std::uint32_t weights[block_rows];
+            if (run_values_program != run_program::wide) {
+                walk_weights(k, s, weights);
+                with_run_values(k, run_values_program, [&](const auto &v) {
+                    for (unsigned i = 0; i < d.count; ++i)
+                        weigh(d.base + v[i], weights[i]);
+                });
+                return;
+            }
+            read_plane(k, 0, d.count, buffer);
             run_weights(k, s, weights);
             for (unsigned i = 0; i < d.count; ++i)
                 weigh(d.base + buffer[i], weights[i]);

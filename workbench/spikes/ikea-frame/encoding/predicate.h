@@ -119,6 +119,51 @@ inline row_selection and_rows(const row_selection &a, const row_selection &b) {
     return {a[0] & b[0], a[1] & b[1], a[2] & b[2], a[3] & b[3]};
 }
 
+// The rows of a runs block's passing runs (keep(rank)), from run boundaries:
+// a bit at each run start where the pass state changes from the previous run
+// (branch free, four register words), then a prefix XOR within each
+// 64-bit word (six shift-XORs) carried across the four words. Run starts are
+// below 256, and a run's rows are [start, next start), so after the prefix
+// XOR bit i is set exactly when row i's run passes.
+template <class Keep> row_selection toggled_runs(const borrowed_block &k, Keep &&keep) {
+    u64 t0 = 0, t1 = 0, t2 = 0, t3 = 0, previous = 0;
+    walk_runs(k, [&](unsigned rank, unsigned first, unsigned) {
+        const u64 pass = keep(rank) ? 1 : 0;
+        const u64 bit = (pass ^ previous) << (first & 63);
+        const unsigned w = first >> 6;
+        // Words stay in registers: an indexed XOR into memory chains each
+        // run through a store and reload (1.2-1.4x slower locally).
+        t0 ^= bit & (u64{0} - (w == 0)), t1 ^= bit & (u64{0} - (w == 1));
+        t2 ^= bit & (u64{0} - (w == 2)), t3 ^= bit & (u64{0} - (w == 3));
+        previous = pass;
+    });
+    const u64 t[4] = {t0, t1, t2, t3};
+    row_selection r;
+    u64 carry = 0;
+    for (unsigned w = 0; w < 4; ++w) {
+        u64 x = t[w];
+        x ^= x << 1, x ^= x << 2, x ^= x << 4, x ^= x << 8, x ^= x << 16, x ^= x << 32;
+        x ^= carry;
+        r[w] = x;
+        carry = u64{0} - (x >> 63);
+    }
+    return r;
+}
+// The rows of the passing runs under run_mask_fill.
+template <class Keep> row_selection runs_rows(const borrowed_block &k, Keep &&keep) {
+    if (run_mask_fill == run_fill::toggle)
+        return toggled_runs(k, keep);
+    row_selection r{};
+    walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) {
+        if (keep(rank)) {
+            const row_selection run = rows_between(first, limit);
+            for (unsigned w = 0; w < 4; ++w)
+                r[w] |= run[w];
+        }
+    });
+    return r;
+}
+
 // Rows of a among the first n decoded values with v in [lo, last].
 inline row_selection buffer_rows(const u64 *v, unsigned n, u64 lo, u64 last, const row_selection &a) {
     const u64 span = last - lo;
@@ -136,11 +181,12 @@ inline row_selection buffer_rows(const u64 *v, unsigned n, u64 lo, u64 last, con
 }
 
 // Rows of a whose plane value base + r has r in a full 256-row plane at the
-// block's width, for stored values in [lo, last] (lo <= last): bounds decide
-// the whole plane where they can, else one or two filters.
-inline row_selection plane_interval_rows(const std::uint8_t *plane, unsigned width, u64 base, u64 lo, u64 last,
-                                         const row_selection &a) {
-    const u64 top = width >= 64 ? ~u64{0} : (u64{1} << width) - 1;
+// block's width, every r below 2^bound (bound <= width), for stored values in
+// [lo, last] (lo <= last): bounds decide the whole plane where they can, else
+// one or two filters.
+inline row_selection plane_interval_rows(const std::uint8_t *plane, unsigned width, unsigned bound, u64 base, u64 lo,
+                                         u64 last, const row_selection &a) {
+    const u64 top = bound >= 64 ? ~u64{0} : (u64{1} << bound) - 1;
     const u64 max = base + top < base ? ~u64{0} : base + top;
     if (last < base || lo > max)
         return {};
@@ -171,9 +217,10 @@ inline row_selection stored_interval_rows(const borrowed_block &k, u64 lo, u64 l
     case kind::constant:
         return in.contains(d.base) ? a : row_selection{};
     case kind::packed:
-        return plane_interval_rows(k.body, d.width, d.base, lo, last, a);
+        return plane_interval_rows(k.body, d.width, bound_width(k), d.base, lo, last, a);
     case kind::runs: {
-        const u64 top = d.width >= 64 ? ~u64{0} : (u64{1} << d.width) - 1;
+        const unsigned bound = bound_width(k);
+        const u64 top = bound >= 64 ? ~u64{0} : (u64{1} << bound) - 1;
         const u64 max = d.base + top < d.base ? ~u64{0} : d.base + top;
         if (last < d.base || lo > max)
             return {};
@@ -183,15 +230,7 @@ inline row_selection stored_interval_rows(const borrowed_block &k, u64 lo, u64 l
             // Relative interval [rlo, rlast] in the run-value domain.
             const u64 rlo = lo <= d.base ? 0 : lo - d.base, span = std::min(last - d.base, top) - rlo;
             return with_run_values(k, run_values_program, [&](const auto &v) {
-                row_selection r{};
-                walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) {
-                    if (u64{v[rank]} - rlo <= span) {
-                        const row_selection run = rows_between(first, limit);
-                        for (unsigned w = 0; w < 4; ++w)
-                            r[w] |= run[w];
-                    }
-                });
-                return and_rows(r, a);
+                return and_rows(runs_rows(k, [&](unsigned rank) { return u64{v[rank]} - rlo <= span; }), a);
             });
         }
         read_plane(k, 0, d.count, buffer);
@@ -213,7 +252,7 @@ inline row_selection stored_interval_rows(const borrowed_block &k, u64 lo, u64 l
         const row_selection inliers = and_not(a, exceptions);
         row_selection r{};
         if (!selection_empty(inliers))
-            r = plane_interval_rows(k.body, d.width, d.base, lo, last, inliers);
+            r = plane_interval_rows(k.body, d.width, bound_width(k), d.base, lo, last, inliers);
         const row_selection hit = and_rows(a, exceptions);
         if (!selection_empty(hit)) {
             read_exceptions(p, buffer);
@@ -321,6 +360,10 @@ private:
         case kind::constant:
             return holds(d.base) ? a : row_selection{};
         case kind::runs: {
+            if (run_values_program != run_program::wide)  // one truth bit per run off the narrow lane
+                return with_run_values(k, run_values_program, [&](const auto &v) {
+                    return and_rows(runs_rows(k, [&](unsigned rank) { return holds(d.base + v[rank]); }), a);
+                });
             read_plane(k, 0, d.count, buffer);
             unsigned row = 0;
             each_run(k, [&](unsigned rank, unsigned size) {

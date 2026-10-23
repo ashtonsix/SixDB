@@ -7,7 +7,8 @@
 //              pass over the u8 ends (the original leaf).
 //   narrow     the plane decoded through the catalogue into the narrowest lane
 //              that holds K (range8/16/32; u64 past 32), then one walk over the
-//              u8 ends with u64 v * len arithmetic.
+//              u8 ends with u64 v * len arithmetic. K = 1 is read in place as
+//              bits (in_place_bits).
 //   in_place   as narrow, but a plane whose width is exactly 8, 16 or 32 bits
 //              is read where it lies: at a byte-multiple width a Local
 //              SeriesPack plane is a row-major little-endian array (R = 0, H =
@@ -38,6 +39,14 @@ inline const char *run_program_name(run_program p) {
 }
 inline run_program run_values_program = run_program::wide;
 
+// How the predicate runs law (narrow and in_place programs) turns passing runs
+// into row bits: per_run ORs rows_between(first, limit) for each passing run
+// (four masked words per run); toggle sets one bit per run boundary where the
+// pass state changes and prefix-XORs the 256 bits (predicate.h, toggled_runs).
+enum class run_fill : std::uint8_t { per_run, toggle };
+inline const char *run_fill_name(run_fill f) { return f == run_fill::per_run ? "per_run" : "toggle"; }
+inline run_fill run_mask_fill = run_fill::toggle;
+
 // A little-endian lane read in place: value r is the K'/8 bytes at r * K'/8,
 // loaded by memcpy (bodies sit at any byte).
 template <class T> struct in_place_lane {
@@ -50,11 +59,23 @@ template <class T> struct in_place_lane {
     }
 };
 
+// A K = 1 plane read in place: a Local SeriesPack plane at K = 1 is a
+// row-major LSB-first bit array (run_check checks it for every count), so
+// value r is bit r % 8 of byte r / 8, inside plane_bytes(1, n).
+struct in_place_bits {
+    const std::uint8_t *at;
+    std::uint8_t operator[](unsigned r) const { return at[r >> 3] >> (r & 7) & 1; }
+};
+
 // f(values) with values[r] the r-th run value (relative to d.base), in the
 // narrowest lane the program allows. Requires a runs block and a non-wide
-// program.
+// program. Both narrow programs read K = 1 in place: its catalogue decode is
+// a scalar bit loop at the few runs such blocks hold, no faster than the
+// wide u64 decode (IsRefresh SUM read 1.01-1.02x of wide through it).
 template <class F> decltype(auto) with_run_values(const borrowed_block &k, run_program program, F &&f) {
     const unsigned w = k.d.width, n = k.d.count;
+    if (w == 1)
+        return f(in_place_bits{k.body});
     if (program == run_program::in_place) {
         if (w == 8)
             return f(static_cast<const std::uint8_t *>(k.body));

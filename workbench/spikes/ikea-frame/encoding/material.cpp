@@ -309,7 +309,7 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
     } else if (runs_cost < packed_cost) {
         d.type = kind::runs;
         d.count = static_cast<std::uint16_t>(run_values.size());
-        d.width = static_cast<std::uint8_t>(runs_width);
+        d.width = static_cast<std::uint8_t>(runs_width > k ? k | byte_lane_flag : k);
         const std::size_t values_bytes = plane_bytes(runs_width, run_values.size());
         payload.resize(payload.size() + values_bytes + run_sizes.size());
         pack(runs_width, run_values, payload.data() + d.offset);
@@ -323,7 +323,7 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
             scratch[i] = block[i] - *lo;
         d.type = kind::packed;
         d.count = block_rows;
-        d.width = static_cast<std::uint8_t>(packed_width);
+        d.width = static_cast<std::uint8_t>(packed_width > k ? k | byte_lane_flag : k);
         payload.resize(payload.size() + packed_cost);
         pack(packed_width, scratch, payload.data() + d.offset);
     }
@@ -608,9 +608,10 @@ column encode(std::span<const u64> values, encode_options options) {
         }
         // An arrival block's plane (its references) follows the flags.
         const std::size_t at = d.offset + (d.type == kind::arrival ? arrival_flag_bytes : 0);
+        const unsigned width = plane_width(d);
         const sp::dense_input input{
-            d.width, sp::geometry::local,
-            std::as_bytes(std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(d.width, d.count))),
+            width, sp::geometry::local,
+            std::as_bytes(std::span<const std::uint8_t>(c.payload).subspan(at, plane_bytes(width, d.count))),
             d.count};
         auto decoder = sp::bind_reader<u64>(input);
         if (!decoder)
@@ -632,11 +633,11 @@ column encode(std::span<const u64> values, encode_options options) {
         }
         if (d.type == kind::arrival)
             continue;
-        if (d.width <= 8)
+        if (width <= 8)
             c.d8.back() = *sp::bind_reader<std::uint8_t>(input);
-        else if (d.width <= 16)
+        else if (width <= 16)
             c.d16.back() = *sp::bind_reader<std::uint16_t>(input);
-        else if (d.width <= 32)
+        else if (width <= 32)
             c.d32.back() = *sp::bind_reader<std::uint32_t>(input);
     }
     return c;
@@ -647,6 +648,10 @@ bool admits(const borrowed_block &k) {
     if (k.rows != block_rows || static_cast<unsigned>(d.type) > static_cast<unsigned>(kind::arrival))
         return false;
     if (d.type != kind::constant && !k.body)
+        return false;
+    // A byte-lane view's exact width lies below its plane's byte lane.
+    if (k.exact_width && ((d.type != kind::runs && d.type != kind::packed) || k.exact_width >= d.width ||
+                          byte_lane_width(k.exact_width) != d.width))
         return false;
     const auto extent = extent_of(d, k.delta_checkpoints, k.body, k.grant);
     if (!extent || extent->read_grant_bytes > k.grant)
@@ -750,7 +755,7 @@ u64 stored_count_eq(const borrowed_block &k, u64 s) {
         if (s < d.base)
             return 0;
         const u64 rhs = s - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return 0;
         if (d.type == kind::packed) {
             read_plane(k, 0, block_rows, buffer);

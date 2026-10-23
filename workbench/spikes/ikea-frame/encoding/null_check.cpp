@@ -88,7 +88,7 @@ void check(const std::string &name, const std::vector<u64> &values, const std::v
                 const auto x = *extent_of(c.blocks[b], c.options.delta_checkpoints, c.payload.data() + c.blocks[b].offset,
                                           c.payload.size() - c.blocks[b].offset);
                 if (!k.coded && (plain.blocks[0].type != k.d.type || plain.blocks[0].base != k.d.base ||
-                                 plain.blocks[0].width != k.d.width || plain.payload.size() != x.body_bytes ||
+                                 plain.blocks[0].width != c.blocks[b].width || plain.payload.size() != x.body_bytes ||
                                  std::memcmp(plain.payload.data(), k.body, x.body_bytes)))
                     fail("a block without NULL differs from encode()", name, b);
             }

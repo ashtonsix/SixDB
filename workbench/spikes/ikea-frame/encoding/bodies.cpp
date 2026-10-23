@@ -83,18 +83,23 @@ u64 plain_count_eq(const plain<T> &p, const block_mask &mask, u64 value) {
 // cyclic order, so each arm always follows the same predecessor; with
 // shuffled_arms (the default unless --cold-only) each trial instead takes a
 // fixed-seed random order, so no arm inherits one predecessor's cache state.
+// arm_order_seed sets that seed (it restarts every call); arm_prewarm runs
+// each arm once, untimed, right before its timed call, so every timed call
+// starts from its own warm state whatever preceded it.
 struct arm {
     const char *name;
     std::function<void()> call;
     std::vector<double> ns;
 };
 bool shuffled_arms = true;
+u64 arm_order_seed = 0x2545f4914f6cdd1du;
+bool arm_prewarm = false;
 
 void time_arms(std::vector<arm> &arms, int trials = 21) {
     for (auto &a : arms)
         a.call();  // warm
     std::vector<std::size_t> order(arms.size());
-    u64 seed = 0x2545f4914f6cdd1du;
+    u64 seed = arm_order_seed;
     for (int t = 0; t < trials; ++t) {
         for (std::size_t i = 0; i < order.size(); ++i)
             order[i] = (i + t) % arms.size();
@@ -105,6 +110,8 @@ void time_arms(std::vector<arm> &arms, int trials = 21) {
             }
         for (std::size_t i = 0; i < arms.size(); ++i) {
             auto &a = arms[order[i]];
+            if (arm_prewarm)
+                a.call();
             const auto start = std::chrono::steady_clock::now();
             a.call();
             a.ns.push_back(std::chrono::duration<double, std::nano>(

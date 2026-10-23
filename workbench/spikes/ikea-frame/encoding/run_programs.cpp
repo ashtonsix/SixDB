@@ -11,8 +11,11 @@
 //   a         exact image, wide program (the current leaf)
 //   a_dup     the same again (the noise control)
 //   b         exact image, narrow program (catalogue narrow lane, u8 ends)
+//   b_run     masks only: b with the per-run mask fill instead of the
+//             boundary toggle (runs.h, run_fill)
 //   c         byte_lanes image, narrow program
 //   d         byte_lanes image, in_place program
+//   d_run     masks only: d with the per-run mask fill
 //   ctl       packed-and-runs byte_lanes image, in_place program
 //   plain     SUM and COUNT(>=) only: the column minus its minimum at the
 //             narrowest byte width
@@ -56,7 +59,7 @@ std::pair<std::size_t, std::size_t> runs_bytes(const column &c) {
     std::size_t values = 0, ends = 0;
     for (const auto &d : c.blocks)
         if (d.type == kind::runs)
-            values += plane_bytes(d.width, d.count), ends += d.count;
+            values += plane_bytes(plane_width(d), d.count), ends += d.count;
     return {values, ends};
 }
 
@@ -66,6 +69,13 @@ void consume_result(const fused_result &r) {
 }
 
 template <class T> void run(const char *name, std::span<const u64> values, u64 lo, const char *only) {
+    // Timing order (bodies.cpp): ARM_SEED gives a round its own fixed seed,
+    // ARM_PREWARM=1 an untimed call of the same arm before each timed one.
+    if (const char *e = std::getenv("ARM_SEED"))
+        arm_order_seed = std::strtoull(e, nullptr, 0);
+    if (const char *e = std::getenv("ARM_PREWARM"))
+        arm_prewarm = *e == '1';
+    const int trials = std::getenv("RUN_TRIALS") ? std::atoi(std::getenv("RUN_TRIALS")) : 21;  // profiling
     encode_options exact;
     exact.bind_decoders = false;
     encode_options lanes = exact;
@@ -119,10 +129,10 @@ template <class T> void run(const char *name, std::span<const u64> values, u64 l
     }
     const u64 above = max == UINT64_MAX ? max : max + 1;
 
-    std::printf("{\"column\":\"%s\",\"rows\":%zu,\"blocks\":%zu,\"median\":%llu,\"mode\":%llu,\"rare\":%llu,"
-                "\"max\":%llu,\"p99\":%llu,\"plain_bytes_per_value\":%zu,\"images\":{",
-                name, values.size(), n, static_cast<unsigned long long>(median), static_cast<unsigned long long>(mode),
-                static_cast<unsigned long long>(rare), static_cast<unsigned long long>(max),
+    std::printf("{\"column\":\"%s\",\"arm_seed\":%llu,\"arm_prewarm\":%s,\"rows\":%zu,\"blocks\":%zu,\"median\":%llu,"
+                "\"mode\":%llu,\"rare\":%llu,\"max\":%llu,\"p99\":%llu,\"plain_bytes_per_value\":%zu,\"images\":{",
+                name, static_cast<unsigned long long>(arm_order_seed), arm_prewarm ? "true" : "false", values.size(), n, static_cast<unsigned long long>(median),
+                static_cast<unsigned long long>(mode), static_cast<unsigned long long>(rare), static_cast<unsigned long long>(max),
                 static_cast<unsigned long long>(p99), sizeof(T));
     for (std::size_t i = 0; i < images.size(); ++i) {
         const auto &im = images[i];
@@ -133,7 +143,7 @@ template <class T> void run(const char *name, std::span<const u64> values, u64 l
         std::size_t widths[65] = {};
         for (const auto &d : im.c.blocks)
             if (d.type == kind::runs)
-                ++widths[d.width];
+                ++widths[plane_width(d)];
         std::printf("%s\"%s\":{\"total_bytes\":%zu,\"payload_bytes\":%zu,\"bits_per_value\":%.3f,"
                     "\"nullable_total_bytes\":%zu,\"runs_value_bytes\":%zu,\"runs_end_bytes\":%zu,"
                     "\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"encode_ns\":%.0f,\"runs_widths\":{",
@@ -158,12 +168,16 @@ template <class T> void run(const char *name, std::span<const u64> values, u64 l
         const char *name;
         const image *im;
         run_program program;
+        run_fill fill = run_fill::toggle;
+        bool masks_only = false;  // the fill only differs in predicate masks
     };
     const std::vector<program_arm> program_arms{{"a", &images[0], run_program::wide},
                                                 {"a_dup", &images[0], run_program::wide},
                                                 {"b", &images[0], run_program::narrow},
+                                                {"b_run", &images[0], run_program::narrow, run_fill::per_run, true},
                                                 {"c", &images[1], run_program::narrow},
                                                 {"d", &images[1], run_program::in_place},
+                                                {"d_run", &images[1], run_program::in_place, run_fill::per_run, true},
                                                 {"ctl", &images[2], run_program::in_place}};
     fused_request q2;
     q2.sum = true, q2.ge_count = 1, q2.ge[0] = median;
@@ -180,13 +194,17 @@ template <class T> void run(const char *name, std::span<const u64> values, u64 l
         for (const auto &pa : program_arms) {
             if (keep_arms && !std::strstr(keep_arms, pa.name))
                 continue;
+            if (pa.masks_only && std::strncmp(op, "mask", 4))
+                continue;
             run_values_program = pa.program;
+            run_mask_fill = pa.fill;
             if (!(f(*pa.im) == want)) {
                 std::fprintf(stderr, "%s %s: arm %s differs from arm a\n", name, op, pa.name);
                 std::exit(1);
             }
             arms.push_back({pa.name, [&, pa] {
                                 run_values_program = pa.program;
+                                run_mask_fill = pa.fill;
                                 const answer r = f(*pa.im);
                                 if constexpr (std::is_same_v<answer, fused_result>)
                                     consume_result(r);
@@ -199,7 +217,7 @@ template <class T> void run(const char *name, std::span<const u64> values, u64 l
         }
         if (plain_call)
             arms.push_back({"plain", plain_call, {}});
-        time_arms(arms);
+        time_arms(arms, trials);
         run_values_program = run_program::wide;
         std::printf(",\"%s\":{\"answer\":\"%s\"", op, [&] {
             if constexpr (std::is_same_v<answer, fused_result>)

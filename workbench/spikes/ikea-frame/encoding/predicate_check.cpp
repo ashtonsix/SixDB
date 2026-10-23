@@ -320,9 +320,16 @@ int main(int argc, char **argv) {
         u64 lo = ~u64{0}, hi = 0;
         for (unsigned i = 0; i < block_rows; ++i)
             lo = std::min(lo, v[i]), hi = std::max(hi, v[i]);
+        // A runs or packed descriptor's bound is the block's exact width (base
+        // is the minimum), on byte-lane images too.
+        if (!k.coded && (d.type == kind::runs || d.type == kind::packed) &&
+            (d.base != lo || bound_width(k) != width_of(hi - lo)))
+            fail("bound width is not the block's exact width", b);
         std::vector<u64> t{0, ~u64{0}, lo, hi, lo - 1, hi + 1, d.base, d.base - 1};
-        if (d.width && d.width < 64)
-            t.push_back(d.base + (u64{1} << d.width));  // the first unrepresentable residual
+        if (const unsigned w = bound_width(k); w && w < 64)
+            t.push_back(d.base + (u64{1} << w));  // the first unrepresentable residual
+        if (k.exact_width)  // a byte-lane plane: the first residual its physical width can't hold
+            t.push_back(d.base + (u64{1} << k.d.width) - 1), t.push_back(d.base + (u64{1} << k.d.width));
         for (unsigned r : {0u, 1u, 15u, 16u, 17u, 63u, 64u, 65u, 127u, 128u, 239u, 240u, 241u, 255u})
             t.push_back(v[r]), t.push_back(v[r] + 1);
         t.push_back(v[mix(b) % block_rows]);

@@ -338,13 +338,13 @@ inline u64 masked_stored_count_ge_mixed(const borrowed_block &k, const row_selec
         return 0;
     case kind::packed: {
         const u64 rhs = threshold - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return 0;
         return plane_kernels(d.width).masked_count_ge(k.body, s.data(), rhs);
     }
     case kind::runs: {
         const u64 rhs = threshold - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return 0;
         if (run_values_program != run_program::wide)
             return masked_runs_count(k, s, run_values_program, [rhs](u64 v) { return v >= rhs; });
@@ -371,7 +371,7 @@ inline u64 masked_stored_count_ge_mixed(const borrowed_block &k, const row_selec
         if (d.base >= threshold)
             return total + selected_count(inliers);
         const u64 rhs = threshold - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return total;
         return total + plane_kernels(d.width).masked_count_ge(k.body, inliers.data(), rhs);
     }
@@ -427,7 +427,7 @@ inline u64 masked_stored_count_eq_mixed(const borrowed_block &k, const row_selec
         if (v < d.base)
             return 0;
         const u64 rhs = v - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return 0;
         if (d.type == kind::packed)
             return plane_kernels(d.width).masked_count_eq(k.body, s.data(), rhs);
@@ -454,7 +454,7 @@ inline u64 masked_stored_count_eq_mixed(const borrowed_block &k, const row_selec
         if (selection_empty(inliers) || v < d.base)
             return total;
         const u64 rhs = v - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return total;
         return total + plane_kernels(d.width).masked_count_eq(k.body, inliers.data(), rhs);
     }
@@ -509,9 +509,23 @@ template <class L> u128 masked_coded_sum(const borrowed_block &k, const row_sele
         return total + static_cast<u128>(lookup(d.base)) * n;
     alignas(64) u64 buffer[block_rows];
     if (d.type == kind::runs) {
+        const selection_rank ranks(s);
+        if (run_values_program != run_program::wide)
+            return with_run_values(k, run_values_program, [&](const auto &v) -> u128 {
+                if (p.width <= 56) {
+                    u64 x = 0;
+                    walk_runs(k, [&](unsigned r, unsigned first, unsigned limit) {
+                        x += lookup(d.base + v[r]) * ranks.between(first, limit);
+                    });
+                    return total + x;
+                }
+                walk_runs(k, [&](unsigned r, unsigned first, unsigned limit) {
+                    total += static_cast<u128>(lookup(d.base + v[r])) * ranks.between(first, limit);
+                });
+                return total;
+            });
         read_plane(k, 0, d.count, buffer);
         unsigned row = 0;
-        const selection_rank ranks(s);
         each_run(k, [&](unsigned rank, unsigned size) {
             total += static_cast<u128>(lookup(d.base + buffer[rank])) * ranks.between(row, row + size);
             row += size;
@@ -569,6 +583,8 @@ inline u64 masked_coded_truth_count(const borrowed_block &k, const row_selection
         return total;
     }
     if (d.type == kind::runs) {
+        if (run_values_program != run_program::wide)
+            return masked_runs_count(k, s, run_values_program, [&](u64 v) { return truth_holds(bits, d.base + v); });
         read_plane(k, 0, d.count, buffer);
         unsigned row = 0;
         const selection_rank ranks(s);

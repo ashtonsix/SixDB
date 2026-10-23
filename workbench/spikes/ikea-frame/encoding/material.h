@@ -166,8 +166,9 @@ struct encode_options {
     bool bind_decoders = true;
     // Run-value plane width (runs.h): exact K, or byte_lanes, which rounds K
     // up to 8, 16 or 32 (K > 32 stays exact) so that the plane is a row-major
-    // array the in-place program can read; the descriptor width is the
-    // physical width, so bounds weaken to base + 2^K' - 1. Experimental, off.
+    // array the in-place program can read. The descriptor keeps the exact K
+    // beside the flag (byte_lane_flag), so width-derived bounds stay
+    // base + 2^K - 1. Experimental, off.
     enum class run_width : std::uint8_t { exact, byte_lanes };
     run_width run_values = run_width::exact;
     // Control: round packed planes the same way (expected to cost far more).
@@ -175,6 +176,19 @@ struct encode_options {
 };
 // The byte-lane width for k: 8, 16 or 32, or k itself past 32.
 inline unsigned byte_lane_width(unsigned k) { return k <= 8 ? 8 : k <= 16 ? 16 : k <= 32 ? 32 : k; }
+
+// A stored runs or packed descriptor whose plane encode rounded up to a byte
+// lane sets byte_lane_flag in its width byte and keeps the exact value width K
+// (1..31) in the low bits; the plane is stored at byte_lane_width(K) > K.
+// Bounds read K from the descriptor alone, at no byte cost. Only byte-lane
+// images (opt-in) set it, so default descriptors are unchanged. Views
+// normalise it (view_descriptor): borrowed_block::d.width is the plane's
+// physical width and bound_width the exact one.
+constexpr std::uint8_t byte_lane_flag = 0x80;
+inline bool byte_lane_rounded(const descriptor &d) { return d.width & byte_lane_flag; }
+inline unsigned plane_width(const descriptor &d) {
+    return byte_lane_rounded(d) ? byte_lane_width(d.width & ~byte_lane_flag & 0xff) : d.width;
+}
 
 inline const char *checkpoint_name(checkpoints mode) {
     switch (mode) {
@@ -335,10 +349,11 @@ struct block_extent {
 constexpr std::size_t arrival_flag_bytes = block_rows / 8;
 
 inline std::size_t fixed_body_bytes(const descriptor &d, checkpoints mode) {
-    const std::size_t plane = plane_bytes(d.width, block_rows);
+    const unsigned width = plane_width(d);
+    const std::size_t plane = plane_bytes(width, block_rows);
     switch (d.type) {
     case kind::constant: return 0;
-    case kind::runs: return plane_bytes(d.width, d.count) + d.count;  // values, u8 ends
+    case kind::runs: return plane_bytes(width, d.count) + d.count;  // values, u8 ends
     case kind::packed: return plane;
     case kind::delta: return plane + 8 + checkpoint_cost(mode, d.width);
     case kind::patched: return plane + 10;  // + lo, n, W
@@ -356,8 +371,14 @@ inline std::size_t fixed_body_bytes(const descriptor &d, checkpoints mode) {
 // [body, body + span) and nothing at all except n and W.
 inline std::optional<block_extent> extent_of(const descriptor &d, checkpoints mode,
                                              const std::uint8_t *body, std::size_t span) {
-    if (d.type != kind::constant && (d.width < 1 || d.width > 64))
+    if (byte_lane_rounded(d)) {
+        // Exact K in 1..31 below its byte lane, on a runs or packed plane only.
+        const unsigned exact = d.width & ~byte_lane_flag & 0xff;
+        if ((d.type != kind::runs && d.type != kind::packed) || exact < 1 || byte_lane_width(exact) <= exact)
+            return std::nullopt;
+    } else if (d.type != kind::constant && (d.width < 1 || d.width > 64)) {
         return std::nullopt;
+    }
     if (d.type == kind::runs && (d.count < 1 || d.count > block_rows))
         return std::nullopt;
     if (d.type == kind::arrival && d.count > block_rows)
@@ -425,14 +446,35 @@ struct dictionary_view {
 // requires 256. The view owns no allocation, version or liveness: it is
 // valid while the caller's selected material is.
 struct borrowed_block {
-    descriptor d;
+    descriptor d;  // d.width is the plane's physical width (view_descriptor)
     const std::uint8_t *body;
     std::size_t grant;
     checkpoints delta_checkpoints;
     std::uint32_t rows = block_rows;
     bool coded = false;
     dictionary_view dictionary;  // set and read only when coded
+    // The exact value width of a byte-lane plane (below d.width); 0 when
+    // d.width is exact. Width-derived bounds read bound_width(k).
+    std::uint8_t exact_width = 0;
 };
+// k.d = d, with a byte-lane descriptor split into its physical plane width and
+// exact value width.
+inline void view_descriptor(borrowed_block &k, const descriptor &d) {
+    k.d = d;
+    k.exact_width = 0;
+    if (byte_lane_rounded(d)) {
+        k.exact_width = static_cast<std::uint8_t>(d.width & ~byte_lane_flag);
+        k.d.width = static_cast<std::uint8_t>(plane_width(d));
+    }
+}
+// Every stored value of a runs, packed or patched-inlier plane is base + r
+// with r < 2^bound_width(k).
+inline unsigned bound_width(const borrowed_block &k) { return k.exact_width ? k.exact_width : k.d.width; }
+// A residual rhs above every representable one: no body read decides it.
+inline bool above_bound(const borrowed_block &k, u64 rhs) {
+    const unsigned w = bound_width(k);
+    return w < 64 && rhs >> w;
+}
 
 // Attach-time admission of a view: kind, widths, the reported extent within
 // grant, ascending patch positions, and for a coded block its dictionary's
@@ -462,7 +504,7 @@ inline const dictionary_part &part_of(const column &c, std::size_t b) {
 inline borrowed_block borrow(const column &c, std::size_t b) {
     const auto &d = c.blocks[b];
     borrowed_block k;  // default-initialized: an uncoded view's dictionary stays unwritten
-    k.d = d;
+    view_descriptor(k, d);
     k.body = c.payload.data() + d.offset;
     k.grant = c.payload.size() - d.offset;
     k.delta_checkpoints = c.options.delta_checkpoints;
@@ -919,6 +961,20 @@ template <class L> u128 coded_sum(const borrowed_block &k, L &&lookup) {
     alignas(64) u64 buffer[block_rows];
     u128 total = rows_min;
     if (d.type == kind::runs) {
+        if (run_values_program != run_program::wide)  // one lookup per run off the narrow lane
+            return with_run_values(k, run_values_program, [&](const auto &v) -> u128 {
+                if (p.width <= 56) {  // sum D_r len_r <= 256 (2^56 - 1)
+                    u64 s = 0;
+                    walk_runs(k, [&](unsigned r, unsigned first, unsigned limit) {
+                        s += lookup(d.base + v[r]) * (limit - first);
+                    });
+                    return total + s;
+                }
+                walk_runs(k, [&](unsigned r, unsigned first, unsigned limit) {
+                    total += static_cast<u128>(lookup(d.base + v[r])) * (limit - first);
+                });
+                return total;
+            });
         read_plane(k, 0, d.count, buffer);
         each_run(k, [&](unsigned rank, unsigned size) {
             total += static_cast<u128>(lookup(d.base + buffer[rank])) * size;
@@ -1249,7 +1305,7 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
         if (d.base >= threshold)
             return total + block_rows - p.n;
         const u64 rhs = threshold - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return total;
         read_plane(k, 0, block_rows, buffer);
         u64 inliers = 0;
@@ -1261,7 +1317,7 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
     }
     case kind::packed: {
         const u64 rhs = threshold - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return 0;  // the threshold exceeds every representable residual
         read_plane(k, 0, block_rows, buffer);
         for (std::size_t i = 0; i < block_rows; ++i)
@@ -1270,7 +1326,7 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
     }
     case kind::runs: {
         const u64 rhs = threshold - d.base;
-        if (d.width < 64 && rhs >> d.width)
+        if (above_bound(k, rhs))
             return 0;  // as packed: above every representable run value
         if (run_values_program != run_program::wide)
             return runs_count(k, run_values_program, [rhs](u64 v) { return v >= rhs; });
@@ -1322,6 +1378,8 @@ inline u64 coded_truth_count(const borrowed_block &k, const u64 *bits) {
         return total;
     }
     if (d.type == kind::runs) {
+        if (run_values_program != run_program::wide)
+            return runs_count(k, run_values_program, [&](u64 v) { return truth_holds(bits, d.base + v); });
         read_plane(k, 0, d.count, buffer);
         each_run(k, [&](unsigned rank, unsigned size) {
             if (truth_holds(bits, d.base + buffer[rank]))
@@ -1686,7 +1744,7 @@ inline u64 catalogue_stored_count_ge(const borrowed_block &k, u64 t) {
     if (d.type != kind::packed || d.base >= t)
         return stored_count_ge(k, t);
     const u64 rhs = t - d.base;
-    if (d.width < 64 && rhs >> d.width)
+    if (above_bound(k, rhs))
         return 0;
     return plane_kernels(d.width).count_ge(k.body, block_rows, rhs);
 }
