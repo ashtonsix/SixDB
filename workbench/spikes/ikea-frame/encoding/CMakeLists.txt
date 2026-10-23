@@ -1,6 +1,6 @@
 # Private experimental material shared by the driver, Codex's access check and
 # Engine's consumers. Codecs compile once here; no public Frame API.
-add_library(frame_encoding_material STATIC material.cpp kernels.cpp packing.cpp)
+add_library(frame_encoding_material STATIC material.cpp kernels.cpp packing.cpp predicate.cpp)
 sixdb_target(frame_encoding_material)
 target_include_directories(frame_encoding_material PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(frame_encoding_material PUBLIC ikea::seriespack ikea::intervals)
@@ -35,3 +35,13 @@ target_link_libraries(frame_encoding_nulls PRIVATE frame_encoding_material)
 add_executable(frame_encoding_fused fused.cpp)
 sixdb_target(frame_encoding_fused)
 target_link_libraries(frame_encoding_fused PRIVATE frame_encoding_material)
+
+# Predicate masks (predicate.h): complete masks against the input oracle,
+# coarse-skip guards and end-to-end filter(A) -> SUM/COUNT(B) (predicate_check),
+# then emit timings against decode-and-compare (predicates).
+add_executable(frame_encoding_predicate_check predicate_check.cpp)
+sixdb_target(frame_encoding_predicate_check)
+target_link_libraries(frame_encoding_predicate_check PRIVATE frame_encoding_material)
+add_executable(frame_encoding_predicates predicates.cpp)
+sixdb_target(frame_encoding_predicates)
+target_link_libraries(frame_encoding_predicates PRIVATE frame_encoding_material)

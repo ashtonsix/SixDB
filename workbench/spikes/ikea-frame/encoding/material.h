@@ -1549,3 +1549,4 @@ inline void consume(u128 v) {
 
 #include "selected.h"  // row-selected aggregates over the operations above
 #include "fused.h"     // fused multi-aggregate programs over both
+#include "predicate.h"  // predicate masks feeding the row-selected aggregates
