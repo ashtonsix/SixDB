@@ -20,8 +20,8 @@
 // faster, but lost on two cells locally (README, "Run-value programs"), so
 // it and in_place are opt-in. Byte-multiple planes come from
 // encode_options::run_values (byte_lanes), an opt-in encoding that rounds K
-// up to 8, 16 or 32 at the cost of weaker width-derived bounds
-// (base + 2^K' - 1).
+// up to 8, 16 or 32; its descriptors keep the exact K, so width-derived
+// bounds stay base + 2^K - 1 (material.h, byte_lane_flag).
 #pragma once
 
 #include <bit>
@@ -41,8 +41,9 @@ inline run_program run_values_program = run_program::wide;
 
 // How the predicate runs law (narrow and in_place programs) turns passing runs
 // into row bits: per_run ORs rows_between(first, limit) for each passing run
-// (four masked words per run); toggle sets one bit per run boundary where the
-// pass state changes and prefix-XORs the 256 bits (predicate.h, toggled_runs).
+// (four masked words per run); toggle counts passing runs (none or all settle
+// the block), else sets one bit per run boundary where the pass state changes
+// and prefix-XORs the 256 bits (predicate.h, toggled_runs).
 enum class run_fill : std::uint8_t { per_run, toggle };
 inline const char *run_fill_name(run_fill f) { return f == run_fill::per_run ? "per_run" : "toggle"; }
 inline run_fill run_mask_fill = run_fill::toggle;
