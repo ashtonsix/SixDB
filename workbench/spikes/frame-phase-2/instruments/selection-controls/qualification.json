@@ -1,0 +1,342 @@
+{
+  "study": "Native selection and reorder controls",
+  "owned_inputs_sha256": {
+    "workbench/peers/frame-selection.cmake": "211f6e60959071bc1688d5f7773eea7e4392057a8e80debb8de09022762ac6d4",
+    "workbench/spikes/frame-phase-2/instruments/selection-controls/CMakeLists.txt": "bb6c1ba0d570566b3a3615ea8dc1a5c86bda0162bd3bbd6823625a97a5cf0639",
+    "workbench/spikes/frame-phase-2/instruments/selection-controls/roaring_check.cpp": "b5ed78983da5c20a360bc2c4434d962e121d574e426d05489c76f0bde932310a",
+    "workbench/spikes/frame-phase-2/instruments/selection-controls/vqsort_check.cpp": "4feb7556d501212469b5a3390583165ee1c4fc305d4e68508cc8d432c63113a4",
+    "workbench/spikes/frame-phase-2/instruments/selection-controls/run.py": "e7f985d2c93672562687de78938beb4859ab51b4cdc06f2c51d588a637719d74"
+  },
+  "inputs_unchanged": true,
+  "host": "Linux ubuntu 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "language": "C11 / C++23",
+  "isa": "armv8-a+simd",
+  "tune": "neoverse-v2",
+  "common_fp_flags": [
+    "-fno-fast-math",
+    "-ffp-contract=off"
+  ],
+  "peers": {
+    "croaring": {
+      "version": "5.3.2",
+      "revision": "5fce11dbf8f8227125a466ce895266967e708816",
+      "url_prefix": "https://github.com/RoaringBitmap/CRoaring/releases/download/v5.3.2/",
+      "files_sha256": {
+        "roaring.c": "81ae778a927108500a7d577ae3ff44fa1dfa5c46dfe0f0d0bedd8e4ae624efe2",
+        "roaring.h": "5a09d9e2996b8c0c545b8147996a3b008bcad1a991c559c9b4ecac3120a2b468"
+      },
+      "form": "Unmodified official release amalgamation"
+    },
+    "highway": {
+      "version": "1.4.0",
+      "revision": "2607d3b5b0113992fe84d3848859eae13b3b52c1",
+      "url": "https://codeload.github.com/google/highway/tar.gz/2607d3b5b0113992fe84d3848859eae13b3b52c1",
+      "archive_sha256": "741d705781e0b3e406beda8f1f994fbae01321237ce8023a1ad90fbaf7940c25",
+      "upstream_files_verified": 278,
+      "snapshot_sha256": "d5df13ab19a3703c8deb55788e3916b49cfba42c7df6aefbdfe9251fedb61c22",
+      "snapshot_digest": "SHA256 of sorted relative-path-to-file-SHA256 JSON, comma/colon separators, UTF-8; extracted files match pinned archive before and after all profiles",
+      "consequential_sources_sha256": {
+        "hwy/contrib/sort/shared-inl.h": "981ea901025f18a11d9a6a7ce384be5c3587d7358f744e7dc1f0fb59b5bf36b0",
+        "hwy/contrib/sort/vqsort-inl.h": "f4e4f3c4a75851f5d4ed4cf448a36fa4950584873f82fd3ab932b31496288058"
+      }
+    }
+  },
+  "corpus": {
+    "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/datasets/prepared/536c2f7c742270d974839b658fa20ef0c88342666d8dac5b7dc3021f6fddeaef",
+    "id": "d1508be6791a608ef4805c788ef4ff8c6968c87a191b53c1aac5b94d886c56d9",
+    "windows": 96,
+    "lineage_sha256": "3e1b39e1a63641f79b14b1d9c17471fbc46397b15d4786884375c2610bc87150",
+    "semantics": "Rebased low16 whole windows; all cells retained. Arbitrary correctness pairs, not a query mix or reconstructed full original bitmap."
+  },
+  "corpus_source_id": "6fa273f2d0d7a198e1f71bac604cf90046be22c9ea88f727a223075e18e15aa1",
+  "corpus_cache_key": "536c2f7c742270d974839b658fa20ef0c88342666d8dac5b7dc3021f6fddeaef",
+  "corpus_files_sha256": {
+    "census-income.windows": "190aead19e81cda9a42f848b29706a2fe113f5268330cc16ab79805d7afeb2a0",
+    "census-income_srt.windows": "8247f8c0b1a57863804f9735a0156ae1f532dbf9de848c93e4ee1016f2be28dc",
+    "census1881.windows": "3563888c876487fdaa1fbdde69abe200c555f1cc61ec9a6a8b85fc4f13e0ec29",
+    "census1881_srt.windows": "c8cc625a2427bfb3603ba70d3ef8a54078a007c803567f48493eab45339994ab",
+    "dimension_003.windows": "527302c99db516bad2c5f322d84bc904e51d7d8b53ab1d71b61d398a500026bd",
+    "dimension_008.windows": "24487f5b33e6efddddb9bdaf2d7cd38022d6e7569a90e21fcf0b4d5d49e36dc2",
+    "dimension_033.windows": "a723adb7d6762bd59ceaee924d0b3c704b7e30802c3903bcb17514165012e253",
+    "uscensus2000.windows": "4b3c66b445199a1239bcdc363a84fb217205515336be956ce0f22755cb381339",
+    "weather_sept_85.windows": "a74982e69c6d79284133889471538922db0b21b0d0af339129169872b54133a4",
+    "weather_sept_85_srt.windows": "a0e39410faf947c08d0eabf9c2f6f4ab022b99c70134bdef41549a9260da0cf0",
+    "wikileaks-noquotes.windows": "1fa9651ee853da959f7a35a7b0a74fae83288791757d9ed1712cde71beb70bae",
+    "wikileaks-noquotes_srt.windows": "54d9d4f12a9d97b988a79cde708e63a2268e16e23e483c308d1745b36b301b4e",
+    "lineage.json": "3e1b39e1a63641f79b14b1d9c17471fbc46397b15d4786884375c2610bc87150",
+    "prepared.json": "f26b65a64336a4950939e8c4990b502d1b1c3b8104ac98bd0d716e3441e2e5e6"
+  },
+  "profiles": [
+    {
+      "profile": "normal",
+      "optimization": "O3",
+      "sanitizers": [],
+      "compatibility": {
+        "macros": [
+          "#define HWY_IS_ASAN 0",
+          "#define HWY_IS_UBSAN 0",
+          "#define VQSORT_COMPILER_COMPATIBLE 1"
+        ],
+        "algorithm": "vector vqsort enabled",
+        "output_sha256": "11627e4e24a5c56e6a82e17ac4223936b31537c968ad25b21eeb1c0e2037dde3"
+      },
+      "peers": {
+        "roaring": {
+          "summary": {
+            "peer": "CRoaring",
+            "version": "5.3.2",
+            "images": 108,
+            "Boolean_operations": 4032,
+            "truncation_negatives": 864,
+            "neon_compile_path": true,
+            "pass": true,
+            "timing_claim": false
+          },
+          "binary_sha256": "c401442eabfed04a7c72be829bb17b1d573a60bc650f45e8031ba33aa35c82f1",
+          "output_sha256": "b53c7034f5fc3677109290079160efa1f388253b0dfad7cc0f76d1a70d62cd72"
+        },
+        "vqsort": {
+          "summary": {
+            "peer": "Highway vqsort",
+            "integer_sorts": 1848,
+            "payload_sorts": 528,
+            "compiled_targets": 872677376,
+            "supported_targets": 6917529028446388224,
+            "selected_index": 14,
+            "selected_target": "NEON",
+            "stable_equal_keys": false,
+            "pass": true,
+            "timing_claim": false
+          },
+          "binary_sha256": "045afc76b19bd14ce1e8232dc769e3a6284f9177b63a9cf7b07096515b503450",
+          "output_sha256": "39db74cdf245b47279941848feca268c232e31a019c1724adde5225a5724aea1"
+        }
+      }
+    },
+    {
+      "profile": "ubsan",
+      "optimization": "O1",
+      "sanitizers": [
+        "undefined"
+      ],
+      "compatibility": {
+        "macros": [
+          "#define HWY_IS_ASAN 0",
+          "#define HWY_IS_UBSAN 1",
+          "#define VQSORT_COMPILER_COMPATIBLE 1"
+        ],
+        "algorithm": "vector vqsort enabled",
+        "output_sha256": "090cdf6b2393dd2a8387cab9b5c349ac216146a112ebb3b7f8d67f4deba38bbf"
+      },
+      "peers": {
+        "roaring": {
+          "summary": {
+            "peer": "CRoaring",
+            "version": "5.3.2",
+            "images": 108,
+            "Boolean_operations": 4032,
+            "truncation_negatives": 864,
+            "neon_compile_path": true,
+            "pass": true,
+            "timing_claim": false
+          },
+          "binary_sha256": "4b4449ef2ba9ae4ed6de56e7fbd228d75f5f0673c07ae80da74048a19a165757",
+          "output_sha256": "b53c7034f5fc3677109290079160efa1f388253b0dfad7cc0f76d1a70d62cd72"
+        },
+        "vqsort": {
+          "summary": {
+            "peer": "Highway vqsort",
+            "integer_sorts": 1848,
+            "payload_sorts": 528,
+            "compiled_targets": 872677376,
+            "supported_targets": 6917529028446388224,
+            "selected_index": 14,
+            "selected_target": "NEON",
+            "stable_equal_keys": false,
+            "pass": true,
+            "timing_claim": false
+          },
+          "binary_sha256": "2650dcebbbfe07699f8003094fa0f12f1f32d14c3af84525f7235f912f036222",
+          "output_sha256": "39db74cdf245b47279941848feca268c232e31a019c1724adde5225a5724aea1"
+        }
+      }
+    },
+    {
+      "profile": "sanitize",
+      "optimization": "O1",
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "compatibility": {
+        "macros": [
+          "#define HWY_IS_ASAN 1",
+          "#define HWY_IS_UBSAN 1",
+          "#define VQSORT_COMPILER_COMPATIBLE 0"
+        ],
+        "algorithm": "upstream HeapSort fallback",
+        "output_sha256": "7c29e8d67182ef0a9d0b85975780038763185e236fa414708a9b472bab9ac41b"
+      },
+      "peers": {
+        "roaring": {
+          "summary": {
+            "peer": "CRoaring",
+            "version": "5.3.2",
+            "images": 108,
+            "Boolean_operations": 4032,
+            "truncation_negatives": 864,
+            "neon_compile_path": true,
+            "pass": true,
+            "timing_claim": false
+          },
+          "binary_sha256": "fb75c4281c771591dc4118625b41757932170c4dfc28575757c716cfc7f15eca",
+          "output_sha256": "b53c7034f5fc3677109290079160efa1f388253b0dfad7cc0f76d1a70d62cd72"
+        },
+        "vqsort": {
+          "summary": {
+            "peer": "Highway vqsort",
+            "integer_sorts": 1764,
+            "payload_sorts": 504,
+            "compiled_targets": 872677376,
+            "supported_targets": 6917529028446388224,
+            "selected_index": 14,
+            "selected_target": "NEON",
+            "stable_equal_keys": false,
+            "pass": true,
+            "timing_claim": false
+          },
+          "binary_sha256": "68542087168e510be9a1a5ad8f0b3496ae9f91ea32eeef6d36211d0aaa25126c",
+          "output_sha256": "531f811a8124fbc9330c5875bf6f6a85c289adc4788196028d4617c6704d6ba8"
+        }
+      }
+    }
+  ],
+  "analytic_full_u32_universe": {
+    "cardinality": 4294967296,
+    "enumerated": false,
+    "included_in_108_images": false,
+    "observations": [
+      {
+        "case": "full_u32_universe_analytic",
+        "cardinality": 4294967296,
+        "range_prepared_portable_bytes": 925700,
+        "enumerated": false
+      },
+      {
+        "case": "full_u32_universe_analytic",
+        "cardinality": 4294967296,
+        "range_prepared_portable_bytes": 925700,
+        "enumerated": false
+      },
+      {
+        "case": "full_u32_universe_analytic",
+        "cardinality": 4294967296,
+        "range_prepared_portable_bytes": 925700,
+        "enumerated": false
+      }
+    ]
+  },
+  "dispatch": {
+    "observed_index": 14,
+    "table_name": "_ZN3hwy12_GLOBAL__N_130SortU32AscHighwayDispatchTableE",
+    "table": {
+      "address": 1299680,
+      "bytes": 136
+    },
+    "slot": 1299792,
+    "resolved_target": 267120,
+    "resolved_symbol": "0000000000041370 00000000000000ec t hwy::N_NEON::(anonymous namespace)::SortU32Asc(unsigned int*, unsigned long)",
+    "compiled_u32_targets": [
+      "0000000000041190 00000000000000ec t hwy::N_SVE2_128::(anonymous namespace)::SortU32Asc(unsigned int*, unsigned long)",
+      "0000000000041280 00000000000000ec t hwy::N_NEON_BF16::(anonymous namespace)::SortU32Asc(unsigned int*, unsigned long)",
+      "0000000000041460 00000000000000ec t hwy::N_NEON_WITHOUT_AES::(anonymous namespace)::SortU32Asc(unsigned int*, unsigned long)",
+      "0000000000041370 00000000000000ec t hwy::N_NEON::(anonymous namespace)::SortU32Asc(unsigned int*, unsigned long)"
+    ],
+    "wrapper_name": "_ZN3hwy6VQSortEPjmNS_13SortAscendingE",
+    "wrapper": {
+      "address": 266176,
+      "bytes": 80
+    },
+    "objdump_argv": [
+      "llvm-objdump-21",
+      "-d",
+      "--demangle",
+      "--start-address=266176",
+      "--stop-address=266256",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/selection-controls/normal/frame_vqsort_check"
+    ],
+    "disassembly_sha256": "711336f90547d7beb43028deb3e75e2075952111b02c7a0a6c4282c01b56f5f1",
+    "binary_sha256": "045afc76b19bd14ce1e8232dc769e3a6284f9177b63a9cf7b07096515b503450"
+  },
+  "zero_negative": {
+    "argv": [
+      "taskset",
+      "-c",
+      "8",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/selection-controls/sanitize/frame_vqsort_check",
+      "--zero"
+    ],
+    "returncode": -15,
+    "owner_terminated": true,
+    "classification": "AArch64 ASan fallback zero-size build-heap counter underflow",
+    "bounded_guard_seconds": 2,
+    "output_sha256": "5349b900b21fff6f738c610d1a4da95bd0190b31003ce7f2f02de3588c615c12",
+    "note": "Source and debugger independently establish num_lanes=0 and huge unsigned counter; the two-second guard is resource control, not a latency result.",
+    "upstream_qualified_for_empty_asan_fallback": false,
+    "source_mechanism": "shared-inl.h:151 disables vector vqsort under AArch64 ASan; vqsort-inl.h:164 returns for one key only, and line 167 subtracts from zero in build-heap counter"
+  },
+  "original_debugger_observation": {
+    "pid": 3405710,
+    "binary_sha256": "45f83f72c939c18a557e99b5d2ec30f4f65b6349035c10fdfd0ab889fb0e3e47",
+    "source_sha256": "c77595e147dffa79100fca21032381bb9c26f8a96c8415ba4c8719d354867258",
+    "debugger_sha256": "0b4fb8e1d9025bd6f18f2da47aef4e58494ad14fae27062871eb50339926b589",
+    "reason": "Confirmed zero num_lanes in actual N_NEON HeapSort/SiftDown; upstream build-heap counter underflows before empty check. Terminating this owned case; not restarting due an observation timeout.",
+    "note": "Earlier witness/binary, independently identifies zero length and counter underflow. Final --zero negative uses the current recorded sanitizer executable."
+  },
+  "all_declared_observations_obtained": true,
+  "instrumentation_scope": "Native Linux NEON optimized and UBSan vector vqsort; default AArch64 ASan/UBSan uses upstream HeapSort fallback, nonempty checks plus dedicated zero negative. CRoaring has full ASan/UBSan coverage. All compiled peer TUs instrumented in sanitizer profiles. No speed, native x86, float ordering, stability or Frame policy claim.",
+  "raw_receipt": {
+    "path": "build/frame-helper/selection-controls/evidence/runs.json",
+    "sha256": "947428d6543a6422df6153e12a77d76138661ac89a2482ee91e380064a09bc96",
+    "recovery_reference": "evidence/artifact.json"
+  },
+  "retention": {
+    "selection": "Compact source/corpus/executable identities, final counts, algorithm distinction and non-passing empty fallback retained here; full command receipt and diagnostic/dispatch proof archived separately. Routine build output and rebuildable binaries stay ignored.",
+    "archived_files_sha256": {
+      "README.txt": "93537f0ed05b7ee5ea984f9a5e9e96da4c6fe6d0088dacde9b0ef7ac55ac6003",
+      "asan-zero-negative.log": "5349b900b21fff6f738c610d1a4da95bd0190b31003ce7f2f02de3588c615c12",
+      "default-sanitizer-zero-debugger.txt": "0b4fb8e1d9025bd6f18f2da47aef4e58494ad14fae27062871eb50339926b589",
+      "default-sanitizer-zero.json": "e94f104f379ef9038007dccbcfb52198d5c5354e24c726d53037605eab05c844",
+      "normal-compatibility.txt": "11627e4e24a5c56e6a82e17ac4223936b31537c968ad25b21eeb1c0e2037dde3",
+      "runs.json": "947428d6543a6422df6153e12a77d76138661ac89a2482ee91e380064a09bc96",
+      "sanitize-compatibility.txt": "7c29e8d67182ef0a9d0b85975780038763185e236fa414708a9b472bab9ac41b",
+      "ubsan-compatibility.txt": "090cdf6b2393dd2a8387cab9b5c349ac216146a112ebb3b7f8d67f4deba38bbf",
+      "vqsort-dispatch.txt": "711336f90547d7beb43028deb3e75e2075952111b02c7a0a6c4282c01b56f5f1"
+    }
+  },
+  "reproduction": {
+    "entrypoint": "python3 workbench/spikes/frame-phase-2/instruments/selection-controls/run.py",
+    "build_root": "build/frame-helper/selection-controls",
+    "profile_directories": [
+      "normal",
+      "ubsan",
+      "sanitize"
+    ],
+    "build_jobs": 1,
+    "cpu": 8,
+    "targets": [
+      "frame_roaring_check",
+      "frame_vqsort_check"
+    ],
+    "roaring_arguments": "All twelve .windows files, sorted by filename; identities retained in corpus_files_sha256.",
+    "vqsort_arguments": {
+      "normal": [],
+      "ubsan": [],
+      "sanitize": [
+        "--nonempty"
+      ]
+    },
+    "exact_commands": "See archived runs.json for full configure/build/check argv and all compile commands."
+  }
+}
