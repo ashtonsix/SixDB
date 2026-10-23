@@ -134,6 +134,17 @@ below 10% density, every predicate that spreads across blocks 0.3–0.5×.
    front A's); warm, the permuted layout mainly breaks sequential order for
    Frame's variable-size bodies.
 
+### Flushed inputs
+
+The same pairs with every input the arm reads flushed before each call
+(`fedf883b`, jobs `20261023T224308Z-b83c96ac` and `20261023T224341Z-754bbd8d`;
+[evidence/select-v2-summary.txt](evidence/select-v2-summary.txt)). On Zen 5
+the native fused pass slows from about 0.8 to 1.9 ms on OS → UserID, while
+Frame barely changes, so Frame's losses shrink (10% density: 0.34 → 0.66 of
+the best native time) without turning into wins. UserID → URLHash stays a
+3–6.5× win. Permuted blocks now cost Frame up to 1.65× (10%: 266 → 437 µs),
+the pattern phase 1 saw scattered and cold.
+
 ## Independent point reads
 
 [`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
@@ -161,6 +172,19 @@ the native narrow-FOR array with and without prefetch. Jobs
    resident. The native array gains similarly from prefetch.
 3. The 3M-row slices fit both hosts' LLC (32–36 MB), so none of these cells is
    DRAM-resident; the DRAM tier needs larger slices on the workers.
+
+4. **Phase 1's getter never used Intervals' native search.** It passes run
+   ends through a `size()`/`at()` wrapper, so Intervals falls back to plain
+   bisection. Searching the u8 ends through `direct_source` instead
+   (`eef398ad`, jobs `20261023T225108Z-d4a30327` and
+   `20261023T225137Z-142e22fc`) cuts resident points on Zen 5 from 37.8 to
+   8.2 ns (EventTime) and 37.0 to 6.7 ns (URLHash), but only 27.1 → 20.1 ns on
+   OS and 30.4 → 22.3 ns on UserID. On Graviton 4's full slice it halves
+   UserID (99.8 → 43.0 ns). The remaining OS and UserID cost sits where the
+   native search bisects a window wider than one vector or scans a window
+   narrower than one vector one element at a time. That is the Intervals
+   optimisation thread's question. Medians:
+   [evidence/points-v2-summary.txt](evidence/points-v2-summary.txt).
 
 The point leaf belongs to front C. Staging stays here, to be re-measured once
 leaves are near their floor and on DRAM-resident slices.
