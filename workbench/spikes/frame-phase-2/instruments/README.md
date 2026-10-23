@@ -18,6 +18,9 @@ selecting a concurrency policy or changing query paths.
 The [front C contract review](LEAF-CONTRACTS.md) covers admitted read windows,
 append reservations, evidence coherence, stable output order and the native
 peer entry points and their natural block sizes.
+[Native system controls](systems/README.md) begin with DuckDB's actual C API
+over owned typed tables. External-source and compressed-storage cells retain
+separate ownership and residence limits.
 
 The [phase-1 scans](../../frame-phase-1/scan/FINDINGS.md) supply exact native FOR
 and actual Polars controls, balanced treatment order and actual-buffer conditioning.

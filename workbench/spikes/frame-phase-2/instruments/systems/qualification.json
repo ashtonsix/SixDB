@@ -1,0 +1,38 @@
+{
+  "scope": "Native local Linux AArch64 correctness only; no timings, no native x86 run, no instrumented engine claim",
+  "result": {
+    "peer": "DuckDB C API",
+    "version": "v2.0.0",
+    "checks": 90,
+    "vector_rows": 2048,
+    "engine_build": "official release binary",
+    "timing_claim": false
+  },
+  "engine_release": "https://github.com/duckdb/duckdb/releases/tag/v2.0.0",
+  "engine_commit": "d54cbbe3df17e8e5ce68312f483b4155836112aa",
+  "engine_archive_sha256": "c60eecf91143ca6bbac55c4f4d40dc22520488b0ac257c86e0fe9a2b451cf2b7",
+  "engine_library_sha256": "e81ab176315947cc2000328571cf372f07071bb472f6d54abf8e61c530be4624",
+  "wrapper_sha256": "55a99d4be3e46440374297dc56931c307550e271fb640a1b059fd901ed93d711",
+  "owned_sources": {
+    "workbench/peers/duckdb.cmake": "7cc49ef57909111eb40f2bca6ae73facca398973c28cd2d8d3cda51845e99213",
+    "workbench/spikes/frame-phase-2/instruments/systems/duckdb_check.cpp": "049aed82494090b33beb2961f79a4d2792e4475f234889cc3f60519cf0ac6b16",
+    "workbench/spikes/frame-phase-2/instruments/systems/CMakeLists.txt": "632e8fa7d553ab5f5cd6debfb6c5d52da16dd4648eb76743de11f109efc220f9"
+  },
+  "compile_command": {
+    "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-systems-neon",
+    "command": "/usr/bin/clang++-21 -DDUCKDB_API_ALLOW_DEPRECATED=0 -DDUCKDB_API_ALLOW_UNSTABLE=0 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-systems-neon/_deps/workbench_duckdb-src -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/frame-phase-2/instruments/systems/CMakeFiles/frame_duckdb_check.dir/duckdb_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/systems/duckdb_check.cpp",
+    "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/systems/duckdb_check.cpp",
+    "output": "workbench/spikes/frame-phase-2/instruments/systems/CMakeFiles/frame_duckdb_check.dir/duckdb_check.cpp.o"
+  },
+  "execute_argv": [
+    "taskset",
+    "-c",
+    "7",
+    "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/clang/frame-systems-neon/workbench/spikes/frame-phase-2/instruments/systems/frame_duckdb_check"
+  ],
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "host": "Linux ubuntu 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux\n",
+  "runtime_library_origin": "Official upstream prebuilt release; wrapper compiler/ISA flags do not describe engine code",
+  "data_lifetime": "Input appender and chunks destroyed before each prepared query; table remains owned by DuckDB",
+  "numeric_law": "Exact signed128 oracle; empty/all-NULL SUM is NULL; COUNT(B) excludes B NULL; COUNT(*) counts matched A-valid rows"
+}

@@ -13,3 +13,8 @@ option(SIXDB_FRAME_CODEC_CONTROLS "Build pinned native Frame codec controls" OFF
 if(SIXDB_FRAME_CODEC_CONTROLS)
   add_subdirectory(codecs)
 endif()
+
+option(SIXDB_FRAME_SYSTEM_CONTROLS "Build native Frame query-engine controls" OFF)
+if(SIXDB_FRAME_SYSTEM_CONTROLS)
+  add_subdirectory(systems)
+endif()

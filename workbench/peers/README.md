@@ -36,3 +36,9 @@ without adopting upstream benchmark flags or datasets. The
 the qualified operations and build limits. FastLanes FFOR and ALP export some
 identical symbols: use separate executables for their comparisons. These targets
 are primitive controls, not the full FastLanes file format or a query engine.
+
+[DuckDB's C API provider](duckdb.cmake) imports a hash-verified official Linux
+release. Its [native typed-table check](../spikes/frame-phase-2/instruments/systems/README.md)
+keeps ingestion and retained table ownership separate from complete prepared
+queries. The engine is prebuilt: the caller's compiler and march/tune flags do
+not identify the engine build or its selected kernel ISA.

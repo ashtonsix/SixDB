@@ -1,0 +1,5 @@
+include(${PROJECT_SOURCE_DIR}/workbench/peers/duckdb.cmake)
+add_executable(frame_duckdb_check duckdb_check.cpp)
+sixdb_target(frame_duckdb_check)
+target_link_libraries(frame_duckdb_check PRIVATE workbench::duckdb)
+target_compile_definitions(frame_duckdb_check PRIVATE DUCKDB_API_ALLOW_DEPRECATED=0 DUCKDB_API_ALLOW_UNSTABLE=0)
