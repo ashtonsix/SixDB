@@ -140,7 +140,7 @@ and separately accounts for summaries and visibility.
 | --- | --- |
 | Layout, map and groups supplied to preparation | Can expire after their controls are copied |
 | General reader/writer's named view and prepared plan | Unchanged values at stable addresses through every bound invocation; rebind after assigning a new plan or placement |
-| Prepared predicate's plan and intermediate reader | Can expire after binding; the code projection is copied |
+| Prepared predicate's layout, plan and intermediate reader | Can expire after binding; the code projection is copied |
 | Prepared predicate's named view | Unchanged value at a stable address, with live backing, through every invocation |
 | Source view identified by emitted effects | Resolvable until the owner consumes those effects; the prepared plan need not survive for this alone |
 | View storage | Live, with unchanged placement and the layout that encoded it |
@@ -149,11 +149,19 @@ and separately accounts for summaries and visibility.
 | Erased operation's concrete source | Stable while the erased operation borrows it |
 | CPS plan and bindings | Live through the complete chain |
 
-`predicate<Byte, Rows=1>` prepares an ordinary single-code comparison with
-`bind_predicate(reader)` or `bind_predicate(plan, view)`. Preparation rejects
-empty, hole-only and multi-code maps with `error::map`, without payload reads.
-It copies the code projection and borrows only the named view under the table
-above. Rows is a power of two from 1 through 64; packet capacity N has no meaning
+`predicate<Byte, Rows=1>` prepares an ordinary single-code comparison.
+`bind_predicate<Rows=1>(layout, std::size_t code_index, view)` selects a code from
+an existing validated layout without preparing packet controls. The layout is
+authoritative for these bytes: the view retains extent, not layout identity.
+The binder checks equal unit extents first (`error::description`), then the code
+index (`error::map`), without payload reads. It borrows the layout only through
+binding and accepts a temporary layout. Temporary views are rejected.
+
+`bind_predicate(reader)` and `bind_predicate(plan, view)` reuse existing plans.
+These forms reject empty, hole-only and multi-code maps with `error::map`,
+without payload reads. Every form copies the code and borrows only the named
+view under the table above. Rows is a power of two from 1 through 64; packet
+capacity N has no meaning
 for this operation. Binding from different packet capacities with the same Byte
 and Rows returns the same predicate type. The code is prepared once; comparison
 operator, right-hand side and row activity belong to each `filter<Op>` command.

@@ -11,7 +11,7 @@
 
 namespace ikea::tuplepack {
 /// Prepared single-code comparison in original-row coordinates. Copies the
-/// code projection and named view pointer. Plan/reader may expire after bind;
+/// code projection and named view pointer. Layout/plan/reader may expire after bind;
 /// the named view and its values stay stable through use. No plan is retained.
 template <class Byte, unsigned Rows = 1> class predicate {
     static_assert(Rows <= 64 && std::has_single_bit(Rows));
@@ -21,9 +21,24 @@ template <class Byte, unsigned Rows = 1> class predicate {
     template <unsigned N>
     explicit predicate(const reader<N, Byte, Rows>& source)
         : source_(&source.source()), code_(source.plan().controls().codes[0]) {}
+    predicate(const basic_view<Byte>& source, code selected)
+        : source_(&source), code_(selected) {}
 
   public:
     static constexpr unsigned rows = Rows;
+    /// Copies one code from the authoritative layout for these bytes. Views
+    /// retain extent, not layout identity; the owner supplies that association.
+    /// The layout may expire after binding. No payload is accessed. Extent
+    /// mismatch rejects with description before an invalid code index with map.
+    [[nodiscard]] static std::expected<predicate, error>
+    bind(const layout& format, std::size_t code_index, const basic_view<Byte>& source) {
+        if (format.bytes() != source.unit_bytes())
+            return std::unexpected(error::description);
+        if (code_index >= format.codes().size())
+            return std::unexpected(error::map);
+        return predicate(source, format.codes()[code_index]);
+    }
+    static auto bind(const layout&, std::size_t, const basic_view<Byte>&&) = delete;
     template <unsigned N>
     [[nodiscard]] static std::expected<predicate, error>
     bind(const reader<N, Byte, Rows>& source) {
@@ -152,6 +167,14 @@ template <class Byte, unsigned Rows = 1> class predicate {
         return filter_unchecked<Op>(first, rhs, active);
     }
 };
+
+template <unsigned Rows = 1, class Byte>
+[[nodiscard]] auto bind_predicate(const layout& format, std::size_t code_index,
+                                  const basic_view<Byte>& source) {
+    return predicate<Byte, Rows>::bind(format, code_index, source);
+}
+template <unsigned Rows = 1, class Byte>
+auto bind_predicate(const layout&, std::size_t, const basic_view<Byte>&&) = delete;
 
 template <unsigned N, class Byte, unsigned Rows>
 [[nodiscard]] auto bind_predicate(const reader<N, Byte, Rows>& source) {

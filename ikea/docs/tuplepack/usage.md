@@ -90,22 +90,29 @@ registers; [the consumer guide](../consumers.md) covers the surrounding boundari
 [Filtering packed values](../filters.md) shows how to bind a one-code predicate
 returning original-row masks, or share a native projection between predicates
 using packet-byte masks. Call `read->filter<Op>(first, rhs, active)` on a
-one-code reader for a single command. For repeated comparisons, prepare the
-one-code projection once:
+one-code reader for a single command. A predicate-only caller can select a code
+directly from its validated layout, without preparing a packet plan:
 
 ```cpp
 using ikea::comparison;
-auto one_code = tp::read_plan<8, 2>::make(*format, std::array<std::uint8_t, 1>{1});
-// Check one_code, then check the returned predicate before use.
-auto predicate = tp::bind_predicate(*one_code, *placed);
+auto predicate = tp::bind_predicate<2>(*format, 1, *placed);
+// Check the returned predicate before use; placed remains named and stable.
 auto at_least_7 = predicate->filter<comparison::greater_equal>(0, 7, 0b11);
 auto at_least_20 = predicate->filter<comparison::greater_equal>(0, 20, 0b11);
 ```
 
-`bind_predicate(*read)` also prepares from an existing one-code reader. It copies
-the code and retains only the named view, so its plan and intermediate reader
-may expire. Keep the view's value, address and backing stable through use.
-Empty, multi-code and hole-only maps reject with `error::map`.
+The template argument is the number of original rows, a power of two in 1–64
+(default 1). The code index is a rank in `format`, not a packet slot. The owner
+supplies the layout that encoded this view; the binder checks equal unit extents
+before checking the code index. A mismatch returns `error::description`, and an
+invalid index returns `error::map`, without reading payload.
+
+`bind_predicate(*read)` and `bind_predicate(*one_code_plan, *placed)` reuse an
+existing one-code projection. Empty, multi-code and hole-only maps reject with
+`error::map`. All forms copy the code and retain only the named view: the layout,
+preparation plan and intermediate reader may expire. Keep the view's value,
+address and backing stable through use; bind another predicate after changing
+placement. Temporary layouts are accepted; temporary views are rejected.
 A tight column can compare encoded bytes without a
 general projection. For multiple
 predicates, reuse a projection only when its saved work outweighs that direct

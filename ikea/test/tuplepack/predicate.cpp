@@ -1,5 +1,5 @@
 // Prepared predicates own their code projection and borrow a named view.
-// Detect expired-plan reads and overrun independently of encoded result checks.
+// Detect expired-plan/layout reads and overruns independently of result checks.
 #include <ikea/tuplepack.h>
 #include <algorithm>
 #include <array>
@@ -174,6 +174,7 @@ void check_geometry(unsigned width, unsigned shift, unsigned unit, unsigned stri
     const auto law = take(tp::layout::make(unit, std::array<tp::code, 1>{
         {{std::uint8_t(offset), std::uint8_t(shift), std::uint8_t(width)}}}));
     const auto source = take(tp::const_view::attach(law, payload.bytes(), count, stride));
+    const auto direct = take(tp::bind_predicate<Rows>(law, 0, source));
     using Plan = tp::read_plan<N, Rows>;
     PlanPage<Plan> storage;
     const auto predicates = [&] {
@@ -192,12 +193,14 @@ void check_geometry(unsigned width, unsigned shift, unsigned unit, unsigned stri
         (readable<Rows, Ops>(predicates.first, payload.bytes(), count, stride, offset, shift, width), ...);
         (readable<Rows, Ops>(predicates.second, payload.bytes(), count, stride, offset, shift, width), ...);
         (readable<Rows, Ops>(temporary_plan, payload.bytes(), count, stride, offset, shift, width), ...);
+        (readable<Rows, Ops>(direct, payload.bytes(), count, stride, offset, shift, width), ...);
     }(comparisons<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
     payload.hide();
     [&]<C... Ops>(comparisons<Ops...>) {
         (inaccessible<Rows, Ops>(predicates.first, count, width), ...);
         (inaccessible<Rows, Ops>(predicates.second, count, width), ...);
         (inaccessible<Rows, Ops>(temporary_plan, count, width), ...);
+        (inaccessible<Rows, Ops>(direct, count, width), ...);
     }(comparisons<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
     for (unsigned kind = 0; kind < (N / Rows > 1 ? 3u : 2u); ++kind) {
         const std::array<std::uint8_t, 2> map = kind == 0 ? std::array<std::uint8_t, 2>{tp::hole, 0}
@@ -221,6 +224,60 @@ void check_geometry(unsigned width, unsigned shift, unsigned unit, unsigned stri
     const auto mismatch = tp::bind_predicate(compatible_plan, wrong_view);
     need(!mismatch && mismatch.error() == tp::error::description, "placement mismatch before binding");
 }
+template <unsigned Rows> void layout_binding() {
+    constexpr unsigned count = Rows + 3, unit = 64, stride = 67;
+    context = {0, Rows, 1, 7, 63, stride};
+    std::array<tp::code, 128> codes;
+    for (unsigned i = 0; i < codes.size(); ++i)
+        codes[i] = {std::uint8_t(i / 2), std::uint8_t(i % 2 ? 7 : 0), 1};
+    PlanPage<tp::layout> storage;
+    const auto& law = storage.construct(take(tp::layout::make(unit, codes)));
+    Payload payload((count - 1) * stride + unit);
+    const auto mutable_source = take(tp::view::attach(law, payload.bytes(), count, stride));
+    const auto source = mutable_source.as_const();
+    constexpr std::array<std::size_t, 6> indices{0, 1, 63, 64, 126, 127};
+    const auto predicates = [&]<std::size_t... I>(std::index_sequence<I...>) {
+        return std::array{take(tp::bind_predicate<Rows>(law, indices[I], source))...};
+    }(std::make_index_sequence<indices.size()>{});
+    const auto mutable_predicate = take(tp::bind_predicate<Rows>(law, 127, mutable_source));
+    const auto static_predicate = take(tp::predicate<const std::byte, Rows>::bind(law, 127, source));
+    const auto temporary_layout = take(tp::bind_predicate<Rows>(
+        take(tp::layout::make(unit, codes)), 127, source));
+
+    Payload hidden((count - 1) * stride + unit);
+    const auto protected_source = take(tp::const_view::attach(law, hidden.bytes(), count, stride));
+    hidden.hide();
+    const auto protected_predicate = take(tp::bind_predicate<Rows>(law, 127, protected_source));
+    for (const auto index : {std::size_t{128}, std::size_t{255}, std::size_t{256},
+                             std::numeric_limits<std::size_t>::max() / 2 + 1,
+                             std::numeric_limits<std::size_t>::max()}) {
+        const auto rejected = tp::bind_predicate<Rows>(law, index, protected_source);
+        need(!rejected && rejected.error() == tp::error::map, "layout code index before payload access");
+    }
+    const auto other = take(tp::layout::make(1, std::array<tp::code, 1>{{{0, 0, 1}}}));
+    const auto wrong_view = take(tp::const_view::attach(other, {hidden.bytes().data(), 0}, 0, 1));
+    for (const auto index : {std::size_t{0}, std::numeric_limits<std::size_t>::max()}) {
+        const auto rejected = tp::bind_predicate<Rows>(law, index, wrong_view);
+        need(!rejected && rejected.error() == tp::error::description,
+             "layout extent mismatch precedes code index / payload access");
+    }
+    storage.expire(); // Destroy the actual bound layout, then protect its page.
+    for (unsigned i = 0; i < indices.size(); ++i) {
+        const auto code = codes[indices[i]];
+        context.offset = code.offset; context.shift = code.shift;
+        [&]<C... Ops>(comparisons<Ops...>) {
+            (readable<Rows, Ops>(predicates[i], payload.bytes(), count, stride,
+                                  code.offset, code.shift, code.width), ...);
+        }(comparisons<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
+    }
+    context.offset = 63; context.shift = 7;
+    [&]<C... Ops>(comparisons<Ops...>) {
+        (readable<Rows, Ops>(mutable_predicate, payload.bytes(), count, stride, 63, 7, 1), ...);
+        (readable<Rows, Ops>(static_predicate, payload.bytes(), count, stride, 63, 7, 1), ...);
+        (readable<Rows, Ops>(temporary_layout, payload.bytes(), count, stride, 63, 7, 1), ...);
+        (inaccessible<Rows, Ops>(protected_predicate, count, 1), ...);
+    }(comparisons<C::equal, C::less, C::less_equal, C::greater, C::greater_equal>{});
+}
 template <unsigned N, unsigned Rows> void shape() {
     using Plan = tp::read_plan<N, Rows>;
     static_assert(!requires(const Plan& plan, tp::const_view view) {
@@ -229,6 +286,23 @@ template <unsigned N, unsigned Rows> void shape() {
     static_assert(!requires(Plan plan, tp::const_view view) {
         tp::bind_predicate(std::move(plan), std::move(view));
     });
+    static_assert(!requires(const tp::layout& law, tp::const_view view) {
+        tp::bind_predicate<Rows>(law, 0, std::move(view));
+    });
+    static_assert(!requires(tp::layout law, tp::view view) {
+        tp::bind_predicate<Rows>(std::move(law), 0, std::move(view));
+    });
+    static_assert(!requires(const tp::layout& law, tp::view view) {
+        tp::predicate<std::byte, Rows>::bind(law, 0, std::move(view));
+    });
+    static_assert(requires(tp::layout law, const tp::const_view& view) {
+        tp::bind_predicate<Rows>(std::move(law), 0, view);
+    });
+    using Direct = typename decltype(tp::bind_predicate<Rows>(
+        std::declval<const tp::layout&>(), 0, std::declval<const tp::const_view&>()))::value_type;
+    using Planned = typename decltype(tp::bind_predicate(
+        std::declval<const Plan&>(), std::declval<const tp::const_view&>()))::value_type;
+    static_assert(std::is_same_v<Direct, Planned>, "direct and planned predicates have the same type");
     if constexpr (Rows <= 8) {
         using Small = typename decltype(tp::bind_predicate(
             std::declval<const tp::read_plan<8, Rows>&>(), std::declval<const tp::const_view&>()))::value_type;
@@ -247,5 +321,7 @@ int main() {
     shape<8, 1>(); shape<8, 2>(); shape<8, 4>(); shape<8, 8>();
     shape<64, 1>(); shape<64, 2>(); shape<64, 4>(); shape<64, 8>();
     shape<64, 16>(); shape<64, 32>(); shape<64, 64>();
-    std::puts("predicate-check: 11 shapes, 36 width/shift laws, 3 placements, 5 unsigned comparisons; expired plans, guarded exact tails, masks and admission passed");
+    layout_binding<1>(); layout_binding<2>(); layout_binding<4>(); layout_binding<8>();
+    layout_binding<16>(); layout_binding<32>(); layout_binding<64>();
+    std::puts("predicate-check: 11 shapes, 36 width/shift laws, 3 placements, 5 unsigned comparisons; expired plans/layouts, direct code ranks through 127, guarded exact tails, masks and admission passed");
 }

@@ -179,8 +179,8 @@ mask-register tests. Sparse activity resolves only the active lanes.
 
 ## TuplePack
 
-A TuplePack code is an unsigned 1–8-bit value inside one physical byte. Prepare
-a one-code projection across the required rows and bind its reader:
+A TuplePack code is an unsigned 1–8-bit value inside one physical byte. An
+existing one-code reader offers a checked single-command convenience:
 
 ```cpp
 auto plan = tp::read_plan<64, 32>::make(layout, std::array<std::uint8_t, 1>{code_rank});
@@ -188,31 +188,40 @@ auto read = tp::bind_reader(*plan, source);
 auto selected = read->filter<comparison::equal>(first, 7, incoming_rows);
 ```
 
-This convenience prepares the code projection for that command. Prepare a
-predicate once outside a repeated filter loop instead:
+This convenience prepares the code projection for that command. A predicate-only
+caller can bind directly from a validated layout without preparing a packet
+plan. Keep the predicate outside a repeated filter loop:
 
 ```cpp
-auto predicate = tp::bind_predicate(*plan, source);
+auto predicate = tp::bind_predicate<32>(layout, code_rank, source);
 // Check the factory result before use; source remains named and stable.
 auto equal_7 = predicate->filter<comparison::equal>(first, 7, incoming_rows);
 auto below_12 = predicate->filter<comparison::less>(first, 12, incoming_rows);
 ```
 
-`tp::bind_predicate(*read)` is equivalent preparation from an existing reader.
-It copies the code projection and borrows only the named view. The preparation
-plan and intermediate reader may expire. Keep the view's value, address and
+`Rows` defaults to 1 and is a power of two through 64. The code rank indexes the
+layout, not packet output. Supply the authoritative layout for this view: views
+retain extent rather than layout identity. Direct preparation rejects an extent
+mismatch with `error::description` before rejecting an invalid code rank with
+`error::map`. It reads no payload.
+
+`tp::bind_predicate(*read)` and `tp::bind_predicate(*plan, source)` reuse existing
+one-code plans. Every form copies the code and borrows only the named view. The
+layout, preparation plan and intermediate reader may expire. Keep the view's
+value, address and
 backing stable; bind another predicate to select a different code or placement.
 A general reader retains its plan/view borrowing and carries no copied code
 projection.
 
-Predicate preparation and the checked reader convenience reject empty,
+Plan-based predicate preparation and the checked reader convenience reject empty,
 hole-only and multi-code maps with `error::map`. Bit `r` names original row `first+r`, just as in the bound
 reader. Only active rows require storage; inactive rows perform no payload access.
 `filter_unchecked<Op>` skips window admission after the caller has established it.
-It requires a one-code map, `first <= source.size()`, activity confined to `Rows` bits, and every
+It requires `first <= source.size()`, activity confined to `Rows` bits, and every
 active row in bounds. Unlike SeriesPack's complete-window contract, inactive
 TuplePack tail rows need no storage. The checked entry rejects activity outside
 `Rows`, including for a query whose result is known without loading payload.
+The reader's unchecked convenience also requires its one-code non-hole plan.
 Tight, fully active byte columns admit comparisons on encoded bits directly;
 other placements retain the prepared projection's access rules.
 
