@@ -155,8 +155,12 @@ After review: an inner or interleaved Section no longer overwrites the
 outer epoch (a per-Reader depth; the outermost announces, the last to end
 withdraws), and every replacement reserves its retirement entry before
 anything is published, so a failed reservation refuses the move instead of
-unwinding past published bytes. [relocatable_check.cpp](relocatable_check.cpp)
-checks nested and non-LIFO Sections against retirement.
+unwinding past published bytes; that capacity grows geometrically, so a
+stalled reader's backlog costs amortized constant bookkeeping. A Reader
+belongs to one Table (Tables' epochs are independent), so a thread keeps one
+Reader per Table; the Table binds its Readers and every Section asserts the
+pairing. [relocatable_check.cpp](relocatable_check.cpp) checks nested,
+non-LIFO and cross-Table Sections against retirement.
 
 Not covered yet:
 - readers that stall inside a Section, which hold back retirement;

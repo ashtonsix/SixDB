@@ -199,7 +199,7 @@ void cheapest_selection() {
 void trim_admission() {
   auto group = take(FiniteGroup::create(finite_classes - 1), "create trim geometry");
   okay(group->prepare(), "prepare trim geometry");
-  check(group->payload_pages() > 68, "geometry has a cross-word run and later pages");
+  check(group->payload_pages() >= 4, "geometry has the four pages the first fixture uses");
   const auto page = group->native_page();
   map(*group, {0, 3});
   group->page_address(0)[0] = std::byte{0x71};

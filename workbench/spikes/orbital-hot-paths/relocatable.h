@@ -23,13 +23,17 @@ namespace a = orbital::allocation;
 
 inline constexpr std::uint64_t idle = std::numeric_limits<std::uint64_t>::max();
 
-/// One per reading thread, on its own line. Written only by that thread.
-/// Sections on one Reader may nest or interleave (for example Loom Tasks on
-/// one worker): the outermost announces, and protection lasts until the last
-/// Section on the Reader ends.
+class Table;
+/// One per (Table, reading thread), on its own line. Written only by that
+/// thread. A Reader belongs to the Table it was registered with: epochs of
+/// different Tables are independent, so sharing a Reader would let one
+/// Table's Section stand in for another's. Sections on one Reader may nest or
+/// interleave (for example Loom Tasks on one worker): the outermost announces,
+/// and protection lasts until the last Section on the Reader ends.
 struct alignas(64) Reader {
   std::atomic<std::uint64_t> epoch{idle};
   std::uint32_t depth{}; // Reader-thread only.
+  const Table* table{}; // Set once by the owning Table.
 };
 
 /// What a reader sees: an address and a readable extent, valid until its
@@ -59,10 +63,15 @@ class Table {
 public:
   Table(a::Pool& pool, std::size_t handles, std::span<Reader> readers)
       : pool_(pool), slots_(new Slot[handles]), owned_(handles), readers_(readers) {
+    for (auto& reader : readers_) {
+      assert(!reader.table && "a Reader belongs to exactly one Table");
+      reader.table = this;
+    }
     free_.reserve(handles);
     for (auto h = handles; h--;) free_.push_back(static_cast<std::uint32_t>(h));
     retired_.reserve(handles);
   }
+  ~Table() { for (auto& reader : readers_) reader.table = nullptr; }
   Table(const Table&) = delete;
   Table& operator=(const Table&) = delete;
 
@@ -71,6 +80,8 @@ public:
     Reader& reader_;
   public:
     Section(const Table& table, Reader& reader) noexcept : reader_(reader) {
+      // Enforced: optimized builds keep assertions.
+      assert(reader_.table == &table && "Section on a Reader registered with another Table");
       if (reader_.depth++) return; // An enclosing Section already protects this epoch.
       // Announce before resolving: the owner's collect() must observe this
       // epoch or a later one before it can free anything resolved below.
@@ -184,8 +195,11 @@ private:
   }
   // Before anything is published: once readers can see a replacement, retiring
   // the old payload must not fail, or unwinding would free protected bytes.
+  // Capacity grows geometrically, so a stalled reader's growing backlog costs
+  // amortized constant bookkeeping per move.
   bool reserve_retirement() noexcept {
-    try { retired_.reserve(retired_.size() + 1); return true; }
+    if (retired_.size() < retired_.capacity()) return true;
+    try { retired_.reserve(std::max<std::size_t>(16, 2 * retired_.capacity())); return true; }
     catch (const std::bad_alloc&) { return false; }
   }
   void retire(a::Allocation old) noexcept {
