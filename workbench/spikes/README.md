@@ -87,6 +87,7 @@ slack, retained versions, shared interpretation and current complete consumers.
 | [Allocation palettes](allocation-palettes/README.md) | Palette/class geometry, slack and complete allocation choices behind production work. |
 | [Reuse and temperature](allocation-reuse-temperature/README.md) | Cheap reuse selection and temperature for cold-first trim; ranked queues and candidate caches lost. |
 | [Live-tail allocation](allocation-live-tail/README.md) | Group reclamation, live tails and complete physical drain. |
+| [Orbital hot paths](orbital-hot-paths/README.md) | Attributed allocate/release, cold growth, Lane fan-in and catalog lookup costs on Zen 5/Graviton, with patch variants and a forward look at the planned submodules. |
 | [Object integration and MVCC history](orbital-mvcc/README.md) | Current production consequence checks, cross-module outcomes, metadata/ABI and historical performance negatives. Timing drivers are retired. |
 | [Embedded views](orbital-views/README.md) | Earlier copy/COW/take, readiness, growth and intent comparisons; current interfaces live in Orbital. |
 | [Local handoff](orbital-local-handoff/README.md) | Same-host thread/worker handoff and hardware calibration. |

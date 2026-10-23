@@ -1,0 +1,104 @@
+diff --git a/orbital/include/orbital/detail/object/directory.h b/orbital/include/orbital/detail/object/directory.h
+index 81821f9..ff787ec 100644
+--- a/orbital/include/orbital/detail/object/directory.h
++++ b/orbital/include/orbital/detail/object/directory.h
+@@ -43,7 +43,11 @@ class TipDirectory {
+   static constexpr std::uint32_t page_entries = 32;
+   struct Page { std::array<Entry, page_entries> entries; };
+   std::pmr::vector<Page*> pages_;
+-  std::pmr::vector<Handle> buckets_;
++  // A bucket carries the handle and 32 further hash bits, so a probe touches
++  // an Entry only when its tag matches; misses usually read buckets alone.
++  struct Bucket { Handle handle; std::uint32_t tag; };
++  std::pmr::vector<Bucket> buckets_;
++  static std::uint32_t tag_of(std::uint64_t hash) noexcept { return static_cast<std::uint32_t>(hash >> 32); }
+   std::size_t size_{}, tombstones_{};
+   Handle free_{};
+ 
+@@ -94,7 +98,7 @@ public:
+   }
+ 
+   std::size_t size() const noexcept { return size_; }
+-  std::size_t bucket_bytes() const noexcept { return buckets_.capacity() * sizeof(Handle); }
++  std::size_t bucket_bytes() const noexcept { return buckets_.capacity() * sizeof(Bucket); }
+   std::size_t entry_bytes() const noexcept { return pages_.size() * sizeof(Page); }
+   std::size_t page_pointer_bytes() const noexcept { return pages_.capacity() * sizeof(Page*); }
+   std::size_t capacity_bytes() const noexcept { return bucket_bytes() + entry_bytes() + page_pointer_bytes(); }
+@@ -118,14 +122,16 @@ inline std::uint64_t TipDirectory::hash(ObjectId id) noexcept {
+ inline std::size_t TipDirectory::position(ObjectId id) const noexcept {
+   assert(!buckets_.empty());
+   const auto mask = buckets_.size() - 1;
+-  auto index = static_cast<std::size_t>(hash(id)) & mask;
++  const auto hashed = hash(id);
++  const auto tag = tag_of(hashed);
++  auto index = static_cast<std::size_t>(hashed) & mask;
+   auto first_deleted = buckets_.size();
+   for (std::size_t scanned = 0; scanned < buckets_.size(); ++scanned) {
+-    const auto handle = buckets_[index];
+-    if (handle == empty) return first_deleted == buckets_.size() ? index : first_deleted;
+-    if (handle == deleted) {
++    const auto bucket = buckets_[index];
++    if (bucket.handle == empty) return first_deleted == buckets_.size() ? index : first_deleted;
++    if (bucket.handle == deleted) {
+       if (first_deleted == buckets_.size()) first_deleted = index;
+-    } else if (cell(handle).object == id) return index;
++    } else if (bucket.tag == tag && cell(bucket.handle).object == id) return index;
+     index = (index + 1) & mask;
+   }
+   assert(first_deleted != buckets_.size());
+@@ -134,8 +140,7 @@ inline std::size_t TipDirectory::position(ObjectId id) const noexcept {
+ 
+ inline Handle TipDirectory::find(ObjectId id) const noexcept {
+   if (buckets_.empty()) return empty;
+-  const auto index = position(id);
+-  const auto handle = buckets_[index];
++  const auto handle = buckets_[position(id)].handle;
+   return handle == empty || handle == deleted ? empty : handle;
+ }
+ 
+diff --git a/orbital/src/object/storage.cpp b/orbital/src/object/storage.cpp
+index 49fece6..72e03f4 100644
+--- a/orbital/src/object/storage.cpp
++++ b/orbital/src/object/storage.cpp
+@@ -60,13 +60,13 @@ void DebtQueue::reserve(std::size_t additional) {
+ }
+ void TipDirectory::rehash(std::size_t count) {
+   if (count > buckets_.max_size()) throw std::bad_alloc();
+-  std::pmr::vector<Handle> next(count, empty, &resource());
++  std::pmr::vector<Bucket> next(count, Bucket{empty, 0}, &resource());
+   const auto mask = count - 1;
+-  for (auto handle : buckets_) {
+-    if (handle == empty || handle == deleted) continue;
+-    auto index = static_cast<std::size_t>(hash(cell(handle).object)) & mask;
+-    while (next[index] != empty) index = (index + 1) & mask;
+-    next[index] = handle;
++  for (auto bucket : buckets_) {
++    if (bucket.handle == empty || bucket.handle == deleted) continue;
++    auto index = static_cast<std::size_t>(hash(cell(bucket.handle).object)) & mask;
++    while (next[index].handle != empty) index = (index + 1) & mask;
++    next[index] = bucket;
+   }
+   buckets_.swap(next);
+   tombstones_ = 0;
+@@ -106,8 +106,8 @@ std::pair<Handle, bool> TipDirectory::ensure(ObjectId id) {
+   auto& entry = cell(handle);
+   free_ = entry.older;
+   entry = {id, 0, nullptr, 0, live};
+-  if (buckets_[index] == deleted) --tombstones_;
+-  buckets_[index] = handle;
++  if (buckets_[index].handle == deleted) --tombstones_;
++  buckets_[index] = {handle, tag_of(hash(id))};
+   ++size_;
+   return {handle, true};
+ }
+@@ -123,8 +123,8 @@ bool TipDirectory::erase(Handle handle) noexcept {
+   auto& entry = cell(handle);
+   if (entry.flags & (pinned_bit | debt_bit)) return false;
+   const auto index = position(entry.object);
+-  assert(buckets_[index] == handle);
+-  buckets_[index] = deleted;
++  assert(buckets_[index].handle == handle);
++  buckets_[index] = {deleted, 0};
+   ++tombstones_; --size_;
+   entry = {{}, 0, nullptr, free_, 0}; free_ = handle;
+   return true;

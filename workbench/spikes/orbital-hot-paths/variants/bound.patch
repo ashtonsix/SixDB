@@ -1,0 +1,267 @@
+diff --git a/orbital/include/orbital/worker.h b/orbital/include/orbital/worker.h
+index 803fa1b..4bc482b 100644
+--- a/orbital/include/orbital/worker.h
++++ b/orbital/include/orbital/worker.h
+@@ -30,7 +30,13 @@ struct alignas(64) Lane {
+ /// Handoff requires old-owner relinquishment and caller-established happens-before.
+ [[nodiscard]] Result<void> adopt(Lane&, int cpu = -1);
+ void relinquish(Lane&) noexcept;
+-bool on_lane(const Lane&) noexcept;
++namespace detail {
++// Trivial per-thread owner token: no TLS guard or call on the ownership check.
++extern constinit thread_local char lane_token;
++}
++[[gnu::always_inline]] inline bool on_lane(const Lane& lane) noexcept {
++  return lane.owner.load(std::memory_order_acquire) == &detail::lane_token;
++}
+ /// Record must remain stable; cannot repost while queued. Capacity cannot refuse it.
+ /// Capture the optional route hint before publication, then invoke it after
+ /// linking payload. Neither Lane nor Message is accessed after linkage. The
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+index 527cef0..cf8e5cd 100644
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -71,12 +71,19 @@ void recycle(Storage& use, bool notify = true) noexcept {
+   Ref<Arena> retained;
+   if (domain.finite) {
+     auto& group = *static_cast<Group*>(domain.context);
++    if (!group.retiring && !group.control_preparing && !pool.internal->close_requested) {
++      const auto cls = group.geometry->bound_class({use.identity()});
++      auto& cache = pool.internal->bound[static_cast<std::size_t>(group.palette) * 15 + cls];
++      if (cache.count < BoundCache::depth) {
++        cache.slots[cache.count++] = &use;
++        ++pool.internal->bound_live;
++        if (notify) pulse(pool.capacity_changed);
++        return;
++      }
++    }
+     assert(group.active_identities);
+     if (!--group.active_identities) retained = std::move(group.active_lifetime);
+-    const auto home = group.geometry->bound_home({use.identity()});
+-    assert(home);
+-    verify(group.geometry->release_identity({use.identity()}));
+-    verify(group.geometry->release_home(*home));
++    group.geometry->release_bound({use.identity()});
+     add_available(group);
+   } else {
+     auto& window = *static_cast<Window*>(domain.context);
+@@ -104,6 +111,24 @@ void apply_return(Storage& use) noexcept {
+   ++route(use)->pool->internal->counts.foreign_returns;
+ }
+ 
++void flush_bound(Pool& pool) noexcept {
++  auto& state = *pool.internal;
++  if (!state.bound_live) return;
++  for (auto& cache : state.bound) {
++    while (cache.count) {
++      auto& use = *cache.slots[--cache.count];
++      auto& group = *static_cast<Group*>(route(use)->context);
++      Ref<Arena> retained;
++      assert(group.active_identities);
++      if (!--group.active_identities) retained = std::move(group.active_lifetime);
++      group.geometry->release_bound({use.identity()});
++      add_available(group);
++    }
++  }
++  state.bound_live = 0;
++  pulse(pool.capacity_changed);
++}
++
+ void returns_handle(worker::Message& message, worker::Lane&) noexcept {
+   auto& domain = *static_cast<Domain*>(message.context);
+   {
+@@ -180,7 +205,10 @@ void drop(Storage& use, ReleaseHint value) noexcept {
+       } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
+     }
+   }
+-  for (;;) {
++  if (local && (state & UseState::user_mask) == 1) {
++    // Sole user on the owner Lane: no other holder can race this final store.
++    use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
++  } else for (;;) {
+     const auto users = state & UseState::user_mask;
+     assert(users && users < returning);
+     if (users == 1 && !local) {
+@@ -233,6 +261,26 @@ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
+   const auto reserve = std::max(*size, request.reserved_bytes);
+   Result<Allocation> result(std::in_place);
+   auto& value = *result;
++  if (reserve <= 3072 && request.alignment <= 3072 && pool.internal->bound_live) {
++    const auto palette = preferred_palette(page_size(), reserve, request.alignment);
++    const auto cls = FiniteGroup::lookup_class(palette, page_size(), reserve);
++    auto& cache = pool.internal->bound[static_cast<std::size_t>(palette) * 15 + cls];
++    if (cache.count) {
++      auto& use = *cache.slots[cache.count - 1];
++      auto& group = *static_cast<Group*>(route(use)->context);
++      auto* address = group.geometry->resolve({use.identity()});
++      if ((reinterpret_cast<std::uintptr_t>(address) & (request.alignment - 1)) == 0) {
++        --cache.count; --pool.internal->bound_live;
++        value.storage = &use; value.address = address;
++        value.size = request.bytes; value.readable_padding = request.readable_padding;
++        use.users.store(1, std::memory_order_relaxed); // Group pin retained while cached.
++        if (request.initialization == Initialization::zero) std::memset(value.address, 0, *size);
++        else if (request.readable_padding) std::memset(value.address + request.bytes, 0, request.readable_padding);
++        ++pool.internal->counts.allocations; ++pool.internal->counts.reuses;
++        return result;
++      }
++    }
++  }
+   auto acquired = reserve <= 3072 && request.alignment <= 3072
+       ? finite_allocate(pool, request, reserve, value)
+       : window_allocate(pool, request, *size, value);
+@@ -509,6 +557,7 @@ Hold::~Hold() { release(*this); }
+ 
+ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+   if (!pool.lane || !worker::on_lane(*pool.lane)) return Progress::fail(Error::conflict);
++  flush_bound(pool);
+   if (std::exchange(pool.internal->trim_failed, false)) return Progress::fail(Error::io);
+   const auto observed = pool.capacity_changed.generation;
+   bool pending = false;
+@@ -615,6 +664,7 @@ Progress close(Pool& pool) {
+   if (pool.state == Pool::State::closed) return Progress::done();
+   if (!pool.lane || !worker::on_lane(*pool.lane)) return Progress::fail(Error::conflict);
+   pool.internal->close_requested = true;
++  flush_bound(pool);
+   if (pool.state == Pool::State::open) {
+     {
+       std::unique_lock lock(pool.arena->state->registry, std::try_to_lock);
+diff --git a/orbital/src/allocation/finite.cpp b/orbital/src/allocation/finite.cpp
+index f19c230..70e4f97 100644
+--- a/orbital/src/allocation/finite.cpp
++++ b/orbital/src/allocation/finite.cpp
+@@ -206,6 +206,20 @@ Result<void> FiniteGroup::release_identity(Identity identity) noexcept {
+   return {};
+ }
+ 
++void FiniteGroup::release_bound(Identity identity) noexcept {
++  assert(valid(identity));
++  const auto coordinate = bindings_[identity.index];
++  assert(coordinate != unbound);
++  const auto grid = identity.index / 16;
++  const unsigned cls = coordinate & 15u, slot = coordinate >> 4u;
++  assert(!(grids_[grid].pending[cls] & (1u << slot)));
++  assert(grids_[grid].occupied[cls] & (1u << slot));
++  store(bindings_[identity.index], unbound);
++  grids_[grid].occupied[cls] &= static_cast<std::uint16_t>(~(1u << slot));
++  grids_[grid].identities &= static_cast<std::uint16_t>(~(1u << (identity.index % 16)));
++  available_identity_grids_ |= std::uint64_t{1} << grid;
++}
++
+ Home FiniteGroup::home(std::size_t grid, unsigned cls, unsigned slot) const noexcept {
+   const auto capacity = capacities_[cls];
+   const auto offset = offsets_[cls] + (grid * 16 + slot) * capacity;
+@@ -221,6 +235,12 @@ std::size_t FiniteGroup::class_minimum(std::uint8_t cls) const noexcept {
+   return cls < capacities_.size() ? (cls ? capacities_[cls - 1] + 1 : 1) : 0;
+ }
+ 
++std::uint8_t FiniteGroup::lookup_class(Palette palette, std::size_t page, std::size_t bytes) noexcept {
++  assert(bytes && bytes <= 3072);
++  if (palette == Palette::a) return lookup_a[(bytes - 1) >> 4];
++  return (page >= 16384 ? lookup_b_large : lookup_b)[(bytes - 1) >> 6];
++}
++
+ Result<std::uint8_t> FiniteGroup::class_for(std::size_t bytes) const noexcept {
+   if (!bytes || bytes > 3072) return std::unexpected(Error::invalid_argument);
+   return class_lookup_[(bytes - 1) >> class_lookup_shift_];
+@@ -304,15 +324,8 @@ Result<void> FiniteGroup::bind(Identity identity, const Home& candidate) noexcep
+   for (auto page = candidate.pages.first; page < candidate.pages.first + candidate.pages.count; ++page)
+     if (pages_[page] != Page::mapped)
+       return std::unexpected(Error::unavailable);
++  // claim_home_class set this Home's occupied bit; no sibling can bind it too.
+   const auto coordinate = static_cast<std::uint8_t>((candidate.slot << 4) | candidate.cls);
+-  auto identities = grids_[candidate.grid].identities;
+-  while (identities) {
+-    const auto other = std::countr_zero(identities);
+-    if (candidate.grid * 16 + other != identity.index &&
+-        load(bindings_[candidate.grid * 16 + other]) == coordinate)
+-      return std::unexpected(Error::conflict);
+-    identities &= static_cast<std::uint16_t>(identities - 1);
+-  }
+   store(bindings_[identity.index], coordinate);
+   return {};
+ }
+diff --git a/orbital/src/allocation/finite.h b/orbital/src/allocation/finite.h
+index 1a2fdae..27671d8 100644
+--- a/orbital/src/allocation/finite.h
++++ b/orbital/src/allocation/finite.h
+@@ -119,6 +119,16 @@ public:
+   [[nodiscard]] bool has_identity() const noexcept { return available_identity_grids_ != 0; }
+ 
+   [[nodiscard]] Result<void> release_identity(Identity) noexcept;
++  // Owner recycle of a bound, settled identity: clears its binding, Home and
++  // identity together without re-deriving the Home or scanning sibling bindings.
++  void release_bound(Identity) noexcept;
++  // Owner-only: the bound class of a live/cached identity, without validation.
++  [[nodiscard]] std::uint8_t bound_class(Identity identity) const noexcept {
++    return bindings_[identity.index] & 15u;
++  }
++  [[nodiscard]] std::size_t class_capacity(std::uint8_t cls) const noexcept { return capacities_[cls]; }
++  // Same shared byte-size tables every Group of this palette and page uses.
++  [[nodiscard]] static std::uint8_t lookup_class(Palette, std::size_t page, std::size_t bytes) noexcept;
+   [[nodiscard]] Result<Home> claim_home(Identity, std::size_t bytes,
+                                       std::size_t alignment) noexcept;
+   // Select once while trying several identity grids in the same Group.
+diff --git a/orbital/src/allocation/internal.h b/orbital/src/allocation/internal.h
+index fdcc0f3..06654a5 100644
+--- a/orbital/src/allocation/internal.h
++++ b/orbital/src/allocation/internal.h
+@@ -151,7 +151,17 @@ struct ReadyCandidate {
+   std::uint8_t grid{};
+ };
+ 
++// Owner-local LIFO of released finite identities that keep their binding,
++// Home and Group pin. Trim and close flush it before inspecting Groups.
++struct BoundCache {
++  static constexpr std::size_t depth = 32;
++  std::uint32_t count{};
++  std::array<Storage*, depth> slots{};
++};
++
+ struct PoolState {
++  std::array<BoundCache, 30> bound; // palette × class
++  std::uint64_t bound_live{};
+   std::array<ReadyCandidate, 4> ready_candidates;
+   std::uint8_t next_candidate{};
+   Pool* next_interested{};
+@@ -268,6 +278,8 @@ bool claim_bytes(Arena& arena, std::uint64_t amount) noexcept {
+ }
+ 
+ void renumber_idle(PoolState&) noexcept;
++// Return every cached identity through the ordinary recycle transaction.
++void flush_bound(Pool&) noexcept;
+ 
+ inline void add_idle(Window& window) noexcept {
+   if (window.previous_idle || window.trim_pending || window.uses[0].users.load(std::memory_order_acquire) ||
+diff --git a/orbital/src/worker.cpp b/orbital/src/worker.cpp
+index 0f3b9bb..bb3ecf5 100644
+--- a/orbital/src/worker.cpp
++++ b/orbital/src/worker.cpp
+@@ -20,6 +20,11 @@ struct Association {
+ };
+ 
+ thread_local Association association;
++} // namespace
++namespace detail { constinit thread_local char lane_token{}; }
++namespace {
++// Registering the Association's destructor stays on adopt, off the owner check.
++void* token() noexcept { return &detail::lane_token; }
+ 
+ Result<void> affinity(int cpu) {
+   if (cpu < -1 || cpu >= CPU_SETSIZE) return std::unexpected(Error::invalid_argument);
+@@ -71,15 +76,11 @@ Lane::~Lane() {
+   assert(!owner.load(std::memory_order_relaxed));
+ }
+ 
+-bool on_lane(const Lane& lane) noexcept {
+-  return lane.owner.load(std::memory_order_acquire) == &association;
+-}
+-
+ Result<void> adopt(Lane& lane, int cpu) {
+   if (lane.owner.load(std::memory_order_acquire)) return std::unexpected(Error::conflict);
+   if (auto result = affinity(cpu); !result) return result;
+   void* expected = nullptr;
+-  if (!lane.owner.compare_exchange_strong(expected, &association, std::memory_order_acq_rel))
++  if (!lane.owner.compare_exchange_strong(expected, token(), std::memory_order_acq_rel))
+     return std::unexpected(Error::conflict);
+   lane.cpu = cpu;
+   lane.owner_next = association.first;

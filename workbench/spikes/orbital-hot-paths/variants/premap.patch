@@ -1,0 +1,59 @@
+diff --git a/orbital/src/allocation/group.cpp b/orbital/src/allocation/group.cpp
+index 77430b3..f7e590f 100644
+--- a/orbital/src/allocation/group.cpp
++++ b/orbital/src/allocation/group.cpp
+@@ -521,23 +521,44 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
+   return {};
+ }
+ 
++// Map the Home plus up to map_ahead following absent pages with one mprotect,
++// then prefault the whole run in one call. The extra pages are charged idle
++// capacity that trim can return; refusal falls back to the Home's own pages.
++constexpr std::size_t map_ahead = 15;
+ Result<void> map_home(Group& group, const Home& home) noexcept {
+   auto& pool = *group.uses.domain.pool;
+-  const auto page = group.geometry->native_page();
++  auto& geometry = *group.geometry;
++  const auto page = geometry.native_page();
+   std::size_t remaining = 0;
+   for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
+-    remaining += !group.geometry->mapped(p);
+-  // Claim the complete candidate before changing any page. Capacity refusal
+-  // leaves the budget available to another legal home or packing group.
+-  if (remaining && !claim(pool, remaining * page)) return std::unexpected(Error::capacity);
+-  for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p) {
+-    if (group.geometry->mapped(p)) continue;
+-    if (::mprotect(group.geometry->page_address(p), page, PROT_READ | PROT_WRITE) != 0) {
++    remaining += !geometry.mapped(p);
++  if (!remaining) return {};
++  auto end = home.pages.first + home.pages.count;
++  std::size_t ahead = 0;
++  while (ahead < map_ahead && end + ahead < geometry.payload_pages() &&
++      !geometry.mapped(end + ahead) && !geometry.trimming(end + ahead) && !geometry.preparing(end + ahead))
++    ++ahead;
++  if (ahead && !claim(pool, (remaining + ahead) * page)) ahead = 0;
++  else if (ahead) remaining += ahead;
++  if (!ahead && !claim(pool, remaining * page)) return std::unexpected(Error::capacity);
++  end += ahead;
++  // Absent pages within the run form contiguous spans; protect each span once.
++  for (std::size_t p = home.pages.first; p < end;) {
++    if (geometry.mapped(p)) { ++p; continue; }
++    auto q = p;
++    while (q < end && !geometry.mapped(q)) ++q;
++    auto* address = geometry.page_address(p);
++    const auto bytes = (q - p) * page;
++    if (::mprotect(address, bytes, PROT_READ | PROT_WRITE) != 0) {
+       refund(pool, remaining * page);
+       return std::unexpected(Error::io);
+     }
+-    verify(group.geometry->mark_mapped({p, 1}));
+-    --remaining;
++#ifdef MADV_POPULATE_WRITE
++    (void)::madvise(address, bytes, MADV_POPULATE_WRITE); // Advisory: faults remain correct.
++#endif
++    verify(geometry.mark_mapped({p, q - p}));
++    remaining -= q - p;
++    p = q;
+   }
+   return {};
+ }

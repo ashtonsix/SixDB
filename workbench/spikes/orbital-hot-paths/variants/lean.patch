@@ -1,0 +1,136 @@
+diff --git a/orbital/include/orbital/worker.h b/orbital/include/orbital/worker.h
+index 803fa1b..4bc482b 100644
+--- a/orbital/include/orbital/worker.h
++++ b/orbital/include/orbital/worker.h
+@@ -30,7 +30,13 @@ struct alignas(64) Lane {
+ /// Handoff requires old-owner relinquishment and caller-established happens-before.
+ [[nodiscard]] Result<void> adopt(Lane&, int cpu = -1);
+ void relinquish(Lane&) noexcept;
+-bool on_lane(const Lane&) noexcept;
++namespace detail {
++// Trivial per-thread owner token: no TLS guard or call on the ownership check.
++extern constinit thread_local char lane_token;
++}
++[[gnu::always_inline]] inline bool on_lane(const Lane& lane) noexcept {
++  return lane.owner.load(std::memory_order_acquire) == &detail::lane_token;
++}
+ /// Record must remain stable; cannot repost while queued. Capacity cannot refuse it.
+ /// Capture the optional route hint before publication, then invoke it after
+ /// linking payload. Neither Lane nor Message is accessed after linkage. The
+diff --git a/orbital/src/allocation/allocation.cpp b/orbital/src/allocation/allocation.cpp
+index 527cef0..c33df40 100644
+--- a/orbital/src/allocation/allocation.cpp
++++ b/orbital/src/allocation/allocation.cpp
+@@ -73,10 +73,7 @@ void recycle(Storage& use, bool notify = true) noexcept {
+     auto& group = *static_cast<Group*>(domain.context);
+     assert(group.active_identities);
+     if (!--group.active_identities) retained = std::move(group.active_lifetime);
+-    const auto home = group.geometry->bound_home({use.identity()});
+-    assert(home);
+-    verify(group.geometry->release_identity({use.identity()}));
+-    verify(group.geometry->release_home(*home));
++    group.geometry->release_bound({use.identity()});
+     add_available(group);
+   } else {
+     auto& window = *static_cast<Window*>(domain.context);
+@@ -180,7 +177,10 @@ void drop(Storage& use, ReleaseHint value) noexcept {
+       } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
+     }
+   }
+-  for (;;) {
++  if (local && (state & UseState::user_mask) == 1) {
++    // Sole user on the owner Lane: no other holder can race this final store.
++    use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
++  } else for (;;) {
+     const auto users = state & UseState::user_mask;
+     assert(users && users < returning);
+     if (users == 1 && !local) {
+diff --git a/orbital/src/allocation/finite.cpp b/orbital/src/allocation/finite.cpp
+index f19c230..124d328 100644
+--- a/orbital/src/allocation/finite.cpp
++++ b/orbital/src/allocation/finite.cpp
+@@ -206,6 +206,20 @@ Result<void> FiniteGroup::release_identity(Identity identity) noexcept {
+   return {};
+ }
+ 
++void FiniteGroup::release_bound(Identity identity) noexcept {
++  assert(valid(identity));
++  const auto coordinate = bindings_[identity.index];
++  assert(coordinate != unbound);
++  const auto grid = identity.index / 16;
++  const unsigned cls = coordinate & 15u, slot = coordinate >> 4u;
++  assert(!(grids_[grid].pending[cls] & (1u << slot)));
++  assert(grids_[grid].occupied[cls] & (1u << slot));
++  store(bindings_[identity.index], unbound);
++  grids_[grid].occupied[cls] &= static_cast<std::uint16_t>(~(1u << slot));
++  grids_[grid].identities &= static_cast<std::uint16_t>(~(1u << (identity.index % 16)));
++  available_identity_grids_ |= std::uint64_t{1} << grid;
++}
++
+ Home FiniteGroup::home(std::size_t grid, unsigned cls, unsigned slot) const noexcept {
+   const auto capacity = capacities_[cls];
+   const auto offset = offsets_[cls] + (grid * 16 + slot) * capacity;
+@@ -304,15 +318,8 @@ Result<void> FiniteGroup::bind(Identity identity, const Home& candidate) noexcep
+   for (auto page = candidate.pages.first; page < candidate.pages.first + candidate.pages.count; ++page)
+     if (pages_[page] != Page::mapped)
+       return std::unexpected(Error::unavailable);
++  // claim_home_class set this Home's occupied bit; no sibling can bind it too.
+   const auto coordinate = static_cast<std::uint8_t>((candidate.slot << 4) | candidate.cls);
+-  auto identities = grids_[candidate.grid].identities;
+-  while (identities) {
+-    const auto other = std::countr_zero(identities);
+-    if (candidate.grid * 16 + other != identity.index &&
+-        load(bindings_[candidate.grid * 16 + other]) == coordinate)
+-      return std::unexpected(Error::conflict);
+-    identities &= static_cast<std::uint16_t>(identities - 1);
+-  }
+   store(bindings_[identity.index], coordinate);
+   return {};
+ }
+diff --git a/orbital/src/allocation/finite.h b/orbital/src/allocation/finite.h
+index 1a2fdae..ca21e39 100644
+--- a/orbital/src/allocation/finite.h
++++ b/orbital/src/allocation/finite.h
+@@ -119,6 +119,9 @@ public:
+   [[nodiscard]] bool has_identity() const noexcept { return available_identity_grids_ != 0; }
+ 
+   [[nodiscard]] Result<void> release_identity(Identity) noexcept;
++  // Owner recycle of a bound, settled identity: clears its binding, Home and
++  // identity together without re-deriving the Home or scanning sibling bindings.
++  void release_bound(Identity) noexcept;
+   [[nodiscard]] Result<Home> claim_home(Identity, std::size_t bytes,
+                                       std::size_t alignment) noexcept;
+   // Select once while trying several identity grids in the same Group.
+diff --git a/orbital/src/worker.cpp b/orbital/src/worker.cpp
+index 0f3b9bb..bb3ecf5 100644
+--- a/orbital/src/worker.cpp
++++ b/orbital/src/worker.cpp
+@@ -20,6 +20,11 @@ struct Association {
+ };
+ 
+ thread_local Association association;
++} // namespace
++namespace detail { constinit thread_local char lane_token{}; }
++namespace {
++// Registering the Association's destructor stays on adopt, off the owner check.
++void* token() noexcept { return &detail::lane_token; }
+ 
+ Result<void> affinity(int cpu) {
+   if (cpu < -1 || cpu >= CPU_SETSIZE) return std::unexpected(Error::invalid_argument);
+@@ -71,15 +76,11 @@ Lane::~Lane() {
+   assert(!owner.load(std::memory_order_relaxed));
+ }
+ 
+-bool on_lane(const Lane& lane) noexcept {
+-  return lane.owner.load(std::memory_order_acquire) == &association;
+-}
+-
+ Result<void> adopt(Lane& lane, int cpu) {
+   if (lane.owner.load(std::memory_order_acquire)) return std::unexpected(Error::conflict);
+   if (auto result = affinity(cpu); !result) return result;
+   void* expected = nullptr;
+-  if (!lane.owner.compare_exchange_strong(expected, &association, std::memory_order_acq_rel))
++  if (!lane.owner.compare_exchange_strong(expected, token(), std::memory_order_acq_rel))
+     return std::unexpected(Error::conflict);
+   lane.cpu = cpu;
+   lane.owner_next = association.first;

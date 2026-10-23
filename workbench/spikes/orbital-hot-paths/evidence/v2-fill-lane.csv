@@ -1,0 +1,10 @@
+case,baseline ns,chain ns,premap ns,chain/base,premap/base
+alloc/fill/64,180.38,180.94,210.23,1.00x,0.86x
+alloc/fill/1024,732.49,733.83,421.70,1.00x,1.74x
+lane/pingpong,723.77,770.97,747.88,0.94x,0.97x
+lane/local64,15.89,15.89,15.89,1.00x,1.00x
+lane/pending-empty,1.07,1.07,1.07,1.00x,1.00x
+lane/mpsc1,77.28,86.84,81.53,0.89x,0.95x
+lane/mpsc3,39.80,46.45,46.43,0.86x,0.86x
+lane/mpsc1-chain64,,7.52,,,
+lane/mpsc3-chain64,,7.02,,,

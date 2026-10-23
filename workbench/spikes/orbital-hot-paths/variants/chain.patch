@@ -1,0 +1,40 @@
+diff --git a/orbital/include/orbital/worker.h b/orbital/include/orbital/worker.h
+index 803fa1b..b7963c2 100644
+--- a/orbital/include/orbital/worker.h
++++ b/orbital/include/orbital/worker.h
+@@ -37,6 +37,10 @@ bool on_lane(const Lane&) noexcept;
+ /// receiver may have destroyed the record by then. Notification context stays
+ /// alive until all post calls return, including callbacks after queue drain.
+ void post(Lane&, Message&) noexcept;
++/// Publish an already linked first..last chain with one producer exchange.
++/// Every record follows post's rules; the caller links them through next.
++#define ORBITAL_POST_CHAIN 1
++void post_chain(Lane&, Message& first, Message& last) noexcept;
+ /// Counts handled Messages; an incomplete producer publication can yield zero
+ /// while pending remains true. Queue link work is bounded by message_budget.
+ std::uint64_t poll(Lane&, std::uint64_t message_budget) noexcept;
+diff --git a/orbital/src/worker.cpp b/orbital/src/worker.cpp
+index 0f3b9bb..03a7d8b 100644
+--- a/orbital/src/worker.cpp
++++ b/orbital/src/worker.cpp
+@@ -107,6 +107,20 @@ void post(Lane& lane, Message& message) noexcept {
+   if (notify) notify(context);
+ }
+ 
++void post_chain(Lane& lane, Message& first, Message& last) noexcept {
++  for (auto* message = &first;; message = message->next.load(std::memory_order_relaxed)) {
++    assert(message && message->ops);
++    message->ops->retain(*message);
++    if (message == &last) break;
++  }
++  const auto notify = lane.notify_posted;
++  void* const context = notify ? lane.notify_context : nullptr;
++  last.next.store(nullptr, std::memory_order_relaxed);
++  auto* predecessor = lane.producer.exchange(&last, std::memory_order_acq_rel);
++  predecessor->next.store(&first, std::memory_order_release);
++  if (notify) notify(context);
++}
++
+ std::uint64_t poll(Lane& lane, std::uint64_t budget) noexcept {
+   assert(on_lane(lane));
+   std::uint64_t handled = 0;
