@@ -143,10 +143,10 @@ the emitted spans.
 
 ## Results for the final tree
 
-Measured against `f1534200` with aligned code and varied stack offsets. This is
-the final tree, except that the composed-coverage visitor in the run was the
-reverted single body: the committed tree keeps HEAD's version, measured in the
-HEAD-control and no-origin runs.
+Measured on the committed tree (`cc8a401d`) against `f1534200`, with aligned
+code and varied stack offsets. The Bec256, StreamPack and Hashtable row comes
+from the preceding run. That tree differed only in a SeriesPack composed-mutation
+header those benches do not include.
 
 | Area | NEON | AVX2 | AVX-512 |
 | --- | --- | --- | --- |
@@ -161,14 +161,10 @@ harness cases explained above. SeriesPack substituted (patched-tail) mutations
 stay at HEAD's 3–7% x86 loss: two attempts to close it are recorded above.
 TuplePack `composition/128/body` keeps its 4% AVX-512 kernel-only difference.
 
-All 98 selected tests (Ikea, owner, Directory, Loom and Orbital checks) and all
-93 public headers pass on NEON, AVX2 and AVX-512 in two trees:
-- the measured tree above;
-- an earlier tree with HEAD's composed visitor and per-record origins.
-
-The committed combination differs from each of those only in a file the other
-one tested. It was not rerun as a whole, because the AWS credentials expired
-before the final run.
+On NEON, no SeriesPack, TuplePack, filter or initialization case is slower
+than 1.04. All 98 selected tests (Ikea, owner, Directory, Loom and Orbital
+checks) and all 93 public headers pass on NEON, AVX2 and AVX-512 for the
+committed tree.
 
 ## Uneven feature support
 
