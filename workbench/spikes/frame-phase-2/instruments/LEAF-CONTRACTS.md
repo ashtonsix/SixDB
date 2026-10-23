@@ -203,6 +203,14 @@ at every row, especially exception ranks 63/64,127/128,255, before timing it;
 not part of the original DAC execution receipt either. Do not claim wider
 qualification from the target name.
 
+The subsequent [local block qualification](codecs/README.md#per-block-point-follow-up)
+now checks every 128/256-row PFor point, shuffled access, large exception prefixes
+and horizontal FOR points on Linux AArch64. It also retains an upstream inline
+accessor alignment diagnostic: patched bitmap words at image+2 require an aligned
+placement for the instrumented caller. The explicit image-start 6-modulo-8
+route passes without modifying the peer; account for its placement bytes.
+This does not extend the native x86 receipt or qualify a fully sanitized library.
+
 The boot control reserves initialized read slack (+64 bytes); include the
 actual allocation and context in capacity and conditioning. A tight guarded
 input is a different contract. Full-width u64 encode/decode passed, but this

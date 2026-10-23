@@ -59,3 +59,30 @@ executable hashes; recovery references retain the full sources, peer source
 manifests, compile commands, binaries and logs. No performance ranking follows
 from these boot checks. Encode/decode plus useful consumption, preparation,
 capacity and complete Frame workloads remain front A work.
+
+## Per-block point follow-up
+
+The separate [block control](turbopfor_block_check.cpp) extends point coverage
+to every row of 128/256-row PFor images and horizontal FOR widths 0..32 at
+ten lengths through 256. Ordered and shuffled PFor accesses include bitmap
+boundaries and more than 128 exceptions. The [local receipt](turbopfor-block-qualification.json)
+records 330 FOR cases/36,465 points and 396 PFor cases/152,064 points. This is
+Linux AArch64 execution with Clang 21.1.8; it does not extend the earlier
+three-ISA boot receipt to native x86 256-row points.
+
+Both ordinary and explicitly aligned image placements pass optimized execution.
+The instrumented inline caller exposes a distinct upstream alignment problem:
+`p4getx32` loads the bitmap as u64 words at image+2, misaligned for a naturally
+aligned image. The default placement retains that diagnostic. Placing the image
+at address 6 modulo 8 aligns its patched bitmap and passes the caller's
+ASan/UBSan checks with unmodified peer code. This is a placement constraint,
+not a peer patch or a fully instrumented library claim. Charge the possible
+0..7 prefix bytes and the initialized read slack used by the fixture (64 bytes).
+
+Build `frame_turbopfor_block_check` and the excluded-by-default
+`frame_turbopfor_block_wrapper_sanitize` with the existing optional codec
+configuration. The optimized control passes with either no argument or
+`--aligned-pfor`. The sanitizer control passes with `--aligned-pfor`; its
+ordinary-placement invocation is the retained alignment negative. Full compile
+arguments and binary/source identities are in the receipt. No timing or
+arbitrary-alignment defined-behaviour claim follows from the optimized pass.

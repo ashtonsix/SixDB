@@ -1,0 +1,151 @@
+{
+  "owned_source_sha256": "359cab8ac4b00adc4f25527d46523c6cdcdfd1a1e42d1ab5070a6cd7394baebd",
+  "upstream_revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+  "upstream_static_library_sha256": "dbef61553f21c9ea39f534afecc5fb1b539f34d0c6cdb809cca62f870c29a692",
+  "compile_argv": {
+    "normal": [
+      "clang++-21",
+      "-std=c++23",
+      "-O3",
+      "-gline-tables-only",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/turbopfor-1f646d98d65ee91befd3066f351f2cf386593442/include",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/turbopfor-1f646d98d65ee91befd3066f351f2cf386593442/lib/include_",
+      "-DWORKBENCH_PEER_REVISION=\"1f646d98d65ee91befd3066f351f2cf386593442\"",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/codecs/turbopfor_block_check.cpp",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/libic.a",
+      "-lm",
+      "-pthread",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/frame_turbopfor_block_check"
+    ],
+    "sanitize": [
+      "clang++-21",
+      "-std=c++23",
+      "-O1",
+      "-gline-tables-only",
+      "-march=armv8-a+simd",
+      "-mtune=neoverse-v2",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/turbopfor-1f646d98d65ee91befd3066f351f2cf386593442/include",
+      "-I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/turbopfor-1f646d98d65ee91befd3066f351f2cf386593442/lib/include_",
+      "-DWORKBENCH_PEER_REVISION=\"1f646d98d65ee91befd3066f351f2cf386593442\"",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/codecs/turbopfor_block_check.cpp",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/libic.a",
+      "-lm",
+      "-pthread",
+      "-o",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/frame_turbopfor_block_wrapper_sanitize",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "-fno-omit-frame-pointer"
+    ]
+  },
+  "results": [
+    {
+      "mode": "normal-ordinary",
+      "argv": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/frame_turbopfor_block_check"
+      ],
+      "returncode": 0,
+      "result": {
+        "peer": "TurboPFor",
+        "revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+        "for_cases": 330,
+        "for_points": 36465,
+        "pfor_cases": 396,
+        "pfor_points": 152064,
+        "patched_cases": 213,
+        "over128_exception_cases": 30,
+        "aligned_pfor": false,
+        "timing_claim": false
+      },
+      "executable_sha256": "2efa931e3118128e200ecefee2467ae1820237f4dcb15414fef4d310c99a95ba",
+      "stdout_sha256": "a425856d76dd23090c63c1c3880f0c07be71ac1277002923af2e2545d9fb9ee7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "normal-aligned",
+      "argv": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/frame_turbopfor_block_check",
+        "--aligned-pfor"
+      ],
+      "returncode": 0,
+      "result": {
+        "peer": "TurboPFor",
+        "revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+        "for_cases": 330,
+        "for_points": 36465,
+        "pfor_cases": 396,
+        "pfor_points": 152064,
+        "patched_cases": 213,
+        "over128_exception_cases": 30,
+        "aligned_pfor": true,
+        "timing_claim": false
+      },
+      "executable_sha256": "2efa931e3118128e200ecefee2467ae1820237f4dcb15414fef4d310c99a95ba",
+      "stdout_sha256": "5d5b1b87bdcabc2201966ac3d962748b249400bb1fe449c414182eade49df421",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "sanitize-ordinary",
+      "argv": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/frame_turbopfor_block_wrapper_sanitize"
+      ],
+      "returncode": 1,
+      "result": null,
+      "executable_sha256": "cfe25ac32a6a72aa4588e937dde5a307f8136049e7ffea0b5d89661dc13fd644",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "275aabe228d6fd40b6a923a8db2973dae067bc12f9cb24dcf5ca2fe3a230eec2"
+    },
+    {
+      "mode": "sanitize-aligned",
+      "argv": [
+        "taskset",
+        "-c",
+        "7",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-collab/turbopfor-block-local/frame_turbopfor_block_wrapper_sanitize",
+        "--aligned-pfor"
+      ],
+      "returncode": 0,
+      "result": {
+        "peer": "TurboPFor",
+        "revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+        "for_cases": 330,
+        "for_points": 36465,
+        "pfor_cases": 396,
+        "pfor_points": 152064,
+        "patched_cases": 213,
+        "over128_exception_cases": 30,
+        "aligned_pfor": true,
+        "timing_claim": false
+      },
+      "executable_sha256": "cfe25ac32a6a72aa4588e937dde5a307f8136049e7ffea0b5d89661dc13fd644",
+      "stdout_sha256": "5d5b1b87bdcabc2201966ac3d962748b249400bb1fe449c414182eade49df421",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Local Linux AArch64 only. Inline caller/preparation/accessor instrumented; linked upstream static library not instrumented. Ordinary optimized and explicit bitmap-aligned optimized pass. Ordinary placement has retained alignment diagnostic; aligned placement passes the instrumented caller. No timing claim.",
+  "upstream_archive_sha256": "2acebd3031b20f67d8b59e2350607d7505d9b474f025e0983c5186e2550ba3c0",
+  "upstream_files_compared_in_header_and_library_build_trees": 124,
+  "owned_inputs": {
+    "workbench/spikes/frame-phase-2/instruments/codecs/turbopfor_block_check.cpp": "359cab8ac4b00adc4f25527d46523c6cdcdfd1a1e42d1ab5070a6cd7394baebd",
+    "workbench/spikes/frame-phase-2/instruments/codecs/CMakeLists.txt": "41f9fc809ab7012b867647c38057c86bfa2aca1cdfd429b2dce629c10421fc5b"
+  },
+  "library_build": "Reused unmodified upstream make-built generic NEON static library from the completed frame-bodies controls build; wrapper is tuned for V2. No claim of an instrumented static library.",
+  "compiler": "Ubuntu Clang 21.1.8, AArch64 Linux",
+  "reproduction": "Existing optional frame-codecs provider; normal frame_turbopfor_block_check and frame_turbopfor_block_wrapper_sanitize --aligned-pfor. Ordinary sanitizer invocation retains alignment failure."
+}
