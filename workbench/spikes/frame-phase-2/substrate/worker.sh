@@ -25,10 +25,20 @@ for isa in $isas; do
   mkdir -p "$out"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release '-DSIXDB_SPIKES=frame-phase-1;frame-phase-2' $flags \
     > "$out/configure.txt" 2>&1
-  cmake --build "$build" --target frame_substrate_measure frame_substrate_select -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
+  cmake --build "$build" --target frame_substrate_measure frame_substrate_select frame_substrate_points -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_measure"
   sel="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_select"
+  pts="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_points"
   for repeat in 1 2 3; do
+    if [ -n "${POINTS_ONLY:-}" ]; then
+      for rows in 65536 2999808; do
+        for d in 4 8 16; do
+          taskset -c "$SIXDB_CPU" "$pts" "$cols" "$rows" "${ROUNDS:-41}" "$d" OS UserID EventTime URLHash WatchID \
+            | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/points.jsonl"
+        done
+      done
+      continue
+    fi
     taskset -c "$SIXDB_CPU" "$sel" "$cols" 2999808 "${ROUNDS:-41}" OS:UserID UserID:URLHash EventTime:WatchID RegionID:ClientIP \
       | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/select.jsonl"
     [ -n "${SELECT_ONLY:-}" ] && continue
