@@ -1,4 +1,5 @@
 #include <ikea/detail/filter/compare.h>
+#include <ikea/tuplepack/author/filter.h>
 #include <ikea/tuplepack/filter.h>
 #include "../packed-filters/baseline.h"
 

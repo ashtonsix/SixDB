@@ -5,7 +5,6 @@
 #include <ikea/tuplepack/selection.h>
 
 namespace ikea::tuplepack {
-template <unsigned N, class Byte, unsigned Rows> class predicate;
 /// Borrows a named plan and view. Their values and addresses remain stable;
 /// assigning a new plan or placement requires rebinding the operation.
 /// Output/plan/selection metadata must be disjoint from mutable source storage.

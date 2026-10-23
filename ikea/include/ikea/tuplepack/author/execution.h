@@ -1,6 +1,7 @@
 #pragma once
 #include <ikea/author/chain.h>
 #include <ikea/tuplepack/author/native.h>
+#include <ikea/tuplepack/detail/native/read.h>
 #include <ikea/tuplepack/detail/native/packet.h>
 #include <ikea/tuplepack/detail/native/selection.h>
 #include <ikea/tuplepack/write.h>

@@ -21,7 +21,7 @@ namespace tp = ikea::tuplepack;
 using word = std::uint64_t;
 using Plan = tp::read_plan<64, 16>;
 using Reader = tp::reader<64, const std::byte, 16>;
-using Predicate = tp::predicate<64, const std::byte, 16>;
+using Predicate = typename decltype(tp::bind_predicate(std::declval<const Reader&>()))::value_type;
 constexpr unsigned blocks = 64;
 constexpr auto comparison = ikea::comparison::greater_equal;
 enum class Route { retained, reprepare, oneshot, fresh };

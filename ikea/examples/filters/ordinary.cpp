@@ -1,4 +1,5 @@
 #include <ikea/tuplepack/author/execution.h>
+#include <ikea/tuplepack/author/filter.h>
 #include <ikea/seriespack/author/store.h>
 #include <ikea/seriespack.h>
 #include <ikea/tuplepack.h>

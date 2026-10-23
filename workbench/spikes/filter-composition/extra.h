@@ -95,7 +95,7 @@ template <unsigned K> struct Pair {
     static word truth(const Input &in, unsigned i) { return in.truth[i]; }
 };
 using Reader = tp::author::native_reader<64, std::byte, 16>;
-using Filter = tp::predicate<64, std::byte, 16>;
+using Filter = typename decltype(tp::bind_predicate(std::declval<const tp::reader<64, std::byte, 16>&>()))::value_type;
 struct TupleInput {
     const Reader *read;
     const Filter *filter;
