@@ -13,6 +13,9 @@ the cached unit-stride predicate candidate. The subsequent
 [copied-projection comparison](PROJECTION-NATIVE.md) supports the adopted
 plan-independent predicate while retaining its measured x86 filter exceptions.
 The general reader remains a two-pointer binding.
+The subsequent [one-image control](PREDICATE-PANEL.md) retains selected complete
+op2 callers and an equivalent old-code copy in one executable. The targeted
+AVX2 dependent and AVX-512 stage losses persist; their cause remains unresolved.
 
 The controls freeze the R3 diagnostic source, then change only the reader and
 predicate cache placement:
