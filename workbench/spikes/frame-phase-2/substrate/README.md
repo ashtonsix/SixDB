@@ -52,12 +52,18 @@ both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
    block in the leaf at L2 against the native array's 2.5 ns. My earlier claim
    that phase 1 mostly measured dispatch overhead was wrong; STAGES.md and the
    README are corrected.
-2. **Grouping by kind can cost more than it saves.** URLHash at one part gets
-   45% slower and ResolutionWidth's full slice 10% slower under batching. Kind
-   groups visit blocks out of address order, which plausibly defeats
-   sequential prefetch where kinds interleave (not yet attributed). A
-   substrate should batch within address order, for example over runs of
-   equal kind inside a 16-block group, not across the image.
+2. **The unit of batching barely matters.** A follow-up run (`166b8727`,
+   jobs `20261023T214551Z-63932352` and `20261023T214629Z-dc609e2b`) holds
+   bytes and leaves fixed and varies only the unit: one switch per block in
+   address order, one hoisted loop per address-order segment of equal kind
+   and width, or the whole-image kind index. The three stay within about 10%
+   of each other on run- and packed-heavy columns (OS SUM at one part, AVX-512:
+   15.7 / 15.9 / 15.2 ns per block; native 2.6). Only closed-form cells gain
+   from the kind index (UserID COUNT 2.4 → 0.9). URLHash's slowdown against
+   phase 1 is not ordering: it is as slow per block in address order. Its
+   first part is all width-64 run blocks, where this probe's u128 run leaf is
+   slower than phase 1's on Zen 5 (faster locally). Medians:
+   [evidence/units-v1-summary.txt](evidence/units-v1-summary.txt).
 3. **Frame slows about 1.8× from one part to the full slice; the native array
    does not.** OS SUM goes from 15 to 27 ns per block on Zen 5. The image is
    1 MB, so the full slice leaves Zen 5's 1 MB L2. Frame's descriptor → offset
@@ -94,7 +100,6 @@ raw-record audit.
 - Leaves at their floor, measured against the native array per width:
   direct Local bit-plane SUM and COUNT for packed blocks (popcount per plane,
   no unpack), and a vectorised run leaf.
-- Batching in address order, with the descriptor columns kept.
 - Attribute the one-part → full-slice slowdown and stage the descriptor →
   body chain.
 - Selected-row SUM and COUNT, where block summaries cannot answer.
