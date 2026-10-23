@@ -111,6 +111,25 @@ u128 native_staged(const native &a, const native &b, u64 t, std::size_t n, std::
     });
 }
 
+// Evict [p, p + n) from every cache level, then fence. Conditioning only:
+// it does not prove where later loads are served from.
+void flush(const void *p, std::size_t n) {
+    auto a = reinterpret_cast<std::uintptr_t>(p) & ~std::uintptr_t{63};
+    const auto e = reinterpret_cast<std::uintptr_t>(p) + n;
+    for (; a < e; a += 64) {
+#if defined(__x86_64__)
+        asm volatile("clflushopt (%0)" ::"r"(a) : "memory");
+#elif defined(__aarch64__)
+        asm volatile("dc civac, %0" ::"r"(a) : "memory");
+#endif
+    }
+#if defined(__x86_64__)
+    asm volatile("mfence" ::: "memory");
+#elif defined(__aarch64__)
+    asm volatile("dsb ish" ::: "memory");
+#endif
+}
+
 template <class F> double time_ns(F &&f) {
     const auto a = std::chrono::steady_clock::now();
     f();
@@ -208,27 +227,42 @@ int main(int argc, char **argv) {
                     {"native_fused", [&] { return native_fused(an_, bn_, t, n); }},
                 };
                 constexpr std::size_t narms = sizeof arms / sizeof arms[0];
-                std::vector<std::vector<double>> samples(narms);
                 for (const auto &a : arms)
                     if (a.run() != oracle) {
                         std::fprintf(stderr, "%s %s %s q=%g: wrong answer\n", pair.c_str(), layout, a.name, q);
                         return 1;
                     }
-                for (int r = 0; r < rounds; ++r)
-                    for (std::size_t j = 0; j < narms; ++j) {
-                        const std::size_t i = (j + static_cast<std::size_t>(r)) % narms;
-                        arms[i].run();
-                        bool ok = true;
-                        samples[i].push_back(time_ns([&] { ok = arms[i].run() == oracle; }));
-                        if (!ok)
-                            return 1;
+                // Flushed: evict every input the arm reads (Frame images, or the
+                // native arrays) before each timed call; prepared scratch stays.
+                auto evict = [&](std::size_t i) {
+                    if (i < 2) {
+                        flush(ac.payload.data(), ac.payload.size()), flush(ac.blocks.data(), ac.descriptor_bytes());
+                        flush(bc.payload.data(), bc.payload.size()), flush(bc.blocks.data(), bc.descriptor_bytes());
+                    } else {
+                        flush(an_.bytes.data(), an_.bytes.size()), flush(bn_.bytes.data(), bn_.bytes.size());
                     }
-                for (std::size_t i = 0; i < narms; ++i) {
-                    const double ns = median(samples[i]);
-                    std::printf("{\"pair\":\"%s\",\"layout\":\"%s\",\"rows\":%zu,\"q\":%g,\"density\":%.5f,\"blocks_touched\":%.4f,"
-                                "\"arm\":\"%s\",\"ns\":%.0f,\"ns_per_row\":%.4f,\"a_bytes\":%zu,\"b_bytes\":%zu}\n",
-                                pair.c_str(), layout, n, q, double(hits) / n, double(touched) / blocks, arms[i].name, ns,
-                                ns / n, ac.payload.size() + ac.descriptor_bytes(), bc.payload.size() + bc.descriptor_bytes());
+                };
+                for (const char *cond : {"warm", "flushed"}) {
+                    std::vector<std::vector<double>> samples(narms);
+                    for (int r = 0; r < rounds; ++r)
+                        for (std::size_t j = 0; j < narms; ++j) {
+                            const std::size_t i = (j + static_cast<std::size_t>(r)) % narms;
+                            if (cond[0] == 'f')
+                                evict(i);
+                            else
+                                arms[i].run();
+                            bool ok = true;
+                            samples[i].push_back(time_ns([&] { ok = arms[i].run() == oracle; }));
+                            if (!ok)
+                                return 1;
+                        }
+                    for (std::size_t i = 0; i < narms; ++i) {
+                        const double ns = median(samples[i]);
+                        std::printf("{\"pair\":\"%s\",\"layout\":\"%s\",\"condition\":\"%s\",\"rows\":%zu,\"q\":%g,\"density\":%.5f,"
+                                    "\"blocks_touched\":%.4f,\"arm\":\"%s\",\"ns\":%.0f,\"ns_per_row\":%.4f,\"a_bytes\":%zu,\"b_bytes\":%zu}\n",
+                                    pair.c_str(), layout, cond, n, q, double(hits) / n, double(touched) / blocks, arms[i].name, ns,
+                                    ns / n, ac.payload.size() + ac.descriptor_bytes(), bc.payload.size() + bc.descriptor_bytes());
+                    }
                 }
             }
         }
