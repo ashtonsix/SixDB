@@ -21,7 +21,10 @@ additional removals without claiming an exact combined byte delta.
 [artifact recovery reference](../../artifacts.md). Member names retain their
 paths relative to that tree. The selection covers regular files at least 1 MiB
 that had settled for an hour; pins, symlinks and Git metadata were excluded.
-Small authored programs, scripts, notes and other local files remain in place.
+Small authored programs, scripts, notes and other local files remained in place
+at that checkpoint. The remaining closed tree was later retired into the
+[October 23 checkpoint](../storage-20261023/README.md), preserving those smaller
+files and the earlier recovery maps.
 
 Each part was uploaded, downloaded and checksum-verified, then read from S3
 again to verify its members before byte-identical local copies were removed.

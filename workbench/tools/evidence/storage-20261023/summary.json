@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-23",
+  "request": "Reclaim more than 50 GB without losing active work or unique evidence",
+  "physical_result": {
+    "measurement": "df -k /System/Volumes/Data",
+    "initial_available_bytes": 8866934784,
+    "final_available_bytes": 72049479680,
+    "net_space_reclaimed_bytes": 63182544896,
+    "target_bytes": 50000000000,
+    "target_met": true
+  },
+  "retained_output": {
+    "large_file_parts": 11,
+    "large_files": 1104,
+    "complete_trees": [
+      {
+        "name": "hashtable-design",
+        "regular_files": 627717,
+        "regular_bytes": 7577201352,
+        "reference": "workbench/tools/evidence/storage-20261023/hashtable-design-tree.json"
+      },
+      {
+        "name": "iceberg-swiss-active",
+        "regular_files": 20351,
+        "regular_bytes": 4779828764,
+        "reference": "workbench/tools/evidence/storage-20261023/iceberg-swiss-active-tree.json"
+      }
+    ],
+    "operational_recovery": "operations.json"
+  },
+  "separate_reclamation": [
+    "Verified archived worker collections",
+    "Seven-day idle and explicitly relinquished CMake objects",
+    "Released obsolete CMake build trees",
+    "Verified duplicate interrupted-transfer files",
+    "Disposable package and browser caches"
+  ],
+  "preservation": {
+    "protected_paths_checked": 13,
+    "large_temporary_files_remaining": false,
+    "staging_directories_remaining": false,
+    "periodic_maintenance_installed": false
+  }
+}

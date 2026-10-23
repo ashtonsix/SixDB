@@ -1,0 +1,19 @@
+{
+  "format": 1,
+  "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/b20fba6941c200a274622afc0eed5ed94b5a0e991178e8d74a878b227bd89137.tar.gz",
+  "bucket": "calico-fleet-artifacts",
+  "region": "us-east-1",
+  "key": "sixdb/artifacts/sha256/b20fba6941c200a274622afc0eed5ed94b5a0e991178e8d74a878b227bd89137.tar.gz",
+  "sha256": "b20fba6941c200a274622afc0eed5ed94b5a0e991178e8d74a878b227bd89137",
+  "bytes": 2499177546,
+  "files": 1,
+  "kind": "files",
+  "origin": "build/hashtable-design",
+  "inner_archive": "hashtable-design.tar.gz",
+  "inner_archive_sha256": "fa4193f112ce898866fc2878e484ac2c6177b42280113a5220d3597a0a43562f",
+  "recovery": "Fetch this ordinary artifact, then extract the contained tar.gz into a new directory; it preserves the original root name and symlinks.",
+  "verified_at": 1792730618.979071,
+  "original_regular_files": 627717,
+  "original_regular_bytes": 7577201352,
+  "verification": "Fresh full S3 object verification, exact inner-archive hash, per-file original/archive SHA256 comparison, symlink/hardlink checks, complete post-verification name and identity comparison"
+}

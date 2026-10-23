@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/6ed0ccf94ab5aa1077ffad137d27a882164c279dc65ebe0b0226f7fda66c9ab4.tar.gz",
+  "bucket": "calico-fleet-artifacts",
+  "region": "us-east-1",
+  "key": "sixdb/artifacts/sha256/6ed0ccf94ab5aa1077ffad137d27a882164c279dc65ebe0b0226f7fda66c9ab4.tar.gz",
+  "sha256": "6ed0ccf94ab5aa1077ffad137d27a882164c279dc65ebe0b0226f7fda66c9ab4",
+  "bytes": 1298069205,
+  "files": 1,
+  "origin": "build/iceberg-swiss-active",
+  "inner_archive": "iceberg-swiss-active.tar.gz",
+  "inner_archive_sha256": "25286501d077f1b452da932ae7182969ed49e032a39b40b3c766cbe5fff1ad2d",
+  "recovery": "Fetch this ordinary artifact, then extract the contained tar.gz into a new directory; it preserves the original root name and symlinks.",
+  "verified_at": 1792730793.798108,
+  "original_regular_files": 20351,
+  "original_regular_bytes": 4779828764,
+  "verification": "Fresh full S3 object verification, exact inner-archive hash, per-file original/archive SHA256 comparison, symlink/hardlink checks, complete post-verification name and identity comparison"
+}

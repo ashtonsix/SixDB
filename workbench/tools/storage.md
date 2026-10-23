@@ -112,3 +112,6 @@ Retry `wait JOB` or `fetch JOB`. They check sizes and hashes against
 failures. Compiler omissions stay omitted unless requested. Differing or user-added
 files survive repair in `replaced-results-*` beside the results; inspect before deleting.
 A verified collection preserves what the script produced, including failed runs.
+
+Closed local study recovery checkpoints: [October 16](evidence/storage-20261016/README.md)
+and [October 23](evidence/storage-20261023/README.md).
