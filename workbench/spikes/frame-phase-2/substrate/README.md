@@ -52,7 +52,7 @@ both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
    block in the leaf at L2 against the native array's 2.5 ns. My earlier claim
    that phase 1 mostly measured dispatch overhead was wrong; STAGES.md and the
    README are corrected.
-2. **The unit of batching barely matters when access is predictable.** A follow-up run (`166b8727`,
+2. **The unit of batching barely matters when access is predictable and leaves are slow** (reversed on fast leaves; see [the shared image](#the-shared-image-substrate-over-front-cs-leaves)). A follow-up run (`166b8727`,
    jobs `20261023T214551Z-63932352` and `20261023T214629Z-dc609e2b`) holds
    bytes and leaves fixed and varies only the unit: one switch per block in
    address order, one hoisted loop per address-order segment of equal kind
@@ -237,6 +237,49 @@ Frame here is still phase 1's images and leaves. Medians:
    full-socket instance (front A).
 3. These used phase 1's leaves; on front C's leaves the single-stream gap
    is already smaller, so the shared image's scaling run is next.
+
+## The shared image: substrate over front C's leaves
+
+[`image.h`](image.h) keeps descriptor columns in block order over front C's
+plane256, runs and u64-lane bodies, with bodies placed in address order or
+grouped by kind; [`image_measure.cpp`](image_measure.cpp) re-runs the
+substrate's cells on it (`2281816d`, `1efa2ef8`; jobs
+`20261023T233253Z-042cc020`, `20261023T233319Z-a8bebfca`,
+`20261023T234426Z-69a22fb8`, `20261023T234455Z-3640117d`). Medians:
+[evidence/image-v1-summary.txt](evidence/image-v1-summary.txt),
+[evidence/image-v2-summary.txt](evidence/image-v2-summary.txt).
+
+| Zen 5 AVX-512, warm, ns per block | Address segments | Kind index, address placement | Kind index, grouped placement | Native |
+| --- | ---: | ---: | ---: | ---: |
+| OS SUM | 8.23 | 4.15 | 3.24 | 2.51 |
+| ResolutionWidth SUM | 8.49 | 4.84 | 3.59 | 4.77 |
+| UserID SUM | 14.68 | 12.90 | 9.59 | 31.30 |
+| EventTime SUM | 7.39 | 6.73 | 6.93 | 11.81 |
+| WatchID SUM | 40.87 | 39.51 | 41.16 | 44.49 |
+
+1. **With fast leaves the visit unit matters again.** On run-heavy OS and
+   ResolutionWidth, a whole-image kind index halves the time of address-order
+   segments, and grouping body placement by kind takes it to 2.4–2.5×. This
+   reverses finding 2 above, which held only while phase 1's leaves were
+   slow. Placement and visit order are both substrate choices.
+2. **Frame now wins full SUM where blocks are structured.** UserID 3.3×,
+   EventTime 1.7× and ResolutionWidth 1.3× faster than the native array on
+   Zen 5 (UserID 2.0× and EventTime 1.8× on Graviton 4); OS is within 1.3×;
+   incompressible WatchID and URLHash are at parity.
+3. **Fused predicate → SUM wins 10× where A clusters** (URLHash summed over
+   UserID's top 10%: 12.1 vs 120.1 ns per block warm on Zen 5) and loses
+   2.6× where A spreads (ClientIP over RegionID: 63.5 vs 24.8).
+4. **Points are 5–15 ns resident** against 2–4 ns native, down from
+   26–38 ns on phase 1's leaves; cold they are 13–38 ns against 13–14 ns.
+5. **Random-order visits with extent staging match the staged native
+   array** on Zen 5 and beat it 2–4× on Graviton 4 for run-heavy columns
+   (UserID 54 vs 218 ns per block).
+
+The leaf boundary held: the substrate calls front C's header leaves with
+(body, width, count, base, args) and nothing else. The open seam is
+placement: kind-grouped bodies help scans, while address placement keeps
+selected blocks and points local. Choosing it is a layout decision for the
+part, possibly per group.
 
 ## Independent point reads
 

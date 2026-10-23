@@ -1,0 +1,169 @@
+isa column cell condition | arm=median ...
+avx2   ClientIP:RegionID pair_sum   flushed | frame_fused=84.03  native_fused=37.18
+avx2   ClientIP:RegionID pair_sum   warm    | frame_fused=81.12  native_fused=33.95
+avx2   ClientIP:RegionID points     flushed | frame=32.44  native=13.41
+avx2   ClientIP:RegionID points     warm    | frame=13.67  native=4.05
+avx2   ClientIP:RegionID random_sum flushed | frame_address=69.06  frame_address_staged=33.28  frame_by_kind=70.08  frame_by_kind_staged=32.72  native=87.31  native_staged=32.91
+avx2   ClientIP:RegionID random_sum warm    | frame_address=21.15  frame_address_staged=27.81  frame_by_kind=20.71  frame_by_kind_staged=27.71  native=19.41  native_staged=12.67
+avx2   ClientIP:RegionID sum        flushed | frame_address=12.79  frame_address_kind_index=13.21  frame_by_kind=12.60  frame_by_kind_kind_index=11.91  native=24.00
+avx2   ClientIP:RegionID sum        warm    | frame_address=11.29  frame_address_kind_index=10.74  frame_by_kind=10.94  frame_by_kind_kind_index=10.18  native=11.73
+avx2   EventTime         points     flushed | frame=30.54  native=12.69
+avx2   EventTime         points     warm    | frame=5.91  native=4.04
+avx2   EventTime         random_sum flushed | frame_address=67.01  frame_address_staged=26.89  frame_by_kind=67.68  frame_by_kind_staged=26.97  native=86.46  native_staged=32.58
+avx2   EventTime         random_sum warm    | frame_address=13.55  frame_address_staged=14.90  frame_by_kind=16.37  frame_by_kind_staged=14.94  native=22.00  native_staged=12.65
+avx2   EventTime         sum        flushed | frame_address=12.81  frame_address_kind_index=19.33  frame_by_kind=13.47  frame_by_kind_kind_index=13.42  native=23.46
+avx2   EventTime         sum        warm    | frame_address=6.17  frame_address_kind_index=6.28  frame_by_kind=7.05  frame_by_kind_kind_index=5.78  native=12.66
+avx2   OS                points     flushed | frame=18.21  native=12.14
+avx2   OS                points     warm    | frame=11.38  native=3.99
+avx2   OS                random_sum flushed | frame_address=39.93  frame_address_staged=24.93  frame_by_kind=39.91  frame_by_kind_staged=24.91  native=65.66  native_staged=23.81
+avx2   OS                random_sum warm    | frame_address=11.87  frame_address_staged=18.90  frame_by_kind=11.27  frame_by_kind_staged=18.66  native=15.20  native_staged=8.97
+avx2   OS                sum        flushed | frame_address=10.35  frame_address_kind_index=10.18  frame_by_kind=10.69  frame_by_kind_kind_index=5.60  native=6.45
+avx2   OS                sum        warm    | frame_address=8.44  frame_address_kind_index=4.64  frame_by_kind=8.51  frame_by_kind_kind_index=3.88  native=4.19
+avx2   ResolutionWidth   points     flushed | frame=23.09  native=13.95
+avx2   ResolutionWidth   points     warm    | frame=12.22  native=4.29
+avx2   ResolutionWidth   random_sum flushed | frame_address=45.43  frame_address_staged=26.17  frame_by_kind=45.50  frame_by_kind_staged=26.07  native=63.33  native_staged=25.54
+avx2   ResolutionWidth   random_sum warm    | frame_address=13.37  frame_address_staged=20.59  frame_by_kind=12.82  frame_by_kind_staged=20.41  native=16.41  native_staged=9.81
+avx2   ResolutionWidth   sum        flushed | frame_address=11.51  frame_address_kind_index=12.51  frame_by_kind=11.98  frame_by_kind_kind_index=6.21  native=11.98
+avx2   ResolutionWidth   sum        warm    | frame_address=9.36  frame_address_kind_index=5.48  frame_by_kind=9.42  frame_by_kind_kind_index=4.34  native=4.11
+avx2   URLHash:UserID    pair_sum   flushed | frame_fused=13.78  native_fused=89.07
+avx2   URLHash:UserID    pair_sum   warm    | frame_fused=10.24  native_fused=71.05
+avx2   URLHash:UserID    points     flushed | frame=27.50  native=14.18
+avx2   URLHash:UserID    points     warm    | frame=17.44  native=2.60
+avx2   URLHash:UserID    random_sum flushed | frame_address=169.66  frame_address_staged=62.65  frame_by_kind=181.44  frame_by_kind_staged=62.31  native=167.90  native_staged=63.30
+avx2   URLHash:UserID    random_sum warm    | frame_address=106.87  frame_address_staged=38.35  frame_by_kind=101.39  frame_by_kind_staged=38.31  native=101.99  native_staged=31.33
+avx2   URLHash:UserID    sum        flushed | frame_address=45.37  frame_address_kind_index=71.70  frame_by_kind=45.32  frame_by_kind_kind_index=46.02  native=48.41
+avx2   URLHash:UserID    sum        warm    | frame_address=40.66  frame_address_kind_index=52.30  frame_by_kind=38.36  frame_by_kind_kind_index=36.96  native=40.69
+avx2   UserID:OS         pair_sum   flushed | frame_fused=101.81  native_fused=57.68
+avx2   UserID:OS         pair_sum   warm    | frame_fused=98.63  native_fused=47.45
+avx2   UserID:OS         points     flushed | frame=42.40  native=13.99
+avx2   UserID:OS         points     warm    | frame=14.66  native=2.17
+avx2   UserID:OS         random_sum flushed | frame_address=77.24  frame_address_staged=37.27  frame_by_kind=78.50  frame_by_kind_staged=37.39  native=152.67  native_staged=61.30
+avx2   UserID:OS         random_sum warm    | frame_address=26.37  frame_address_staged=30.57  frame_by_kind=25.68  frame_by_kind_staged=30.60  native=86.34  native_staged=29.19
+avx2   UserID:OS         sum        flushed | frame_address=19.54  frame_address_kind_index=49.82  frame_by_kind=24.10  frame_by_kind_kind_index=16.24  native=46.78
+avx2   UserID:OS         sum        warm    | frame_address=16.97  frame_address_kind_index=14.23  frame_by_kind=19.09  frame_by_kind_kind_index=11.17  native=34.15
+avx2   WatchID           points     flushed | frame=13.72  native=14.01
+avx2   WatchID           points     warm    | frame=6.61  native=2.16
+avx2   WatchID           random_sum flushed | frame_address=177.93  frame_address_staged=67.96  frame_by_kind=183.54  frame_by_kind_staged=67.87  native=165.28  native_staged=62.36
+avx2   WatchID           random_sum warm    | frame_address=101.75  frame_address_staged=34.98  frame_by_kind=100.04  frame_by_kind_staged=34.41  native=96.51  native_staged=31.18
+avx2   WatchID           sum        flushed | frame_address=49.47  frame_address_kind_index=49.49  frame_by_kind=49.12  frame_by_kind_kind_index=47.96  native=48.77
+avx2   WatchID           sum        warm    | frame_address=37.29  frame_address_kind_index=36.61  frame_by_kind=38.58  frame_by_kind_kind_index=37.78  native=40.84
+avx2   WatchID:EventTime pair_sum   flushed | frame_fused=67.44  native_fused=67.32
+avx2   WatchID:EventTime pair_sum   warm    | frame_fused=59.45  native_fused=56.87
+avx2   WatchID:EventTime points     flushed | frame=13.39  native=13.56
+avx2   WatchID:EventTime points     warm    | frame=6.56  native=2.29
+avx2   WatchID:EventTime random_sum flushed | frame_address=166.44  frame_address_staged=66.81  frame_by_kind=174.56  frame_by_kind_staged=66.24  native=160.40  native_staged=62.71
+avx2   WatchID:EventTime random_sum warm    | frame_address=109.32  frame_address_staged=35.09  frame_by_kind=98.57  frame_by_kind_staged=35.16  native=94.88  native_staged=31.32
+avx2   WatchID:EventTime sum        flushed | frame_address=46.63  frame_address_kind_index=46.61  frame_by_kind=47.41  frame_by_kind_kind_index=46.77  native=45.71
+avx2   WatchID:EventTime sum        warm    | frame_address=38.53  frame_address_kind_index=37.86  frame_by_kind=38.96  frame_by_kind_kind_index=38.77  native=39.10
+avx512 ClientIP:RegionID pair_sum   flushed | frame_fused=69.45  native_fused=30.58
+avx512 ClientIP:RegionID pair_sum   warm    | frame_fused=63.21  native_fused=24.35
+avx512 ClientIP:RegionID points     flushed | frame=31.02  native=15.00
+avx512 ClientIP:RegionID points     warm    | frame=14.17  native=4.01
+avx512 ClientIP:RegionID random_sum flushed | frame_address=54.16  frame_address_staged=31.04  frame_by_kind=54.52  frame_by_kind_staged=30.87  native=50.55  native_staged=30.71
+avx512 ClientIP:RegionID random_sum warm    | frame_address=15.83  frame_address_staged=26.11  frame_by_kind=15.44  frame_by_kind_staged=25.92  native=15.64  native_staged=11.62
+avx512 ClientIP:RegionID sum        flushed | frame_address=10.12  frame_address_kind_index=10.94  frame_by_kind=9.88  frame_by_kind_kind_index=9.73  native=21.94
+avx512 ClientIP:RegionID sum        warm    | frame_address=7.35  frame_address_kind_index=7.33  frame_by_kind=6.61  frame_by_kind_kind_index=6.08  native=9.89
+avx512 EventTime         points     flushed | frame=33.21  native=12.92
+avx512 EventTime         points     warm    | frame=6.04  native=4.04
+avx512 EventTime         random_sum flushed | frame_address=53.64  frame_address_staged=26.49  frame_by_kind=54.77  frame_by_kind_staged=26.35  native=49.56  native_staged=30.79
+avx512 EventTime         random_sum warm    | frame_address=13.23  frame_address_staged=14.28  frame_by_kind=18.79  frame_by_kind_staged=14.38  native=17.55  native_staged=11.95
+avx512 EventTime         sum        flushed | frame_address=17.64  frame_address_kind_index=19.63  frame_by_kind=18.02  frame_by_kind_kind_index=16.38  native=22.10
+avx512 EventTime         sum        warm    | frame_address=7.39  frame_address_kind_index=6.73  frame_by_kind=9.47  frame_by_kind_kind_index=6.93  native=11.81
+avx512 OS                points     flushed | frame=18.22  native=11.74
+avx512 OS                points     warm    | frame=12.43  native=4.01
+avx512 OS                random_sum flushed | frame_address=34.89  frame_address_staged=23.47  frame_by_kind=34.35  frame_by_kind_staged=23.32  native=36.57  native_staged=17.48
+avx512 OS                random_sum warm    | frame_address=11.33  frame_address_staged=18.46  frame_by_kind=10.52  frame_by_kind_staged=18.22  native=8.54  native_staged=5.39
+avx512 OS                sum        flushed | frame_address=10.29  frame_address_kind_index=8.90  frame_by_kind=10.43  frame_by_kind_kind_index=5.20  native=5.65
+avx512 OS                sum        warm    | frame_address=8.23  frame_address_kind_index=4.15  frame_by_kind=8.28  frame_by_kind_kind_index=3.24  native=2.51
+avx512 ResolutionWidth   points     flushed | frame=20.18  native=13.23
+avx512 ResolutionWidth   points     warm    | frame=12.81  native=4.25
+avx512 ResolutionWidth   random_sum flushed | frame_address=39.14  frame_address_staged=24.78  frame_by_kind=39.70  frame_by_kind_staged=24.70  native=40.95  native_staged=20.41
+avx512 ResolutionWidth   random_sum warm    | frame_address=12.76  frame_address_staged=20.63  frame_by_kind=12.04  frame_by_kind_staged=20.36  native=9.67  native_staged=7.24
+avx512 ResolutionWidth   sum        flushed | frame_address=10.68  frame_address_kind_index=11.37  frame_by_kind=11.17  frame_by_kind_kind_index=6.08  native=11.12
+avx512 ResolutionWidth   sum        warm    | frame_address=8.49  frame_address_kind_index=4.84  frame_by_kind=8.61  frame_by_kind_kind_index=3.59  native=4.77
+avx512 URLHash:UserID    pair_sum   flushed | frame_fused=20.77  native_fused=142.09
+avx512 URLHash:UserID    pair_sum   warm    | frame_fused=11.94  native_fused=120.25
+avx512 URLHash:UserID    points     flushed | frame=28.90  native=15.03
+avx512 URLHash:UserID    points     warm    | frame=14.71  native=2.59
+avx512 URLHash:UserID    random_sum flushed | frame_address=124.22  frame_address_staged=58.91  frame_by_kind=125.35  frame_by_kind_staged=59.16  native=111.26  native_staged=58.36
+avx512 URLHash:UserID    random_sum warm    | frame_address=99.24  frame_address_staged=34.97  frame_by_kind=92.82  frame_by_kind_staged=34.13  native=93.62  native_staged=29.81
+avx512 URLHash:UserID    sum        flushed | frame_address=57.35  frame_address_kind_index=58.76  frame_by_kind=55.34  frame_by_kind_kind_index=50.18  native=47.11
+avx512 URLHash:UserID    sum        warm    | frame_address=49.39  frame_address_kind_index=42.38  frame_by_kind=44.23  frame_by_kind_kind_index=39.35  native=41.88
+avx512 UserID:OS         pair_sum   flushed | frame_fused=121.80  native_fused=162.65
+avx512 UserID:OS         pair_sum   warm    | frame_fused=119.70  native_fused=73.92
+avx512 UserID:OS         points     flushed | frame=38.49  native=15.81
+avx512 UserID:OS         points     warm    | frame=14.79  native=2.53
+avx512 UserID:OS         random_sum flushed | frame_address=68.12  frame_address_staged=35.08  frame_by_kind=70.69  frame_by_kind_staged=34.65  native=107.75  native_staged=59.77
+avx512 UserID:OS         random_sum warm    | frame_address=20.92  frame_address_staged=28.98  frame_by_kind=20.54  frame_by_kind_staged=28.75  native=66.17  native_staged=26.83
+avx512 UserID:OS         sum        flushed | frame_address=17.70  frame_address_kind_index=46.18  frame_by_kind=22.28  frame_by_kind_kind_index=15.92  native=44.80
+avx512 UserID:OS         sum        warm    | frame_address=14.68  frame_address_kind_index=12.90  frame_by_kind=17.24  frame_by_kind_kind_index=9.59  native=31.30
+avx512 WatchID           points     flushed | frame=13.41  native=15.10
+avx512 WatchID           points     warm    | frame=6.69  native=2.65
+avx512 WatchID           random_sum flushed | frame_address=126.74  frame_address_staged=65.76  frame_by_kind=127.36  frame_by_kind_staged=65.38  native=117.62  native_staged=59.33
+avx512 WatchID           random_sum warm    | frame_address=93.69  frame_address_staged=32.75  frame_by_kind=93.49  frame_by_kind_staged=32.70  native=89.21  native_staged=29.51
+avx512 WatchID           sum        flushed | frame_address=53.21  frame_address_kind_index=52.10  frame_by_kind=52.46  frame_by_kind_kind_index=51.76  native=47.61
+avx512 WatchID           sum        warm    | frame_address=40.87  frame_address_kind_index=39.51  frame_by_kind=41.95  frame_by_kind_kind_index=41.16  native=44.49
+avx512 WatchID:EventTime pair_sum   flushed | frame_fused=131.96  native_fused=139.08
+avx512 WatchID:EventTime pair_sum   warm    | frame_fused=118.39  native_fused=122.08
+avx512 WatchID:EventTime points     flushed | frame=13.47  native=15.54
+avx512 WatchID:EventTime points     warm    | frame=6.31  native=2.61
+avx512 WatchID:EventTime random_sum flushed | frame_address=125.61  frame_address_staged=63.58  frame_by_kind=125.29  frame_by_kind_staged=64.64  native=117.45  native_staged=58.97
+avx512 WatchID:EventTime random_sum warm    | frame_address=99.22  frame_address_staged=33.41  frame_by_kind=96.90  frame_by_kind_staged=33.30  native=88.96  native_staged=29.96
+avx512 WatchID:EventTime sum        flushed | frame_address=52.44  frame_address_kind_index=52.12  frame_by_kind=51.79  frame_by_kind_kind_index=51.84  native=47.45
+avx512 WatchID:EventTime sum        warm    | frame_address=44.41  frame_address_kind_index=40.46  frame_by_kind=48.55  frame_by_kind_kind_index=46.12  native=42.49
+native ClientIP:RegionID pair_sum   flushed | frame_fused=136.68  native_fused=92.61
+native ClientIP:RegionID pair_sum   warm    | frame_fused=135.79  native_fused=92.25
+native ClientIP:RegionID points     flushed | frame=27.93  native=12.09
+native ClientIP:RegionID points     warm    | frame=18.97  native=4.70
+native ClientIP:RegionID random_sum flushed | frame_address=102.01  frame_address_staged=51.75  frame_by_kind=96.23  frame_by_kind_staged=51.23  native=156.41  native_staged=96.15
+native ClientIP:RegionID random_sum warm    | frame_address=48.98  frame_address_staged=44.59  frame_by_kind=49.76  frame_by_kind_staged=44.34  native=68.74  native_staged=40.88
+native ClientIP:RegionID sum        flushed | frame_address=27.19  frame_address_kind_index=25.34  frame_by_kind=26.83  frame_by_kind_kind_index=24.34  native=33.07
+native ClientIP:RegionID sum        warm    | frame_address=25.86  frame_address_kind_index=23.88  frame_by_kind=25.61  frame_by_kind_kind_index=23.71  native=25.96
+native EventTime         points     flushed | frame=25.36  native=12.10
+native EventTime         points     warm    | frame=12.08  native=5.00
+native EventTime         random_sum flushed | frame_address=105.59  frame_address_staged=57.82  frame_by_kind=102.40  frame_by_kind_staged=57.61  native=149.00  native_staged=97.20
+native EventTime         random_sum warm    | frame_address=46.94  frame_address_staged=30.02  frame_by_kind=47.93  frame_by_kind_staged=28.79  native=76.25  native_staged=40.72
+native EventTime         sum        flushed | frame_address=20.46  frame_address_kind_index=25.27  frame_by_kind=20.67  frame_by_kind_kind_index=19.52  native=32.97
+native EventTime         sum        warm    | frame_address=16.12  frame_address_kind_index=16.73  frame_by_kind=16.95  frame_by_kind_kind_index=14.68  native=26.61
+native OS                points     flushed | frame=18.03  native=10.21
+native OS                points     warm    | frame=15.23  native=4.47
+native OS                random_sum flushed | frame_address=44.17  frame_address_staged=29.02  frame_by_kind=45.78  frame_by_kind_staged=28.95  native=123.58  native_staged=37.16
+native OS                random_sum warm    | frame_address=21.50  frame_address_staged=26.36  frame_by_kind=20.94  frame_by_kind_staged=26.32  native=40.53  native_staged=24.03
+native OS                sum        flushed | frame_address=16.71  frame_address_kind_index=12.91  frame_by_kind=16.64  frame_by_kind_kind_index=10.30  native=11.72
+native OS                sum        warm    | frame_address=15.96  frame_address_kind_index=10.05  frame_by_kind=15.95  frame_by_kind_kind_index=9.23  native=9.66
+native ResolutionWidth   points     flushed | frame=20.22  native=11.39
+native ResolutionWidth   points     warm    | frame=15.62  native=4.45
+native ResolutionWidth   random_sum flushed | frame_address=53.01  frame_address_staged=32.43  frame_by_kind=55.56  frame_by_kind_staged=32.47  native=143.78  native_staged=60.20
+native ResolutionWidth   random_sum warm    | frame_address=25.67  frame_address_staged=28.62  frame_by_kind=24.74  frame_by_kind_staged=28.55  native=47.96  native_staged=20.98
+native ResolutionWidth   sum        flushed | frame_address=17.43  frame_address_kind_index=16.64  frame_by_kind=17.38  frame_by_kind_kind_index=12.00  native=16.93
+native ResolutionWidth   sum        warm    | frame_address=16.74  frame_address_kind_index=11.02  frame_by_kind=16.64  frame_by_kind_kind_index=10.20  native=11.64
+native URLHash:UserID    pair_sum   flushed | frame_fused=28.85  native_fused=111.11
+native URLHash:UserID    pair_sum   warm    | frame_fused=25.71  native_fused=100.47
+native URLHash:UserID    points     flushed | frame=27.56  native=12.07
+native URLHash:UserID    points     warm    | frame=19.71  native=4.62
+native URLHash:UserID    random_sum flushed | frame_address=234.68  frame_address_staged=188.80  frame_by_kind=237.00  frame_by_kind_staged=192.86  native=214.49  native_staged=192.16
+native URLHash:UserID    random_sum warm    | frame_address=188.41  frame_address_staged=121.82  frame_by_kind=198.64  frame_by_kind_staged=121.01  native=188.58  native_staged=110.30
+native URLHash:UserID    sum        flushed | frame_address=73.76  frame_address_kind_index=89.22  frame_by_kind=74.86  frame_by_kind_kind_index=73.75  native=69.54
+native URLHash:UserID    sum        warm    | frame_address=73.15  frame_address_kind_index=72.95  frame_by_kind=74.23  frame_by_kind_kind_index=71.47  native=70.42
+native UserID:OS         pair_sum   flushed | frame_fused=161.88  native_fused=128.91
+native UserID:OS         pair_sum   warm    | frame_fused=160.83  native_fused=129.24
+native UserID:OS         points     flushed | frame=35.07  native=11.99
+native UserID:OS         points     warm    | frame=21.36  native=4.52
+native UserID:OS         random_sum flushed | frame_address=112.63  frame_address_staged=69.84  frame_by_kind=115.61  frame_by_kind_staged=70.13  native=212.61  native_staged=186.73
+native UserID:OS         random_sum warm    | frame_address=63.18  frame_address_staged=52.00  frame_by_kind=66.32  frame_by_kind_staged=51.94  native=161.05  native_staged=107.12
+native UserID:OS         sum        flushed | frame_address=38.16  frame_address_kind_index=55.96  frame_by_kind=39.27  frame_by_kind_kind_index=33.95  native=69.67
+native UserID:OS         sum        warm    | frame_address=36.85  frame_address_kind_index=35.36  frame_by_kind=38.02  frame_by_kind_kind_index=31.65  native=64.73
+native WatchID           points     flushed | frame=14.32  native=12.07
+native WatchID           points     warm    | frame=9.38  native=4.48
+native WatchID           random_sum flushed | frame_address=216.91  frame_address_staged=190.35  frame_by_kind=225.25  frame_by_kind_staged=196.32  native=214.27  native_staged=191.25
+native WatchID           random_sum warm    | frame_address=182.64  frame_address_staged=117.44  frame_by_kind=193.85  frame_by_kind_staged=117.86  native=189.09  native_staged=110.91
+native WatchID           sum        flushed | frame_address=71.60  frame_address_kind_index=71.49  frame_by_kind=72.53  frame_by_kind_kind_index=72.09  native=69.14
+native WatchID           sum        warm    | frame_address=71.61  frame_address_kind_index=64.39  frame_by_kind=73.20  frame_by_kind_kind_index=70.42  native=70.40
+native WatchID:EventTime pair_sum   flushed | frame_fused=154.90  native_fused=103.18
+native WatchID:EventTime pair_sum   warm    | frame_fused=151.51  native_fused=101.92
+native WatchID:EventTime points     flushed | frame=14.34  native=12.08
+native WatchID:EventTime points     warm    | frame=8.83  native=4.55
+native WatchID:EventTime random_sum flushed | frame_address=219.87  frame_address_staged=191.40  frame_by_kind=226.03  frame_by_kind_staged=196.49  native=213.92  native_staged=191.52
+native WatchID:EventTime random_sum warm    | frame_address=183.84  frame_address_staged=116.92  frame_by_kind=195.77  frame_by_kind_staged=117.34  native=189.27  native_staged=111.89
+native WatchID:EventTime sum        flushed | frame_address=70.64  frame_address_kind_index=70.72  frame_by_kind=72.83  frame_by_kind_kind_index=72.70  native=69.47
+native WatchID:EventTime sum        warm    | frame_address=70.51  frame_address_kind_index=63.42  frame_by_kind=73.00  frame_by_kind_kind_index=70.72  native=70.56
