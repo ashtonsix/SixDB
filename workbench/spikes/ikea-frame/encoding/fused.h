@@ -369,9 +369,12 @@ inline void run_weights(const borrowed_block &k, const row_selection *s, std::ui
         row += size;
     });
 }
-// n residuals v (below 2^width) with weights w (summing to at most 256).
-inline void weighted_into(totals &t, const u64 *v, const std::uint32_t *w, unsigned n, const fused_request &q,
-                          const plan &p, unsigned width) {
+// n residuals values[i] (below 2^width; any lane, or an in-place view) with
+// weights w (summing to at most 256).
+template <class V>
+void weighted_into(totals &t, const V &values, const std::uint32_t *w, unsigned n, const fused_request &q,
+                   const plan &p, unsigned width) {
+    auto v = [&](unsigned i) { return static_cast<u64>(values[i]); };
     u64 rows = 0;
     for (unsigned i = 0; i < n; ++i)
         rows += w[i];
@@ -380,12 +383,12 @@ inline void weighted_into(totals &t, const u64 *v, const std::uint32_t *w, unsig
         if (width <= 56) {  // sum v_i w_i <= 256 (2^56 - 1)
             u64 x = 0;
             for (unsigned i = 0; i < n; ++i)
-                x += v[i] * w[i];
+                x += v(i) * w[i];
             t.sum += x;
         } else {
             u128 x = 0;
             for (unsigned i = 0; i < n; ++i)
-                x += static_cast<u128>(v[i]) * w[i];
+                x += static_cast<u128>(v(i)) * w[i];
             t.sum += x;
         }
     }
@@ -396,7 +399,7 @@ inline void weighted_into(totals &t, const u64 *v, const std::uint32_t *w, unsig
             const u64 rhs = p.ge_rhs[j];
             u64 c = 0;
             for (unsigned i = 0; i < n; ++i)  // masks, not selects: a select became a branch
-                c += w[i] & (u64{0} - static_cast<u64>(v[i] >= rhs));
+                c += w[i] & (u64{0} - static_cast<u64>(v(i) >= rhs));
             t.ge[j] += c;
         }
     }
@@ -404,19 +407,19 @@ inline void weighted_into(totals &t, const u64 *v, const std::uint32_t *w, unsig
         const u64 rhs = p.eq_rhs;
         u64 c = 0;
         for (unsigned i = 0; i < n; ++i)
-            c += w[i] & (u64{0} - static_cast<u64>(v[i] == rhs));
+            c += w[i] & (u64{0} - static_cast<u64>(v(i) == rhs));
         t.eq += c;
     }
     if (q.min) {
         u64 m = UINT64_MAX;
         for (unsigned i = 0; i < n; ++i)
-            m = std::min(m, v[i] | (u64{0} - static_cast<u64>(w[i] == 0)));
+            m = std::min(m, v(i) | (u64{0} - static_cast<u64>(w[i] == 0)));
         t.min = std::min(t.min, m);
     }
     if (q.max) {
         u64 m = 0;
         for (unsigned i = 0; i < n; ++i)
-            m = std::max(m, v[i] & (u64{0} - static_cast<u64>(w[i] != 0)));
+            m = std::max(m, v(i) & (u64{0} - static_cast<u64>(w[i] != 0)));
         t.max = std::max(t.max, m);
     }
 }
@@ -455,8 +458,22 @@ inline void stored_into(fused_result &r, const borrowed_block &k, const row_sele
                 r.sum += s ? masked_stored_sum_mixed(k, *s) : stored_sum(k);
             return;
         }
-        read_plane(k, 0, d.count, buffer);
         alignas(64) std::uint32_t weights[block_rows];
+        if (run_values_program != run_program::wide) {
+            // Weights straight off the u8 ends, values in their narrowest lane.
+            if (!s) {
+                walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) { weights[rank] = limit - first; });
+            } else {
+                const selection_rank ranks(*s);
+                walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) {
+                    weights[rank] = ranks.between(first, limit);
+                });
+            }
+            with_run_values(k, run_values_program,
+                            [&](const auto &v) { weighted_into(t, v, weights, d.count, q, p, d.width); });
+            return finish(r, q, d.base, t);
+        }
+        read_plane(k, 0, d.count, buffer);
         run_weights(k, s, weights);
         weighted_into(t, buffer, weights, d.count, q, p, d.width);
         return finish(r, q, d.base, t);

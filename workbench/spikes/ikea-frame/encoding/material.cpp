@@ -30,7 +30,10 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
         run_sizes.push_back(static_cast<unsigned>(j - i));
         i = j;
     }
-    const std::size_t packed_cost = plane_bytes(k, block_rows);
+    // Physical widths: exact unless an experimental byte-lane option rounds them.
+    const unsigned packed_width = options.packed_byte_lanes ? byte_lane_width(k) : k;
+    const unsigned runs_width = options.run_values == encode_options::run_width::byte_lanes ? byte_lane_width(k) : k;
+    const std::size_t packed_cost = plane_bytes(packed_width, block_rows);
     // Delta candidate: every true step must fit i64 so wrapping u64
     // reconstruction is exact.
     bool delta_ok = true;
@@ -76,7 +79,7 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
             patched_k = pk;
         }
     }
-    const std::size_t runs_cost = plane_bytes(k, run_values.size()) + run_sizes.size();
+    const std::size_t runs_cost = plane_bytes(runs_width, run_values.size()) + run_sizes.size();
     // Delta-with-exceptions candidate: for e in {2, 8, 32}, two exception
     // sets, each priced exactly under the delta_patched law (material.h):
     //   values  rows outside the narrowest window of 256 - e sorted values
@@ -306,10 +309,10 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
     } else if (runs_cost < packed_cost) {
         d.type = kind::runs;
         d.count = static_cast<std::uint16_t>(run_values.size());
-        d.width = static_cast<std::uint8_t>(k);
-        const std::size_t values_bytes = plane_bytes(k, run_values.size());
+        d.width = static_cast<std::uint8_t>(runs_width);
+        const std::size_t values_bytes = plane_bytes(runs_width, run_values.size());
         payload.resize(payload.size() + values_bytes + run_sizes.size());
-        pack(k, run_values, payload.data() + d.offset);
+        pack(runs_width, run_values, payload.data() + d.offset);
         unsigned end = 0;
         for (std::size_t r = 0; r < run_sizes.size(); ++r) {
             end += run_sizes[r];
@@ -320,9 +323,9 @@ descriptor emit_block(std::span<const u64> block, const encode_options &options,
             scratch[i] = block[i] - *lo;
         d.type = kind::packed;
         d.count = block_rows;
-        d.width = static_cast<std::uint8_t>(k);
+        d.width = static_cast<std::uint8_t>(packed_width);
         payload.resize(payload.size() + packed_cost);
-        pack(k, scratch, payload.data() + d.offset);
+        pack(packed_width, scratch, payload.data() + d.offset);
     }
     return d;
 }
@@ -755,6 +758,8 @@ u64 stored_count_eq(const borrowed_block &k, u64 s) {
                 total += buffer[i] == rhs;
             return total;
         }
+        if (run_values_program != run_program::wide)
+            return runs_count(k, run_values_program, [rhs](u64 v) { return v == rhs; });
         read_plane(k, 0, d.count, buffer);
         each_run(k, [&](unsigned rank, unsigned size) {
             if (buffer[rank] == rhs)

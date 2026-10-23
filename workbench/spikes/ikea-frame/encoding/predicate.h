@@ -179,6 +179,21 @@ inline row_selection stored_interval_rows(const borrowed_block &k, u64 lo, u64 l
             return {};
         if (lo <= d.base && last >= max)
             return a;
+        if (run_values_program != run_program::wide) {
+            // Relative interval [rlo, rlast] in the run-value domain.
+            const u64 rlo = lo <= d.base ? 0 : lo - d.base, span = std::min(last - d.base, top) - rlo;
+            return with_run_values(k, run_values_program, [&](const auto &v) {
+                row_selection r{};
+                walk_runs(k, [&](unsigned rank, unsigned first, unsigned limit) {
+                    if (u64{v[rank]} - rlo <= span) {
+                        const row_selection run = rows_between(first, limit);
+                        for (unsigned w = 0; w < 4; ++w)
+                            r[w] |= run[w];
+                    }
+                });
+                return and_rows(r, a);
+            });
+        }
         read_plane(k, 0, d.count, buffer);
         row_selection r{};
         unsigned row = 0;

@@ -164,7 +164,17 @@ struct encode_options {
     // execution/ consumers that still do. The driver turns it off with
     // --no-bindings.
     bool bind_decoders = true;
+    // Run-value plane width (runs.h): exact K, or byte_lanes, which rounds K
+    // up to 8, 16 or 32 (K > 32 stays exact) so that the plane is a row-major
+    // array the in-place program can read; the descriptor width is the
+    // physical width, so bounds weaken to base + 2^K' - 1. Experimental, off.
+    enum class run_width : std::uint8_t { exact, byte_lanes };
+    run_width run_values = run_width::exact;
+    // Control: round packed planes the same way (expected to cost far more).
+    bool packed_byte_lanes = false;
 };
+// The byte-lane width for k: 8, 16 or 32, or k itself past 32.
+inline unsigned byte_lane_width(unsigned k) { return k <= 8 ? 8 : k <= 16 ? 16 : k <= 32 ? 32 : k; }
 
 inline const char *checkpoint_name(checkpoints mode) {
     switch (mode) {
@@ -633,6 +643,11 @@ template <class F> void each_run(const borrowed_block &k, F &&visit) {
 template <class F> void each_run(const column &c, std::size_t b, F &&visit) {
     each_run(borrow(c, b), visit);
 }
+}  // namespace frame_encoding
+
+#include "runs.h"  // run-value programs over the plane and ends above
+
+namespace frame_encoding {
 
 // One bit per block, little-endian within 64-bit words. Groups of 16 blocks
 // (4,096 rows) are derived from the same bits: an empty group is skipped
@@ -869,6 +884,8 @@ inline u128 stored_sum(const borrowed_block &k) {
         return static_cast<u128>(t);
     }
     case kind::runs:
+        if (run_values_program != run_program::wide)
+            return runs_sum(k, run_values_program);
         read_plane(k, 0, d.count, buffer);
         each_run(k, [&](unsigned rank, unsigned size) {
             total += static_cast<u128>(buffer[rank] + d.base) * size;
@@ -1255,6 +1272,8 @@ inline u64 stored_count_ge(const borrowed_block &k, u64 threshold) {
         const u64 rhs = threshold - d.base;
         if (d.width < 64 && rhs >> d.width)
             return 0;  // as packed: above every representable run value
+        if (run_values_program != run_program::wide)
+            return runs_count(k, run_values_program, [rhs](u64 v) { return v >= rhs; });
         read_plane(k, 0, d.count, buffer);
         each_run(k, [&](unsigned rank, unsigned size) {
             if (buffer[rank] >= rhs)

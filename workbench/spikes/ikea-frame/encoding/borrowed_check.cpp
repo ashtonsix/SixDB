@@ -740,6 +740,7 @@ int main(int argc, char **argv) {
     }
     encode_options options;
     options.bind_decoders = false;  // the borrowed path reads none of them
+    bool skip_projected = false;
     for (int i = 3; i < argc; ++i) {
         const std::string a = argv[i];
         if (a == "--delta-exceptions") options.delta_exceptions = true;
@@ -751,6 +752,12 @@ int main(int argc, char **argv) {
         else if (a == "--checkpoints=packed") options.delta_checkpoints = checkpoints::packed;
         else if (a == "--checkpoints=every64") options.delta_checkpoints = checkpoints::every64;
         else if (a == "--checkpoints=none") options.delta_checkpoints = checkpoints::none;
+        else if (a == "--run-values=byte_lanes") options.run_values = encode_options::run_width::byte_lanes;
+        else if (a == "--packed-byte-lanes") options.packed_byte_lanes = true;
+        else if (a == "--skip-projected") skip_projected = true;  // checks that leave dictionary views alone
+        else if (a == "--run-program=wide") run_values_program = run_program::wide;
+        else if (a == "--run-program=narrow") run_values_program = run_program::narrow;
+        else if (a == "--run-program=in_place") run_values_program = run_program::in_place;
         else return 2;
     }
     // Inputs load as in bodies.cpp: whole 256-row blocks of u64.
@@ -1283,7 +1290,7 @@ int main(int argc, char **argv) {
     }
 
     projected_report projected;
-    if (options.dictionary != dictionary_order::none && coded)
+    if (options.dictionary != dictionary_order::none && coded && !skip_projected)
         projected = check_projected(c, stored, plane);
 
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"delta_exceptions\":%s,\"dictionary\":\"%s\","

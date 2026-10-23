@@ -248,6 +248,11 @@ int main(int argc, char **argv) {
         else if (a == "--checkpoints=packed") options.delta_checkpoints = checkpoints::packed;
         else if (a == "--checkpoints=every64") options.delta_checkpoints = checkpoints::every64;
         else if (a == "--checkpoints=none") options.delta_checkpoints = checkpoints::none;
+        else if (a == "--run-values=byte_lanes") options.run_values = encode_options::run_width::byte_lanes;
+        else if (a == "--packed-byte-lanes") options.packed_byte_lanes = true;
+        else if (a == "--run-program=wide") run_values_program = run_program::wide;
+        else if (a == "--run-program=narrow") run_values_program = run_program::narrow;
+        else if (a == "--run-program=in_place") run_values_program = run_program::in_place;
         else if (a.rfind("--with=", 0) == 0) with = argv[i] + 7;
         else return 2;
     }

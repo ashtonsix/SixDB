@@ -45,3 +45,12 @@ target_link_libraries(frame_encoding_predicate_check PRIVATE frame_encoding_mate
 add_executable(frame_encoding_predicates predicates.cpp)
 sixdb_target(frame_encoding_predicates)
 target_link_libraries(frame_encoding_predicates PRIVATE frame_encoding_material)
+
+# Run-value programs (runs.h): the width sweep and in-place guards
+# (run_check), then arm timings on real columns (run_programs).
+add_executable(frame_encoding_run_check run_check.cpp)
+sixdb_target(frame_encoding_run_check)
+target_link_libraries(frame_encoding_run_check PRIVATE frame_encoding_material)
+add_executable(frame_encoding_run_programs run_programs.cpp)
+sixdb_target(frame_encoding_run_programs)
+target_link_libraries(frame_encoding_run_programs PRIVATE frame_encoding_material)
