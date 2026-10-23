@@ -42,7 +42,7 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | [Packed filters](packed-filters/README.md) | Direct packed comparisons, native controls and early exits; production contracts in Ikea. |
 | [Filter composition](filter-composition/README.md) | Fused/shared/CPS alternatives, compiler expansion and runtime costs across AVX2, AVX-512 and NEON. |
 | [Ikea composition](ikea-composition/README.md) | Question map into integer/bitset/heterogeneous probes, ABI, grain, value reuse and SeriesPack history. |
-| [Ikea Frame](ikea-frame/README.md) | Design spike for the SeriesPack/TuplePack container: prior-art survey of operations on encoded data as an encodings × operation-families matrix. |
+| [Ikea Frame](ikea-frame/README.md) | SeriesPack/TuplePack container research: [stocktake and remaining map](ikea-frame/INVENTORY.md), real integer programs, selective scans, multi-field execution and mutation/ownership costs; no maintained Frame API yet. |
 
 ## Hashtable choices and frontiers
 

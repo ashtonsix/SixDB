@@ -84,6 +84,9 @@ Ashton's direction (2026-10-22):
 
 ## Contents
 
+- [Stocktake and research map](INVENTORY.md): where the evidence is strong,
+  weak or absent; Engine's consequential choices, fusion and composition seams,
+  and connected fronts for the rest of the spike.
 - [Joint research](RESEARCH.md): current frontiers, peer ownership and shared
   witnesses; the question index remains the single list of open questions.
 - [Architectural review](REVIEW.md): Frame's place in SixDB, opportunities and
