@@ -169,7 +169,7 @@ int main(int argc, char **argv) {
                     std::function<u128()> run;
                     std::function<void()> evict;
                 };
-                const arm arms[] = {
+                std::vector<arm> arms = {
                     {"frame_owner", [&] { return fe::encoded_sum(c, m); },
                      [&] {
                          flush(c.payload.data(), c.payload.size());
@@ -284,7 +284,38 @@ int main(int argc, char **argv) {
                      },
                      [&] { flush(nat.data(), nat.size()); }},
                 };
-                constexpr std::size_t narms = sizeof arms / sizeof arms[0];
+                // Lookahead sweep for the extent-aware arm: body D ahead,
+                // descriptors 2D ahead.
+                for (std::size_t d : {2u, 4u, 16u, 32u}) {
+                    static const char *names[] = {"frame_extent_d2", "frame_extent_d4", "frame_extent_d16", "frame_extent_d32"};
+                    const char *label = names[d == 2 ? 0 : d == 4 ? 1 : d == 16 ? 2 : 3];
+                    arms.push_back({label, [&, d] {
+                                        u128 t = 0;
+                                        const std::size_t k = random_ids.size(), nb = c.blocks.size();
+                                        for (std::size_t i = 0; i < k; ++i) {
+                                            if (i + 2 * d < k) {
+                                                const std::uint32_t b = random_ids[i + 2 * d];
+                                                __builtin_prefetch(c.blocks.data() + b);
+                                                if (b + 1 < nb)
+                                                    __builtin_prefetch(c.blocks.data() + b + 1);
+                                            }
+                                            if (i + d < k) {
+                                                const std::uint32_t b = random_ids[i + d];
+                                                const std::size_t first = c.blocks[b].offset;
+                                                const std::size_t limit = b + 1 < nb ? c.blocks[b + 1].offset : c.payload.size();
+                                                for (std::size_t o = 0; o < limit - first; o += 64)
+                                                    __builtin_prefetch(c.payload.data() + first + o);
+                                            }
+                                            t += fe::block_sum(c, random_ids[i]);
+                                        }
+                                        return t;
+                                    },
+                                    [&] {
+                                        flush(c.payload.data(), c.payload.size());
+                                        flush(c.blocks.data(), c.descriptor_bytes());
+                                    }});
+                }
+                const std::size_t narms = arms.size();
                 for (const char *cond : {"warm", "flushed"}) {
                     const bool cold = cond[0] == 'f';
                     std::vector<std::vector<double>> samples(narms);
