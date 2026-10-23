@@ -3,7 +3,7 @@ d=collections.defaultdict(list); meta={}
 for f in sys.argv[1:]:
     for l in open(f):
         r=json.loads(l); k=(r['isa'],r['rows'],r['column'],r['op'],r['arm']); d[k].append(r['ns_per_block'])
-arms=['phase1_owner','per_block','segments','batched','native_for']
+arms=['per_block','per_block_prefetch8','per_block_parts','native_for','native_for_parts']
 keys=sorted({k[:4] for k in d})
 print('isa rows column op | '+' / '.join(arms)+' | ns per block (median of 3 repeats), spread')
 for k in keys:

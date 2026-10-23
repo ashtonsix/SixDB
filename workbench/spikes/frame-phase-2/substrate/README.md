@@ -64,11 +64,21 @@ both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
    first part is all width-64 run blocks, where this probe's u128 run leaf is
    slower than phase 1's on Zen 5 (faster locally). Medians:
    [evidence/units-v1-summary.txt](evidence/units-v1-summary.txt).
-3. **Frame slows about 1.8× from one part to the full slice; the native array
-   does not.** OS SUM goes from 15 to 27 ns per block on Zen 5. The image is
-   1 MB, so the full slice leaves Zen 5's 1 MB L2. Frame's descriptor → offset
-   → variable-size body chain is a candidate cause; this is the first target
-   for staging (mechanism M6). Not yet attributed.
+3. **Frame's leaves are residence-sensitive; the native array is not.** The
+   first "one part" comparison mixed residence with data, because the first
+   part's blocks differ from the column's. A same-data run (`03792b90`, jobs
+   `20261023T215742Z-2882c078` and `20261023T215808Z-35c5647f`) times each
+   65,536-row part warm on its own and adds them up. On AVX-512 that makes
+   Frame 1.3–1.65× faster than one full-slice pass (OS SUM 30.9 → 21.2 ns per
+   block, RegionID 49.3 → 30.3, UserID SUM 56.4 → 37.8), while the native
+   array barely moves (OS 2.7 → 2.5). Graviton 4 shows the same pattern. A
+   part's Frame image is about 22 KB on OS, so "part-resident" is close to L1
+   for Frame. Prefetching each body eight blocks ahead changes nothing, so
+   body acquisition at that distance is not the cause; the leaves themselves
+   pay for L1 misses. Unattributed until front A qualifies counters. The
+   native per-part control uses per-part FOR, so it is a stronger control
+   than the global array. Medians:
+   [evidence/residence-v1-summary.txt](evidence/residence-v1-summary.txt).
 4. **Closed forms deliver what M1 predicts.** UserID COUNT is 31× faster than
    the native array on Zen 5 and 56× on Graviton 4 at the full slice, and
    CounterID and IsRefresh decide from descriptors. Batching makes these cells
@@ -100,6 +110,5 @@ raw-record audit.
 - Leaves at their floor, measured against the native array per width:
   direct Local bit-plane SUM and COUNT for packed blocks (popcount per plane,
   no unpack), and a vectorised run leaf.
-- Attribute the one-part → full-slice slowdown and stage the descriptor →
-  body chain.
+- Attribute the leaves' residence sensitivity once counters are qualified.
 - Selected-row SUM and COUNT, where block summaries cannot answer.
