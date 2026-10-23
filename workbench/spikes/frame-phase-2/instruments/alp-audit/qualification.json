@@ -1,0 +1,824 @@
+{
+  "study": "ALP/RD IEEE and floating-environment audit",
+  "upstream_revision": "31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce",
+  "archive_sha256": "080807a58508ad4041f00251c14feae3a984d7630046f55aa42b375fb491b6f3",
+  "upstream_files_verified": 775,
+  "upstream_snapshot_sha256": "433787d0fe84bd1a789a91b9340006c9ca94cb8de1b8f0a6c4ed11d4eeebd275",
+  "snapshot_digest": "SHA256 of sorted path-to-file-SHA256 JSON, separators comma/colon, UTF-8; entire pinned extraction verified against archive before and after runs",
+  "upstream_consumed_region_sha256": {
+    "include/alp.hpp": "fbbb77d7033c01a915df11aad09e9ffb58def937fdf5be8aac1c54ae1053ce9a",
+    "include/alp/common.hpp": "1ce00e6c0035b24a108cc54bceeb2d51e206c73570af5b6ddf814c2e8e3c6654",
+    "include/alp/config.hpp": "a8765c13b6749f9bcee159d6464733fc6e7159babb0d469d61d691e6f8f6acf1",
+    "include/alp/constants.hpp": "678a7e59902aa09e54ead214874c33322f27d8e3d87e948fb008f0b422074708",
+    "include/alp/decoder.hpp": "10e06a92d5512d45bcbba487f4e4206d749b1ae93de2ffbb30108777a3f084e2",
+    "include/alp/encoder.hpp": "538329ab268a89a51627da12513a2d224851f22a267bd3221d03ae35d7a8e4d9",
+    "include/alp/falp.hpp": "bbb0fee084b2de5f0c76e9bd156cfc6eb02e5dd8a5f613d86cd8a8affb978be9",
+    "include/alp/rd.hpp": "c3f9b2b6f4161b2f3f19341520e3de2976f045b82b4c0188156058fb7dc7e43a",
+    "include/alp/sampler.hpp": "817bbb7576f809649efbb033a706c7c98b79ed9c322fcf114249038b82e54b2a",
+    "include/alp/storer.hpp": "b09515f1c2d470245c4fcd64795d13b75bcfee3840d0f2da8d3a11527417d3df",
+    "include/fastlanes/ffor.hpp": "204d2a756ede07c6b93195a5613178bf504cd0891b1c83928c746bbf8bd7f6c9",
+    "include/fastlanes/unffor.hpp": "c5d75d0714ea30f6fc12be9ade733c28bbb1e9e9095700b47b1c88f2db787d64",
+    "src/fastlanes_ffor.cpp": "26de38c080f7936f21bf95f8eab9e2eea0e69ffba0c30dbb4d1b3ff005a0fafa",
+    "src/fastlanes_generated_ffor.cpp": "0dfdd1757675bec963a19d1ba9b392ac097a655c35dd2cbd52bc996eac51c95c",
+    "src/fastlanes_generated_unffor.cpp": "e0a15e0c8ac8fea96d0aabc14c48451e679491fca1e412e54f4faac2c121b5ca",
+    "src/fastlanes_unffor.cpp": "29835cad8de080df62adb9367c7ca301cbd897080b2c275e19833884aa65d2f9"
+  },
+  "owned_inputs_sha256": {
+    "CMakeLists.txt": "c562a6267d3523d0c7708e65b4239fc224ba146ea275f6fb5ebcfbcaf143ff04",
+    "check.cpp": "1aefe00829acfec23778132603592620a4fc0031c8213fbe4bc6d2bce8ba13e1",
+    "run.py": "8c66c181ef55f6c572bd60a750ba20f796633d66188006469c34a58506406c1f"
+  },
+  "inputs_unchanged": true,
+  "host": "Linux ubuntu 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin",
+  "build_commands": [
+    [
+      "cmake",
+      "-S",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/alp-audit",
+      "-B",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "-G",
+      "Ninja",
+      "-DALP_AUDIT_SOURCE=/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce",
+      "-DALP_AUDIT_SANITIZE=ON"
+    ],
+    [
+      "taskset",
+      "-c",
+      "8",
+      "cmake",
+      "--build",
+      "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "-j1"
+    ]
+  ],
+  "compile_commands": [
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "command": "/usr/bin/clang++-21 -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include -std=gnu++23 -O1 -gline-tables-only -march=armv8-a+simd -mtune=neoverse-v2 -fno-fast-math -ffp-contract=off -frounding-math -fdenormal-fp-math=ieee -fsanitize=address,undefined,float-cast-overflow -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_ffor.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_ffor.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_ffor.cpp",
+      "output": "CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_ffor.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "command": "/usr/bin/clang++-21 -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include -std=gnu++23 -O1 -gline-tables-only -march=armv8-a+simd -mtune=neoverse-v2 -fno-fast-math -ffp-contract=off -frounding-math -fdenormal-fp-math=ieee -fsanitize=address,undefined,float-cast-overflow -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_unffor.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_unffor.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_unffor.cpp",
+      "output": "CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_generated_unffor.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "command": "/usr/bin/clang++-21 -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include -std=gnu++23 -O1 -gline-tables-only -march=armv8-a+simd -mtune=neoverse-v2 -fno-fast-math -ffp-contract=off -frounding-math -fdenormal-fp-math=ieee -fsanitize=address,undefined,float-cast-overflow -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_ffor.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_ffor.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_ffor.cpp",
+      "output": "CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_ffor.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "command": "/usr/bin/clang++-21 -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include -std=gnu++23 -O1 -gline-tables-only -march=armv8-a+simd -mtune=neoverse-v2 -fno-fast-math -ffp-contract=off -frounding-math -fdenormal-fp-math=ieee -fsanitize=address,undefined,float-cast-overflow -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_unffor.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_unffor.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_unffor.cpp",
+      "output": "CMakeFiles/alp_audit_upstream.dir/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/src/fastlanes_unffor.cpp.o"
+    },
+    {
+      "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/alp-audit/sanitize",
+      "command": "/usr/bin/clang++-21 -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include -std=gnu++23 -O1 -gline-tables-only -march=armv8-a+simd -mtune=neoverse-v2 -fno-fast-math -ffp-contract=off -frounding-math -fdenormal-fp-math=ieee -fsanitize=address,undefined,float-cast-overflow -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/frame_alp_audit.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/alp-audit/check.cpp",
+      "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/alp-audit/check.cpp",
+      "output": "CMakeFiles/frame_alp_audit.dir/check.cpp.o"
+    }
+  ],
+  "binary_sha256": "38db0da96709b13ced6c8bb992ff38ec4ddfdd5d51fb78109829f129f3f20a3c",
+  "cases": 144,
+  "classifications": {
+    "bit_exact": 117,
+    "ubsan_bounds": 3,
+    "ubsan_signed_overflow": 12,
+    "ubsan_float_cast": 5,
+    "ieee_mismatch": 7
+  },
+  "rd": {
+    "cases": 98,
+    "vectors": 1106,
+    "rows": 1132544,
+    "corpus_vectors": 1024,
+    "mismatches": 0,
+    "scope": "Both IEEE types: cardinalities1..8, no/one/1023/all exceptions, sampled-map index9, special bit patterns and all4 rounding modes with FZoff/on; plus all1024 vectors of16 original binary64 corpus prefixes."
+  },
+  "corpus_id": "85f48a79cec7ed1b4048004612552cdfc950adca7498186e268cf4ec66eb2bfc",
+  "corpus_inputs_sha256": {
+    "active-power.f64": "ad131f6c471acbadd70e25c57154d82f8e96e24e4bbb4733fed7fa0421145cbb",
+    "jena-00.f64": "b2fed4931bd1be98f0ba859a45d7b19d7ccea57b122a796a90797e6366ad62e5",
+    "jena-01.f64": "8f6b551bfb1bf3c8e2e83e636078fe997063a686337bcab0329e651e7bb78fff",
+    "jena-02.f64": "161b7b8cba50f8a211ba229a13cb16326ed6f2bb70f28d913fbf45229aba23b7",
+    "jena-03.f64": "67f27e12a710064bf92409241ba46d3d235ca045526a587afd9d6fae16c79d6b",
+    "jena-04.f64": "0b02e54ab739535af23b588ded75a151e805b7d869423f7ee62a286bf30c820f",
+    "jena-05.f64": "49cbb3861b65b2c2cf59274b2181bd4925ba7426351fabc2cb0463170814ba42",
+    "jena-06.f64": "16217d194138850858b32d116040ff4ac319d4470900c706544de667faf567f1",
+    "jena-07.f64": "396b51a8b04adc6c29ab4c1ddc4d0178528da9100470cfc24af8754dd638932e",
+    "jena-08.f64": "2d88f04f5312538a9b286533e40f2adf80acea32008735c9141b0feadac44dc5",
+    "jena-09.f64": "d0300b7995fd027619c71c98e6ecb87e4908da3c3169764fec630f5f374ab67e",
+    "jena-10.f64": "972367327e07f6e129de6ee525ee1d76edbb1f38beedfff5080e4d9f91a5adfe",
+    "jena-11.f64": "7f0983e04e7925441cc631fe94115ae4699efbcb9507c4c22f14fb2013f3603e",
+    "jena-12.f64": "c3bc06c7c9dcc5c32e0cf6e7bf8fc6d820378987b1a97c2bf02cf2fc69a7b4fb",
+    "jena-13.f64": "52dc0816b07174eff20bf8c53b84153adc5c91f44d856ee3ae0e345f8ad96dad",
+    "shapes-all.f64": "e1d8ac780cf196756dd47a306384649b8e234bfbabbad0ec5e407f56aa2ee91a",
+    "columns.json": "8326b04afe9c699449f027a61a37f6fd4554dfb71c5082a5a3465ad98b3f9df9"
+  },
+  "minimum_cases": [
+    {
+      "arguments": [
+        "rd",
+        "double",
+        "5",
+        "3"
+      ],
+      "classification": "bit_exact",
+      "returncode": 0,
+      "observations": [
+        {
+          "path": "RD",
+          "type": "double",
+          "case": "dictionary5_population3",
+          "vectors": 1,
+          "dict": 5,
+          "left_width": 3,
+          "right_width": 48,
+          "exceptions": 1024,
+          "raw_outside_allocation": 0,
+          "decoded_inactive_slots": 1024,
+          "max_raw": 5,
+          "max_decoded": 5,
+          "mismatches": 0
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "2dda72a88763b62c2c1aecffd1ecfac513d28913e41815790ccd812ca59d2657"
+    },
+    {
+      "arguments": [
+        "rd",
+        "double",
+        "8",
+        "3"
+      ],
+      "classification": "bit_exact",
+      "returncode": 0,
+      "observations": [
+        {
+          "path": "RD",
+          "type": "double",
+          "case": "dictionary8_population3",
+          "vectors": 1,
+          "dict": 8,
+          "left_width": 3,
+          "right_width": 48,
+          "exceptions": 1024,
+          "raw_outside_allocation": 1024,
+          "decoded_inactive_slots": 0,
+          "max_raw": 8,
+          "max_decoded": 0,
+          "mismatches": 0
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "c78d50b12bd124ff94c36c696eca1a5ac4300d1a165ee2df511031b8bc9a5c8e"
+    },
+    {
+      "arguments": [
+        "rd",
+        "double",
+        "8",
+        "4"
+      ],
+      "classification": "bit_exact",
+      "returncode": 0,
+      "observations": [
+        {
+          "path": "RD",
+          "type": "double",
+          "case": "dictionary8_population4",
+          "vectors": 1,
+          "dict": 8,
+          "left_width": 3,
+          "right_width": 48,
+          "exceptions": 1024,
+          "raw_outside_allocation": 1024,
+          "decoded_inactive_slots": 0,
+          "max_raw": 9,
+          "max_decoded": 1,
+          "mismatches": 0
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "c17934f95097bf5ba1364ef3a4d77cad7c382fea93da8d81b1496e106e3d2523"
+    },
+    {
+      "arguments": [
+        "rd-raw",
+        "double",
+        "8",
+        "3"
+      ],
+      "classification": "ubsan_bounds",
+      "returncode": 1,
+      "observations": [
+        {
+          "control": "omitted_FFOR",
+          "dict": 8,
+          "exceptions": 1024,
+          "max_raw": 8
+        }
+      ],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/rd.hpp:166:21: runtime error: index 8 out of bounds for type 'uint16_t[8]' (aka 'unsigned short[8]')",
+      "log_sha256": "e43f1889d1a005e53254070fc3cfc0188a7507d5919d61514b710f2273bdc010"
+    },
+    {
+      "arguments": [
+        "alp",
+        "float",
+        "plain",
+        "0",
+        "0",
+        "0"
+      ],
+      "classification": "ubsan_bounds",
+      "returncode": 1,
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:44: runtime error: index 10 out of bounds for type 'const int32_t[10]' (aka 'const int[10]')",
+      "log_sha256": "8dbcffe10fee7dd17310bc0bcb280035f77491254e4a0308d380cdbc8ffff1b4"
+    },
+    {
+      "arguments": [
+        "alp",
+        "double",
+        "zero",
+        "0",
+        "0",
+        "0"
+      ],
+      "classification": "ubsan_float_cast",
+      "returncode": 1,
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "zero",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        }
+      ],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/encoder.hpp:88:26: runtime error: 9.22337e+20 is outside the range of representable values of type 'long'",
+      "log_sha256": "55bdae1935a575a14ee26e495e5f6c89dc26c6e0a46d1e76160ef6f52ffb52a6"
+    },
+    {
+      "arguments": [
+        "alp",
+        "double",
+        "train-zero",
+        "0",
+        "0",
+        "0"
+      ],
+      "classification": "ubsan_signed_overflow",
+      "returncode": 1,
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 9223372036854774784 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "6cc262140a0274668cb7336ee6f7c10ffc2f539a467c01107df9630164bfa142"
+    },
+    {
+      "arguments": [
+        "alp",
+        "double",
+        "denorm",
+        "0",
+        "0",
+        "1"
+      ],
+      "classification": "ieee_mismatch",
+      "returncode": 1,
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "denorm",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": true
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "denorm",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": true,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 1,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ab90d2eaf581c41eeb922e49195de718450abf7cd4b88803f0bc739b4d9fc331"
+    }
+  ],
+  "rounding_modes": {
+    "0": "nearest",
+    "1": "upward",
+    "2": "downward",
+    "3": "toward zero"
+  },
+  "decimal_rounding_matrix": [
+    {
+      "encoding_round": 0,
+      "decoding_round": 0,
+      "path": "ALP",
+      "mismatches": 0,
+      "exceptions": 0
+    },
+    {
+      "encoding_round": 0,
+      "decoding_round": 1,
+      "path": "ALP",
+      "mismatches": 512,
+      "exceptions": 0
+    },
+    {
+      "encoding_round": 0,
+      "decoding_round": 2,
+      "path": "ALP",
+      "mismatches": 502,
+      "exceptions": 0
+    },
+    {
+      "encoding_round": 0,
+      "decoding_round": 3,
+      "path": "ALP",
+      "mismatches": 602,
+      "exceptions": 0
+    },
+    {
+      "encoding_round": 1,
+      "decoding_round": 0,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 1,
+      "decoding_round": 1,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 1,
+      "decoding_round": 2,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 1,
+      "decoding_round": 3,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 2,
+      "decoding_round": 0,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 2,
+      "decoding_round": 1,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 2,
+      "decoding_round": 2,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 2,
+      "decoding_round": 3,
+      "path": "RD",
+      "mismatches": 0,
+      "exceptions": 10
+    },
+    {
+      "encoding_round": 3,
+      "decoding_round": 0,
+      "path": "ALP",
+      "mismatches": 240,
+      "exceptions": 283
+    },
+    {
+      "encoding_round": 3,
+      "decoding_round": 1,
+      "path": "ALP",
+      "mismatches": 260,
+      "exceptions": 283
+    },
+    {
+      "encoding_round": 3,
+      "decoding_round": 2,
+      "path": "ALP",
+      "mismatches": 471,
+      "exceptions": 283
+    },
+    {
+      "encoding_round": 3,
+      "decoding_round": 3,
+      "path": "ALP",
+      "mismatches": 0,
+      "exceptions": 283
+    }
+  ],
+  "linked_inspection": {
+    "binary_sha256": "38db0da96709b13ced6c8bb992ff38ec4ddfdd5d51fb78109829f129f3f20a3c",
+    "actual_rd_decode": [
+      {
+        "mangled": "_ZN3alp10rd_encoderIdE6decodeEPdPmPtS4_S4_S4_RNS_5stateIdEE",
+        "address": "1d0e08",
+        "size": 1160,
+        "sha256": "8174646a66c243ce355392b6a3c92cc3cd48b165803347252116a0917da6ea2f",
+        "argv": [
+          "llvm-objdump-21",
+          "-d",
+          "--demangle",
+          "--start-address=0x1d0e08",
+          "--stop-address=0x1d1290",
+          "build/frame-helper/alp-audit/sanitize/frame_alp_audit"
+        ],
+        "lines": 296
+      },
+      {
+        "mangled": "_ZN3alp10rd_encoderIfE6decodeEPfPjPtS4_S4_S4_RNS_5stateIfEE",
+        "address": "1ddae8",
+        "size": 1252,
+        "sha256": "3fe352a19a8c69ba219e481dacefe16a8dbe1c17668e8857c66f3b03be639ab8",
+        "argv": [
+          "llvm-objdump-21",
+          "-d",
+          "--demangle",
+          "--start-address=0x1ddae8",
+          "--stop-address=0x1ddfcc",
+          "build/frame-helper/alp-audit/sanitize/frame_alp_audit"
+        ],
+        "lines": 319
+      }
+    ],
+    "stub_note": "The witness rd_decode wrappers are four-byte tail branches; inspection follows them to the outlined upstream bodies."
+  },
+  "linked_observations": [
+    "The actual upstream double RD body retains a bounds comparison against8 before the dictionary load; exception count is acquired only after its full1024-row dictionary loop. See selected range/hash in linked_inspection. Sanitizer ordering facts, not instruction cost measurements.",
+    "Witness wrappers are four-byte tail branches; inspection followed them to the outlined upstream bodies."
+  ],
+  "instrumentation_scope": "Executed native NEON, strict dynamic FP, ASan/UBSan/float-cast-overflow witness and all four linked upstream FFOR/unFFOR TUs. No fused falp, whole upstream build, foreign ISA, performance, file-format, short-vector or corrupt-input qualification.",
+  "all_expected_observations": true,
+  "upstream_qualified_for_arbitrary_IEEE_ALP": false,
+  "comparison_limits": [
+    "The original RD bounds suspicion does not reproduce on the documented complete FFOR pipeline; omitted-FFOR negative is a violated primitive precondition.",
+    "Legitimate ALP float initialization and double sampled ordinary/special or unsampled special/large values expose UB at this pin;8 of16 original corpus first vectors fail sampling.",
+    "Changing rounding between encode/decode changes decimal bits; FZ can erase a subnormal before exception detection.",
+    "Codec preservation is separate from aggregate semantics. No fused falp, full upstream compressor, alternate compiler, native x86, speed or exhaustive IEEE qualification."
+  ],
+  "raw_receipt": {
+    "path": "build/frame-helper/alp-audit/evidence/runs.json",
+    "sha256": "0ee3acd2af47b27b2bf0e80e7bb8a648b8f8c62b45b854d5cd66efd1f1d8b304",
+    "retention": "Rebuildable ignored logs, all128 arguments/results, exact compile commands, binary and disassembly under build/frame-helper/alp-audit; committed run.py reproduces them."
+  },
+  "alp_corpus_first_vectors": [
+    {
+      "file": "active-power.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 378 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "7d69da5716d2e625e73b7c9d572f0e55585bf378eda6890b122df81960c6125c"
+    },
+    {
+      "file": "jena-00.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 997 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "d413330c45e835861730d0c0596bdd4989119f4edda5c9e855e752559a17d51d"
+    },
+    {
+      "file": "jena-01.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: -10 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "1b079669f60a98069a3785eb164020df2834d3b9d099ce7eb61f5391067fc4f3"
+    },
+    {
+      "file": "jena-02.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 265 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "d0181563639c76224372e7e4df05b0b089dffb6420e30b96b17333a5bb42543a"
+    },
+    {
+      "file": "jena-03.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: -11 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "862812f3df911bf4c198fedc9f247f1c70748ed073aa66fb7b5c0288feb7f5f8"
+    },
+    {
+      "file": "jena-04.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 93 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "837deb1e266d77a20051fddf5865371eae79f8c9b675cf2c2512af662a4b4ede"
+    },
+    {
+      "file": "jena-05.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ce28834eb2f0f7415e1ba1cc122e0abf54ff005e43f7d7a6ab8f16e118d4fe30"
+    },
+    {
+      "file": "jena-06.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ce28834eb2f0f7415e1ba1cc122e0abf54ff005e43f7d7a6ab8f16e118d4fe30"
+    },
+    {
+      "file": "jena-07.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ce28834eb2f0f7415e1ba1cc122e0abf54ff005e43f7d7a6ab8f16e118d4fe30"
+    },
+    {
+      "file": "jena-08.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ce28834eb2f0f7415e1ba1cc122e0abf54ff005e43f7d7a6ab8f16e118d4fe30"
+    },
+    {
+      "file": "jena-09.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ce28834eb2f0f7415e1ba1cc122e0abf54ff005e43f7d7a6ab8f16e118d4fe30"
+    },
+    {
+      "file": "jena-10.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 1308 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "df8455f1a87204b911c710ec580aa2600da6764aaa6f8b7fd451700ef0193667"
+    },
+    {
+      "file": "jena-11.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 12,
+          "exceptions": 0,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "ce28834eb2f0f7415e1ba1cc122e0abf54ff005e43f7d7a6ab8f16e118d4fe30"
+    },
+    {
+      "file": "jena-12.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 16,
+          "factor": 14,
+          "exceptions": 22,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "31dcc9980be252c63c7d5cd5a7bdd83d1dc4ef5a7dc05d244bfb4fdd49815463"
+    },
+    {
+      "file": "jena-13.f64",
+      "rows": 1024,
+      "classification": "ubsan_signed_overflow",
+      "observations": [],
+      "diagnostic": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/peers/frame/alp-31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce/include/alp/decoder.hpp:129:42: runtime error: signed integer overflow: 152 * 1000000000000000000 cannot be represented in type 'int64_t' (aka 'long')",
+      "log_sha256": "aa36628a342234d6dfe23b1e9ad8c2f95913f6b7c5bb870360b0e876b2484d49"
+    },
+    {
+      "file": "shapes-all.f64",
+      "rows": 1024,
+      "classification": "bit_exact",
+      "observations": [
+        {
+          "stage": "init",
+          "type": "double",
+          "scheme": 2,
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false
+        },
+        {
+          "path": "ALP",
+          "type": "double",
+          "shape": "plain",
+          "enc_round": 0,
+          "dec_round": 0,
+          "flush": false,
+          "exponent": 14,
+          "factor": 6,
+          "exceptions": 60,
+          "mismatches": 0,
+          "encode_flags": 16,
+          "decode_flags": 16
+        }
+      ],
+      "diagnostic": null,
+      "log_sha256": "f086f710627c9314c0a44ef09ad0eba2d55e2360428c5be06e2ecc416ac3748d"
+    }
+  ]
+}

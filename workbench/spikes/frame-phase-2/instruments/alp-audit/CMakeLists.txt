@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.24)
+find_program(alp_audit_clang NAMES clang++-21 REQUIRED)
+set(CMAKE_CXX_COMPILER "${alp_audit_clang}" CACHE FILEPATH "Pinned compiler")
+project(FrameAlpAudit LANGUAGES CXX)
+if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "21.1.8")
+    message(FATAL_ERROR "ALP audit requires Clang 21.1.8")
+endif()
+if(NOT ALP_AUDIT_SOURCE)
+    message(FATAL_ERROR "Set ALP_AUDIT_SOURCE to the verified pinned extraction")
+endif()
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_library(alp_audit_upstream STATIC
+    "${ALP_AUDIT_SOURCE}/src/fastlanes_generated_ffor.cpp"
+    "${ALP_AUDIT_SOURCE}/src/fastlanes_generated_unffor.cpp"
+    "${ALP_AUDIT_SOURCE}/src/fastlanes_ffor.cpp"
+    "${ALP_AUDIT_SOURCE}/src/fastlanes_unffor.cpp")
+target_include_directories(alp_audit_upstream SYSTEM PUBLIC "${ALP_AUDIT_SOURCE}/include")
+add_executable(frame_alp_audit check.cpp)
+target_link_libraries(frame_alp_audit PRIVATE alp_audit_upstream)
+foreach(target IN ITEMS alp_audit_upstream frame_alp_audit)
+    target_compile_features(${target} PRIVATE cxx_std_23)
+    target_compile_options(${target} PRIVATE -O1 -gline-tables-only -march=armv8-a+simd -mtune=neoverse-v2
+        -fno-fast-math -ffp-contract=off -frounding-math -fdenormal-fp-math=ieee)
+    if(ALP_AUDIT_SANITIZE)
+        target_compile_options(${target} PRIVATE -fsanitize=address,undefined,float-cast-overflow -fno-sanitize-recover=all -fno-omit-frame-pointer)
+    endif()
+endforeach()
+if(ALP_AUDIT_SANITIZE)
+    target_link_options(frame_alp_audit PRIVATE -fsanitize=address,undefined,float-cast-overflow)
+endif()
