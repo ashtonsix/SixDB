@@ -389,6 +389,13 @@ struct dictionary_identity {
 // A coded block must be read with the dictionary it was coded against; the
 // code_* aggregates below reuse a decoded dictionary or translated threshold
 // while the identity is unchanged.
+//
+// Entries need not be distinct: a projected view (an owner's forward map) may
+// give several codes one value, and a sorted view is then non-decreasing in
+// code order rather than strictly increasing. injective is the owner's proof
+// that no two codes share a value; only then may COUNT(x == v) resolve v to a
+// single code. encode builds distinct entries, so dictionary_of sets it; every
+// other view starts false and stays false unless its owner proves otherwise.
 struct dictionary_view {
     u64 min;
     std::uint32_t count;
@@ -397,6 +404,7 @@ struct dictionary_view {
     const std::uint8_t *plane;
     std::size_t grant;
     dictionary_identity edition;
+    bool injective = false;
     std::size_t bytes() const { return plane_bytes(width, count); }
 };
 
@@ -428,7 +436,7 @@ bool admits(const borrowed_block &k);
 inline dictionary_view dictionary_of(const column &c, std::size_t part) {
     const auto &p = c.parts[part];
     return {p.min,    p.count, p.width, c.options.dictionary, c.payload.data() + p.offset,
-            c.payload.size() - p.offset, {c.image, part}};
+            c.payload.size() - p.offset, {c.image, part}, true};  // encode's entries are distinct
 }
 
 inline bool is_coded(const column &c, std::size_t b) {
@@ -531,6 +539,23 @@ inline void read_dictionary(const dictionary_view &p, std::size_t first, std::si
 inline void read_dictionary(const column &c, std::size_t part, std::size_t first,
                             std::size_t take, u64 *out) {
     read_dictionary(dictionary_of(c, part), first, take, out);
+}
+// The first code of a sorted (non-decreasing) dictionary whose value reaches
+// t, or count if none does: value >= t iff code >= the bound, with or without
+// duplicate entries.
+inline u64 dictionary_lower_bound(const dictionary_view &p, u64 t) {
+    if (t <= p.min)
+        return 0;
+    const u64 rhs = t - p.min;
+    u64 lo = 0, hi = p.count;
+    while (lo < hi) {
+        const u64 mid = lo + (hi - lo) / 2;
+        if (dictionary_at(p, mid) < rhs)
+            lo = mid + 1;
+        else
+            hi = mid;
+    }
+    return lo;
 }
 
 // Whole-block reconstruction of a delta_patched block under the law above.
@@ -930,14 +955,21 @@ inline u128 block_sum(const column &c, std::size_t b) {
 // Per identity, each piece is built lazily on first use:
 //   values     decoded entries, min-relative, in code order: 8 B/entry. Feeds
 //              SUM, point reads, truth tables and the equality index.
-//   thresholds COUNT(u >= t): frequency and arrival keep a truth table, one bit
-//              per entry; sorted keeps only its code threshold. At most
-//              thresholds_per_identity per identity, replaced round-robin.
-//   index      COUNT(u == v): open addressing over u32 codes, probed by value
-//              and confirmed against values[code]. Slots are a power of two at
-//              load <= 2/3, 4 B each: 6-11 B/entry over values. A sorted
-//              (value, code) array cost 12 B/entry, built 6x slower, and took
-//              ~8x longer per cache-cold lookup on URLHash's parts.
+//   thresholds translated comparisons, each keyed by (kind, rhs) so that
+//              material for x >= t and x == t never alias:
+//              ge t   COUNT(u >= t): frequency and arrival keep a truth table,
+//                     one bit per entry; sorted keeps only its code threshold.
+//              eq v   x == v without assuming one code per value: sorted keeps
+//                     the code range [lb(v), lb(v + 1)), frequency and arrival
+//                     a truth table with every matching entry's bit.
+//              At most thresholds_per_identity per identity, replaced
+//              round-robin.
+//   index      COUNT(u == v) for an injective identity only: open addressing
+//              over u32 codes, probed by value and confirmed against
+//              values[code]. Slots are a power of two at load <= 2/3, 4 B
+//              each: 6-11 B/entry over values. A sorted (value, code) array
+//              cost 12 B/entry, built 6x slower, and took ~8x longer per
+//              cache-cold lookup on URLHash's parts.
 // bytes() counts the tables plus a fixed charge per identity. An insertion
 // that would exceed capacity_bytes clears the whole cache first. Holders
 // (code_sum, code_count) share ownership of the tables they read, so clearing
@@ -950,13 +982,20 @@ public:
         u64 code_threshold = 0;  // sorted
         table truth;             // frequency, arrival
     };
+    struct equality_material {
+        u64 first = 0, limit = 0;  // sorted: codes [first, limit) hold v
+        table truth;               // frequency, arrival
+    };
     std::size_t capacity_bytes = SIZE_MAX;
 
     // The decoded entries of p's identity.
     table values(const dictionary_view &p);
     // COUNT(u >= t)'s translation for p's identity.
     threshold_material threshold(const dictionary_view &p, u64 t);
-    // v's code in p's identity, or none when v isn't an entry.
+    // x == v's translation for p's identity (any view, duplicates allowed).
+    equality_material equality(const dictionary_view &p, u64 v);
+    // v's code in p's identity, or none when v isn't an entry. Requires
+    // p.injective: with duplicates it would name only one of v's codes.
     std::optional<u64> code_of(const dictionary_view &p, u64 v);
     // Entry code of p's identity (point reads); the last identity is memoized.
     u64 entry(const dictionary_view &p, u64 code) {
@@ -974,9 +1013,12 @@ private:
         unsigned shift;
         table values;
     };
+    enum class comparison : std::uint8_t { ge, eq };
     struct slot {
-        u64 threshold;
-        threshold_material m;
+        comparison kind;
+        u64 rhs;
+        u64 first, limit;  // sorted: ge's code threshold is first
+        table truth;
         std::size_t bytes;
     };
     struct material {
@@ -998,6 +1040,8 @@ private:
     // p's material, after making room for `adding` bytes (which may clear).
     material &room(const dictionary_view &p, std::size_t adding);
     u64 entry_slow(const dictionary_view &p, u64 code);
+    // The (kind, rhs) slot of p's identity, built on a miss.
+    const slot &comparison_slot(const dictionary_view &p, comparison kind, u64 rhs);
 };
 
 // A point read whose dictionary lookup goes through the cache's decoded entries.
@@ -1231,6 +1275,154 @@ inline u64 stored_count_ge(const column &c, std::size_t b, u64 threshold) {
     return stored_count_ge(borrow(c, b), threshold);
 }
 
+// Rows of an unordered coded block (all 256) whose code has its bit set in a
+// truth table: one bit for constant, one per run, literals by popcount over
+// their code range [F, F + L) and references one bit each for arrival, and a
+// code decode for the other kinds.
+inline bool truth_holds(const u64 *bits, u64 code) { return bits[code / 64] >> (code % 64) & 1; }
+inline u64 truth_holds_range(const u64 *bits, u64 first, u64 n) {
+    u64 total = 0;
+    for (u64 limit = first + n; first < limit;) {
+        const u64 bit = first % 64, take = std::min<u64>(64 - bit, limit - first);
+        const u64 word = bits[first / 64] >> bit;
+        total += static_cast<u64>(std::popcount(take == 64 ? word : word & ((u64{1} << take) - 1)));
+        first += take;
+    }
+    return total;
+}
+inline u64 coded_truth_count(const borrowed_block &k, const u64 *bits) {
+    const auto &d = k.d;
+    if (d.type == kind::constant)
+        return truth_holds(bits, d.base) ? block_rows : 0;
+    alignas(64) u64 buffer[block_rows];
+    u64 total = 0;
+    if (d.type == kind::arrival) {
+        const auto w = arrival_flags(k);
+        total = truth_holds_range(bits, d.base, arrival_literals(w));
+        each_arrival_reference(k, w, [&](unsigned, u64 code) { total += truth_holds(bits, code); });
+        return total;
+    }
+    if (d.type == kind::runs) {
+        read_plane(k, 0, d.count, buffer);
+        each_run(k, [&](unsigned rank, unsigned size) {
+            if (truth_holds(bits, d.base + buffer[rank]))
+                total += size;
+        });
+        return total;
+    }
+    decode_stored(k, buffer);
+    for (std::size_t i = 0; i < block_rows; ++i)
+        total += truth_holds(bits, buffer[i]);
+    return total;
+}
+
+// The code-domain law of a value interval [lo, last] (lo <= last), or its
+// complement, under one dictionary identity. Predicate masks and COUNT(x == v)
+// share it; it never assumes one code per value:
+//   sorted     the plane must be non-decreasing in code order (equal
+//              neighbours allowed, as in a projected view with duplicate
+//              values): value in [lo, last] iff code in [lb(lo), lb(last + 1)).
+//   otherwise  one truth bit per code, T[k] = pred(min + D[k]), from the whole
+//              plane, so every duplicate of a matching value has its bit.
+// A translation admitting every code, or none, is all or none. With a cache,
+// equality (lo == last) comes from its eq material for that value, other
+// intervals from ge material as T_lo AND NOT T_{last+1}; both persist.
+enum class code_law : std::uint8_t { none, all, codes, truth };
+struct code_translation {
+    code_law law = code_law::none;
+    u64 lo = 0, last = 0;        // codes: the code interval (a complement still applies to it)
+    std::vector<u64> own;        // truth built here, complement folded in
+    dictionary_cache::table held;  // truth shared with a cache
+    const u64 *bits = nullptr;   // the truth table read: own's or held's
+    code_translation() = default;
+    code_translation(const code_translation &o) : law(o.law), lo(o.lo), last(o.last), own(o.own), held(o.held) {
+        bits = !o.bits ? nullptr : o.bits == o.own.data() ? own.data() : held->data();
+    }
+    code_translation &operator=(const code_translation &o) {
+        if (this != &o) {
+            code_translation copy(o);
+            *this = std::move(copy);
+        }
+        return *this;
+    }
+    code_translation(code_translation &&) = default;  // a moved vector keeps its buffer
+    code_translation &operator=(code_translation &&) = default;
+
+    bool holds(u64 code) const { return truth_holds(bits, code); }
+    bool single() const { return law == code_law::codes && lo == last; }
+
+    void build(const dictionary_view &p, u64 vlo, u64 vlast, bool negate, dictionary_cache *cache) {
+        held.reset();
+        bits = nullptr;
+        if (p.order == dictionary_order::sorted) {
+            u64 first, limit;
+            if (cache && vlo == vlast) {
+                const auto e = cache->equality(p, vlo);
+                first = e.first, limit = e.limit;
+            } else {
+                auto bound = [&](u64 t) {
+                    return cache ? cache->threshold(p, t).code_threshold : dictionary_lower_bound(p, t);
+                };
+                first = vlo ? bound(vlo) : 0;
+                limit = vlast == ~u64{0} ? p.count : bound(vlast + 1);
+            }
+            if (first >= limit)
+                law = negate ? code_law::all : code_law::none;
+            else if (first == 0 && limit >= p.count)
+                law = negate ? code_law::none : code_law::all;
+            else
+                law = code_law::codes, lo = first, last = limit - 1;
+            return;
+        }
+        const std::size_t words = (p.count + 63) / 64;
+        if (cache && vlo == vlast && !negate) {
+            held = cache->equality(p, vlo).truth;  // bits past count are 0
+            bits = held->data();
+            std::size_t set = 0;
+            for (std::size_t w = 0; w < words; ++w)
+                set += static_cast<std::size_t>(std::popcount(bits[w]));
+            law = set == 0 ? code_law::none : set == p.count ? code_law::all : code_law::truth;
+            return;
+        }
+        own.assign(words, 0);
+        if (cache && vlo == vlast) {
+            const auto eq = cache->equality(p, vlo).truth;
+            std::copy(eq->begin(), eq->end(), own.begin());
+        } else if (cache) {
+            const auto from = vlo ? cache->threshold(p, vlo).truth : nullptr;
+            const auto past = vlast != ~u64{0} ? cache->threshold(p, vlast + 1).truth : nullptr;
+            for (std::size_t w = 0; w < words; ++w)
+                own[w] = (from ? (*from)[w] : ~u64{0}) & ~(past ? (*past)[w] : 0);
+        } else {
+            // Each word is built in a register (first is a multiple of 256, so
+            // chunks are word-aligned).
+            const u64 span = vlast - vlo;
+            alignas(64) u64 buffer[block_rows];
+            for (u64 first = 0; first < p.count; first += block_rows) {
+                const u64 n = std::min<u64>(block_rows, p.count - first);
+                read_dictionary(p, first, n, buffer);
+                for (u64 g = 0; g < n; g += 64) {
+                    u64 word = 0;
+                    const u64 m = std::min<u64>(64, n - g);
+                    for (u64 i = 0; i < m; ++i)  // no overflow: at most the part maximum
+                        word |= static_cast<u64>(p.min + buffer[g + i] - vlo <= span) << i;
+                    own[(first + g) / 64] = word;
+                }
+            }
+        }
+        // Fold the complement in and clear the bits past count, then decide
+        // identities that admit every code or none.
+        std::size_t set = 0;
+        for (std::size_t w = 0; w < words; ++w) {
+            const u64 valid = w + 1 < words || p.count % 64 == 0 ? ~u64{0} : (u64{1} << (p.count % 64)) - 1;
+            own[w] = (negate ? ~own[w] : own[w]) & valid;
+            set += static_cast<std::size_t>(std::popcount(own[w]));
+        }
+        bits = own.data();
+        law = set == 0 ? code_law::none : set == p.count ? code_law::all : code_law::truth;
+    }
+};
+
 // COUNT(u >= t) for coded blocks, translated once per dictionary edition
 // (lazily, on the first coded block visited with it; blocks of one edition
 // arrive together in ascending masks).
@@ -1287,18 +1479,7 @@ struct code_count {
         }
         code_threshold = 0;
         if (p.order == dictionary_order::sorted) {
-            if (threshold <= p.min)
-                return;  // code_threshold 0: every code counts
-            const u64 rhs = threshold - p.min;
-            u64 lo = 0, hi = p.count;
-            while (lo < hi) {
-                const u64 mid = lo + (hi - lo) / 2;
-                if (dictionary_at(p, mid) < rhs)
-                    lo = mid + 1;
-                else
-                    hi = mid;
-            }
-            code_threshold = lo;
+            code_threshold = dictionary_lower_bound(p, threshold);  // 0 when t <= min: every code counts
             return;
         }
         // Each word is built in a register (first is a multiple of 256, so
@@ -1319,48 +1500,13 @@ struct code_count {
         }
         truth_bits = truth.data();
     }
-    bool holds(u64 code) const { return truth_bits[code / 64] >> (code % 64) & 1; }
-    // Codes in [first, first + n) whose truth bit is set.
-    u64 holds_range(u64 first, u64 n) const {
-        u64 total = 0;
-        for (u64 limit = first + n; first < limit;) {
-            const u64 bit = first % 64, take = std::min<u64>(64 - bit, limit - first);
-            const u64 word = truth_bits[first / 64] >> bit;
-            total += static_cast<u64>(std::popcount(take == 64 ? word : word & ((u64{1} << take) - 1)));
-            first += take;
-        }
-        return total;
-    }
+    bool holds(u64 code) const { return truth_holds(truth_bits, code); }
 
     u64 count(const borrowed_block &k) {
         prepare(k.dictionary);
         if (k.dictionary.order == dictionary_order::sorted)
             return code_threshold >= k.dictionary.count ? 0 : stored_count_ge(k, code_threshold);
-        const auto &d = k.d;
-        if (d.type == kind::constant)
-            return holds(d.base) ? block_rows : 0;
-        alignas(64) u64 buffer[block_rows];
-        u64 total = 0;
-        if (d.type == kind::arrival) {
-            // Literal rows hold the codes [F, F + L): one popcount over truth
-            // bits. References look up one bit each.
-            const auto w = arrival_flags(k);
-            total = holds_range(d.base, arrival_literals(w));
-            each_arrival_reference(k, w, [&](unsigned, u64 code) { total += holds(code); });
-            return total;
-        }
-        if (d.type == kind::runs) {
-            read_plane(k, 0, d.count, buffer);
-            each_run(k, [&](unsigned rank, unsigned size) {
-                if (holds(d.base + buffer[rank]))
-                    total += size;
-            });
-            return total;
-        }
-        decode_stored(k, buffer);
-        for (std::size_t i = 0; i < block_rows; ++i)
-            total += holds(buffer[i]);
-        return total;
+        return coded_truth_count(k, truth_bits);
     }
     u64 count(std::size_t b) { return count(borrow(*c, b)); }
     // Row-selected COUNT over a coded block (non-empty selection).
@@ -1401,17 +1547,23 @@ inline u64 stored_count_eq(const column &c, std::size_t b, u64 s) {
     return stored_count_eq(borrow(c, b), s);
 }
 
-// COUNT(u == v) for coded blocks: v's code is found once per dictionary edition
-// (lazily, as code_count does) and the block's stored equality COUNT at that
-// code is the answer; a value absent from the edition counts nothing. sorted:
-// binary search over the plane. frequency and arrival: a scan of the plane.
-// With a dictionary_cache, every order probes the cache's equality index.
+// COUNT(u == v) for coded blocks, translated once per dictionary edition
+// (lazily, as code_count does).
+//   injective identity (dictionary_view::injective, the owner's proof): v has
+//     at most one code, found by binary search (sorted) or a plane scan
+//     (frequency, arrival), and the block's stored equality COUNT at that
+//     code is the answer; a value absent from the edition counts nothing.
+//     With a dictionary_cache the code comes from its equality index.
+//   otherwise: predicate masks' duplicate-safe law (code_translation) for
+//     [v, v]: a sorted code range [lb(v), lb(v + 1)), counted as the stored
+//     COUNT at its one code or as a difference of two stored COUNT(>=), or
+//     an equality truth table counted as code_count counts its own. With a
+//     cache, both come from its eq material for v.
 struct code_count_eq {
     u64 value;
     bool ready = false;
     dictionary_identity edition{};
-    bool present = false;
-    u64 code = 0;
+    code_translation match;  // single(): the one code is match.lo
     dictionary_cache *cache = nullptr;
     explicit code_count_eq(u64 v, dictionary_cache *c = nullptr) : value(v), cache(c) {}
 
@@ -1420,48 +1572,53 @@ struct code_count_eq {
             return;
         ready = true;
         edition = p.edition;
-        if (cache) {
-            const auto found = cache->code_of(p, value);
-            present = found.has_value();
-            code = found.value_or(0);
-            return;
+        if (!p.injective)
+            return match.build(p, value, value, false, cache);
+        const auto found = injective_code(p);
+        match.law = found ? code_law::codes : code_law::none;
+        match.lo = match.last = found.value_or(0);
+    }
+    u64 count(const borrowed_block &k) {
+        prepare(k.dictionary);
+        switch (match.law) {
+        case code_law::none: return 0;
+        case code_law::all: return block_rows;
+        case code_law::codes:
+            if (match.lo == match.last)
+                return stored_count_eq(k, match.lo);
+            return stored_count_ge(k, match.lo) -
+                   (match.last + 1 < k.dictionary.count ? stored_count_ge(k, match.last + 1) : 0);
+        case code_law::truth: return coded_truth_count(k, match.bits);
         }
-        present = false;
+        std::abort();
+    }
+    u64 masked(const borrowed_block &k, const row_selection &s);
+
+private:
+    std::optional<u64> injective_code(const dictionary_view &p) const {
+        if (cache)
+            return cache->code_of(p, value);
         if (value < p.min)
-            return;
+            return std::nullopt;
         const u64 rhs = value - p.min;
         if (p.width < 64 && rhs >> p.width)
-            return;
+            return std::nullopt;
         if (p.order == dictionary_order::sorted) {
-            u64 lo = 0, hi = p.count;
-            while (lo < hi) {
-                const u64 mid = lo + (hi - lo) / 2;
-                if (dictionary_at(p, mid) < rhs)
-                    lo = mid + 1;
-                else
-                    hi = mid;
-            }
-            present = lo < p.count && dictionary_at(p, lo) == rhs;
-            code = lo;
-            return;
+            const u64 lo = dictionary_lower_bound(p, value);
+            if (lo < p.count && dictionary_at(p, lo) == rhs)
+                return lo;
+            return std::nullopt;
         }
         alignas(64) u64 buffer[block_rows];
         for (u64 first = 0; first < p.count; first += block_rows) {
             const u64 n = std::min<u64>(block_rows, p.count - first);
             read_dictionary(p, first, n, buffer);
             for (u64 i = 0; i < n; ++i)
-                if (buffer[i] == rhs) {
-                    present = true;
-                    code = first + i;
-                    return;
-                }
+                if (buffer[i] == rhs)
+                    return first + i;
         }
+        return std::nullopt;
     }
-    u64 count(const borrowed_block &k) {
-        prepare(k.dictionary);
-        return present ? stored_count_eq(k, code) : 0;
-    }
-    u64 masked(const borrowed_block &k, const row_selection &s);
 };
 
 // Exact COUNT(u == v) within one block, and over the selected blocks.

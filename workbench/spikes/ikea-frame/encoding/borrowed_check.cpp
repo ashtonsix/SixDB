@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstring>
 #include <map>
+#include <memory>
 #include <string>
 
 #include <csignal>
@@ -433,6 +434,246 @@ std::size_t check_masked(const borrowed_block &k, const expected &e, std::size_t
     }
     fused_checked += check_fused(k, e, b, selections_for(k, b, few), fused_cache);
     return checks;
+}
+
+// Projected dictionary views (Engine's non-injective forward maps): the coded
+// blocks' own codes read through hand-built planes whose entries repeat, with
+// fresh identities and injective left false. The oracle is independent: row
+// values min + P[code] from stored_oracle's codes and the projection P, never
+// the operations. Equality is checked per block (full and fine selections,
+// 1% NULL, and both together), over a coarse block mask with one holder
+// across blocks (as the column forms run), through fused programs against
+// the oracle and the separate equality, and through one cache shared across
+// the sequence old/new/old/copy, where GE t and EQ t at the same t alternate.
+// Seeded mutants must be caught: the old single-code law (the same view
+// marked injective), and EQ answered from GE material at the same rhs.
+struct projected_report {
+    std::size_t views = 0, checks = 0, column_checks = 0, sequence_checks = 0;
+    std::size_t duplicate_probes = 0;            // (block, probe) pairs where the value has several codes
+    std::size_t mutant_probes = 0, mutant_caught = 0, fused_mutant_caught = 0, alias_caught = 0;
+};
+projected_report check_projected(const column &c, std::span<const u64> stored, std::span<const u64> plane) {
+    projected_report out;
+    struct projection {
+        dictionary_order order;
+        unsigned shift, modulus;  // P[e] = D[e] % modulus, or D[e] >> shift
+    };
+    std::vector<projection> projections;
+    const auto unordered =
+        c.options.dictionary == dictionary_order::arrival ? dictionary_order::arrival : dictionary_order::frequency;
+    if (c.options.dictionary == dictionary_order::sorted)
+        projections = {{dictionary_order::sorted, 3, 0}, {dictionary_order::sorted, 0, 0}, {unordered, 0, 7}};
+    else
+        projections = {{unordered, 0, 7}, {unordered, 3, 0}};
+    const std::size_t nblocks = c.blocks.size();
+    struct view_set {
+        std::vector<std::vector<u64>> entries;  // per part, projected
+        std::vector<std::unique_ptr<guarded>> pages, copies;
+        std::vector<dictionary_view> views, copy_views;
+    };
+    std::vector<view_set> sets(projections.size());
+    for (std::size_t pi = 0; pi < projections.size(); ++pi) {
+        auto &set = sets[pi];
+        auto pr = projections[pi];
+        set.entries.resize(c.parts.size());
+        set.views.resize(c.parts.size());
+        set.copy_views.resize(c.parts.size());
+        set.pages.resize(c.parts.size());
+        set.copies.resize(c.parts.size());
+        for (std::size_t part = 0; part < c.parts.size(); ++part) {
+            const auto &dp = c.parts[part];
+            if (!dp.count)
+                continue;
+            std::vector<u64> entries(dp.count), projected(dp.count);
+            read_dictionary(c, part, 0, dp.count, entries.data());
+            // shift 0 under sorted: about half the plane's width, so long
+            // duplicate runs of codes share each value.
+            const unsigned shift = pr.shift ? pr.shift : std::max(1u, unsigned{dp.width} / 2);
+            u64 top = 0;
+            for (std::size_t e = 0; e < dp.count; ++e) {
+                projected[e] = pr.modulus ? entries[e] % pr.modulus : entries[e] >> shift;
+                top = std::max(top, projected[e]);
+            }
+            const unsigned width = std::max(1u, width_of(top));
+            const std::size_t bytes = plane_bytes(width, dp.count);
+            set.pages[part] = std::make_unique<guarded>(bytes + 64);
+            set.copies[part] = std::make_unique<guarded>(bytes + 64);
+            std::uint8_t *at = set.pages[part]->hi() - bytes, *copy_at = set.copies[part]->hi() - bytes;
+            pack(width, projected, at);
+            std::memcpy(copy_at, at, bytes);
+            const dictionary_identity id{~c.image - 16 - pi, part};
+            set.views[part] = {dp.min, dp.count, static_cast<std::uint8_t>(width), pr.order, at, bytes, id};
+            set.copy_views[part] = set.views[part];  // an unchanged copy keeps its identity
+            set.copy_views[part].plane = copy_at;
+            set.entries[part] = std::move(projected);
+            ++out.views;
+        }
+    }
+    auto values_of = [&](std::size_t pi, std::size_t b, u64 *v) {
+        const auto &P = sets[pi].entries[b / part_blocks];
+        const u64 m = c.parts[b / part_blocks].min;
+        for (unsigned i = 0; i < block_rows; ++i)
+            v[i] = m + P[stored[b * block_rows + i]];
+    };
+    auto equal_rows = [](const u64 *v, const row_selection &s, u64 x) {
+        u64 n = 0;
+        for (unsigned i = 0; i < block_rows; ++i)
+            n += selected(s, i) && v[i] == x;
+        return n;
+    };
+    auto ge_rows = [](const u64 *v, const row_selection &s, u64 x) {
+        u64 n = 0;
+        for (unsigned i = 0; i < block_rows; ++i)
+            n += selected(s, i) && v[i] >= x;
+        return n;
+    };
+    // Probes per part: present projected values (the most repeated first), a
+    // value past each, the part's bounds and their neighbours, and UINT64_MAX.
+    auto probes_of = [&](std::size_t pi, std::size_t part) {
+        const auto &P = sets[pi].entries[part];
+        const u64 m = c.parts[part].min;
+        std::map<u64, unsigned> multiplicity;
+        for (u64 x : P)
+            ++multiplicity[x];
+        u64 mode = P[0];
+        for (const auto &[x, n] : multiplicity)
+            if (n > multiplicity[mode])
+                mode = x;
+        std::vector<u64> t{m + mode, m + mode + 1, m + P[0], m + P[P.size() / 2], m + P.back(),
+                           m + multiplicity.rbegin()->first, m + multiplicity.rbegin()->first + 1, ~u64{0}};
+        if (m)
+            t.push_back(m - 1);
+        return std::pair{t, multiplicity};
+    };
+    dictionary_cache shared;
+    for (std::size_t pi = 0; pi < projections.size(); ++pi) {
+        auto &set = sets[pi];
+        for (std::size_t part = 0; part < c.parts.size(); ++part) {
+            if (!c.parts[part].count)
+                continue;
+            const auto [probes, multiplicity] = probes_of(pi, part);
+            const dictionary_view view = set.views[part];
+            dictionary_view mutant = view;
+            mutant.injective = true;  // the old law: one code per value
+            const std::size_t first = part * part_blocks, limit = std::min(first + part_blocks, nblocks);
+            for (u64 x : probes) {
+                const u64 rel = x - c.parts[part].min;
+                const bool duplicated = x >= c.parts[part].min && multiplicity.count(rel) && multiplicity.at(rel) > 1;
+                // One holder per probe across the part's blocks, per call and cached.
+                code_count_eq run_eq(x), run_cached(x, &shared), run_mutant(x);
+                code_count run_ge(x, &shared);
+                fused_request counts_q, sum_q;
+                counts_q.ge_count = 1, counts_q.ge[0] = x, counts_q.eq = true, counts_q.eq_value = x;
+                sum_q.sum = true, sum_q.eq = true, sum_q.eq_value = x;
+                fused_program fused_counts(counts_q), fused_cached(counts_q, &shared), fused_sum(sum_q),
+                    fused_mutant(counts_q);
+                // Coarse: every third coded block, the fine row plane AND 1% NULL.
+                u64 coarse_want = 0, coarse_got = 0, coarse_cached = 0, coarse_fused = 0;
+                code_count_eq coarse_eq(x), coarse_eq_cached(x, &shared);
+                fused_program coarse_program(counts_q, &shared);
+                fused_result coarse_r;
+                for (std::size_t b = first; b < limit; ++b) {
+                    if (!is_coded(c, b))
+                        continue;
+                    borrowed_block k = borrow(c, b);
+                    k.dictionary = view;
+                    if (!admits(k))
+                        fail("projected view refused", b);
+                    borrowed_block mk = k;
+                    mk.dictionary = mutant;
+                    alignas(64) u64 v[block_rows];
+                    values_of(pi, b, v);
+                    const row_selection nulls = random_selection(b * 31 + 7, 990);
+                    auto sels = selections_for(k, b, true);
+                    sels.push_back(nulls);
+                    sels.push_back(and_rows(selection_at(plane, b), nulls));
+                    bool hit = false;
+                    for (const auto &s : sels) {
+                        const u64 want = equal_rows(v, s, x);
+                        const u64 ge = ge_rows(v, s, x);
+                        // Lone-block forms translate per call: sampled blocks.
+                        const bool lone = b % 8 == 0;
+                        const u64 got = run_eq.masked(k, s);
+                        if (got != want || run_cached.masked(k, s) != want ||
+                            (selection_full(s) && (run_eq.count(k) != want || run_cached.count(k) != want)) ||
+                            (lone && (masked_block_count_eq(k, s, x) != want ||
+                                      reference_block_count_eq(k, s, x) != want ||
+                                      (selection_full(s) && block_count_eq(k, x) != want))))
+                            fail("projected equality COUNT", b);
+                        // GE t and EQ t through the same cache, alternating.
+                        if (run_ge.masked(k, s) != ge || (lone && masked_block_count_ge(k, s, x) != ge))
+                            fail("projected COUNT(>=) beside equality", b);
+                        fused_result a, ca, sa;
+                        fused_counts.masked(a, k, s);
+                        fused_cached.masked(ca, k, s);
+                        fused_sum.masked(sa, k, s);
+                        const fused_result want_counts = fused_oracle(v, s, counts_q), want_sum = fused_oracle(v, s, sum_q);
+                        if (a != want_counts || ca != want_counts || sa != want_sum || a.eq != got ||
+                            (lone && masked_fused_block(k, s, counts_q) != want_counts))
+                            fail("projected fused equality", b);
+                        // Mutants: the old single-code law, and EQ from GE material.
+                        const u64 single = run_mutant.masked(mk, s);
+                        fused_result ma;
+                        fused_mutant.masked(ma, mk, s);
+                        ++out.mutant_probes;
+                        out.mutant_caught += single != want;
+                        out.fused_mutant_caught += ma.eq != want;
+                        out.alias_caught += ge != want;
+                        hit |= want > 0;
+                        ++out.checks;
+                    }
+                    out.duplicate_probes += duplicated && hit;
+                    if (b % 3 == 0) {
+                        const row_selection s = and_rows(selection_at(plane, b), nulls);
+                        coarse_want += equal_rows(v, s, x);
+                        if (selection_full(s))
+                            coarse_got += coarse_eq.count(k), coarse_cached += coarse_eq_cached.count(k);
+                        else
+                            coarse_got += coarse_eq.masked(k, s), coarse_cached += coarse_eq_cached.masked(k, s);
+                        coarse_program.masked(coarse_r, k, s);
+                    }
+                }
+                coarse_fused = coarse_r.eq;
+                if (coarse_got != coarse_want || coarse_cached != coarse_want || coarse_fused != coarse_want)
+                    fail("projected coarse equality COUNT", first);
+                ++out.column_checks;
+            }
+        }
+    }
+    // old/new/old/copy/new through one shared cache and one persistent holder
+    // per probe: each identity must answer from its own plane.
+    if (projections.size() >= 2) {
+        dictionary_cache sequence;
+        for (std::size_t b = 0; b < nblocks; b += 7) {
+            if (!is_coded(c, b))
+                continue;
+            const std::size_t part = b / part_blocks;
+            alignas(64) u64 v0[block_rows], v1[block_rows];
+            values_of(0, b, v0);
+            values_of(1, b, v1);
+            const auto probes = probes_of(0, part).first;
+            for (u64 x : probes) {
+                code_count_eq held(x), cached_held(x, &sequence);
+                code_count held_ge(x, &sequence);
+                const dictionary_view order[] = {sets[0].views[part], sets[1].views[part], sets[0].views[part],
+                                                 sets[0].copy_views[part], sets[1].views[part]};
+                for (std::size_t i = 0; i < std::size(order); ++i) {
+                    borrowed_block k = borrow(c, b);
+                    k.dictionary = order[i];
+                    const u64 *v = i == 1 || i == 4 ? v1 : v0;
+                    const row_selection all{~u64{0}, ~u64{0}, ~u64{0}, ~u64{0}};
+                    code_count_eq fresh(x, &sequence);
+                    if (held.count(k) != equal_rows(v, all, x) || cached_held.count(k) != equal_rows(v, all, x) ||
+                        fresh.count(k) != equal_rows(v, all, x) || held_ge.count(k) != ge_rows(v, all, x))
+                        fail("projected identity sequence", b);
+                    ++out.sequence_checks;
+                }
+            }
+        }
+    }
+    if (out.duplicate_probes && (!out.mutant_caught || !out.fused_mutant_caught || !out.alias_caught))
+        fail("a seeded equality mutant went undetected", 0);
+    return out;
 }
 
 // Run read in a child; true when it was killed by SIGSEGV/SIGBUS.
@@ -1041,6 +1282,10 @@ int main(int argc, char **argv) {
         }
     }
 
+    projected_report projected;
+    if (options.dictionary != dictionary_order::none && coded)
+        projected = check_projected(c, stored, plane);
+
     std::printf("{\"column\":\"%s\",\"delta_checkpoints\":\"%s\",\"delta_exceptions\":%s,\"dictionary\":\"%s\","
                 "\"blocks\":%zu,\"coded\":%zu,\"kinds\":[%zu,%zu,%zu,%zu,%zu,%zu,%zu],\"extent_gaps_checked\":%zu,"
                 "\"max_body\":%zu,\"max_dictionary\":%zu,\"page\":%zu,\"placements_checked\":%zu,\"scan_grants_checked\":%zu,"
@@ -1072,8 +1317,13 @@ int main(int argc, char **argv) {
     std::printf("},\"identity_checks\":%zu,\"identity_alias_stale\":%d,\"cached_checks\":%zu,"
                 "\"cache_identities\":%zu,\"cache_bytes\":%zu,\"identity_alias_stale_cached\":%d,"
                 "\"masked_checks\":%zu,\"masked_scan_checks\":%zu,\"empty_selection_guarded\":%d,"
-                "\"fused_checks\":%zu,\"fused_scan_checks\":%zu,\"fused_column_checks\":%zu}\n",
+                "\"fused_checks\":%zu,\"fused_scan_checks\":%zu,\"fused_column_checks\":%zu,"
+                "\"projected\":{\"views\":%zu,\"checks\":%zu,\"column_checks\":%zu,\"sequence_checks\":%zu,"
+                "\"duplicate_probes\":%zu,\"mutant_probes\":%zu,\"single_code_mutant_caught\":%zu,"
+                "\"fused_single_code_mutant_caught\":%zu,\"ge_as_eq_mutant_caught\":%zu}}\n",
                 identity_checks, alias_stale, cached_checks, cache_identities, cache_bytes, alias_stale_cached,
                 masked_checked, masked_scan_checked, empty_guarded, fused_checked, fused_scan_checked,
-                fused_column_checked);
+                fused_column_checked, projected.views, projected.checks, projected.column_checks,
+                projected.sequence_checks, projected.duplicate_probes, projected.mutant_probes,
+                projected.mutant_caught, projected.fused_mutant_caught, projected.alias_caught);
 }

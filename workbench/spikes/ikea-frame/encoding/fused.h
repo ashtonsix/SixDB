@@ -540,9 +540,9 @@ inline fused_result fused_stored(const borrowed_block &k, const row_selection &s
 }
 
 // Dictionary holders for a fused program: entries through code_sum's state,
-// translated thresholds and truth tables through code_count, the equality code
-// through code_count_eq; each prepared lazily, per edition, and only for the
-// aggregates requested.
+// translated thresholds and truth tables through code_count, equality's code,
+// code range or truth table through code_count_eq; each prepared lazily, per
+// edition, and only for the aggregates requested.
 struct fused_codes {
     code_sum sums;
     std::array<code_count, fused_thresholds> counts;
@@ -608,7 +608,12 @@ struct fused_codes {
         }
         if (q.eq)
             equal.prepare(p);
-        const bool eq = q.eq && equal.present;
+        // Equality is one code (an injective identity, or a value held once),
+        // or a set of codes: a sorted code range or a truth table under the
+        // duplicate-safe law, or every code.
+        const auto &m = equal.match;
+        const bool eq = q.eq && m.single();
+        const bool eq_set = q.eq && !eq && m.law != code_law::none;
         for (unsigned j = 0; j < q.ge_count; ++j)
             counts[j].prepare(p);
         if (p.order == dictionary_order::sorted) {
@@ -619,20 +624,23 @@ struct fused_codes {
             for (unsigned j = 0; j < q.ge_count; ++j)
                 c.ge[j] = std::min<u64>(counts[j].code_threshold, p.count);
             c.eq = eq;
-            c.eq_value = equal.code;
+            c.eq_value = m.lo;
             fused_result t;
             stored_into(t, k, s, c);
             for (unsigned j = 0; j < q.ge_count; ++j)
                 r.ge[j] += t.ge[j];
             r.eq += t.eq;
+            if (eq_set)  // a code range: equality's own stored COUNTs
+                r.eq += s ? equal.masked(k, *s) : equal.count(k);
             return;
         }
         // Frequency and arrival: truth bits and the equality code off one
         // code buffer.
+        auto matches = [&](u64 code) { return eq ? code == m.lo : eq_set && (m.law == code_law::all || m.holds(code)); };
         auto weigh = [&](u64 code, u64 w) {
             for (unsigned j = 0; j < q.ge_count; ++j)
                 r.ge[j] += counts[j].holds(code) ? w : 0;
-            r.eq += eq && code == equal.code ? w : 0;
+            r.eq += matches(code) ? w : 0;
         };
         if (d.type == kind::constant)
             return weigh(d.base, n);
@@ -657,7 +665,12 @@ struct fused_codes {
         if (eq) {
             u64 c = 0;
             for (unsigned i = 0; i < block_rows; ++i)
-                c += selected(sel, i) && buffer[i] == equal.code;
+                c += selected(sel, i) && buffer[i] == m.lo;
+            r.eq += c;
+        } else if (eq_set) {
+            u64 c = 0;
+            for (unsigned i = 0; i < block_rows; ++i)
+                c += selected(sel, i) && matches(buffer[i]);
             r.eq += c;
         }
     }

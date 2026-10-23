@@ -517,6 +517,38 @@ inline u128 code_sum::masked(const borrowed_block &k, const row_selection &s) {
     return masked_coded_sum(k, s, [entries](u64 code) { return entries[code]; });
 }
 
+// Selected rows (non-empty, non-full s) of an unordered coded block whose code
+// has its truth bit set, by coded_truth_count's per-kind split.
+inline u64 masked_coded_truth_count(const borrowed_block &k, const row_selection &s, const u64 *bits) {
+    const auto &d = k.d;
+    if (d.type == kind::constant)
+        return truth_holds(bits, d.base) ? selected_count(s) : 0;
+    alignas(64) u64 buffer[block_rows];
+    u64 total = 0;
+    if (d.type == kind::arrival) {
+        const auto w = arrival_flags(k);
+        each_selected_literal(w, s, [&](unsigned, unsigned rank) { total += truth_holds(bits, d.base + rank); });
+        each_arrival_reference(k, w,
+                               [&](unsigned row, u64 code) { total += selected(s, row) && truth_holds(bits, code); });
+        return total;
+    }
+    if (d.type == kind::runs) {
+        read_plane(k, 0, d.count, buffer);
+        unsigned row = 0;
+        const selection_rank ranks(s);
+        each_run(k, [&](unsigned rank, unsigned size) {
+            total += truth_holds(bits, d.base + buffer[rank]) * ranks.between(row, row + size);
+            row += size;
+        });
+        return total;
+    }
+    decode_stored(k, buffer);
+    for (unsigned word = 0; word < 4; ++word)
+        for (u64 hit = s[word]; hit; hit &= hit - 1)
+            total += truth_holds(bits, buffer[word * 64 + static_cast<unsigned>(std::countr_zero(hit))]);
+    return total;
+}
+
 inline u64 code_count::masked(const borrowed_block &k, const row_selection &s) {
     if (selection_empty(s))
         return 0;
@@ -525,32 +557,7 @@ inline u64 code_count::masked(const borrowed_block &k, const row_selection &s) {
     prepare(k.dictionary);
     if (k.dictionary.order == dictionary_order::sorted)
         return code_threshold >= k.dictionary.count ? 0 : masked_stored_count_ge_mixed(k, s, code_threshold);
-    const auto &d = k.d;
-    if (d.type == kind::constant)
-        return holds(d.base) ? selected_count(s) : 0;
-    alignas(64) u64 buffer[block_rows];
-    u64 total = 0;
-    if (d.type == kind::arrival) {
-        const auto w = arrival_flags(k);
-        each_selected_literal(w, s, [&](unsigned, unsigned rank) { total += holds(d.base + rank); });
-        each_arrival_reference(k, w, [&](unsigned row, u64 code) { total += selected(s, row) && holds(code); });
-        return total;
-    }
-    if (d.type == kind::runs) {
-        read_plane(k, 0, d.count, buffer);
-        unsigned row = 0;
-        const selection_rank ranks(s);
-        each_run(k, [&](unsigned rank, unsigned size) {
-            total += holds(d.base + buffer[rank]) * ranks.between(row, row + size);
-            row += size;
-        });
-        return total;
-    }
-    decode_stored(k, buffer);
-    for (unsigned word = 0; word < 4; ++word)
-        for (u64 hit = s[word]; hit; hit &= hit - 1)
-            total += holds(buffer[word * 64 + static_cast<unsigned>(std::countr_zero(hit))]);
-    return total;
+    return masked_coded_truth_count(k, s, truth_bits);
 }
 
 inline u64 code_count_eq::masked(const borrowed_block &k, const row_selection &s) {
@@ -559,7 +566,17 @@ inline u64 code_count_eq::masked(const borrowed_block &k, const row_selection &s
     if (selection_full(s))
         return count(k);
     prepare(k.dictionary);
-    return present ? masked_stored_count_eq_mixed(k, s, code) : 0;
+    switch (match.law) {
+    case code_law::none: return 0;
+    case code_law::all: return selected_count(s);
+    case code_law::codes:
+        if (match.lo == match.last)
+            return masked_stored_count_eq_mixed(k, s, match.lo);
+        return masked_stored_count_ge_mixed(k, s, match.lo) -
+               (match.last + 1 < k.dictionary.count ? masked_stored_count_ge_mixed(k, s, match.last + 1) : 0);
+    case code_law::truth: return masked_coded_truth_count(k, s, match.bits);
+    }
+    std::abort();
 }
 
 // Logical operations on one block (a lone coded block translates per call).

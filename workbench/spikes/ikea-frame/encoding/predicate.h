@@ -32,7 +32,8 @@
 //                  through the last active row and compared.
 //   delta_patched, arrival   decode, then compare (no law applies).
 // Coded blocks translate the predicate once per dictionary identity (lazily,
-// on the first coded block visited with it), so codes, not values, are tested:
+// on the first coded block visited with it) by code_translation (material.h),
+// the duplicate-safe law COUNT(x == v) shares, so codes, not values, are tested:
 //   sorted         the plane must be non-decreasing in code order (strictly
 //                  increasing for encoded parts; equal neighbours are allowed,
 //                  as in a projected view with duplicate values). Then value
@@ -41,14 +42,15 @@
 //                  range too and never assumes one code per value. The code
 //                  interval runs through the stored-kind law above.
 //   otherwise      a truth table of one bit per code, T[k] = pred(min + D[k]),
-//                  built from the whole plane (or a cache's threshold tables),
-//                  so duplicate values each get their bit. Constant: one bit;
+//                  built from the whole plane (or a cache's tables), so
+//                  duplicate values each get their bit. Constant: one bit;
 //                  runs: one bit per run; arrival: literals by rank, references
 //                  in row order; other kinds decode codes and look up per row.
 // A translation that admits every code, or none, answers each coded block of
 // that identity without reading its body. With a dictionary_cache, sorted
-// bounds and unordered threshold tables (T_lo AND NOT T_{last+1}) come from its
-// per-identity thresholds and persist across calls.
+// bounds and unordered tables come from its per-identity material, keyed by
+// comparison and value (eq v for x == v and x != v; T_lo AND NOT T_{last+1}
+// from ge material otherwise), and persist across calls.
 // Grants: every kind stays within extent_of(...).scan_grant_bytes except a
 // non-decreasing delta block with checkpoints, whose bound search reads its
 // checkpoints (read_grant_bytes), as monotone COUNT does.
@@ -261,10 +263,10 @@ public:
         if (!k.coded)
             return finish(stored_interval_rows(k, interval.lo, interval.last, active), active);
         prepare(k.dictionary);
-        switch (law) {
+        switch (match.law) {
         case code_law::none: return {};
         case code_law::all: return active;
-        case code_law::codes: return finish(stored_interval_rows(k, code_lo, code_last, active), active);
+        case code_law::codes: return finish(stored_interval_rows(k, match.lo, match.last, active), active);
         case code_law::truth: return truth_rows(k, active);
         }
         std::abort();
@@ -273,84 +275,26 @@ public:
     // Lower bound of t's code under a sorted identity: the first code whose
     // value reaches t (count if none).
     u64 sorted_bound(const dictionary_view &p, u64 t) {
-        if (cache)
-            return cache->threshold(p, t).code_threshold;
-        if (t <= p.min)
-            return 0;
-        const u64 rhs = t - p.min;
-        u64 lo = 0, hi = p.count;
-        while (lo < hi) {
-            const u64 mid = lo + (hi - lo) / 2;
-            if (dictionary_at(p, mid) < rhs)
-                lo = mid + 1;
-            else
-                hi = mid;
-        }
-        return lo;
+        return cache ? cache->threshold(p, t).code_threshold : dictionary_lower_bound(p, t);
     }
 
 private:
-    enum class code_law : std::uint8_t { none, all, codes, truth };
     dictionary_cache *cache;
     bool ready = false;
     dictionary_identity edition{};
-    code_law law = code_law::none;
-    u64 code_lo = 0, code_last = 0;  // codes: the code interval (negate still applies)
-    std::vector<u64> truth;          // truth: one bit per code, negate folded in
+    code_translation match;  // the current identity's law (the shared duplicate-safe one)
 
     row_selection finish(const row_selection &in, const row_selection &active) const {
         return interval.negate ? and_not(active, in) : in;
     }
-    bool holds(u64 code) const { return truth[code / 64] >> (code % 64) & 1; }
+    bool holds(u64 code) const { return match.holds(code); }
 
     void prepare(const dictionary_view &p) {
         if (ready && p.edition == edition)
             return;
         ready = true;
         edition = p.edition;
-        const u64 lo = interval.lo, last = interval.last;
-        if (p.order == dictionary_order::sorted) {
-            const u64 first = lo ? sorted_bound(p, lo) : 0;
-            const u64 limit = last == ~u64{0} ? p.count : sorted_bound(p, last + 1);
-            if (first >= limit)
-                law = interval.negate ? code_law::all : code_law::none;
-            else if (first == 0 && limit >= p.count)
-                law = interval.negate ? code_law::none : code_law::all;
-            else
-                law = code_law::codes, code_lo = first, code_last = limit - 1;
-            return;
-        }
-        const std::size_t words = (p.count + 63) / 64;
-        truth.assign(words, 0);
-        if (cache) {
-            // T_lo AND NOT T_{last+1} from the cache's per-identity tables.
-            const auto from = lo ? cache->threshold(p, lo).truth : nullptr;
-            const auto past = last != ~u64{0} ? cache->threshold(p, last + 1).truth : nullptr;
-            for (std::size_t w = 0; w < words; ++w)
-                truth[w] = (from ? (*from)[w] : ~u64{0}) & ~(past ? (*past)[w] : 0);
-        } else {
-            alignas(64) u64 buffer[block_rows];
-            for (u64 first = 0; first < p.count; first += block_rows) {
-                const u64 n = std::min<u64>(block_rows, p.count - first);
-                read_dictionary(p, first, n, buffer);
-                for (u64 g = 0; g < n; g += 64) {
-                    u64 bits = 0;
-                    const u64 m = std::min<u64>(64, n - g);
-                    for (u64 i = 0; i < m; ++i)
-                        bits |= static_cast<u64>(interval.contains(p.min + buffer[g + i])) << i;
-                    truth[(first + g) / 64] = bits;
-                }
-            }
-        }
-        // Fold the complement in and clear the bits past count, then decide
-        // identities that admit every code or none.
-        std::size_t set = 0;
-        for (std::size_t w = 0; w < words; ++w) {
-            const u64 valid = w + 1 < words || p.count % 64 == 0 ? ~u64{0} : (u64{1} << (p.count % 64)) - 1;
-            truth[w] = (interval.negate ? ~truth[w] : truth[w]) & valid;
-            set += static_cast<std::size_t>(std::popcount(truth[w]));
-        }
-        law = set == 0 ? code_law::none : set == p.count ? code_law::all : code_law::truth;
+        match.build(p, interval.lo, interval.last, interval.negate, cache);
     }
 
     // Unordered coded block: one truth bit per code (complement folded in).

@@ -4,6 +4,7 @@
 
 #include <array>
 #include <atomic>
+#include <cassert>
 
 namespace frame_encoding {
 namespace {
@@ -892,29 +893,19 @@ u64 dictionary_cache::entry_slow(const dictionary_view &p, u64 code) {
     return last_values[code];
 }
 
-dictionary_cache::threshold_material dictionary_cache::threshold(const dictionary_view &p, u64 t) {
+const dictionary_cache::slot &dictionary_cache::comparison_slot(const dictionary_view &p, comparison kind, u64 rhs) {
     if (auto it = entries.find(p.edition); it != entries.end()) {
         const auto &m = it->second;
         for (unsigned i = 0; i < m.used; ++i)
-            if (m.thresholds[i].threshold == t)
-                return m.thresholds[i].m;
+            if (m.thresholds[i].kind == kind && m.thresholds[i].rhs == rhs)
+                return m.thresholds[i];
     }
-    threshold_material made;
-    std::size_t bytes = 0;
+    slot made{kind, rhs, 0, 0, nullptr, 0};
     if (p.order == dictionary_order::sorted) {
-        // As code_count: lower_bound over the plane; no decode needed.
-        if (t > p.min) {
-            const u64 rhs = t - p.min;
-            u64 lo = 0, hi = p.count;
-            while (lo < hi) {
-                const u64 mid = lo + (hi - lo) / 2;
-                if (dictionary_at(p, mid) < rhs)
-                    lo = mid + 1;
-                else
-                    hi = mid;
-            }
-            made.code_threshold = lo;
-        }
+        // A lower bound over the plane; no decode needed.
+        made.first = dictionary_lower_bound(p, rhs);
+        if (kind == comparison::eq)
+            made.limit = rhs == ~u64{0} ? p.count : dictionary_lower_bound(p, rhs + 1);
     } else {
         const auto held = values(p);
         const u64 *v = held->data();
@@ -922,21 +913,34 @@ dictionary_cache::threshold_material dictionary_cache::threshold(const dictionar
         for (u64 first = 0; first < p.count; first += 64) {
             u64 bits = 0;
             const u64 n = std::min<u64>(64, p.count - first);
-            for (u64 i = 0; i < n; ++i)  // no overflow: at most the part maximum
-                bits |= static_cast<u64>(p.min + v[first + i] >= t) << i;
+            for (u64 i = 0; i < n; ++i) {  // no overflow: at most the part maximum
+                const u64 x = p.min + v[first + i];
+                bits |= static_cast<u64>(kind == comparison::ge ? x >= rhs : x == rhs) << i;
+            }
             (*truth)[first / 64] = bits;
         }
-        bytes = truth->size() * sizeof(u64);
+        made.bytes = truth->size() * sizeof(u64);
         made.truth = std::move(truth);
     }
-    auto &m = room(p, bytes);
+    auto &m = room(p, made.bytes);
     slot &s = m.used < thresholds_per_identity ? m.thresholds[m.used++] : m.thresholds[m.next++ % thresholds_per_identity];
-    charged -= s.m.truth ? s.bytes : 0;  // a replaced slot's table
-    s = {t, made, bytes};
-    return made;
+    charged -= s.truth ? s.bytes : 0;  // a replaced slot's table
+    s = std::move(made);
+    return s;
+}
+
+dictionary_cache::threshold_material dictionary_cache::threshold(const dictionary_view &p, u64 t) {
+    const slot &s = comparison_slot(p, comparison::ge, t);
+    return {s.first, s.truth};
+}
+
+dictionary_cache::equality_material dictionary_cache::equality(const dictionary_view &p, u64 v) {
+    const slot &s = comparison_slot(p, comparison::eq, v);
+    return {s.first, s.limit, s.truth};
 }
 
 std::optional<u64> dictionary_cache::code_of(const dictionary_view &p, u64 v) {
+    assert(p.injective);
     if (v < p.min)
         return std::nullopt;
     const u64 rhs = v - p.min;

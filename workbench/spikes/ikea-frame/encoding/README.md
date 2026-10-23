@@ -1772,13 +1772,15 @@ active rows are empty is written 0 before any read.
 
 Translation happens once per dictionary identity, lazily. An identity whose
 translation admits every code, or none, answers its blocks without reading
-them. With a `dictionary_cache`, sorted bounds and unordered threshold tables
-(T_lo ∧ ¬T_{last+1}) persist across calls. Sorted needs only a non-decreasing
+them. With a `dictionary_cache`, sorted bounds and unordered tables persist
+across calls, keyed by comparison and value: eq v for = and ≠, T_lo ∧
+¬T_{last+1} from ge material otherwise. Sorted needs only a non-decreasing
 plane, so a projected view with equal neighbours stays correct. Unordered
 truth tables give each duplicated value its own bit. Neither assumes one code
-per value, unlike `code_count_eq`'s first-match search: a projected
-frequency-ordered view with duplicates would be wrong there (fused.h inherits
-this). Grants: every predicate stays within `scan_grant_bytes` except the
+per value. COUNT(x = v) (`code_count_eq`, masked and fused forms) now shares
+this law (`code_translation`); its single-code search runs only under
+`dictionary_view::injective`, which `dictionary_of` sets for encode-built
+parts and every hand-built view leaves false. Grants: every predicate stays within `scan_grant_bytes` except the
 monotone delta search, which reads checkpoints, as monotone COUNT does.
 Packed filters live in [`predicate.cpp`](predicate.cpp), the catalogue's
 `filter_unchecked` call returning bits.
