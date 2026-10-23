@@ -211,6 +211,33 @@ extents taken from descriptors, not regrouping by kind; a short fixed
 lookahead is enough, and wide bodies on Graviton 4 need a different remedy
 than more lead time.
 
+## Shared bandwidth: concurrent streams
+
+Each of 1, 2, 4 and 8 cores runs its own process over its own copy of the
+columns, all scanning at once (`e9342b7f`, jobs `20261023T231839Z-0524c3d9`
+on c8a.2xlarge and `20261023T231916Z-44b3b3af` on c8g.2xlarge; the processes
+walk the same column order, so they overlap per column only approximately).
+Frame here is still phase 1's images and leaves. Medians:
+[evidence/scaling-v1-summary.txt](evidence/scaling-v1-summary.txt).
+
+| SUM, AVX-512, ns per block per stream | 1 stream | 8 streams |
+| --- | --- | --- |
+| UserID: phase 1 owner / native | 45.1 / 34.7 | 57.9 / 187.9 |
+| EventTime: phase 1 owner / native | 27.3 / 10.0 | 43.9 / 84.9 |
+| WatchID: phase 1 owner / native | 46.4 / 40.6 | 288.2 / 298.4 |
+| OS: phase 1 owner / native | 31.4 / 2.6 | 31.9 / 3.1 |
+
+1. **Mechanism M3 shows up on Zen 5 with eight cores pulling.** The native
+   array slows 5.4× on UserID and 8.5× on EventTime, while Frame's compressed
+   images slow 1.3–1.6×, so Frame wins 3.2× and 1.9× where it lost alone.
+   Incompressible WatchID degrades equally on both. OS fits in cache for both.
+2. **Graviton 4's c8g.2xlarge shows no such cliff**: eight streams slow the
+   native array by at most 1.2×, so its per-core share was not exhausted.
+   An 8-core guest is not a socket; the saturated tier still needs a
+   full-socket instance (front A).
+3. These used phase 1's leaves; on front C's leaves the single-stream gap
+   is already smaller, so the shared image's scaling run is next.
+
 ## Independent point reads
 
 [`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
