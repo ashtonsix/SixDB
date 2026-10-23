@@ -77,15 +77,22 @@ u64 plain_count_eq(const plain<T> &p, const block_mask &mask, u64 value) {
     return total;
 }
 
-// Paired, rotated arms: every trial times each arm once, starting from a
-// different arm, so drift lands on all arms alike instead of on whichever arm
-// ran last. Raw whole-call nanoseconds are kept per arm. Rotation keeps the
-// cyclic order, so each arm always follows the same predecessor; with
-// shuffled_arms (the default unless --cold-only) each trial instead takes a
-// fixed-seed random order, so no arm inherits one predecessor's cache state.
-// arm_order_seed sets that seed (it restarts every call); arm_prewarm runs
-// each arm once, untimed, right before its timed call, so every timed call
-// starts from its own warm state whatever preceded it.
+// Paired arms: every trial times each arm once, so drift lands on all arms
+// alike. Raw whole-call nanoseconds are kept per arm. Without shuffled_arms
+// (--cold-only) trial t rotates the arm list by t, so each arm always follows
+// the same predecessor. With shuffled_arms (the default) trials walk a
+// Williams design over the arms: across each complete design every arm
+// follows every other arm equally often (n rows for n arms, 2n when n is
+// odd), and trials round up to whole designs (n = 6 arms: 24 trials). Arm
+// labels are permuted once per call from arm_order_seed, so rounds with
+// different seeds take different orders, still balanced. The earlier
+// fixed-seed shuffle restarted its seed every call: every round took the same
+// 21 orders, and an arm could follow a cache-evicting arm more often than its
+// control did (EventTime's masked rare equality read 1.2-1.3x for that reason;
+// encoding README, "Run-value programs"). The first arm of a trial follows the
+// previous trial's last arm, which the design does not balance. arm_prewarm
+// runs each arm once, untimed, right before its timed call, so every timed
+// call starts from its own warm state whatever preceded it.
 struct arm {
     const char *name;
     std::function<void()> call;
@@ -95,20 +102,47 @@ bool shuffled_arms = true;
 u64 arm_order_seed = 0x2545f4914f6cdd1du;
 bool arm_prewarm = false;
 
+// Row r of the Williams design over n arms (rows n..2n-1, for odd n, are the
+// first n reversed): row 0 is 0, 1, n-1, 2, n-2, ..., row r adds r mod n.
+inline std::vector<std::size_t> williams_row(std::size_t n, std::size_t r) {
+    std::vector<std::size_t> row(n);
+    for (std::size_t i = 0, lo = 1, hi = n - 1; i < n; ++i)
+        row[i] = i == 0 ? 0 : i % 2 ? lo++ : hi--;
+    for (auto &x : row)
+        x = (x + r % n) % n;
+    if (r >= n)
+        std::reverse(row.begin(), row.end());
+    return row;
+}
+
 void time_arms(std::vector<arm> &arms, int trials = 21) {
     for (auto &a : arms)
         a.call();  // warm
-    std::vector<std::size_t> order(arms.size());
+    const std::size_t n = arms.size();
+    if (!n)
+        return;
+    const std::size_t design = n % 2 ? 2 * n : n;
+    if (shuffled_arms)
+        trials = static_cast<int>((static_cast<std::size_t>(trials) + design - 1) / design * design);
+    std::vector<std::size_t> label(n);  // design position -> arm, permuted per call
+    for (std::size_t i = 0; i < n; ++i)
+        label[i] = i;
     u64 seed = arm_order_seed;
+    for (std::size_t i = n; i > 1; --i) {
+        seed = seed * 6364136223846793005u + 1442695040888963407u;
+        std::swap(label[i - 1], label[(seed >> 33) % i]);
+    }
+    std::vector<std::size_t> order(n);
     for (int t = 0; t < trials; ++t) {
-        for (std::size_t i = 0; i < order.size(); ++i)
-            order[i] = (i + t) % arms.size();
-        if (shuffled_arms)
-            for (std::size_t i = order.size(); i > 1; --i) {
-                seed = seed * 6364136223846793005u + 1442695040888963407u;
-                std::swap(order[i - 1], order[(seed >> 33) % i]);
-            }
-        for (std::size_t i = 0; i < arms.size(); ++i) {
+        if (shuffled_arms) {
+            const auto row = williams_row(n, static_cast<std::size_t>(t) % design);
+            for (std::size_t i = 0; i < n; ++i)
+                order[i] = label[row[i]];
+        } else {
+            for (std::size_t i = 0; i < n; ++i)
+                order[i] = (i + static_cast<std::size_t>(t)) % n;
+        }
+        for (std::size_t i = 0; i < n; ++i) {
             auto &a = arms[order[i]];
             if (arm_prewarm)
                 a.call();
