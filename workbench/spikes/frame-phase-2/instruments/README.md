@@ -8,6 +8,9 @@ The [calibration findings](FINDINGS.md) retain the fixed-work caveat, corrected
 common-window Zen 5 rates, PMU limits and the smaller-instance experiment plan.
 [Native codec controls](codecs/README.md) establish pinned functional baselines;
 their boot checks are not speed comparisons.
+The [ALP IEEE audit](alp-audit/README.md) supplies a tested complete RD path and
+retains automatic decimal ALP failures at the pin. Decimal boot round trips do
+not qualify a general-IEEE control.
 The [change witness](../change/README.md) establishes pre-payload read/store
 admission for tested fixed-basis writers using current Ikea primitives. It
 keeps logical contribution and actual physical effects separate, without

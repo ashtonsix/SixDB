@@ -6,7 +6,14 @@ FastLanes FFOR, and ALP/RD primitives. The wrappers call actual upstream APIs;
 no codec implementation is copied into this spike. This is the primitive layer
 of front A, not a complete peer performance comparison.
 
-## What is qualified
+## Native boot observations
+
+The subsequent [IEEE audit](../alp-audit/README.md) qualifies the complete RD
+composition on its tested corpus and exposes arithmetic failures in automatic
+decimal ALP at this pin, including ordinary inputs. Use named ALP_RD for the
+audited general-IEEE control. The optimized ALP boot results below remain
+reproducible observations; they do not establish defined arithmetic or a safe
+general-IEEE decoder.
 
 Pinned Clang 21.1.8 builds execute on Zen 5 (AVX2 and AVX-512 callers) and
 Graviton 4 (NEON). Each profile passes:
@@ -21,8 +28,8 @@ The source audit compares all 3,655 captured SixDB inputs and all 4,164 extracte
 upstream files against the pinned archives. Before/after executable hashes
 match the recovered worker archive identities. These are optimized functional
 checks; they neither time operations nor establish a fully sanitized peer
-build. Broader IEEE, defined-arithmetic and decoder-precondition qualification remains
-separate work; these optimized checks alone do not establish those properties.
+build. The separate IEEE audit instruments the actual executed RD composition
+and decimal paths and retains their failing cases and floating-environment limits.
 
 Run the [worker script](worker.sh) through the existing worker tool, or configure
 the root CMake project on the appropriate native ISA with
