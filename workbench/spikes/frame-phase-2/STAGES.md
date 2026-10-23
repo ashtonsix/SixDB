@@ -42,8 +42,8 @@ like indexes Engine can build and drop.
 | — | Row order and clustering | Composed | Table workload, all columns | Table | Largest byte lever: 179 bits/row original, 294 shuffled, 238 reclustered ([row order](../frame-phase-1/encoding/README.md#row-order-in-real-bodies)) | How fast inserts erode it; whether Frame needs order-repair operations |
 | 0a | Block fitting: kind, base, width, exceptions | Fused | Block values + priors | Block | Real bodies sit 0.3–10 bits/value above the oracle model, mostly run geometry and hash literals | Cost of priors and bad-guess detection; never measured against peer encoders |
 | 0b | Part/table analysis that informs Engine (distincts, runs, order sensitivity, candidate bytes) | Composed input | Engine's analyser consumes it | None (derived) | Census exists but was never tested as a planner ([inventory](../frame-phase-1/INVENTORY.md#have-we-found-the-metadata-knee)) | Which cheap statistics rank programs correctly |
-| 1 | Constant block | Fused | Data | Block | Dominant: 41% of ClickBench blocks, closed forms for every aggregate | Execution: per-block overhead, not the choice (see below) |
-| 1 | Runs vs packed | Weighted | Data; writes break runs | Block | COUNT closed forms win big (UserID 42 vs 460 µs); run SUM still 1.8–2.5× plain | Whether the SUM gap is execution overhead (likely) or a limit |
+| 1 | Constant block | Fused | Data | Block | Dominant: 41% of ClickBench blocks, closed forms for every aggregate | Execution only: descriptor-column checks reach 0.2–0.6 ns per block |
+| 1 | Runs vs packed | Weighted | Data; writes break runs | Block | COUNT closed forms win big (UserID 42 vs 460 µs); SUM over a median 24 runs per block cannot beat native u8 (see below) | The run-count crossover per operation, with leaves at their floor |
 | 2 | Offset binary for signed | Fused | Always (one XOR) | None | Free under FOR; only the sum law needs a bias term | Nothing; Ashton's original "only where order survives" can become "always" |
 | 2 | Decimal-as-float → integer; ALP (e,f) with round-trip check | Fused | Data (lossless check) | Block | None. Jena used pre-scaled integers | Everything: bytes, decode cost, exception rate, block vs value-level opt-out |
 | 2 | Float map (lossless monotone) | Fused | Fallback when ALP fails | Block | None | Same |
@@ -82,26 +82,20 @@ It says nothing about floats, ALP, integer splits, routing, linear or category
 predictors, analysis and priors, or encode throughput. Those placements are
 argued from the laws above and need evidence.
 
-One finding changes how the rest should be read. Phase 1's representation
-comparisons were dominated by execution overhead, so they mostly tested the
-harness rather than the encodings:
-
-- OS full SUM took 475 µs over 11,718 blocks, about 40 ns per 256-row block.
-  Native FOR took 59 µs for the same rows, about 5 ns per block. OS is mostly
-  run and constant blocks, so the encoded form should do less arithmetic than
-  native, not eight times more ([scan findings](../frame-phase-1/scan/FINDINGS.md)).
-- Local OS COUNT read 0.37 ns/row encoded against 0.15 ns/row plain, with run
-  geometry making up 59% of the image. A run COUNT does one comparison per run,
-  so the encoded body was doing less work and still lost
-  ([real bodies](../frame-phase-1/encoding/README.md#real-encoded-bodies-first-native-pass)).
-- Points cost 10–22 ns against 0.5–1.4 ns for a native array. Two dependent
-  loads and a short prefix sum should cost a few nanoseconds at L1
-  ([points](../frame-phase-1/point/FINDINGS.md)).
+Phase 1's speed comparisons between stages are weak evidence for a different
+reason than first assumed. The [substrate probe](substrate/README.md) re-ran
+phase 1's images on Zen 5 and Graviton 4 with kind-batched dispatch. Batching
+saved 0–30% on run- and packed-heavy columns and made some cells slower, so
+dispatch was not the main cost. The leaves were: on L2-resident OS, phase 1
+spends about 15 ns per block against 2.5 ns for a native u8 array on AVX-512.
+Part of that is leaf code (unpacking short planes, per-run loops), and part is
+the representation itself: OS has a median of 24 runs per block, and no run
+leaf can sum 24 runs much faster than AVX-512 sums 256 bytes.
 
 So the stage classification above rests on laws and byte results, which
-survive this. The speed comparisons between stages need re-running once the
-execution substrate has a per-block cost near its floor. That is why the
-substrate gets its own thread in the partition.
+survive this. Speed comparisons between stages need leaves near their floor,
+priced per operation: runs beat packed for COUNT and bounds (UserID COUNT is
+31× the native array) and lose for SUM at OS's run counts.
 
 ## Consequences for the seams
 

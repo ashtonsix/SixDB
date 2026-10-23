@@ -1,0 +1,88 @@
+# Execution substrate, first probe: dispatch is not phase 1's cost
+
+Front B ([partition](../PARTITION.md)), 2026-10-23. Does phase 1's per-block
+cost come from how blocks are dispatched, or from the work inside each block?
+
+## What was measured
+
+[`plan.cpp`](plan.cpp) reads phase 1's encoded images unchanged. It turns the
+descriptors into columns, groups block ids by (kind, width) once per image, and
+runs each group in one loop with its leaf chosen outside the loop. Packed
+blocks call the same catalogue kernels phase 1 uses. Run lengths are computed
+from adjacent ends with no carried dependency, and width-8 run values are read
+in place. Delta, patched and coded blocks fall back to phase 1's owner leaf.
+
+[`measure.cpp`](measure.cpp) times four arms on the same rows: phase 1's owner
+(`encoded_sum`, `encoded_count_ge`), phase 1's catalogue arm, the batched probe
+and a native global-FOR array in its narrowest byte lane. The native loops
+accumulate in u32 over 65,536-row chunks so they vectorise. Every call's answer
+is checked against an exact oracle over the original values. COUNT uses the
+median as threshold. Arms rotate each round and each call is a warm repeat.
+
+Workers: Zen 5 (AMD EPYC 9R45, c8a.2xlarge; AVX2 and AVX-512 builds) and
+Graviton 4 (Neoverse V2, c8g.2xlarge), Clang 21.1.8, source `8b85383c`, three
+process repeats of 41 rounds. Jobs `20261023T213006Z-6767bfc7` and
+`20261023T213036Z-29106869`. Repeat spread is within 1.2× in every cell, and
+mostly within 1.03×. All medians are in
+[evidence/batched-v1-summary.txt](evidence/batched-v1-summary.txt).
+
+## Results
+
+Nanoseconds per 256-row block. "One part" is 65,536 rows (L2-resident on
+both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
+
+| Column, operation | Host | Owner, one part | Batched, one part | Native, one part | Owner, full | Batched, full | Native, full |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| OS SUM | AVX-512 | 17.7 | 15.2 | 2.5 | 31.0 | 27.2 | 2.6 |
+| OS SUM | Graviton 4 | 26.0 | 20.1 | 10.2 | 43.5 | 36.2 | 12.7 |
+| OS COUNT ≥ median | AVX-512 | 19.6 | 13.8 | 4.5 | 31.9 | 27.0 | 4.5 |
+| ResolutionWidth SUM | AVX-512 | 19.9 | 18.0 | 2.8 | 33.8 | 37.3 | 4.6 |
+| EventTime SUM | AVX-512 | 28.8 | 28.5 | 4.8 | 27.0 | 31.5 | 9.5 |
+| URLHash SUM | AVX-512 | 72.1 | 104.2 | 9.1 | 73.8 | 62.8 | 41.2 |
+| WatchID SUM | AVX-512 | 37.9 | 38.1 | 10.2 | 45.2 | 41.4 | 38.7 |
+| UserID COUNT ≥ median | AVX-512 | 4.3 | 1.0 | 7.7 | 4.1 | 0.8 | 25.0 |
+| UserID COUNT ≥ median | Graviton 4 | 8.5 | 1.4 | 28.2 | 9.3 | 1.6 | 89.8 |
+| CounterID SUM | AVX-512 | 3.2 | 0.6 | 2.5 | 3.1 | 0.2 | 4.1 |
+
+## Findings
+
+1. **Dispatch is a small part of phase 1's cost.** Batching changes the
+   owner's time by between −80% (closed-form cells) and +45%. On run- and
+   packed-heavy columns it saves 0–30%. Phase 1's OS SUM spends about 15 ns per
+   block in the leaf at L2 against the native array's 2.5 ns. My earlier claim
+   that phase 1 mostly measured dispatch overhead was wrong; STAGES.md and the
+   README are corrected.
+2. **Grouping by kind can cost more than it saves.** URLHash at one part gets
+   45% slower and ResolutionWidth's full slice 10% slower under batching. Kind
+   groups visit blocks out of address order, which plausibly defeats
+   sequential prefetch where kinds interleave (not yet attributed). A
+   substrate should batch within address order, for example over runs of
+   equal kind inside a 16-block group, not across the image.
+3. **Frame slows about 1.8× from one part to the full slice; the native array
+   does not.** OS SUM goes from 15 to 27 ns per block on Zen 5. The image is
+   1 MB, so the full slice leaves Zen 5's 1 MB L2. Frame's descriptor → offset
+   → variable-size body chain is a candidate cause; this is the first target
+   for staging (mechanism M6). Not yet attributed.
+4. **Closed forms deliver what M1 predicts.** UserID COUNT is 31× faster than
+   the native array on Zen 5 and 56× on Graviton 4 at the full slice, and
+   CounterID and IsRefresh decide from descriptors. Batching makes these cells
+   4–15× faster than phase 1's owner, because the bound checks run over a
+   descriptor column.
+5. **SUM over short runs is a representation limit, not only a leaf cost.**
+   OS stores a median of 24 runs per block (mean 35) at 6–8 bits. Native u8
+   SUM costs 2.5 ns per 256 rows on AVX-512, so a run leaf must spend under
+   about 0.07 ns per run to match it. Even a fully vectorised leaf reaches
+   parity at best. Runs pay for SUM only when blocks hold few runs, so runs
+   versus packed is a per-operation choice (the weighted class in STAGES.md).
+   Full-block SUM can also come from block summaries, which Ashton placed on
+   the parent segment; body SUM matters for selected rows.
+
+## Next
+
+- Leaves at their floor, measured against the native array per width:
+  direct Local bit-plane SUM and COUNT for packed blocks (popcount per plane,
+  no unpack), and a vectorised run leaf.
+- Batching in address order, with the descriptor columns kept.
+- Attribute the one-part → full-slice slowdown and stage the descriptor →
+  body chain.
+- Selected-row SUM and COUNT, where block summaries cannot answer.

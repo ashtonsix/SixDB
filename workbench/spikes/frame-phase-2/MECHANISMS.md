@@ -57,7 +57,7 @@ wins come from narrower lanes and from removing rows altogether.
 
 | | Mechanism | What it removes | Pays at | Why strong baselines lack it | Phase 1 evidence | Main risk |
 | --- | --- | --- | --- | --- | --- | --- |
-| M1 | **Structure replaces rows.** Closed forms on constant and run blocks, FOR base terms, monotone search, block statistics | Work and bytes proportional to rows; cost scales with blocks or runs instead | All tiers | Polars keeps no in-memory structure; DuckDB decompresses runs and constants into 2048-value vectors for most operators | UserID clustered COUNT 42 µs vs 460 µs native | Per-structure overhead (M9) erased it in phase 1 |
+| M1 | **Structure replaces rows.** Closed forms on constant and run blocks, FOR base terms, monotone search, block statistics | Work and bytes proportional to rows; cost scales with blocks or runs instead | All tiers | Polars keeps no in-memory structure; DuckDB decompresses runs and constants into 2048-value vectors for most operators | UserID clustered COUNT 42 µs vs 460 µs native | Per-run leaf cost: SUM over 24+ runs per block cannot beat a native u8 sum |
 | M2 | **SIMD density from shared prefixes.** Values that share high bits (FOR, split, codes) run in u8 or u16 lanes | Up to 8× fewer instructions per value than Int64 | L1/L2, LLC one core | Polars and DuckDB compute at the logical width | Calico u8 SUM 3.9–5.7× decode-then-sum; narrow run-value leaf 0.63–0.79× | Native narrow arrays have it too; Frame's edge is per-block width |
 | M3 | **Fewer bytes through a bandwidth-bound tier** | Bytes per value | DRAM saturated, LLC shared, then DRAM one core | Polars is uncompressed; DuckDB, TurboPFor and FastLanes have the bytes but decode into a vector the operator reads again | None: no saturated measurement | Decode slower than the bandwidth share; metadata bytes |
 | M4 | **Capacity.** The compressed image fits a faster tier than the native one | Misses for points, gathers and repeated scans | LLC versus DRAM | Uncompressed baselines spill first | The regime exists: UserID image 5.5 MB vs native 24 MB on a 16 MiB L3; not yet exploited | Only a band of column sizes benefits |
@@ -65,7 +65,7 @@ wins come from narrower lanes and from removing rows altogether.
 | M6 | **Memory-level parallelism through staging** (Loom rings and streams, prefetch) | Serial descriptor → body → dictionary chains | LLC and DRAM, for points, gathers and scattered selections | Native arrays have one level of indirection and need less; baselines rely on hardware prefetch | Scattered flushed selected SUM 131.6 µs vs native 51.1 µs, a serial chain | Staging overhead at high selectivity |
 | M7 | **Separated fingerprints and heads.** First 1–2 bytes in their own plane, suffix read only for ties | 6–7 of 8 bytes per row for filters, plus u8 lane density | All tiers, most at DRAM | No baseline stores a head plane | Logical H16 3.4–4.8× faster on Jena filters; loses on RegionID | Tie-heavy columns; +1–2 B/row unless the head is a split's high part |
 | M8 | **Pruning by coarse evidence** at 256-row grain | Blocks decided PASS or FAIL from statistics or masks | All tiers on clustered data | DuckDB zone maps work at 122,880-row row groups; Polars has none in memory | Empty and coarse grants skip bodies; clustered COUNT wins | Drift widens bounds (Calico's negative) |
-| M9 | **Batched execution over descriptor planes.** Treat descriptors as columns; run every constant block in one vector loop, every FOR-K block in one width-specialised loop | Per-block indirect dispatch and call overhead | All tiers; it enables M1 and M2 | Not needed by uncompressed baselines; DuckDB pays per-vector interpretation | Phase 1 paid about 40 ns per block (OS SUM 475 µs vs 59 µs native) | Kind-sorted dispatch reorders work; outputs need original coordinates |
+| M9 | **Batched execution over descriptor planes.** Treat descriptors as columns; run every constant block in one vector loop, every FOR-K block in one width-specialised loop | Per-block indirect dispatch and call overhead | All tiers; it enables M1 and M2 | Not needed by uncompressed baselines; DuckDB pays per-vector interpretation | Batching phase 1's images saved 0–30%, and grouping across the image slowed URLHash 45% ([probe](substrate/README.md)) | Out-of-order block visits defeat prefetch; batch within address order |
 | M10 | **Fusion without materialisation.** Predicate → mask → payload; several aggregates in one pass; decode → consume in registers | Intermediate arrays, Boolean bitmaps and second passes | All tiers, most when intermediates leave L1/L2 | Polars materialises Boolean bitmaps and filtered arrays; DuckDB builds selection and decompressed vectors | Row-selected SUM/COUNT 0.17–0.32× decode-then-mask; SUM+COUNT 0.58–0.74× separate | Code size; register pressure |
 | M11 | **Code-domain execution.** Group, hash, equality and IN on dense dictionary codes; per-distinct work | Hash-table probes and per-row hashing | All tiers | DuckDB and Polars have dictionary or categorical paths, but not narrow codes fused with runs | OS grouping 73.9 µs vs 148.2 µs best native shared-code (local) | Large dictionaries; cross-part translation |
 | M12 | **Algebra on transforms.** `x + c` on FOR changes the base; functions run over dictionary entries | Per-row transforms; materialised results | All tiers, when the consumer accepts an encoded result | Baselines materialise a new array | None | Needs Engine to accept structured intermediates |
@@ -116,7 +116,7 @@ the logical type.
 
 | Operation | Mechanisms | Baseline | L1/L2 | LLC 1c / shared | DRAM 1c / sat | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Independent point reads (throughput) | M5, M6, M9 | Native array | Accept ≤ 2× slower | Parity / parity | Parity / parity; ≥ 3× when only Frame fits LLC (M4) | Phase 1 was 10–20× slower: overhead, not the representation |
+| Independent point reads (throughput) | M5, M6, M9 | Native array | Accept ≤ 2× slower | Parity / parity | Parity / parity; ≥ 3× when only Frame fits LLC (M4) | Phase 1 was 10–20× slower; not yet attributed |
 | Independent point reads | M5 | TurboPFor block random access | ≥ 3× | ≥ 3× | ≥ 2× | Fewer residuals and fewer lines per point |
 | Dependent point chain (latency) | M5, M4 | Native array | Accept ≤ 2× slower | Accept ≤ 1.5× | Accept ≤ 1.5×; ≥ 2× with M4 | The descriptor plane stays resident; one body miss per point |
 | Gather by index list | M4, M6, M3 | Polars `gather`, native | Parity | Parity / ≥ 1.5× | ≥ 1.5× clustered indices; parity dispersed | |
@@ -130,7 +130,7 @@ the logical type.
 | --- | --- | --- | --- | --- | --- | --- |
 | `COUNT(x op c)`, FOR K ≤ 8 | M2, M8, M9 | Polars Int64 | ≥ 4× | ≥ 4× / ≥ 6× | ≥ 4× / ≥ 6× | Against native narrow: parity, ≥ 1.5× when block widths are narrower than the global one |
 | `COUNT(x op c)`, FOR K 9–16 | M2, M3 | Polars Int64 | ≥ 2× | ≥ 2× / ≥ 4× | ≥ 2× / ≥ 4× | |
-| `COUNT(x op c)`, run and constant blocks | M1, M9 | Polars | ≥ 5× | ≥ 5× | ≥ 5× | For ≤ 16 runs per block; phase 1 lost this cell to overhead |
+| `COUNT(x op c)`, run and constant blocks | M1, M9 | Polars | ≥ 5× | ≥ 5× | ≥ 5× | For ≤ 16 runs per block, or when bounds decide the block (UserID: 31× native measured) |
 | `COUNT(x op c)`, incompressible 64-bit with a head plane | M7 | Polars, native | ≥ 1.5× | ≥ 2× / ≥ 3× | ≥ 3× / ≥ 4× | Without a head: parity at best |
 | Predicate → selection mask | M2, M10 | Polars Boolean | ≥ 2× for K ≤ 16 | ≥ 2× | ≥ 3× sat | |
 | Predicate on A → SUM of B, clustered 1–10% selection | M8, M10 | Polars; native fused | ≥ 5× Polars; parity native | ≥ 5×; ≥ 1.5× native shared | ≥ 5×; ≥ 1.5× native | The cold-scan thesis |
@@ -162,7 +162,7 @@ the logical type.
 | Operation | Mechanisms | Baseline | L1/L2 | LLC 1c / shared | DRAM 1c / sat | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | Exact SUM, FOR K ≤ 8 | M2, M9 | Polars Int64; native narrow | ≥ 4×; parity | ≥ 4× / ≥ 6× | ≥ 4× / ≥ 6× | |
-| Exact SUM, run and constant blocks | M1, M9 | Polars; native narrow | ≥ 5×; ≥ 2× | ≥ 5× | ≥ 5× | Phase 1: 8× slower than native, from overhead |
+| Exact SUM, run and constant blocks | M1, M9 | Polars; native narrow | ≥ 5×; ≥ 2× when runs are few | ≥ 5× | ≥ 5× | For few runs per block. At OS's median 24 runs, parity with native u8 is the ceiling; full-block SUM should come from block summaries |
 | Exact SUM, delta prediction | M1 (weighted form) | Reconstruct then sum; Polars | ≥ 2×; parity–2× | ≥ 2× | ≥ 4× sat | |
 | Exact wide SUM, 64-bit | M2 (split halves) | Polars Int128; native halves | ≥ 5×; parity | Same | Same | |
 | MIN, MAX | M1, M8 | Polars | ≥ 20× with exact statistics | ≥ 20× | ≥ 20× | Conservative statistics fall back to bodies |

@@ -17,9 +17,10 @@ Engine's analyser will later solve (data distribution, access patterns) →
 - **The split starts from the encoding stages.** Fused stages (Ikea owns the
   composition) and composed stages (Engine chooses per data and workload) set
   the seams and the division of work.
-- **The execution substrate comes first.** Phase 1 paid about 40 ns per
-  256-row block and 10–20× native per point, so most of its representation
-  comparisons measured overhead.
+- **Leaves and the substrate come first.** Phase 1's leaves were 6–10×
+  slower than a native narrow array at L2, and its points 10–20× slower.
+  Dispatch turned out to be a small part of that
+  ([substrate probe](substrate/README.md)).
 - **All operation families.** Phase 1 covered SUM and COUNT on integers.
 
 ## Contents

@@ -83,8 +83,8 @@ lifecycle study.
 ### Ordering
 
 Fronts A and B gate everyone else's measurements: without calibrated tiers and
-a substrate near its floor, every comparison repeats phase 1's problem of
-measuring overhead. They start first. This sequences measurement, not scope:
+leaves and a substrate near their floor, every comparison repeats phase 1's
+problem of measuring slow leaves rather than representations. They start first. This sequences measurement, not scope:
 every family and stage stays in the spike.
 
 ## Decisions (2026-10-23)
