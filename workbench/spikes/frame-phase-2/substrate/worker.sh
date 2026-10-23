@@ -31,6 +31,23 @@ for isa in $isas; do
   pts="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_points"
   msk="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_masks"
   for repeat in 1 2 3; do
+    if [ -n "${SCALING_ONLY:-}" ]; then
+      # Concurrent independent streams: k processes, one per core, each with
+      # its own copy of the data, timing the same full-slice scans at once.
+      ncpu=$(nproc)
+      for k in 1 2 4 $ncpu; do
+        pids=()
+        for j in $(seq 0 $((k - 1))); do
+          taskset -c "$j" "$bin" "$cols" 2999808 "${ROUNDS:-21}" OS EventTime UserID URLHash WatchID \
+            | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",\"streams\":$k,\"stream\":$j,/" > "$out/scaling-$repeat-$k-$j.jsonl" &
+          pids+=($!)
+        done
+        wait "${pids[@]}"
+        cat "$out"/scaling-$repeat-$k-*.jsonl >> "$out/scaling.jsonl"
+        rm -f "$out"/scaling-$repeat-$k-*.jsonl
+      done
+      continue
+    fi
     if [ -n "${MASKS_ONLY:-}" ]; then
       taskset -c "$SIXDB_CPU" "$msk" "$cols" 2999808 "${ROUNDS:-41}" OS ResolutionWidth EventTime UserID URLHash WatchID \
         | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/masks.jsonl"
