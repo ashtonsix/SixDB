@@ -50,6 +50,14 @@ u128 sum(const plan &p);
 u64 count_ge(const plan &p, u64 t);
 u128 sum_per_block(const plan &p);
 u64 count_ge_per_block(const plan &p, u64 t);
+// The same over blocks [first, limit) only.
+u128 sum_per_block(const plan &p, std::size_t first, std::size_t limit);
+u64 count_ge_per_block(const plan &p, u64 t, std::size_t first, std::size_t limit);
 u128 sum_segments(const plan &p);
 u64 count_ge_segments(const plan &p, u64 t);
+// per_block with a software prefetch of the body `distance` blocks ahead (both
+// of its first two lines), to test whether the one-part to full-slice
+// slowdown is acquisition latency.
+u128 sum_per_block_prefetch(const plan &p, unsigned distance);
+u64 count_ge_per_block_prefetch(const plan &p, u64 t, unsigned distance);
 }  // namespace frame_substrate

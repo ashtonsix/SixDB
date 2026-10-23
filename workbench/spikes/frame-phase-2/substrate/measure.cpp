@@ -177,12 +177,14 @@ int main(int argc, char **argv) {
             {"sum", "phase1_owner", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::encoded_sum(*x.c, *x.all) == x.sum; }},
             {"sum", "phase1_catalogue", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::catalogue_sum(*x.c, *x.all) == x.sum; }},
             {"sum", "per_block", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum_per_block(*x.p) == x.sum; }},
+            {"sum", "per_block_prefetch8", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum_per_block_prefetch(*x.p, 8) == x.sum; }},
             {"sum", "segments", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum_segments(*x.p) == x.sum; }},
             {"sum", "batched", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::sum(*x.p) == x.sum; }},
             {"sum", "native_for", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return x.nat->sum() == x.sum; }},
             {"count_ge", "phase1_owner", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::encoded_count_ge(*x.c, *x.all, x.t) == x.count; }},
             {"count_ge", "phase1_catalogue", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fe::catalogue_count_ge(*x.c, *x.all, x.t) == x.count; }},
             {"count_ge", "per_block", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge_per_block(*x.p, x.t) == x.count; }},
+            {"count_ge", "per_block_prefetch8", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge_per_block_prefetch(*x.p, x.t, 8) == x.count; }},
             {"count_ge", "segments", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge_segments(*x.p, x.t) == x.count; }},
             {"count_ge", "batched", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return fs::count_ge(*x.p, x.t) == x.count; }},
             {"count_ge", "native_for", [](const void *v) { auto &x = *static_cast<const ctx *>(v); return x.nat->count_ge(x.t) == x.count; }},
@@ -205,6 +207,42 @@ int main(int argc, char **argv) {
                 if (!ok)
                     return 1;
             }
+        // Same data, part-resident: time each 65,536-row part separately after
+        // warming it, and add the parts' medians. Comparing with the full-slice
+        // call separates residence from the data's block mix.
+        struct extra { const char *op, *name; double ns; };
+        std::vector<extra> extras;
+        if (blocks > fe::part_blocks) {
+            double fb_sum = 0, fb_count = 0, nat_sum = 0, nat_count = 0;
+            for (std::size_t first = 0; first < blocks; first += fe::part_blocks) {
+                const std::size_t limit = std::min(blocks, first + fe::part_blocks);
+                const std::vector<u64> slice(values.begin() + first * fe::block_rows, values.begin() + limit * fe::block_rows);
+                u128 os = 0;
+                u64 oc = 0;
+                for (u64 v : slice)
+                    os += v, oc += v >= t;
+                const native ns(slice);
+                std::vector<double> a, b, c2, d;
+                for (int r = 0; r < rounds; ++r) {
+                    bool ok = true;
+                    fs::sum_per_block(p, first, limit);
+                    a.push_back(time_ns([&] { ok &= fs::sum_per_block(p, first, limit) == os; }));
+                    fs::count_ge_per_block(p, t, first, limit);
+                    b.push_back(time_ns([&] { ok &= fs::count_ge_per_block(p, t, first, limit) == oc; }));
+                    ns.sum();
+                    c2.push_back(time_ns([&] { ok &= ns.sum() == os; }));
+                    ns.count_ge(t);
+                    d.push_back(time_ns([&] { ok &= ns.count_ge(t) == oc; }));
+                    if (!ok) {
+                        std::fprintf(stderr, "%s part %zu: wrong answer\n", name.c_str(), first);
+                        return 1;
+                    }
+                }
+                fb_sum += median(a), fb_count += median(b), nat_sum += median(c2), nat_count += median(d);
+            }
+            extras = {{"sum", "per_block_parts", fb_sum}, {"count_ge", "per_block_parts", fb_count},
+                      {"sum", "native_for_parts", nat_sum}, {"count_ge", "native_for_parts", nat_count}};
+        }
         std::string census;
         kind_census(c, census);
         for (std::size_t i = 0; i < narms; ++i) {
@@ -214,5 +252,9 @@ int main(int argc, char **argv) {
                         name.c_str(), n, arms[i].op, arms[i].name, ns, ns / n, ns / blocks,
                         c.payload.size() + c.descriptor_bytes(), nat.bytes.size(), p.bytes(), census.c_str());
         }
+        for (const auto &e : extras)
+            std::printf("{\"column\":\"%s\",\"rows\":%zu,\"op\":\"%s\",\"arm\":\"%s\",\"ns\":%.0f,\"ns_per_row\":%.4f,"
+                        "\"ns_per_block\":%.2f}\n",
+                        name.c_str(), n, e.op, e.name, e.ns, e.ns / n, e.ns / blocks);
     }
 }

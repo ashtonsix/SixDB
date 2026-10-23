@@ -234,12 +234,12 @@ u64 runs_count(const plan &p, std::uint32_t b, unsigned w, u64 t) {
 }
 }  // namespace
 
-u128 sum_per_block(const plan &p) {
+u128 sum_per_block(const plan &p) { return sum_per_block(p, 0, p.cls.size()); }
+u128 sum_per_block(const plan &p, std::size_t first, std::size_t n) {
     const auto &cat = fe::plane_catalogue;
     const std::uint8_t *payload = p.image->payload.data();
     u128 bases = 0, total = 0;
-    const std::size_t n = p.cls.size();
-    for (std::uint32_t b = 0; b < n; ++b) {
+    for (auto b = static_cast<std::uint32_t>(first); b < n; ++b) {
         const unsigned w = p.width[b];
         switch (p.cls[b]) {
         case constant_class: bases += p.base[b]; break;
@@ -251,12 +251,62 @@ u128 sum_per_block(const plan &p) {
     return total + bases * rows;
 }
 
-u64 count_ge_per_block(const plan &p, u64 t) {
+u64 count_ge_per_block(const plan &p, u64 t) { return count_ge_per_block(p, t, 0, p.cls.size()); }
+u64 count_ge_per_block(const plan &p, u64 t, std::size_t first, std::size_t n) {
+    const auto &cat = fe::plane_catalogue;
+    const std::uint8_t *payload = p.image->payload.data();
+    u64 c = 0;
+    for (auto b = static_cast<std::uint32_t>(first); b < n; ++b) {
+        const unsigned w = p.width[b];
+        const u64 base = p.base[b];
+        switch (p.cls[b]) {
+        case constant_class: c += base >= t ? rows : 0; break;
+        case packed_class:
+            if (base >= t)
+                c += rows;
+            else if (const u64 rhs = t - base; !(rhs >> w))
+                c += cat.count_ge[w](payload + p.offset[b], rows, rhs);
+            break;
+        case runs_class: c += runs_count(p, b, w, t); break;
+        default: c += fe::block_count_ge(*p.image, b, t);
+        }
+    }
+    return c;
+}
+
+u128 sum_per_block_prefetch(const plan &p, unsigned distance) {
+    const auto &cat = fe::plane_catalogue;
+    const std::uint8_t *payload = p.image->payload.data();
+    u128 bases = 0, total = 0;
+    const std::size_t n = p.cls.size();
+    for (std::uint32_t b = 0; b < n; ++b) {
+        if (b + distance < n) {
+            const std::uint8_t *ahead = payload + p.offset[b + distance];
+            __builtin_prefetch(ahead);
+            __builtin_prefetch(ahead + 64);
+        }
+        const unsigned w = p.width[b];
+        switch (p.cls[b]) {
+        case constant_class: bases += p.base[b]; break;
+        case packed_class: bases += p.base[b]; total += cat.sum[w](payload + p.offset[b], rows); break;
+        case runs_class: bases += p.base[b]; total += runs_residuals(p, b, w); break;
+        default: total += fe::block_sum(*p.image, b);
+        }
+    }
+    return total + bases * rows;
+}
+
+u64 count_ge_per_block_prefetch(const plan &p, u64 t, unsigned distance) {
     const auto &cat = fe::plane_catalogue;
     const std::uint8_t *payload = p.image->payload.data();
     u64 c = 0;
     const std::size_t n = p.cls.size();
     for (std::uint32_t b = 0; b < n; ++b) {
+        if (b + distance < n) {
+            const std::uint8_t *ahead = payload + p.offset[b + distance];
+            __builtin_prefetch(ahead);
+            __builtin_prefetch(ahead + 64);
+        }
         const unsigned w = p.width[b];
         const u64 base = p.base[b];
         switch (p.cls[b]) {
