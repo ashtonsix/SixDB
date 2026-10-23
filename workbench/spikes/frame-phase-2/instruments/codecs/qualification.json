@@ -1,0 +1,165 @@
+{
+  "timing_claim": false,
+  "capture": "ccb35ba6c8a93bc0f9542942531955e62cd600dde9596ba647b6d0121a012833",
+  "jobs": [
+    {
+      "job": "20261023T220406Z-86a45c41",
+      "source_files": 3655,
+      "upstream_files": {
+        "frame_alp-src": 775,
+        "frame_fastlanes-src": 3265,
+        "frame_turbopfor-src": 124
+      },
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 15174834,
+        "files": 51,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/278ff940d6775a6f31295066e07c6e4f66115a9e0d48376a2551631179d68adf.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "278ff940d6775a6f31295066e07c6e4f66115a9e0d48376a2551631179d68adf",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/278ff940d6775a6f31295066e07c6e4f66115a9e0d48376a2551631179d68adf.tar.gz"
+      },
+      "profiles": [
+        {
+          "isa": "avx2",
+          "controls": {
+            "turbopfor": {
+              "result": {
+                "peer": "TurboPFor",
+                "revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+                "cases": 329,
+                "direct_points": 12672,
+                "timing_claim": false
+              },
+              "elf_sha256": "890422e3502b685d91c2e1751239d68165c425532a8ec3d6f1ccdd702855d723",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -DWORKBENCH_PEER_REVISION=\\\"1f646d98d65ee91befd3066f351f2cf386593442\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_turbopfor-src/include -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_turbopfor-src/lib/include_ -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=znver5 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_turbopfor_check.dir/turbopfor_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/turbopfor_check.cpp"
+            },
+            "fastlanes": {
+              "result": {
+                "peer": "FastLanes FFOR",
+                "revision": "f0edc1020a538f1f8098640fce8347c9ac247a0d",
+                "cases": 248,
+                "vector_rows": 1024,
+                "timing_claim": false
+              },
+              "elf_sha256": "5a19298340f650618f4690bf100865abbcdf97cb96e64525b23dae5d6e0135ec",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -DWORKBENCH_PEER_REVISION=\\\"f0edc1020a538f1f8098640fce8347c9ac247a0d\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_fastlanes-src/src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=znver5 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_fastlanes_check.dir/fastlanes_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/fastlanes_check.cpp"
+            },
+            "alp": {
+              "result": {
+                "peer": "ALP primitives",
+                "revision": "31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce",
+                "cases": 18,
+                "bit_exact": true,
+                "timing_claim": false
+              },
+              "elf_sha256": "4127f6b8735c842ee0d4386d13483eeca1ec77846001fb05a203ab9062b2ddd0",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -DWORKBENCH_PEER_REVISION=\\\"31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_alp-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=x86-64-v3 -mtune=znver5 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_alp_check.dir/alp_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/alp_check.cpp"
+            }
+          }
+        },
+        {
+          "isa": "avx512",
+          "controls": {
+            "turbopfor": {
+              "result": {
+                "peer": "TurboPFor",
+                "revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+                "cases": 329,
+                "direct_points": 12672,
+                "timing_claim": false
+              },
+              "elf_sha256": "a99d5d955d336e17f0f172c432fdbb626afa12fd4e4e7a33dff143389dfb6db5",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -DWORKBENCH_PEER_REVISION=\\\"1f646d98d65ee91befd3066f351f2cf386593442\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_turbopfor-src/include -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_turbopfor-src/lib/include_ -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_turbopfor_check.dir/turbopfor_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/turbopfor_check.cpp"
+            },
+            "fastlanes": {
+              "result": {
+                "peer": "FastLanes FFOR",
+                "revision": "f0edc1020a538f1f8098640fce8347c9ac247a0d",
+                "cases": 248,
+                "vector_rows": 1024,
+                "timing_claim": false
+              },
+              "elf_sha256": "76eb0e8dba3411b1d414c0db7e10dbffeaa9f01eb3c0696cb31c015f59d41f3e",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -DWORKBENCH_PEER_REVISION=\\\"f0edc1020a538f1f8098640fce8347c9ac247a0d\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_fastlanes-src/src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_fastlanes_check.dir/fastlanes_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/fastlanes_check.cpp"
+            },
+            "alp": {
+              "result": {
+                "peer": "ALP primitives",
+                "revision": "31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce",
+                "cases": 18,
+                "bit_exact": true,
+                "timing_claim": false
+              },
+              "elf_sha256": "be4d8747a2c5ec1f8c06dd34b514e8dd87ae513abbb4ec02f0230a2118461244",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=0 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=1 -DWORKBENCH_PEER_REVISION=\\\"31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_alp-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=znver5 -mtune=znver5 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_alp_check.dir/alp_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/alp_check.cpp"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job": "20261023T220406Z-69d9863d",
+      "source_files": 3655,
+      "upstream_files": {
+        "frame_alp-src": 775,
+        "frame_turbopfor-src": 124,
+        "frame_fastlanes-src": 3265
+      },
+      "artifact": {
+        "bucket": "calico-fleet-artifacts",
+        "bytes": 12897623,
+        "files": 32,
+        "format": 1,
+        "key": "sixdb/artifacts/sha256/48c908fa7f367670f6458662762fbea07c3973eda74903d8749a085c0cdf9d82.tar.gz",
+        "kind": "files",
+        "region": "us-east-1",
+        "sha256": "48c908fa7f367670f6458662762fbea07c3973eda74903d8749a085c0cdf9d82",
+        "uri": "s3://calico-fleet-artifacts/sixdb/artifacts/sha256/48c908fa7f367670f6458662762fbea07c3973eda74903d8749a085c0cdf9d82.tar.gz"
+      },
+      "profiles": [
+        {
+          "isa": "neon",
+          "controls": {
+            "turbopfor": {
+              "result": {
+                "peer": "TurboPFor",
+                "revision": "1f646d98d65ee91befd3066f351f2cf386593442",
+                "cases": 329,
+                "direct_points": 12672,
+                "timing_claim": false
+              },
+              "elf_sha256": "dfb94e448e75392941a40d4af9f5799c0f173d16f4617e774f0477ddee0362b5",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -DWORKBENCH_PEER_REVISION=\\\"1f646d98d65ee91befd3066f351f2cf386593442\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_turbopfor-src/include -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_turbopfor-src/lib/include_ -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_turbopfor_check.dir/turbopfor_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/turbopfor_check.cpp"
+            },
+            "fastlanes": {
+              "result": {
+                "peer": "FastLanes FFOR",
+                "revision": "f0edc1020a538f1f8098640fce8347c9ac247a0d",
+                "cases": 248,
+                "vector_rows": 1024,
+                "timing_claim": false
+              },
+              "elf_sha256": "dd8cc4b81675b46c480085773aff1c672cc19fa40e02500ee05bfd8e3c920619",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -DWORKBENCH_PEER_REVISION=\\\"f0edc1020a538f1f8098640fce8347c9ac247a0d\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_fastlanes-src/src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_fastlanes_check.dir/fastlanes_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/fastlanes_check.cpp"
+            },
+            "alp": {
+              "result": {
+                "peer": "ALP primitives",
+                "revision": "31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce",
+                "cases": 18,
+                "bit_exact": true,
+                "timing_claim": false
+              },
+              "elf_sha256": "a8a4643f181170eff6fd2264698203f034607f98a0940a9beff64f5bcdc6cb11",
+              "compile_command": "/usr/bin/clang++-21 -DSIXDB_TUNE_GENERIC=0 -DSIXDB_TUNE_GRANITE_RAPIDS=0 -DSIXDB_TUNE_NEOVERSE_V2=1 -DSIXDB_TUNE_NEOVERSE_V3=0 -DSIXDB_TUNE_ZEN4=0 -DSIXDB_TUNE_ZEN5=0 -DWORKBENCH_PEER_REVISION=\\\"31ca0ed11c93c99d3f5b5c30e01a3e1c3832d3ce\\\" -isystem /opt/sixdb/source/build/deps/frame-codecs/frame_alp-src/include -O3 -g -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -ffile-prefix-map=/opt/sixdb/source=. -ffunction-sections -fdata-sections -march=armv8-a+simd -mtune=neoverse-v2 -o workbench/spikes/frame-phase-2/instruments/codecs/CMakeFiles/frame_alp_check.dir/alp_check.cpp.o -c /opt/sixdb/source/workbench/spikes/frame-phase-2/instruments/codecs/alp_check.cpp"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "qualification_scope": "Optimized native boot checks; no timings and no fully instrumented upstream build. All captured sources and extracted upstream files compared with frozen capture and official hash-pinned archives."
+}

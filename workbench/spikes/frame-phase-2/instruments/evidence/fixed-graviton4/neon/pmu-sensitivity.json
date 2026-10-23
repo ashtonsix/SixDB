@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "intervals": 120,
+  "events": [
+    {
+      "name": "cpu_cycles",
+      "type": 0,
+      "config": "0x0",
+      "intervals": 120,
+      "complete_full_coverage_intervals": 120,
+      "observed_count_min": 3783111,
+      "observed_count_max": 7270603,
+      "observation": "counts_observed",
+      "qualification": "requires_CPU_kernel_event_semantics"
+    },
+    {
+      "name": "l1d-load-misses",
+      "type": 3,
+      "config": "0x10000",
+      "intervals": 120,
+      "complete_full_coverage_intervals": 120,
+      "observed_count_min": 223,
+      "observed_count_max": 3019437,
+      "observation": "counts_observed",
+      "qualification": "requires_CPU_kernel_event_semantics"
+    },
+    {
+      "name": "retired_instructions",
+      "type": 0,
+      "config": "0x1",
+      "intervals": 120,
+      "complete_full_coverage_intervals": 120,
+      "observed_count_min": 67084,
+      "observed_count_max": 22762625,
+      "observation": "counts_observed",
+      "qualification": "requires_CPU_kernel_event_semantics"
+    }
+  ],
+  "cells": [
+    {
+      "bytes": 16384,
+      "active_chains": 1,
+      "intervals": 3,
+      "median_ns_per_chase_load": 1.870939042339228
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 2,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.9318121969659072
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 4,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.46504000486000435
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 8,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.36952062934497204
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 12,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.29476798480574956
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 16,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.27261997714182257
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 24,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.25953297420776184
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 32,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.3089022616710137
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 48,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.4344924844580671
+    },
+    {
+      "bytes": 16384,
+      "active_chains": 64,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.5180499467883248
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 1,
+      "intervals": 3,
+      "median_ns_per_chase_load": 5.375258601589382
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 2,
+      "intervals": 3,
+      "median_ns_per_chase_load": 2.6770257663785366
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 4,
+      "intervals": 3,
+      "median_ns_per_chase_load": 1.4342468555841794
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 8,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.8533212280071061
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 12,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.6978560777135298
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 16,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.6521516569614159
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 24,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.6371950600939896
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 32,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.6486282470065642
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 48,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.6936987735730415
+    },
+    {
+      "bytes": 524288,
+      "active_chains": 64,
+      "intervals": 3,
+      "median_ns_per_chase_load": 0.7233584037365204
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 1,
+      "intervals": 3,
+      "median_ns_per_chase_load": 31.094947338680562
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 2,
+      "intervals": 3,
+      "median_ns_per_chase_load": 14.656249068748696
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 4,
+      "intervals": 3,
+      "median_ns_per_chase_load": 7.259021564836877
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 8,
+      "intervals": 3,
+      "median_ns_per_chase_load": 3.7544322173348945
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 12,
+      "intervals": 3,
+      "median_ns_per_chase_load": 2.5239615919360445
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 16,
+      "intervals": 3,
+      "median_ns_per_chase_load": 2.0339143973306806
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 24,
+      "intervals": 3,
+      "median_ns_per_chase_load": 1.888320390781563
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 32,
+      "intervals": 3,
+      "median_ns_per_chase_load": 1.9363670031133875
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 48,
+      "intervals": 3,
+      "median_ns_per_chase_load": 1.8716968398632918
+    },
+    {
+      "bytes": 8388608,
+      "active_chains": 64,
+      "intervals": 3,
+      "median_ns_per_chase_load": 1.8882775488350965
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 1,
+      "intervals": 3,
+      "median_ns_per_chase_load": 123.1677539050811
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 2,
+      "intervals": 3,
+      "median_ns_per_chase_load": 59.732734153263955
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 4,
+      "intervals": 3,
+      "median_ns_per_chase_load": 28.28755039181048
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 8,
+      "intervals": 3,
+      "median_ns_per_chase_load": 15.080572622265914
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 12,
+      "intervals": 3,
+      "median_ns_per_chase_load": 10.5545020918993
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 16,
+      "intervals": 3,
+      "median_ns_per_chase_load": 8.280810662771591
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 24,
+      "intervals": 3,
+      "median_ns_per_chase_load": 6.476370121407504
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 32,
+      "intervals": 3,
+      "median_ns_per_chase_load": 6.236538585277969
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 48,
+      "intervals": 3,
+      "median_ns_per_chase_load": 6.46143754494786
+    },
+    {
+      "bytes": 134217728,
+      "active_chains": 64,
+      "intervals": 3,
+      "median_ns_per_chase_load": 6.4880045109211775
+    }
+  ],
+  "observed_load_service_tier": null,
+  "interpretation": "counter response and dependent-chase costs; event-open success is not cache-residency proof"
+}

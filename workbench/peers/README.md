@@ -28,3 +28,11 @@ The maintained Hashtable comparison already shares a
 [verified Abseil provider](../benchmarks/hashtable/abseil.cmake). Reuse it when
 that exact peer fits; do not fork a second acquisition/build recipe. Dataset
 preparation and identity stay with the [existing dataset tools](../datasets/README.md).
+
+[Frame codec primitives](frame-codecs.cmake) provide pinned, hash-verified
+TurboPFor, FastLanes FFOR and ALP targets. They build upstream native sources
+without adopting upstream benchmark flags or datasets. The
+[Frame controls](../spikes/frame-phase-2/instruments/codecs/README.md) describe
+the qualified operations and build limits. FastLanes FFOR and ALP export some
+identical symbols: use separate executables for their comparisons. These targets
+are primitive controls, not the full FastLanes file format or a query engine.
