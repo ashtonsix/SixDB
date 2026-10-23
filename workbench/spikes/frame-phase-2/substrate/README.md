@@ -193,10 +193,23 @@ regrouped by kind, and the random order with a two-stage software prefetch
    descriptor reads cost more than they save. Graviton 4 gains less (UserID
    161.0 → 126.5; WatchID unchanged).
 
-So the substrate's job under unpredictable access is staging, with prefetch
-extents taken from descriptors, not regrouping by kind. The distances and the
-small-body cut-off are per host, which is where Loom's hardware knowledge and
-`IndependentStream` come in.
+6. **Lookahead distance is not the lever.** Sweeping the body distance from 2
+   to 32 blocks (descriptors at twice that; `cab5870f`, jobs
+   `20261023T230748Z-9fd88ef5` and `20261023T230824Z-8236bb53`;
+   [evidence/masks-v3-summary.txt](evidence/masks-v3-summary.txt)) moves cold
+   random-order cells by about 20% at most: the best distance is 4–8 on Zen 5
+   and 2–4 on Graviton 4, flat beyond. Graviton 4's wide bodies stay far from
+   address order at every distance (WatchID 313–360 vs 157 ns per block;
+   URLHash 268–316 vs 139), which points at a cap on outstanding prefetched
+   lines rather than lead time. That host-specific limit is a question for
+   front A's measurements. Loom's hint interface maps demand classes to hint
+   bodies but supplies no calibrated lookahead (its 32 default is a loop
+   shape), so Frame cannot borrow a distance from it today.
+
+So the substrate's job under unpredictable access is staging with prefetch
+extents taken from descriptors, not regrouping by kind; a short fixed
+lookahead is enough, and wide bodies on Graviton 4 need a different remedy
+than more lead time.
 
 ## Independent point reads
 
