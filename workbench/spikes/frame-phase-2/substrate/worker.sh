@@ -25,9 +25,13 @@ for isa in $isas; do
   mkdir -p "$out"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release '-DSIXDB_SPIKES=frame-phase-1;frame-phase-2' $flags \
     > "$out/configure.txt" 2>&1
-  cmake --build "$build" --target frame_substrate_measure -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
+  cmake --build "$build" --target frame_substrate_measure frame_substrate_select -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_measure"
+  sel="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_select"
   for repeat in 1 2 3; do
+    taskset -c "$SIXDB_CPU" "$sel" "$cols" 2999808 "${ROUNDS:-41}" OS:UserID UserID:URLHash EventTime:WatchID RegionID:ClientIP \
+      | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/select.jsonl"
+    [ -n "${SELECT_ONLY:-}" ] && continue
     for rows in 65536 2999808; do
       taskset -c "$SIXDB_CPU" "$bin" "$cols" "$rows" "${ROUNDS:-41}" \
         OS ResolutionWidth RegionID ConnectTiming IsRefresh CounterID EventTime UserID ClientIP URLHash WatchID \
