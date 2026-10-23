@@ -3,7 +3,8 @@
 For small Ikea bindings, reusable width-specific controls and their actual
 caller ABI, start with the [cross-module execution survey](../spikes/ikea-composition/reusable-execution.md).
 It connects the TuplePack and call-boundary findings to current Frame,
-StreamPack and Directory composition; its new mechanisms remain experiments.
+StreamPack and Directory composition, separating implemented bindings from
+experimental shared controls and their remaining evidence limits.
 
 Start with [Loom's execution choices](../../loom/README.md#choose-the-execution-path)
 for current interfaces. [Loom's objectives notebook](loom-objectives-and-architecture.md)

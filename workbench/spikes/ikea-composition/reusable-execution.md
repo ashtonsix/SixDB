@@ -306,25 +306,43 @@ TuplePack lifetime fixture preserves those consequential boundaries after the
 spike. These qualifications do not establish that the earlier f153-to-R4
 SeriesPack, TuplePack write or StreamPack losses are closed.
 
-Execution independence also exposes a cold-binding question: a predicate-only
-owner should not need generic shuffle preparation merely to select one validated
-code. There is no direct binder today. A binder taking a validated layout, code
-index and named view could copy the existing law's code without another raw-code
-validator or projection type. Transfer binding already permits its authoritative
-layouts to expire after admission; it retains the named views instead.
-It would check extent compatibility and code index before returning; only the
-view would remain borrowed. The present shared-plan block witness excludes this
-cold preparation/resident-control saving, so it needs separate complete-command
-costing. Fewer plan bytes alone would not establish a workload win.
+Execution independence also exposed a cold-binding question: predicate-only
+owners previously prepared generic shuffle controls merely to select one
+validated code. Commit `cd55974d` adds
+`bind_predicate<Rows>(layout, code_index, view)`, copying the admitted law's code
+without another raw-code validator or projection type. It checks extent
+compatibility before the full-size code index and borrows only the named view.
+The authoritative layout may expire; equal extent does not establish encoding
+identity. Guarded owning tests cover actual protected expired layouts, rank 127
+and narrowing-sensitive invalid indices. Nine paired representative objects
+retain 115 function, 30 constant and 24 unwind records exactly.
 
-The strongest next generalization is SeriesPack's shared immutable dense
-execution control: Frame already supplies the concrete operation-column witness,
-while the ordinary runtime reader currently copies several entry pointers.
-An Ikea implementation should admit the layout once, select an existing width
-control cheaply, and accept fresh placement/count/grants at the whole-command
-boundary. Keep typed callers direct, and measure copied versus shared entries
-under the tiny and mixed-block comparisons above before choosing the public
-representation. Directory's typed Intervals path needs no extra control layer.
+The [direct-binding command study](handle-boundaries/direct-bind/README.md)
+includes generic plan construction, direct binding and shared-prebuilt-plan
+controls, starting from an already validated layout. This is a separate
+preparation comparison: the original block study excluded generic construction.
+Fewer plan bytes alone establish no complete-command or resident-memory win.
+The completed native comparison improves all 81 cases against rebuilding a
+generic plan. Against shared prepared plans, ARM retains twelve repeated-query
+losses over 5%; x86 has none over that threshold. Actual linked preparation and
+frame reductions therefore do not establish uniform dominance.
+
+The [SeriesPack operation-column prototype](handle-boundaries/series-controls/README.md)
+turns the shared-control question into an executable comparison. Frame supplies
+the existing operation-column witness, while the ordinary runtime reader copies
+several entries. The prototype compares direct columns, shared selector bindings,
+current copied runtime bindings and small typed complete commands. Its real u64
+initializer includes fit/extent checks and whole-journal source resolution.
+No public SeriesPack representation changes follow from the prototype alone.
+Directory's typed Intervals path has no such control layer.
+Fresh shared AVX-512 `read16` loses roughly 22–23% at 64 queries per block against
+fresh copied bindings, while direct columns and retained bindings behave
+differently. The comparison keeps every route and duplicate sample, rather than
+inferring complete cost from a smaller handle.
+
+The [handover account](HANDOVER.md) collects the outstanding observations and
+coverage limits across these mechanisms and the earlier interface work. It does
+not turn the survey's historical proposals into a follow-on implementation plan.
 
 Bec's compact proof capsule and StreamPack's compatible-layout retarget are
 separate candidates with observable contract questions. They should not be

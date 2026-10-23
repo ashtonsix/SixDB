@@ -14,6 +14,9 @@ consolidates the first implementation's useful findings and recovery pointers.
 The [composition design](design.md) develops the organising principles and open
 choices. [Value semantics and owner integration](semantics-and-integration.md)
 explore the Engine/Loom/Orbital seams; module guides own implemented contracts.
+The [handover account](HANDOVER.md) records the current stopping point and broad
+outstanding problems, with evidence limits and recovery, without prescribing
+their solutions.
 
 ## Evidence by question
 

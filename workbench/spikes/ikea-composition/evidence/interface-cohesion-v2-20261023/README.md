@@ -202,3 +202,42 @@ establish a blanket regression-free claim. Later live Frame owner qualification
 uses its own source epoch. A final API audit also removed accidental inherited
 preserving commands from the complete-initialization writer; its separate delta
 qualification keeps that correction distinct from frozen R4.
+
+## Final bounded comparisons and handover
+
+Direct validated-layout predicate binding is implemented in `cd55974d`. Its
+[functional receipt](predicate-direct-binding.json) covers full-size indices,
+error precedence and real protected expired layouts. The separate
+[codegen bridge](predicate-direct-codegen.json) retains 115 function, 30 constant
+and 24 unwind records from nine paired representative objects exactly; its
+[artifact](predicate-direct-codegen-artifact.json) preserves the raw context.
+
+The [complete preparation comparison](../../handle-boundaries/direct-bind/README.md)
+retains [all 81 cases](predicate-direct-native-cases.csv) and
+[actual linked caller findings](predicate-direct-native.json). Direct binding
+beats rebuilding generic plans throughout this cohort. Against already shared
+plans, twelve ARM repeated-query cases lose over 5%; no x86 case crosses that
+loss threshold. Smaller preparation and frames do not establish uniform wins.
+
+The [SeriesPack control study](../../handle-boundaries/series-controls/README.md)
+retains [900 native case-routes](series-controls-native-cases.csv) and its
+[linked analysis](series-controls-native.json). Fresh, retained, direct-column
+and typed operations produce different results. This remains a spike-only
+prototype, with no public SeriesPack representation change.
+
+Their [common qualification](execution-controls-native.json) records identical
+source captures, all nine native oracle/lifetime checks before timing, 6,120
+iteration records, all five route orders, complete verified archives and
+terminated instances. The failed first runner attempt is retained separately
+and produced no timings. These focused checks do not repeat the earlier full
+core/header matrix.
+
+The [one-image x86 control](../../handle-boundaries/PREDICATE-PANEL.md) retains
+[its own protocol, all cases and identity checks](predicate-panel.json). Selected
+losses persist at roughly 6–8%, while some duplicate controls also move. This
+comparison does not provide a causal attribution or close prior regressions.
+
+The [handover account](../../HANDOVER.md) collects outstanding measured problems,
+contract questions, documentation issues and coverage limits without prescribing
+their solutions. The current investigations are closed; their unresolved
+observations remain explicit.

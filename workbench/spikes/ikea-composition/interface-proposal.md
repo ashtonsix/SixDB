@@ -67,9 +67,11 @@ copying metadata must not change journal identity.
 
 TuplePack's former `reader` and `writer` were plans. They become `read_plan`
 and `write_plan`; the bound operations take the simpler nouns. Filtering is a
-reader command with the existing encoded one-code shortcut. Repeated filters
-use `bind_predicate(reader)` or `bind_predicate(plan, view)` to copy the code
-projection once. The predicate borrows only its named view; its preparation
+reader command with the existing encoded one-code shortcut. Predicate-only
+callers use `bind_predicate<Rows>(layout, code_index, view)` without preparing
+packet controls. Existing plans support `bind_predicate(reader)` or
+`bind_predicate(plan, view)`. Every form copies the code projection once.
+The predicate borrows only its named view; its layout, preparation
 plan and intermediate reader may expire. Its type is `predicate<Byte, Rows>`,
 independent of unused packet capacity. A checked filter
 rejects a hole-only, empty or multi-code map. The unchecked peer requires that
