@@ -5,6 +5,30 @@ encoding proposal is [ENCODING.md](../ENCODING.md) and open questions are
 indexed in [QUESTIONS.md](../QUESTIONS.md). This directory holds the corpus,
 baseline and compression investigations. It defines no interface.
 
+## Current digest
+
+The [stocktake inventory](../INVENTORY.md) owns the cross-spike picture. This
+directory's sections below are the evidence; read them by question, not in order.
+
+- **Wins come from algebra, not decoding.** Run and constant blocks answer COUNT
+  without rows, non-decreasing delta blocks search their checkpoints, delta SUM
+  is a weighted closed form, and row-selected SUM/COUNT run at 0.17–0.32× the
+  decode-then-mask cost. Plain or global-FOR native arrays win scans with no
+  shortcut, and points.
+- **Bytes:** real lightweight bodies; arrival dictionaries reach 43.9 bits/value
+  on URLHash (ZSTD-3 41.4); predictor NULL fill costs bodies nothing, but encode
+  3.6–7.6× more.
+- **Seams:** borrowed blocks with exact extents and grants, and dictionary
+  identity as {scope, edition}. Cached dictionary material helps equality and
+  sparse COUNT, not SUM or points.
+- **Open in this directory:** the run-block leaf cost behind the flushed OS SUM
+  loss (prototype in progress), fused aggregate timings (code at `6321ff6d`),
+  the predicate mask emitter (in progress), and every family beyond SUM/COUNT.
+  Detailed questions are in [QUESTIONS.md](../QUESTIONS.md).
+- **Comparison limits:** local timings are OrbStack direction only. Worker runs
+  in [`worker.sh`](worker.sh) are repeated and in-memory, with cache residence
+  unproven; the controlled cold panel is Ikea LEAD's [scan findings](../scan/FINDINGS.md).
+
 ## What exists
 
 | Need | Available now | Gap |
