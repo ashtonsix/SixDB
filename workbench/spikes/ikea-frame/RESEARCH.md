@@ -35,7 +35,7 @@ resources before changing or timing them.
 
 | Front | Current owner | Evidence and next connection |
 | --- | --- | --- |
-| Encoding and representation algebra | Claude | [Actual bodies and laws](encoding/README.md), dictionaries, selected aggregates, NULL fill and point prefixes. Fused aggregate timing, predicate-mask emission and a runs fast-path prototype are active owner cuts, not settled performance results. |
+| Encoding and representation algebra | Claude | [Actual bodies and laws](encoding/README.md), dictionaries, selected aggregates, NULL fill and point prefixes. [Fused timings](encoding/README.md#fused-aggregates) now give local ARM direction, with native qualification pending; predicate-mask emission and a runs fast-path prototype remain active owner cuts. |
 | Scans, selection and acquisition | Ikea LEAD, with Claude | [Controlled scans](scan/README.md): preserve compact native and actual Polars controls; connect predicate(A) to actual selected payload(B), then investigate dependent-access staging and larger/shared-bus work. |
 | Point reconstruction and evidence planes | Ikea LEAD | [Points](point/README.md), [heads/filter consumers](filter/README.md) and [timing-order audit](ORDER-AUDIT.md). Preserve native-array gaps and negative evidence choices; connect metadata to lifecycle costs. |
 | Change and representation lifecycle | Ikea LEAD | [Lifecycle](lifecycle/README.md), [Zen 5 phase costs](lifecycle/ZEN5.md) and [sustained semantic checks](lifecycle/CYCLES.md). Sustained policy costs, append/seal and physical movement/reclaim grain remain open. |
