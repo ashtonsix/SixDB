@@ -9,8 +9,9 @@ decisions.
 ## The test
 
 A stage choice is **fused** when Ikea can make it from the block's own values
-(plus priors), and every alternative offers consumers the same operation laws.
-Engine never needs to see it; the encoder fits it and the decoder fuses it.
+(plus priors), every alternative offers consumers the same operation laws, and
+the alternatives do not trade costs the workload cares about. Engine never
+needs to see it; the encoder fits it and the decoder fuses it.
 
 A stage choice is **composed** when the best option depends on something the
 block's values cannot tell Ikea:
@@ -24,14 +25,25 @@ Composed choices are Engine's. They usually change which operation laws exist
 so a planner has to know about them.
 
 Between the two is a **weighted** class: the choice depends only on the data,
-but it trades bytes against operation cost. Ikea fits it under an objective
-Engine supplies as a few weights (bytes, scan cost, point cost, write cost).
-Ashton's "presets" are named weight vectors over this class, not fixed stage
-lists.
+but it trades bytes against scan, point, fitting, write or repair cost. Same
+laws are not enough to hide such a choice (Ikea LEAD's review). Engine supplies
+the admitted candidate set and an objective (a few weights: bytes, scan cost,
+point cost, write cost); Ikea fits parameters inside them. Engine need not
+choose each block's base or width, and it must not switch on a child's private
+kinds either. Ashton's "presets" are named candidate sets and weight vectors,
+not fixed stage lists.
 
-Stickiness is the second axis. Some choices can be changed without touching
-the body (derived evidence such as statistics, heads and checkpoints). Others
-need a block, group, part or whole-table re-encode. Sticky composed choices are
+Choice ownership is separate from execution fusion, and from what Engine must
+be able to see. A family that Engine sees must still expose the properties on
+which legal operations and update isolation depend. The useful separation from
+phase 1 stays: logical laws, physical image and parameters, proved facts,
+prepared operation, empirical costs.
+
+Stickiness is the second axis. Some choices could be changed without touching
+the body (derived evidence such as statistics and duplicate heads; checkpoints,
+if the layout keeps them physically separate, which phase 1 did not establish:
+its checkpoint mode changed body size and fitting). Others need a block, group,
+part or whole-table re-encode. Sticky composed choices are
 the consequential ones for Engine's analyser; cheap composed choices behave
 like indexes Engine can build and drop.
 
@@ -57,11 +69,11 @@ like indexes Engine can build and drop.
 | 4 | Dictionary order: sorted, frequency, arrival | Composed | Range vs equality workload, cache budget | Part | Arrival 43.9 vs sorted 50.9 bits on URLHash, 1.3–3× slower scans; frequency COUNT up to 1.45× slower | Per-workload selection rule |
 | 4 | Dictionary scope beyond one part; translation | Composed | Cross-part grouping and merging | Part | Decided part-wide; cross-part untested | Translation cost vs stable fingerprints |
 | 4 | Dictionary preparation (truth tables, weights) | Composed (cache) | Reuse horizon, memory budget | None (derived) | Full cache can reach 2× the column's bytes; makes repeated equality much faster | When a retained preparation pays |
-| 5 | Predictor kind: none, previous, linear | Fused | Data | Block | Previous helps Jena; linear untested | Linear and LeCo-style pieces |
+| 5 | Predictor kind: none, previous, linear | Weighted (inside Engine's admitted set) | Data, plus point and repair cost | Block | Previous helps Jena; linear untested | Linear and LeCo-style pieces |
 | 5 | Category predictor | Composed | Cross-column | Part | None | Same questions as routing |
 | 6 | Checkpoint density (every 16, 64, none) | Composed (evidence) | Point vs bytes | None if rebuilt from the body | Jena 147 / 139 / 133 / 128 bits/row; point 13–17 ns with, 27–32 ns without | Density as a droppable index; vs TurboPFor random access |
-| 6 | Checkpoint form (sizes vs relative ends; exceptions in or out) | Fused | Data | Block | Analysed, not measured | Exception handling cost |
-| 7 | Frame of reference base and width | Fused | Data + priors | Block | Exact; tile geometry makes 256-row planes bit-tight | Priors vs exact fitting cost |
+| 6 | Checkpoint form (sizes vs relative ends; exceptions in or out) | Weighted | Data, plus point cost | Block | Analysed, not measured | Exception handling cost |
+| 7 | Frame of reference base, width, exception budget | Weighted (Ikea fits inside the admitted objective) | Data + priors; reserve trades against later writes | Block | Exact; tile geometry makes 256-row planes bit-tight | Priors vs exact fitting cost |
 | 7 | Block-level vs part-level base when heads exist | Weighted | Data, but head meaning depends on it | Block | Analysed only | Folded into the head question |
 | 8 | Encode-time exceptions (patches) | Fused | Data | Block | Exceptions are cheap insurance on real columns | Fused patch decode (Calico was 1.9–4.7× slower unfused) |
 | 8 | Write-time overrides, slack and compaction threshold | Composed (policy) | Write rate, reader ages | Group | Owner lifecycle works; update-dominated cells lose to native | Slack sizing, read tax by override density |
@@ -101,16 +113,22 @@ priced per operation: runs beat packed for COUNT and bounds (UserID COUNT is
 
 1. **Body codecs are one fused unit per body family.** Fitting, emission,
    decoding and every operation's leaf law for a body kind belong together.
-   Engine sees the family (runs, FOR, predicted, coded), never the parameters.
+   Engine admits families and an objective and sees the properties legal
+   operations depend on; Ikea fits the parameters.
 2. **Composed choices form a small expression per part.** Roughly: row order
    (table), presence ∘ routing ∘ domain ∘ (map | predict) ∘ body family, plus
    a set of evidence planes. That expression is what Engine's analyser
    searches over. It is a planning description; execution still runs one fused
    Ikea operation per query step.
-3. **Evidence is a separate account.** Heads, statistics, checkpoints and
-   dictionary preparation can be added or dropped without re-encoding bodies.
-   They should be costed like indexes (bytes, build, maintenance under writes)
-   rather than as encoding stages.
+3. **Three accounts, not one.** (a) Indispensable interpretation: routing
+   basis, dictionary edition, predictor anchors, and a split's high plane,
+   which is payload. (b) Optional evidence: statistics, duplicate heads, and
+   checkpoints if they are made separable; costed like indexes (bytes, build,
+   maintenance under writes). (c) Query preparation, such as a predicate truth
+   table. Their invalidation and lifetime laws differ. Evidence semantics must
+   be available before suffix acquisition, and inlier bounds are never
+   all-value pruning bounds ([residual bounds](../../notebook/pfor-bounds.md)).
+   (Ikea LEAD's review.)
 4. **Execution fusion is orthogonal to choice ownership.** Encode-side
    (residuals → outlier classification → pack) and decode-side (unpack → base
    → patch → consume) chains fuse whatever chose their parameters. Phase 1's

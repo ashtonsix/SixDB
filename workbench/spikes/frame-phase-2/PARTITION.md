@@ -9,8 +9,8 @@ targets in [MECHANISMS.md](MECHANISMS.md).
 The classification gives three kinds of boundary:
 
 1. **Body families are fused units.** Fitting, emission, decoding and each
-   operation family's leaf law for one body kind live together. Engine sees
-   only the family.
+   operation family's leaf law for one body kind live together. Engine admits
+   families and an objective; Ikea fits parameters inside them.
 2. **Composed choices form the part's expression.** Row order, presence,
    routing, domain, map or predict, and the body family. Engine's analyser
    searches this space; Frame describes each choice's laws and costs.
@@ -76,9 +76,28 @@ in scope, as research questions for the body and substrate fronts:
   not pristine and says where to look instead. This is Ashton's leaning, not a
   decision.
 
-Phase 1's lifecycle work (Codex, Ikea LEAD) is the evidence base; each body
-front charges its write and repair laws there rather than starting a second
-lifecycle study.
+Ikea LEAD's constraints for the substrate and bodies:
+
+- Keep three descriptions distinct: logical read and write dependencies, the
+  physical read/store envelope a command needs, and the bytes actually issued
+  (damage and effects). Ikea's journals record source-qualified plane spans per
+  local write group; they are not a pre-acquired lock set. A lock projection
+  must exist before the mutation, as a safe potential envelope or an admitted
+  repair plan.
+- Preserving stores can read neighbours' old bytes, and permission to store
+  does not isolate those reads. TuplePack descriptors default to active-unit
+  access; wider native windows need initialised, readable, isolated bytes, and
+  kind batching must not assume that proof.
+- Re-encoding contributes nothing to logical aggregates, and SeriesPack's
+  modulo-u64 `sum_change` is not the general exact logical delta.
+- Group delta buffers are tested against fitting in-place repair, a base plus
+  coalesced afterimages, and native or plain forms, at equal write counts for
+  a few hot rows and for one edit in every block. Price the pristine-read tax,
+  correction acquisition, write order, evidence invalidation and the eventual
+  fold; no fold is the debt control.
+
+Phase 1's lifecycle traces, oracles and repair laws are the evidence base,
+reused without the old MVCC and publication machinery.
 
 ### Ordering
 

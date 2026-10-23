@@ -43,7 +43,11 @@ one core and saturated, is the first thing the instruments thread measures.
 ### What the tiers imply
 
 Time per value is the larger of compute cost and bytes moved over the tier's
-bandwidth. In the saturated DRAM tier a Polars Int64 scan can deliver at most
+bandwidth. Bytes moved means input, metadata, output, RFO and writeback where
+relevant, and selection and scratch; logical image bytes, the accessed
+footprint and measured traffic are three different numbers. An 8× image-byte
+ratio becomes an 8× speed ratio only where measured compute and traffic allow
+it. In the saturated DRAM tier a Polars Int64 scan can deliver at most
 about 0.4–0.7 values/ns per core (3–5.6 GB/s ÷ 8 B). A Frame body at 8 bits
 per value can deliver 3–5.6 values/ns, which any SIMD decoder exceeds. So the
 saturated tier converts byte ratios into speed ratios almost directly.
@@ -59,9 +63,9 @@ wins come from narrower lanes and from removing rows altogether.
 | --- | --- | --- | --- | --- | --- | --- |
 | M1 | **Structure replaces rows.** Closed forms on constant and run blocks, FOR base terms, monotone search, block statistics | Work and bytes proportional to rows; cost scales with blocks or runs instead | All tiers | Polars keeps no in-memory structure; DuckDB decompresses runs and constants into 2048-value vectors for most operators | UserID clustered COUNT 42 µs vs 460 µs native | Per-run leaf cost: SUM over 24+ runs per block cannot beat a native u8 sum |
 | M2 | **SIMD density from shared prefixes.** Values that share high bits (FOR, split, codes) run in u8 or u16 lanes | Up to 8× fewer instructions per value than Int64 | L1/L2, LLC one core | Polars and DuckDB compute at the logical width | Calico u8 SUM 3.9–5.7× decode-then-sum; narrow run-value leaf 0.63–0.79× | Native narrow arrays have it too; Frame's edge is per-block width |
-| M3 | **Fewer bytes through a bandwidth-bound tier** | Bytes per value | DRAM saturated, LLC shared, then DRAM one core | Polars is uncompressed; DuckDB, TurboPFor and FastLanes have the bytes but decode into a vector the operator reads again | None: no saturated measurement | Decode slower than the bandwidth share; metadata bytes |
+| M3 | **Fewer bytes through a bandwidth-bound tier** | Bytes per value | DRAM saturated, LLC shared, then DRAM one core | Polars is uncompressed. DuckDB, TurboPFor and FastLanes have the bytes; a small decoded scratch vector consumed at once needs no second DRAM pass, so their limit is decode plus interpretation cost, to be measured | None: no saturated measurement | Decode slower than the bandwidth share; metadata bytes |
 | M4 | **Capacity.** The compressed image fits a faster tier than the native one | Misses for points, gathers and repeated scans | LLC versus DRAM | Uncompressed baselines spill first | The regime exists: UserID image 5.5 MB vs native 24 MB on a 16 MiB L3; not yet exploited | Only a band of column sizes benefits |
-| M5 | **Bounded random access through checkpoints** | Block decode for a point: at most 15 residuals in registers instead of 128–1024 values | All tiers versus block codecs | TurboPFor and FastLanes decode a whole block (and its prefix sum for delta) per point | Delta points 13–17 ns with checkpoints, 27–32 ns without (local) | Still behind a native array at L1 |
+| M5 | **Bounded random access through checkpoints** | Prefix work for a point in delta-coded data: at most 15 residuals in registers | All tiers versus block codecs on delta data | TurboPFor offers direct access for FOR and PFor (`bitgetx32`, `p4getx32`), which Frame must match rather than beat by construction; delta needs a prefix over its block. FastLanes' random-access entry is unqualified at the pinned source (Ikea LEAD) | Delta points 13–17 ns with checkpoints, 27–32 ns without (local) | Still behind a native array at L1 |
 | M6 | **Memory-level parallelism through staging** (Loom rings and streams, prefetch) | Serial descriptor → body → dictionary chains | LLC and DRAM, for points, gathers and scattered selections | Native arrays have one level of indirection and need less; baselines rely on hardware prefetch | Scattered flushed selected SUM 131.6 µs vs native 51.1 µs, a serial chain | Staging overhead at high selectivity |
 | M7 | **Separated fingerprints and heads.** First 1–2 bytes in their own plane, suffix read only for ties | 6–7 of 8 bytes per row for filters, plus u8 lane density | All tiers, most at DRAM | No baseline stores a head plane | Logical H16 3.4–4.8× faster on Jena filters; loses on RegionID | Tie-heavy columns; +1–2 B/row unless the head is a split's high part |
 | M8 | **Pruning by coarse evidence** at 256-row grain | Blocks decided PASS or FAIL from statistics or masks | All tiers on clustered data | DuckDB zone maps work at 122,880-row row groups; Polars has none in memory | Empty and coarse grants skip bodies; clustered COUNT wins | Drift widens bounds (Calico's negative) |
@@ -89,8 +93,12 @@ wins come from narrower lanes and from removing rows altogether.
 | Calico Frame kernels | Packed residuals with symbols | M1, M2, M7 | Parity per the brief | Sources only |
 | Parquet + ZSTD, DuckDB storage | At rest | — | Bytes | Yes |
 
-The missing peers need source downloads and builds on the workers. Each is a
-separate request for Ashton's approval.
+Downloads are approved (2026-10-23). Ikea LEAD's acquisition order: native
+controls and Polars first, TurboPFor and FastLanes for the integer-body cells,
+native DuckDB and Polars for complete queries, then ALP and a float corpus,
+then bitmap and reorder peers as those operations open. The "lacks" column is
+a hypothesis about each baseline until its actual entry points and plans are
+inspected.
 
 ## Targets
 
@@ -117,7 +125,8 @@ the logical type.
 | Operation | Mechanisms | Baseline | L1/L2 | LLC 1c / shared | DRAM 1c / sat | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | Independent point reads (throughput) | M5, M6, M9 | Native array | Accept ≤ 2× slower | Parity / parity | Parity / parity; ≥ 3× when only Frame fits LLC (M4) | Phase 1 was 10–20× slower; not yet attributed |
-| Independent point reads | M5 | TurboPFor block random access | ≥ 3× | ≥ 3× | ≥ 2× | Fewer residuals and fewer lines per point |
+| Independent point reads, FOR and PFor | M5, M9 | TurboPFor direct access | Parity | Parity | Parity | The same mechanism; TurboPFor's prepared and unprepared costs both need pricing |
+| Independent point reads, delta | M5 | TurboPFor delta block decode | ≥ 3× | ≥ 3× | ≥ 2× | Fewer residuals and fewer lines per point |
 | Dependent point chain (latency) | M5, M4 | Native array | Accept ≤ 2× slower | Accept ≤ 1.5× | Accept ≤ 1.5×; ≥ 2× with M4 | The descriptor plane stays resident; one body miss per point |
 | Gather by index list | M4, M6, M3 | Polars `gather`, native | Parity | Parity / ≥ 1.5× | ≥ 1.5× clustered indices; parity dispersed | |
 | In-place write that fits | — | Native store | Accept ≤ 1.5× slower | Same | Same | Effects and journal are the extra cost |

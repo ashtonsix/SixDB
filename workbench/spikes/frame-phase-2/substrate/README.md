@@ -79,6 +79,18 @@ both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
 
 ## Next
 
+Ikea LEAD's review proposes separating the units before committing to
+descriptor columns or a kind index, with bytes and logical work fixed: the
+ordinary per-block operation; the same leaf called directly over a
+homogeneous run of blocks; preparation hoisted; then kind batching. Traces:
+constants, short and long runs, FOR; homogeneous and mixed kind/width; all,
+none and scattered coarse domains. Charge index construction and maintenance,
+and keep original coordinates: reordering is lawful for exact integer SUM, not
+for ordered outputs, first-match operations, prefix scans or ordered float
+laws. Timing reuses phase 1's [scan schedule](../../frame-phase-1/scan/run.py)
+(balanced positions and predecessors, every call checked) and its independent
+raw-record audit.
+
 - Leaves at their floor, measured against the native array per width:
   direct Local bit-plane SUM and COUNT for packed blocks (popcount per plane,
   no unpack), and a vectorised run leaf.
