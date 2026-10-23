@@ -52,7 +52,7 @@ both hosts); "full" is 2,999,808 rows (the image sits in LLC on both).
    block in the leaf at L2 against the native array's 2.5 ns. My earlier claim
    that phase 1 mostly measured dispatch overhead was wrong; STAGES.md and the
    README are corrected.
-2. **The unit of batching barely matters.** A follow-up run (`166b8727`,
+2. **The unit of batching barely matters when access is predictable.** A follow-up run (`166b8727`,
    jobs `20261023T214551Z-63932352` and `20261023T214629Z-dc609e2b`) holds
    bytes and leaves fixed and varies only the unit: one switch per block in
    address order, one hoisted loop per address-order segment of equal kind
@@ -144,6 +144,44 @@ Frame barely changes, so Frame's losses shrink (10% density: 0.34 → 0.66 of
 the best native time) without turning into wins. UserID → URLHash stays a
 3–6.5× win. Permuted blocks now cost Frame up to 1.65× (10%: 266 → 437 µs),
 the pattern phase 1 saw scattered and cold.
+
+## Unpredictable block order and coarse masks
+
+Ashton's challenge: grouping might matter once accesses defeat the hardware
+prefetcher. [`masks.cpp`](masks.cpp) sums the blocks a supplied coarse mask
+selects, warm and with inputs flushed before every call. Besides address
+order it visits the same blocks in a random order, that random order
+regrouped by kind, and the random order with a two-stage software prefetch
+(descriptor 16 blocks ahead, body 8 ahead). The native control sums the same
+256-row spans in the same orders. Jobs `20261023T224623Z-e32c5d98` and
+`20261023T224659Z-ae5ed20f`, source `1cf8a90c`. Medians:
+[evidence/masks-v1-summary.txt](evidence/masks-v1-summary.txt).
+
+| All blocks, flushed, AVX-512 (ns per block) | Address order | Random | Random, grouped by kind | Random, staged | Native address / random / random staged |
+| --- | ---: | ---: | ---: | ---: | --- |
+| OS | 32.4 | 94.7 | 96.9 | 39.6 | 6.1 / 26.8 / 18.9 |
+| EventTime | 29.9 | 137.7 | 137.8 | 87.0 | 22.2 / 48.2 / 34.7 |
+| UserID | 49.4 | 161.4 | 157.3 | 109.5 | 56.1 / 114.0 / 69.7 |
+| WatchID | 53.5 | 238.5 | 236.2 | 199.5 | 66.7 / 106.7 / 66.3 |
+
+1. **Visit order matters a great deal once the prefetcher is defeated.** Cold
+   and random, Frame is 2.9–4.6× slower than in address order; warm, 1.1–2×.
+   The native array loses 1.6–4.4× too, but Frame's two-level, variable-size
+   chain is hit harder.
+2. **Grouping by kind does not recover it.** Regrouping the random order by
+   kind changes nothing: the loss is locality, not dispatch. Batching only
+   helps if it restores address order or makes addresses known early.
+3. **Software staging recovers most of it on small bodies.** Prefetching
+   descriptors then bodies brings OS from 94.7 to 39.6 ns per block (address
+   order: 32.4) and EventTime from 137.7 to 87.0, but WatchID's 500-byte
+   bodies only from 238.5 to 199.5: three prefetched lines cover a small
+   body, not a wide one. Staging must cover the body's actual extent.
+4. **Coarse masks cost little to consult.** Phase 1's owner (which skips empty
+   16-block groups) and a plain set-bit walk stay within a few percent at
+   every density; the mask walk is not where time goes.
+
+So the substrate's job under unpredictable access is staging, with prefetch
+extents taken from descriptors, not regrouping by kind.
 
 ## Independent point reads
 
