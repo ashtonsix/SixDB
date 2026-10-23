@@ -85,6 +85,28 @@ distributions, edge constants, selections, every row as a point, plus runs at
 re-checks each arm's answer first. [columns.cpp](columns.cpp) checks every
 real-column answer against an exact oracle.
 
+### Read and write envelopes
+
+Ikea LEAD's [contract review](../instruments/LEAF-CONTRACTS.md) asks for each
+leaf's actual physical envelope instead of the blanket 256 bytes of image
+padding the harnesses allocate. The halo is how far a leaf's loads go past the
+logical body it was given.
+
+| Leaf | Reads past the body | Notes |
+| --- | --- | --- |
+| plane256, plane64, lanes: every operation | none | Vector loads stay inside the slices and planes; odd R loads 32 bytes, not 64 |
+| local8, AVX-512 and NEON transposition | up to 63 bytes past each 64-row group (ceil(8K/64) × 64 − 8K), so into the next body for the last group | The generic path reads exactly |
+| local8 point | 8 − R bytes past the row's tile | One u64 load of the tile's plane bytes |
+| runs, any vector leaf | ends: within the body (they run into the values). Values: up to 15 lanes (15 × lane bytes) past the last value | 16 runs per vector; lanes past n are masked |
+| patched | positions: up to 15 bytes into the values. Values: up to 60 bytes past the last | 16 exceptions per vector |
+| compaction (output) | writes exact selected byte counts to slices; ORs whole plane words; clears a block's R planes on first touch | Partial output blocks leave unused slice bytes uninitialised; a full-block reader needs them initialised or a tail reader |
+| run unpack, fill variants (output) | up to 32 rows past row 256 of the scratch | Splat stores overwritten by the next run |
+
+So one image suffix of max(63, 15 × lane, 60) bytes covers every leaf
+reading the last body. Interior bodies need the next body readable to the same
+depth, or a boundary-tail path. Phase 1's catalogue arm keeps SeriesPack's
+exact-tail law.
+
 ## Measurements
 
 [measure.cpp](measure.cpp) runs synthetic sweeps: uniform residuals per width,

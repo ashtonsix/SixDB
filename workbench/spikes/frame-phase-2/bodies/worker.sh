@@ -5,7 +5,9 @@
 # the full 3M-row slice, under the bytes and packed-only policies.
 # Usage: worker.py run workbench/spikes/frame-phase-2/bodies/worker.sh --machine zen5|neoverse-v2
 #   env: ISAS, ROUNDS, TIERS ("l2 llc dram"), WIDTHS_L2, WIDTHS_BIG, RUN_W, RUN_N,
-#        SWEEP=0 skips the synthetic sweep, COLUMNS=0 the real columns
+#        SWEEP=0 skips the synthetic sweep, COLUMNS=0 the real columns,
+#        EXTRA=0 the patched, compaction and histogram cells, PEERS=0 the
+#        TurboPFor/FastLanes arms
 set -euo pipefail
 inputs=workbench/spikes/frame-phase-1/encoding/worker-inputs.json
 if [ "${COLUMNS:-1}" = 1 ]; then
@@ -38,9 +40,11 @@ for isa in $isas; do
   out="$SIXDB_RESULTS/$isa"
   mkdir -p "$out"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release '-DSIXDB_SPIKES=frame-phase-1;frame-phase-2' $flags \
+    -DSIXDB_FRAME_CODEC_CONTROLS="${PEERS:-1}" \
     > "$out/configure.txt" 2>&1
-  cmake --build "$build" --target frame_bodies_check frame_bodies_measure frame_bodies_columns -j "$SIXDB_BUILD_JOBS" \
-    > "$out/build.txt" 2>&1
+  targets="frame_bodies_check frame_bodies_measure frame_bodies_columns"
+  [ "${PEERS:-1}" = 1 ] && targets="$targets frame_bodies_peers"
+  cmake --build "$build" --target $targets -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   dir="$build/workbench/spikes/frame-phase-2/bodies"
   "$dir/frame_bodies_check" > "$out/check.txt" 2>&1 || { echo "check failed: $isa" >> "$SIXDB_RESULTS/failed.txt"; continue; }
   if [ "${COLUMNS:-1}" = 1 ]; then
@@ -49,6 +53,13 @@ for isa in $isas; do
         taskset -c "$SIXDB_CPU" "$dir/frame_bodies_columns" "$cols" "$part_rows" "$rounds" "$policy" $columns \
           >> "$out/columns.jsonl"
       done
+    done
+  fi
+  if [ "${PEERS:-1}" = 1 ]; then
+    for tier in ${TIERS:-l2 llc dram}; do
+      if [ "$tier" = l2 ]; then widths="$widths_l2"; else widths="$widths_big"; fi
+      taskset -c "$SIXDB_CPU" "$dir/frame_bodies_peers" "${rows[$tier]}" "$rounds" $widths \
+        | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/peers.jsonl"
     done
   fi
   [ "${SWEEP:-1}" = 1 ] || continue
@@ -60,7 +71,7 @@ for isa in $isas; do
       taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" runs "$w" $run_n \
         | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"
     done
-    [ "$tier" = llc ] && continue
+    [ "$tier" = llc ] || [ "${EXTRA:-1}" = 0 ] && continue
     for e in 1 4 16; do
       taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" patched "$e" 4 8 12 16 20 \
         | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"

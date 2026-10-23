@@ -153,6 +153,21 @@ template <layout L, unsigned K> struct packed {
             for (unsigned j = 0; j < B; ++j)
                 a[j].add(slice(body, gs.x, j, g));
         u64 p = 0;
+#if BODIES_ISA_NEON
+        if constexpr (L == layout::plane256 && R > 0) {
+            // NEON: byte popcounts weighted by plane into u16 lanes, one
+            // reduction (u64 popcounts cost a CNT plus three UADDLPs each).
+            uint16x8_t acc = vdupq_n_u16(0);
+            const u8 *res = body + 256 * B;
+            for (unsigned b = 0; b < R; ++b) {
+                const uint8x16_t c = vaddq_u8(vcntq_u8(vld1q_u8(res + 32 * b)), vcntq_u8(vld1q_u8(res + 32 * b + 16)));
+                const uint8x8_t wgt = vdup_n_u8(static_cast<u8>(1u << b));
+                acc = vmlal_u8(acc, vget_low_u8(c), wgt);
+                acc = vmlal_high_u8(acc, c, vdupq_n_u8(static_cast<u8>(1u << b)));
+            }
+            p = vaddlvq_u16(acc);
+        } else
+#endif
         if constexpr (L == layout::plane256 && R > 0) {
             // The R planes are 32R contiguous bytes: popcount whole 64-byte
             // vectors, qword q of vector i weighted by its plane (2i + q / 4).
@@ -295,10 +310,11 @@ template <layout L, unsigned K> struct packed {
     static u64 masked_sum(const u8 *body, const u64 *sel) {
         const groups gs(body);
         simd::acc a[B ? B : 1];
+        // No per-group skip: with sparse random selections the branch
+        // mispredicts and costs more than the masked sums (Zen 5 DRAM, v3).
         for (unsigned g = 0; g < 4; ++g)
-            if (sel[g])
-                for (unsigned j = 0; j < B; ++j)
-                    a[j].add_masked(slice(body, gs.x, j, g), sel[g]);
+            for (unsigned j = 0; j < B; ++j)
+                a[j].add_masked(slice(body, gs.x, j, g), sel[g]);
         v4 s;
         std::memcpy(&s, sel, 32);
         v4 acc = 0;
@@ -396,6 +412,7 @@ template <class T> struct lanes {
     // Lanes kept where their row bit is set.
     static vec keep(vec x, u64 rows) {
 #if BODIES_ISA_AVX512
+        asm("" : "+v"(x));  // keep the load unmasked (see simd::acc::add_masked)
         const mask k = __builtin_bit_cast(mask, static_cast<bits>(rows));
         typedef std::make_signed_t<T> S;
         typedef S svec __attribute__((ext_vector_type(N)));
@@ -470,14 +487,11 @@ template <class T> struct lanes {
         if constexpr (sizeof(T) == 1) {
             simd::acc a;
             for (unsigned g = 0; g < 4; ++g)
-                if (sel[g])
-                    a.add_masked(simd::load(body + 64 * g), sel[g]);
+                a.add_masked(simd::load(body + 64 * g), sel[g]);
             return a.total();
         } else {
             avec s = 0;
             for (unsigned g = 0; g < 4; ++g) {
-                if (!sel[g])
-                    continue;
                 for (unsigned v = 0; v < sizeof(T); ++v)
                     s += __builtin_convertvector(keep(load(body + 64 * (sizeof(T) * g + v)), sel[g] >> (N * v)), avec);
             }

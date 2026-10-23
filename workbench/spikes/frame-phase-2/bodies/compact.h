@@ -2,7 +2,7 @@
 // in order, to a plane256 stream of the same width (and so the same base),
 // without decoding. Per 64-row group: each byte slice is compressed (VBMI2
 // compress, else an 8-row shuffle table) and each plane word is bit-extracted
-// (PEXT, else a loop over the selected bits). The stream is a run of
+// (PEXT or SVE2 BEXT, else a loop over the selected bits). The stream is a run of
 // plane256 blocks; out_rows counts the rows appended.
 //
 // The native control compacts the narrow array into a narrow array.
@@ -17,16 +17,7 @@
 namespace bodies {
 
 namespace detail {
-inline u64 pext(u64 x, u64 m) {
-#if defined(__BMI2__)
-    return _pext_u64(x, m);
-#else
-    u64 r = 0;
-    for (u64 bit = 1; m; bit <<= 1, m &= m - 1)
-        r |= (x & m & (0 - m)) ? bit : 0;
-    return r;
-#endif
-}
+inline u64 pext(u64 x, u64 m) { return bodies::pext(x, m); }
 // shuffle[m] lists the set bit positions of m, then zeros.
 struct shuffle_table {
     alignas(8) u8 idx[256][8] = {};
@@ -90,12 +81,26 @@ template <layout L, unsigned K> struct compactor {
             const std::size_t at = out_rows;
             u8 *ob = out + (at / block_rows) * stride;
             const unsigned f = at % block_rows, first = std::min(n, block_rows - f);
-            alignas(64) u8 c[72];
             for (unsigned j = 0; j < B; ++j) {
+#if BODIES_ISA_AVX512 && defined(__AVX512VBMI2__)
+                // Compress in a register, then masked stores of the n bytes
+                // (slices of one block interleave, so no over-store).
+                const __m512i z = _mm512_maskz_compress_epi8(s, x.s[j].x);
+                _mm512_mask_storeu_epi8(ob + 256 * j + f, first == 64 ? ~u64{0} : (u64{1} << first) - 1, z);
+                if (first < n) {
+                    const __m512i rest = _mm512_maskz_compress_epi8(~((u64{1} << first) - 1) & ~u64{0}, z);
+                    _mm512_mask_storeu_epi8(ob + stride + 256 * j, (u64{1} << (n - first)) - 1, rest);
+                }
+#else
+                alignas(64) u8 c[72];
                 detail::compress_bytes(x.s[j], s, c);
-                std::memcpy(ob + 256 * j + f, c, first);
+                if (f + 64 <= block_rows)
+                    std::memcpy(ob + 256 * j + f, c, 64);  // within this slice; later rows overwrite
+                else
+                    std::memcpy(ob + 256 * j + f, c, first);
                 if (first < n)
                     std::memcpy(ob + stride + 256 * j, c + first, n - first);
+#endif
             }
             // Planes are ORed into, so a block's planes are cleared as rows first reach it.
             if (f == 0)

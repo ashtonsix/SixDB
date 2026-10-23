@@ -15,6 +15,8 @@
 #define BODIES_ISA_AVX2 1
 #elif defined(__ARM_NEON)
 #include <arm_neon.h>
+#include <arm_sve.h>
+#include <sys/auxv.h>
 #define BODIES_ISA_NEON 1
 #else
 #error "bodies needs AVX-512BW, AVX2 or NEON"
@@ -41,6 +43,46 @@ template <class T> inline T load_le(const void *p) {
     T x;
     std::memcpy(&x, p, sizeof(T));
     return x;
+}
+
+// Bit deposit and extract (x86 PDEP/PEXT; on ARM, SVE2 BDEP/BEXT where the
+// CPU has them, else a loop over the mask's bits).
+#if defined(__aarch64__)
+__attribute__((target("sve2-bitperm"))) inline u64 sve_bdep(u64 x, u64 m) {
+    return svlastb_u64(svptrue_pat_b64(SV_VL1), svbdep_n_u64(svdup_n_u64(x), m));
+}
+__attribute__((target("sve2-bitperm"))) inline u64 sve_bext(u64 x, u64 m) {
+    return svlastb_u64(svptrue_pat_b64(SV_VL1), svbext_n_u64(svdup_n_u64(x), m));
+}
+inline const bool has_bitperm = (getauxval(AT_HWCAP2) & (1ul << 4)) != 0;  // HWCAP2_SVEBITPERM
+#endif
+inline u64 pdep(u64 x, u64 m) {
+#if defined(__BMI2__)
+    return _pdep_u64(x, m);
+#else
+#if defined(__aarch64__)
+    if (has_bitperm)
+        return sve_bdep(x, m);
+#endif
+    u64 r = 0;
+    for (u64 bit = 1; m; bit <<= 1, m &= m - 1)
+        r |= (x & bit) ? (m & (0 - m)) : 0;
+    return r;
+#endif
+}
+inline u64 pext(u64 x, u64 m) {
+#if defined(__BMI2__)
+    return _pext_u64(x, m);
+#else
+#if defined(__aarch64__)
+    if (has_bitperm)
+        return sve_bext(x, m);
+#endif
+    u64 r = 0;
+    for (u64 bit = 1; m; bit <<= 1, m &= m - 1)
+        r |= (x & m & (0 - m)) ? bit : 0;
+    return r;
+#endif
 }
 
 namespace simd {
@@ -73,8 +115,12 @@ inline v64 load(const u8 *p) { return {_mm512_loadu_si512(p)}; }
 struct acc {
     __m512i x = _mm512_setzero_si512();
     void add(v64 v) { x = _mm512_add_epi64(x, _mm512_sad_epu8(v.x, _mm512_setzero_si512())); }
+    // The empty asm keeps the load unmasked: folded into a masked load, a
+    // DRAM-streamed selected SUM ran about 2.4x slower on Zen 5 (v2 sweep).
     void add_masked(v64 v, u64 rows) {
-        x = _mm512_add_epi64(x, _mm512_sad_epu8(_mm512_maskz_mov_epi8(rows, v.x), _mm512_setzero_si512()));
+        __m512i y = v.x;
+        asm("" : "+v"(y));
+        x = _mm512_add_epi64(x, _mm512_sad_epu8(_mm512_maskz_mov_epi8(rows, y), _mm512_setzero_si512()));
     }
     u64 total() const { return static_cast<u64>(_mm512_reduce_add_epi64(x)); }
 };

@@ -237,26 +237,37 @@ template <class T> struct runs {
     // Pass transitions deposited at run starts (PDEP), then a prefix XOR:
     // no per-run loop.
     static void mask_ge_starts(const u8 *body, unsigned n, const u64 *starts, u64 c, u64 *m) {
+        // Pass bits of 64 runs per compare, kept in registers (a vector
+        // store reloaded as words stalled store forwarding: 16 ns per block).
+        typedef T t64 __attribute__((ext_vector_type(64)));
+        typedef bool b64 __attribute__((ext_vector_type(64)));
+        typedef u8 i64v __attribute__((ext_vector_type(64)));
         const u8 *v = body + n;
+        i64v iota;
+        for (unsigned i = 0; i < 64; ++i)
+            iota[i] = static_cast<u8>(i);
         u64 p[5] = {0, 0, 0, 0, 0};
-        for (unsigned r0 = 0; r0 < n; r0 += 16) {
-            const m16 pass = live(r0, n) & __builtin_convertvector(load<t16>(v + sizeof(T) * r0) >= static_cast<T>(c), m16);
-            p[r0 >> 6] |= u64{__builtin_bit_cast(u16, pass)} << (r0 & 63);
+        for (unsigned q = 0; q < 4; ++q) {
+            if (64 * q >= n)
+                break;
+            const u8 left = static_cast<u8>(n - 64 * q > 64 ? 64 : n - 64 * q);
+            const b64 pass = __builtin_convertvector(load<t64>(v + sizeof(T) * 64 * q) >= static_cast<T>(c), b64) &
+                             __builtin_convertvector(iota < left, b64);
+            p[q] = __builtin_bit_cast(u64, pass);
         }
-        u64 t[5], carry = 0;
-        for (unsigned q = 0; q < 4; ++q)
-            t[q] = p[q] ^ (p[q] << 1 | carry), carry = p[q] >> 63;
-        t[4] = 0;
+        const u64 t0 = p[0] ^ (p[0] << 1), t1 = p[1] ^ (p[1] << 1 | p[0] >> 63), t2 = p[2] ^ (p[2] << 1 | p[1] >> 63),
+                  t3 = p[3] ^ (p[3] << 1 | p[2] >> 63);
+        // Word q of the transitions by selects, not an indexed stack array.
+        const auto word = [&](unsigned q) { return q == 0 ? t0 : q == 1 ? t1 : q == 2 ? t2 : q == 3 ? t3 : u64{0}; };
         unsigned rank = 0;
         u64 prefix = 0;
         for (unsigned w = 0; w < 4; ++w) {
-            const unsigned k = static_cast<unsigned>(std::popcount(starts[w]));
             const unsigned q = rank >> 6, sh = rank & 63;
-            const u64 bits = sh ? (t[q] >> sh | t[q + 1] << (64 - sh)) : t[q];
+            const u64 bits = sh ? (word(q) >> sh | word(q + 1) << (64 - sh)) : word(q);
             const u64 x = prefix_xor(pdep(bits, starts[w])) ^ prefix;
             prefix = u64{0} - (x >> 63);
             m[w] = x;
-            rank += k;
+            rank += static_cast<unsigned>(std::popcount(starts[w]));
         }
     }
     static u64 point_starts(const u8 *body, unsigned n, const u64 *starts, unsigned row) {
@@ -266,16 +277,7 @@ template <class T> struct runs {
             idx += static_cast<unsigned>(std::popcount(starts[q]));
         return load_le<T>(values(body, n) + idx - 1);
     }
-    static u64 pdep(u64 x, u64 m) {
-#if defined(__BMI2__)
-        return _pdep_u64(x, m);
-#else
-        u64 r = 0;
-        for (u64 bit = 1; m; bit <<= 1, m &= m - 1)
-            r |= (x & bit) ? (m & (0 - m)) : 0;
-        return r;
-#endif
-    }
+    static u64 pdep(u64 x, u64 m) { return bodies::pdep(x, m); }
     // The run holding row: the count of ends below it, accumulated in lanes.
     static u64 point(const u8 *body, unsigned n, unsigned row) {
         const e16 iota = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
