@@ -65,8 +65,12 @@ void population(const char* name, const std::vector<std::size_t>& sizes, std::si
 
 int main() {
   std::printf("population,phase,allocations,requested,capacity,mapped,idle,metadata,reserved\n");
-  std::vector<std::size_t> each{16, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072};
-  population("one-per-class", each);
+  // The 15 legacy palette-A sizes, then every capacity of the 26-class table.
+  std::vector<std::size_t> legacy{16, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072};
+  population("fifteen-sizes", legacy);
+  std::vector<std::size_t> all{16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 448, 512,
+      640, 768, 896, 1024, 1280, 1536, 1792, 2048, 2560, 3072};
+  population("twenty-six-sizes", all);
   std::vector<std::size_t> tiny(64, 64);
   population("64x64B", tiny);
   for (std::size_t count : {1000, 100000}) {

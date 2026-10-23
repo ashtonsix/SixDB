@@ -116,6 +116,26 @@ std::size_t FiniteGroup::first_unready() const noexcept {
   return finite_homes;
 }
 
+std::size_t FiniteGroup::cheapest_unready() const noexcept {
+  auto best = finite_homes;
+  std::size_t fewest = std::numeric_limits<std::size_t>::max();
+  for (std::size_t w = 0; w < finite_words; ++w)
+    for (auto bits = free_[w] & ~ready_[w]; bits; bits &= bits - 1) {
+      const auto home = w * 64 + static_cast<std::size_t>(std::countr_zero(bits));
+      const auto span = pages(home);
+      std::size_t missing = 0;
+      bool usable = true;
+      for (auto p = span.first; usable && p < span.first + span.count; ++p) {
+        usable = pages_[p] == Page::absent || pages_[p] == Page::mapped;
+        missing += pages_[p] == Page::absent;
+      }
+      if (!usable || missing >= fewest) continue;
+      best = home; fewest = missing;
+      if (fewest == 1) return best;
+    }
+  return best;
+}
+
 void FiniteGroup::claim(std::size_t home) noexcept {
   assert(is_free(home) && home_mapped(home));
   free_[home / 64] &= ~(std::uint64_t{1} << (home % 64));

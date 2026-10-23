@@ -129,16 +129,16 @@ between classes. Across 3 trials per host, 2 s each, on a dedicated core per
 thread, there were zero errors. The bench also runs clean under
 ThreadSanitizer locally. Medians, ns per access
 ([Zen 5](evidence/zen5-relocatable.csv), [Graviton](evidence/v2-relocatable.csv);
-jobs `20261023T040318Z-c5245c7e`, `20261023T040318Z-d669ea2f`):
+post-review jobs `20261023T043705Z-c0d5efaf`, `20261023T043705Z-0bc17a2b`):
 
 | Reader access (validated read) | Zen 5 | Graviton |
 | --- | ---: | ---: |
-| Direct pointer, no indirection | 1.58 | 1.65 |
-| Handle, 64 resolves per Section | 2.05 | 2.75 |
-| Handle, one resolve per Section | 6.04 | 11.6 |
-| Handle, 64 per Section, owner moving ~10–15 M/s, 1 reader | 4.93 | 4.19 |
-| Same, 3 readers | 5.31 | 4.19 |
-| **Owner move** (allocate + fill + publish + retire + collect), 1 / 3 readers | 67 / 119 ns | 98 / 119 ns |
+| Direct pointer, no indirection | 1.58 | 1.66 |
+| Handle, 64 resolves per Section | 2.05 | 2.76 |
+| Handle, one resolve per Section | 6.27 | 11.9 |
+| Handle, 64 per Section, owner moving ~10–15 M/s, 1 reader | 4.73 | 4.25 |
+| Same, 3 readers | 5.28 | 4.20 |
+| **Owner move** (allocate + fill + publish + retire + collect), 1 / 3 readers | 75 / 124 ns | 102 / 122 ns |
 
 - **Resolution:** with a batch per Section, a handle adds 0.5 ns (Zen 5) to
   1.1 ns (Graviton) per access over a direct pointer. This is the trampoline's
@@ -146,9 +146,17 @@ jobs `20261023T040318Z-c5245c7e`, `20261023T040318Z-d669ea2f`):
 - **Sections:** each costs about 4 ns on Zen 5 and 9 ns on Graviton (the
   fence). Readers should resolve many handles per Section, as a Ring visit or
   a query batch naturally does.
-- **Moves:** under extreme move rates, readers slow because moved payloads are
-  cold, not because of the protocol. Retirement stayed bounded (peak backlog
+- **Moves:** under extreme move rates, readers slow. Cold moved payloads are
+  one likely cause, but the run does not separate that from protocol and
+  coherence costs (the owner writing slots and epochs readers load). Retirement stayed bounded (peak backlog
   264–2,213 Allocations) and drained to zero once readers left.
+
+After review: an inner or interleaved Section no longer overwrites the
+outer epoch (a per-Reader depth; the outermost announces, the last to end
+withdraws), and every replacement reserves its retirement entry before
+anything is published, so a failed reservation refuses the move instead of
+unwinding past published bytes. [relocatable_check.cpp](relocatable_check.cpp)
+checks nested and non-LIFO Sections against retirement.
 
 Not covered yet:
 - readers that stall inside a Section, which hold back retirement;

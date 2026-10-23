@@ -198,7 +198,7 @@ Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, unsig
     return {};
   }
   for (auto* group = state.available[cls]; group; group = group->next_available) {
-    const auto home = group->geometry->first_unready();
+    const auto home = group->geometry->cheapest_unready();
     if (home == finite_homes) continue;
     auto mapped = map_home(*group, home);
     if (!mapped) {
@@ -258,7 +258,7 @@ Result<void> reserve_preparation_home(FinitePreparation& record, std::size_t hom
 
 // Lowest free Home that is ready (or needs pages), without binding it.
 std::size_t candidate_home(FiniteGroup& geometry, bool ready) noexcept {
-  if (!ready) return geometry.first_unready();
+  if (!ready) return geometry.cheapest_unready();
   for (std::size_t home = 0; home < finite_homes; ++home)
     if (geometry.is_free(home)) {
       const auto span = geometry.pages(home);

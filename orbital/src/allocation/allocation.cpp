@@ -47,21 +47,12 @@ void clear_foreign_hint(Storage& use) noexcept {
   else static_cast<Window*>(route(use)->context)->foreign_hint = {};
 }
 
-// An open Pool keeps its Arena pin across idle moments, so allocate/release
-// churn takes no atomic. The last use still drops it when the Pool is closing
-// or the pin is the Arena's only reference; close drops an idle pin.
-[[gnu::always_inline]] inline bool unpin(const Pool& pool) noexcept {
-  return pool.state != Pool::State::open || pool.internal->close_requested ||
-      pool.arena->references.load(std::memory_order_acquire) == 1;
-}
-
 void activate(Storage& use) noexcept {
   auto& domain = *route(use);
   assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
   // One Arena pin per Pool while any finite or virtual use is live or returning.
   auto& state = *domain.pool->internal;
-  if (!state.active_uses++ && !state.active_lifetime)
-    state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
+  if (!state.active_uses++) state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
   use.users.store(1, std::memory_order_relaxed);
 }
 
@@ -74,7 +65,7 @@ void activate(Storage& use) noexcept {
   Ref<Arena> retained;
   auto& state = *pool.internal;
   assert(state.active_uses);
-  if (!--state.active_uses && unpin(pool)) [[unlikely]] retained = std::move(state.active_lifetime);
+  if (!--state.active_uses) [[unlikely]] retained = std::move(state.active_lifetime);
   if (domain.finite) {
     auto& group = *static_cast<Group*>(domain.context);
     group.geometry->give(use.identity());
@@ -163,7 +154,9 @@ void post_returns(Domain& domain) noexcept {
 }
 
 void drop(Storage& use, ReleaseHint value) noexcept {
-  auto state = use.users.state.load(std::memory_order_relaxed);
+  // Acquire: a foreign Hold's release-decrement must happen-before the owner
+  // reuses the bytes after observing itself as the sole user.
+  auto state = use.users.state.load(std::memory_order_acquire);
   auto& domain = *route(use, state);
   const bool local = worker::on_lane(*domain.pool->lane);
   if (supplied(value)) {
@@ -237,8 +230,7 @@ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
   const auto cls = select_class(state.page, reserve, request.alignment, state.floor_class);
   if (cls < finite_classes && take_head(state, cls, request, value)) [[likely]] {
     // Owner fast path: the Pool pin and first use, without re-routing the Storage.
-    if (!state.active_uses++ && !state.active_lifetime) [[unlikely]]
-      state.active_lifetime = Ref<Arena>::retain(*pool.arena);
+    if (!state.active_uses++) [[unlikely]] state.active_lifetime = Ref<Arena>::retain(*pool.arena);
     value.storage->users.store(1, std::memory_order_relaxed);
   } else {
     auto acquired = cls < finite_classes ? finite_allocate(pool, request, cls, value)
@@ -474,8 +466,9 @@ void release(Allocation& allocation, ReleaseHint value) noexcept {
   auto& use = *std::exchange(allocation.storage, nullptr);
   allocation.address = nullptr; allocation.size = allocation.readable_padding = 0;
   // Owner fast path: the sole use of a finite Home, released on its own Lane
-  // without advice. No other holder exists to race the final store.
-  const auto state = use.users.state.load(std::memory_order_relaxed);
+  // without advice. No other holder exists to race the final store; acquire
+  // orders any foreign Hold's last reads before the Home is reused.
+  const auto state = use.users.state.load(std::memory_order_acquire);
   if ((state & UseState::user_mask) == 1 && !supplied(value)) [[likely]] {
     auto& domain = *route(use, state);
     auto& pool = *domain.pool;
@@ -484,7 +477,7 @@ void release(Allocation& allocation, ReleaseHint value) noexcept {
       use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
       auto& internal = *pool.internal;
       Ref<Arena> retained;
-      if (!--internal.active_uses && unpin(pool)) [[unlikely]] retained = std::move(internal.active_lifetime);
+      if (!--internal.active_uses) [[unlikely]] retained = std::move(internal.active_lifetime);
       auto& group = *static_cast<Group*>(domain.context);
       group.geometry->give(state >> 24);
       if (!group.previous_available) [[unlikely]] add_available(group);
@@ -634,11 +627,6 @@ Progress close(Pool& pool) {
   if (pool.state == Pool::State::closed) return Progress::done();
   if (!pool.lane || !worker::on_lane(*pool.lane)) return Progress::fail(Error::conflict);
   pool.internal->close_requested = true;
-  // An idle Pool's cached pin ends with close. The caller keeps the Arena alive
-  // through close, so this is not its last reference.
-  if (!pool.internal->active_uses && pool.internal->active_lifetime &&
-      pool.arena->references.load(std::memory_order_acquire) > 1)
-    pool.internal->active_lifetime.reset();
   if (pool.state == Pool::State::open) {
     {
       std::unique_lock lock(pool.arena->state->registry, std::try_to_lock);

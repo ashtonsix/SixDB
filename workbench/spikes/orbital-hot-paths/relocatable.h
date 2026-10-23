@@ -8,11 +8,13 @@
 
 #include <orbital/allocation.h>
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cassert>
 #include <cstring>
 #include <limits>
 #include <memory>
+#include <new>
 #include <span>
 #include <vector>
 
@@ -21,9 +23,13 @@ namespace a = orbital::allocation;
 
 inline constexpr std::uint64_t idle = std::numeric_limits<std::uint64_t>::max();
 
-/// One per reading worker, on its own line. Written only by that reader.
+/// One per reading thread, on its own line. Written only by that thread.
+/// Sections on one Reader may nest or interleave (for example Loom Tasks on
+/// one worker): the outermost announces, and protection lasts until the last
+/// Section on the Reader ends.
 struct alignas(64) Reader {
   std::atomic<std::uint64_t> epoch{idle};
+  std::uint32_t depth{}; // Reader-thread only.
 };
 
 /// What a reader sees: an address and a readable extent, valid until its
@@ -65,12 +71,16 @@ public:
     Reader& reader_;
   public:
     Section(const Table& table, Reader& reader) noexcept : reader_(reader) {
+      if (reader_.depth++) return; // An enclosing Section already protects this epoch.
       // Announce before resolving: the owner's collect() must observe this
       // epoch or a later one before it can free anything resolved below.
       reader_.epoch.store(table.epoch_.load(std::memory_order_acquire), std::memory_order_relaxed);
       std::atomic_thread_fence(std::memory_order_seq_cst);
     }
-    ~Section() { reader_.epoch.store(idle, std::memory_order_release); }
+    ~Section() {
+      assert(reader_.depth);
+      if (!--reader_.depth) reader_.epoch.store(idle, std::memory_order_release);
+    }
     Section(const Section&) = delete;
     Section& operator=(const Section&) = delete;
   };
@@ -106,6 +116,7 @@ public:
       slots_[handle].size.store(bytes, std::memory_order_release);
       return false;
     }
+    if (!reserve_retirement()) return std::unexpected(orbital::Error::capacity);
     auto replacement = a::allocate(pool_, {.bytes = bytes});
     if (!replacement) return std::unexpected(replacement.error());
     std::memcpy(replacement->address, current.address, current.size);
@@ -117,6 +128,7 @@ public:
   }
   /// Copy-on-write replacement: fill a fresh Allocation, publish it, retire the old.
   template<class Fill> orbital::Result<void> replace(std::uint32_t handle, std::size_t bytes, Fill fill) {
+    if (!reserve_retirement()) return std::unexpected(orbital::Error::capacity);
     auto replacement = a::allocate(pool_, {.bytes = bytes});
     if (!replacement) return std::unexpected(replacement.error());
     fill(replacement->address, replacement->size);
@@ -130,11 +142,13 @@ public:
     owned_[handle].size = bytes;
     slots_[handle].size.store(bytes, std::memory_order_release);
   }
-  void destroy(std::uint32_t handle) {
+  orbital::Result<void> destroy(std::uint32_t handle) {
+    if (!reserve_retirement()) return std::unexpected(orbital::Error::capacity);
     slots_[handle].address.store(nullptr, std::memory_order_release);
     slots_[handle].size.store(0, std::memory_order_release);
     retire(std::move(owned_[handle]));
-    free_.push_back(handle);
+    free_.push_back(handle); // Capacity reserved at construction.
+    return {};
   }
   /// Release retired Allocations no reader can still hold. Returns the count.
   std::size_t collect() {
@@ -168,7 +182,14 @@ private:
       slot.size.store(value.size, std::memory_order_release);
     }
   }
-  void retire(a::Allocation old) {
+  // Before anything is published: once readers can see a replacement, retiring
+  // the old payload must not fail, or unwinding would free protected bytes.
+  bool reserve_retirement() noexcept {
+    try { retired_.reserve(retired_.size() + 1); return true; }
+    catch (const std::bad_alloc&) { return false; }
+  }
+  void retire(a::Allocation old) noexcept {
+    assert(retired_.size() < retired_.capacity());
     // Readers that entered at or before this epoch may hold the old address.
     const auto epoch = epoch_.fetch_add(1, std::memory_order_acq_rel);
     retired_.push_back({std::move(old), epoch});

@@ -117,8 +117,8 @@ struct Statistics {
   std::uint64_t mapped_bytes{}, reserved_bytes{}, metadata_bytes{}, idle_bytes{};
   std::uint64_t preparing_bytes{}, uncertain_bytes{}, preparing_reserved_bytes{};
   std::uint64_t allocations{}, reuses{}, growths{}, relocations{}, foreign_returns{}, trim_pages{};
-  /// Arena references this Pool holds: one while it is open and has been used,
-  /// or while any use is live or returning; zero once closed and settled.
+  /// Arena references this Pool holds for its physical uses: one while any
+  /// use is live or awaiting its owner return, otherwise zero.
   std::uint64_t arena_pins{};
 };
 

@@ -90,7 +90,7 @@ void run(const Run& config, const std::vector<int>& cpus, double seconds) {
     results[r] = {accesses, errors, std::chrono::duration<double, std::nano>(Clock::now() - begin).count()};
   });
   pin(cpus[0]);
-  std::uint64_t moves = 0, collected = 0, peak_retired = 0;
+  std::uint64_t moves = 0, peak_retired = 0;
   double move_ns = 0;
   start.store(true, std::memory_order_release);
   const auto deadline = Clock::now() + std::chrono::duration<double>(seconds);
@@ -107,13 +107,13 @@ void run(const Run& config, const std::vector<int>& cpus, double seconds) {
       ++moves;
     }
     peak_retired = std::max<std::uint64_t>(peak_retired, table->retired());
-    collected += table->collect();
+    table->collect();
     move_ns += std::chrono::duration<double, std::nano>(Clock::now() - begin).count();
     w::poll(lane, 64);
   }
   stop.store(true);
   for (auto& t : threads) t.join();
-  collected += table->collect();
+  table->collect();
   require(table->retired() == 0, "retirement backlog after readers left");
   std::uint64_t errors = 0; double reader_ns = 0;
   for (const auto& r : results) { errors += r.errors; reader_ns += r.ns / std::max<std::uint64_t>(1, r.accesses); }
@@ -122,7 +122,7 @@ void run(const Run& config, const std::vector<int>& cpus, double seconds) {
       static_cast<unsigned long long>(errors), moves ? move_ns / moves : 0.0,
       static_cast<unsigned long long>(moves), static_cast<unsigned long long>(peak_retired));
   std::fflush(stdout);
-  for (std::uint32_t h = 0; h < handles; ++h) table->destroy(h);
+  for (std::uint32_t h = 0; h < handles; ++h) require(bool(table->destroy(h)), "destroy");
   table->collect();
   table.reset();
   for (;;) {

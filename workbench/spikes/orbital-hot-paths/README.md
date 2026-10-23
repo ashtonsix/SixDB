@@ -201,13 +201,24 @@ against the first overhaul commit and `main` ([Zen 5](evidence/zen5-tuned.csv),
 | churn256 64 B | 85.9 / 24.0 / — | 142.7 / 36.1 / — |
 
 Batched allocation is now faster than glibc (1.2× on Zen 5, 1.5× on
-Graviton). In an otherwise empty Pool, each pair also took and dropped the
-Pool's Arena pin (two atomic read-modify-writes). An open Pool now keeps that
-pin after its first use (`Statistics::arena_pins` reports it), which brings a
-single pair to **15.2 ns on Zen 5 and 16.9 ns on Graviton** (3.4× and 1.8×
-glibc's 4.5 and 9.6 ns), with batches unchanged
-([Zen 5](evidence/zen5-pinned.csv), [Graviton](evidence/v2-pinned.csv);
-jobs `20261023T040318Z-e90f316d`, `20261023T040318Z-89655fd2`).
+Graviton). In an otherwise empty Pool, each pair also takes and drops the
+Pool's Arena pin (two atomic read-modify-writes). Keeping the pin while the Pool
+was open measured 15.2 ns on Zen 5 and 16.9 ns on Graviton per pair
+([Zen 5](evidence/zen5-pinned.csv), [Graviton](evidence/v2-pinned.csv)), but
+review showed it can orphan the Arena: dropping the external reference after
+use, several Pools, or queued foreign returns all leave cached pins that no
+later event releases, retaining backing and the reclaimer thread. A total
+reference count cannot tell cached pins from real owners, so the pin again
+lasts only while a use is live (`Statistics::arena_pins` reports it). Removing
+that cost safely needs Pool pins counted separately from external Arena
+references.
+
+After the review fixes (acquire on the owner's sole-use check, pins only
+while a use is live, cheapest unready Home under budget), the same harness
+gives 20.7 / 16.2 / 12.1 ns on Zen 5 and 31.0 / 16.2 / 19.0 ns on Graviton for
+the empty-Pool pair, non-empty pair and batch rows: unchanged from the tuned
+pass ([Zen 5](evidence/zen5-reviewed.csv), [Graviton](evidence/v2-reviewed.csv);
+jobs `20261023T043705Z-e0ec0c61`, `20261023T043705Z-110d643a`).
 
 The [footprint census](census.cpp) counts mapped, idle, metadata and reserved
 bytes for fixed live populations ([census.csv](evidence/census.csv), 4 KiB
@@ -215,7 +226,8 @@ OrbStack host; counters, not timings):
 
 | Population (after trim) | main mapped / metadata / reserved | overhaul mapped / metadata / reserved |
 | --- | ---: | ---: |
-| one per class (15) | 60 KiB / 8.3 KiB / 6.8 MiB | 60 KiB / 25 KiB / 2.5 MiB |
+| 15 legacy palette sizes, one each | 60 KiB / 8.3 KiB / 6.8 MiB | 60 KiB / 25 KiB / 2.5 MiB |
+| all 26 class sizes, one each | 88 KiB / 8.3 KiB / 6.8 MiB | 104 KiB / 43 KiB / 4.6 MiB |
 | 64 × 64 B | 4 KiB / 3.8 KiB / 2.5 MiB | 4 KiB / 1.6 KiB / 16 KiB |
 | 100k uniform 16–3072 B | 280 MiB / 1.7 MiB / 1.6 GiB | 161 MiB / 0.7 MiB / 164 MiB |
 | 100k log-uniform 16–3072 B | 165 MiB / 1.6 MiB / 1.4 GiB | 60 MiB / 0.7 MiB / 62 MiB |
@@ -224,7 +236,8 @@ OrbStack host; counters, not timings):
 Mixed-class Groups left pages partly used by several classes, so large mixed
 populations mapped 1.7–2.8× their capacity. Single-class Groups map about their
 capacity. The cost moves to Groups per class: a Pool touching every class pays
-one Group's metadata per class (25 KiB for 15 classes versus 8.3 KiB).
+one Group's metadata and at least one page per class (43 KiB metadata and
+104 KiB mapped for all 26 classes, versus 8.3 KiB and 88 KiB on main).
 
 [SHARED.md](SHARED.md) works through multi-worker access and shared growable
 memory: what the one-byte trampolines were for, what replaces them, and what

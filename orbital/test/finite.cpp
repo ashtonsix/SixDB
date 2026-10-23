@@ -172,6 +172,30 @@ void preparation() {
   okay(group->retire(), "retire preparation geometry");
 }
 
+// A Home needing more absent pages must not hide one needing fewer.
+void cheapest_selection() {
+  auto group = take(FiniteGroup::create(finite_classes - 1), "create selection geometry");
+  okay(group->prepare(), "prepare selection geometry");
+  std::array<PageSpan, 2> spans{};
+  (void)take(group->begin_prepare(0, spans), "occupy the first page with a preparation");
+  std::size_t best = finite_homes, fewest = ~std::size_t{0};
+  for (std::size_t home = 0; home < finite_homes; ++home) {
+    if (!group->is_free(home)) continue;
+    const auto span = group->pages(home);
+    std::size_t missing = 0;
+    bool usable = true;
+    for (auto p = span.first; p < span.first + span.count; ++p) {
+      usable = usable && !group->preparing(p) && !group->trimming(p);
+      missing += !group->mapped(p);
+    }
+    if (usable && missing && missing < fewest) { best = home; fewest = missing; }
+  }
+  check(group->cheapest_unready() == best, "selection preferred a costlier unready Home");
+  okay(group->discard_preparation(0, std::span(spans).first(1)), "discard preparation pages");
+  group->end_prepare(0);
+  okay(group->retire(), "retire selection geometry");
+}
+
 void trim_admission() {
   auto group = take(FiniteGroup::create(finite_classes - 1), "create trim geometry");
   okay(group->prepare(), "prepare trim geometry");
@@ -213,6 +237,10 @@ void trim_admission() {
   check(group->mapped_pages() == 2 && !group->mapped(1) && group->page_address(0)[0] == std::byte{0x71} &&
         group->page_address(2)[page - 1] == std::byte{0x93}, "independent completions keep bytes and charge");
   check(group->has_ready(), "Homes wholly on restored pages are ready again");
+  if (group->payload_pages() <= 68) { // 16/64 KiB pages: no Group spans a bitmap word.
+    okay(group->retire(), "retire trim geometry");
+    return;
+  }
   // Cross-word run 61..67 next to a later live Home.
   map(*group, {61, 7});
   const auto late = 68 * page / group->capacity() + 1;
@@ -235,6 +263,7 @@ int main() {
   for (std::size_t page : {4096, 16384, 65536}) geometry(page);
   lifecycle();
   preparation();
+  cheapest_selection();
   trim_admission();
   std::puts("finite: class selection, geometry, readiness, preparation and trim checks passed");
 }

@@ -106,7 +106,7 @@ struct Fixture {
     std::uint64_t expected = 1;
     for (unsigned i = 0; i < count; ++i) {
       expected += bool(endpoints[i].worker.arena);
-      // A used, open Pool keeps one Arena pin, including across idle moments.
+      // A Pool with a live or returning use holds one Arena pin.
       if (endpoints[i].worker.memory) expected += alloc::statistics(*endpoints[i].worker.memory).arena_pins;
     }
     return expected;

@@ -146,6 +146,9 @@ public:
   }
   /// Lowest free Home whose pages are not all mapped; finite_homes if none.
   [[nodiscard]] std::size_t first_unready() const noexcept;
+  /// Free unready Home needing the fewest absent pages (lowest on ties), so a
+  /// costly straddling Home cannot hide an affordable one; finite_homes if none.
+  [[nodiscard]] std::size_t cheapest_unready() const noexcept;
   /// Bind a specific free Home whose pages are all mapped.
   void claim(std::size_t home) noexcept;
 

@@ -236,7 +236,8 @@ void ahead_under_pressure(std::size_t page) {
     auto* pool = take(alloc::add_pool(*arena, lane), "add ahead Pool");
     std::vector<alloc::Allocation> values;
     std::set<std::uintptr_t> pages;
-    for (unsigned i = 0; i < 8; ++i) {
+    // Enough 3072-byte Homes to need at least three native pages.
+    for (std::size_t i = 0; i < 3 * page / 3072 + 1; ++i) {
       values.push_back(take(alloc::allocate(*pool, {3000, 0, 16}), "allocate large finite Homes"));
       const auto address = reinterpret_cast<std::uintptr_t>(values.back().address);
       for (auto p = address / page; p <= (address + 2999) / page; ++p) pages.insert(p);
