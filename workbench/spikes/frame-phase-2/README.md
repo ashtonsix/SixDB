@@ -30,6 +30,10 @@ Engine's analyser will later solve (data distribution, access patterns) →
 - [Mechanisms and targets](MECHANISMS.md): residence tiers, hardware priors,
   thirteen "how we win" mechanisms, the baseline roster and targets per
   operation family, stage and tier, including accepted losses.
+- [Execution substrate](substrate/README.md) (front B): dispatch, selections,
+  residence, unpredictable access and staging, point-read attribution.
+- [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
+  and packed bodies across operation families.
 - [Partition](PARTITION.md): seams, proposed internal packages, the research
   fronts, Ashton's decisions and the first Claude/Codex division.
 
