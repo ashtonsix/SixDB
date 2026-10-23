@@ -15,6 +15,9 @@ The [change witness](../change/README.md) establishes pre-payload read/store
 admission for tested fixed-basis writers using current Ikea primitives. It
 keeps logical contribution and actual physical effects separate, without
 selecting a concurrency policy or changing query paths.
+The [front C contract review](LEAF-CONTRACTS.md) covers admitted read windows,
+append reservations, evidence coherence, stable output order and the native
+peer entry points and their natural block sizes.
 
 The [phase-1 scans](../../frame-phase-1/scan/FINDINGS.md) supply exact native FOR
 and actual Polars controls, balanced treatment order and actual-buffer conditioning.

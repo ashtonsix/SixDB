@@ -156,7 +156,7 @@ do not accidentally introduce an aligned-u32 promise.
 
 ## Native peer targets are ready
 
-Include the already qualified [provider](../../../../peers/frame-codecs.cmake):
+Include the already qualified [provider](../../../peers/frame-codecs.cmake):
 
 ```cmake
 include(${PROJECT_SOURCE_DIR}/workbench/peers/frame-codecs.cmake)
