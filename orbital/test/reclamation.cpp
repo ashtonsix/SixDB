@@ -204,8 +204,8 @@ void finite_payload_preparation_and_cleanup_failure() {
 void finite_heap_preparation_and_cleanup_failure(std::size_t request_bytes, std::size_t alignment) {
   Fixture fixture;
   const auto references = fixture.arena->references.load();
-  const auto palette = detail::preferred_palette(std::size_t(::sysconf(_SC_PAGESIZE)), request_bytes, alignment);
-  auto planned = take(detail::FiniteGroup::create({palette, 256}));
+  const auto cls = detail::select_class(std::size_t(::sysconf(_SC_PAGESIZE)), request_bytes, alignment);
+  auto planned = take(detail::FiniteGroup::create(cls));
   metadata_size = planned->control_bytes();
   metadata_reservation_seen = false; fail_metadata = true;
   auto refused = allocate(*fixture.pool, {request_bytes, 0, alignment, 0, Initialization::zero});
@@ -254,11 +254,11 @@ void budget_refusal_before_vm() {
 
 Allocation finite_neighbor(Fixture& fixture) {
   auto live = take(allocate(*fixture.pool, {3072, 0, 16, 0, Initialization::zero}));
-  const auto original = statistics(*fixture.pool).mapped_bytes;
-  std::vector<Allocation> others;
-  while (statistics(*fixture.pool).mapped_bytes == original)
-    others.push_back(take(allocate(*fixture.pool, {3072, 0, 16})));
-  others.clear();
+  // A released neighbour maps further pages; trim all but one idle page.
+  { auto neighbour = take(allocate(*fixture.pool, {3072, 0, 16})); release(neighbour); }
+  const auto page = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
+  check(finish(fixture.lane, [&] { return trim_cold(*fixture.pool, page); }).kind() == Progress::Kind::done,
+        "setup trim did not settle");
   return live;
 }
 

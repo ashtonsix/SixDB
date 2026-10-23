@@ -50,13 +50,13 @@ sixdb_target(orbital_finite_check)
 target_include_directories(orbital_finite_check PRIVATE src/allocation)
 target_link_libraries(orbital_finite_check PRIVATE orbital)
 add_test(NAME orbital_finite_check COMMAND orbital_finite_check)
-add_executable(orbital_palette_check EXCLUDE_FROM_ALL test/palettes.cpp)
-sixdb_target(orbital_palette_check)
-target_include_directories(orbital_palette_check PRIVATE src/allocation)
-target_link_libraries(orbital_palette_check PRIVATE orbital)
-target_link_options(orbital_palette_check PRIVATE
+add_executable(orbital_class_check EXCLUDE_FROM_ALL test/classes.cpp)
+sixdb_target(orbital_class_check)
+target_include_directories(orbital_class_check PRIVATE src/allocation)
+target_link_libraries(orbital_class_check PRIVATE orbital)
+target_link_options(orbital_class_check PRIVATE
   -Wl,--wrap=_ZnwmRKSt9nothrow_t,--wrap=_ZnwmSt11align_val_tRKSt9nothrow_t)
-add_test(NAME orbital_palette_check COMMAND orbital_palette_check)
+add_test(NAME orbital_class_check COMMAND orbital_class_check)
 add_executable(orbital_reclamation_check EXCLUDE_FROM_ALL test/reclamation.cpp)
 sixdb_target(orbital_reclamation_check)
 target_include_directories(orbital_reclamation_check PRIVATE src/allocation)
@@ -125,7 +125,7 @@ target_link_options(orbital_budget_check PRIVATE "LINKER:--wrap=pthread_mutex_tr
 add_test(NAME orbital_budget_check COMMAND orbital_budget_check)
 set_tests_properties(orbital_budget_check PROPERTIES TIMEOUT 60)
 
-set_tests_properties(orbital_allocation_check orbital_object_check orbital_history_reclamation_check orbital_directory_check orbital_extension_check orbital_representation_check orbital_part_sources_check orbital_finite_check orbital_palette_check
+set_tests_properties(orbital_allocation_check orbital_object_check orbital_history_reclamation_check orbital_directory_check orbital_extension_check orbital_representation_check orbital_part_sources_check orbital_finite_check orbital_class_check
   orbital_reclamation_check orbital_window_check orbital_window_index_check orbital_live_tail_check orbital_return_check
   orbital_worker_check orbital_lifetime_check orbital_thread_check
   orbital_preparation_check orbital_notification_check orbital_budget_check orbital_platform_check
@@ -134,7 +134,7 @@ set_tests_properties(orbital_allocation_check orbital_object_check orbital_histo
 add_custom_target(orbital_validate
   COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${PROJECT_BINARY_DIR}"
     --output-on-failure --no-tests=error -L "^orbital-runtime$"
-  DEPENDS orbital_allocation_check orbital_object_check orbital_history_reclamation_check orbital_directory_check orbital_extension_check orbital_representation_check orbital_part_sources_check orbital_finite_check orbital_palette_check orbital_reclamation_check
+  DEPENDS orbital_allocation_check orbital_object_check orbital_history_reclamation_check orbital_directory_check orbital_extension_check orbital_representation_check orbital_part_sources_check orbital_finite_check orbital_class_check orbital_reclamation_check
     orbital_window_check orbital_window_index_check orbital_live_tail_check orbital_return_check orbital_worker_check
     orbital_lifetime_check orbital_thread_check orbital_preparation_check orbital_notification_check orbital_budget_check orbital_platform_check
   USES_TERMINAL VERBATIM)

@@ -30,7 +30,13 @@ struct alignas(64) Lane {
 /// Handoff requires old-owner relinquishment and caller-established happens-before.
 [[nodiscard]] Result<void> adopt(Lane&, int cpu = -1);
 void relinquish(Lane&) noexcept;
-bool on_lane(const Lane&) noexcept;
+namespace detail {
+// Trivial per-thread owner token: no TLS guard or call on the ownership check.
+extern constinit thread_local char lane_token;
+}
+[[gnu::always_inline]] inline bool on_lane(const Lane& lane) noexcept {
+  return lane.owner.load(std::memory_order_acquire) == &detail::lane_token;
+}
 /// Record must remain stable; cannot repost while queued. Capacity cannot refuse it.
 /// Capture the optional route hint before publication, then invoke it after
 /// linking payload. Neither Lane nor Message is accessed after linkage. The

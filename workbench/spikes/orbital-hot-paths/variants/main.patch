@@ -1,0 +1,2183 @@
+diff --git b/orbital/include/orbital/allocation.h a/orbital/include/orbital/allocation.h
+index bfc518c0..8ea715f8 100644
+--- b/orbital/include/orbital/allocation.h
++++ a/orbital/include/orbital/allocation.h
+@@ -8,7 +8,6 @@
+ #include <chrono>
+ #include <memory>
+ #include <optional>
+-#include <utility>
+ 
+ namespace orbital::allocation {
+ struct Arena;
+@@ -71,26 +70,17 @@ struct Pool {
+   Pool& operator=(const Pool&) = delete;
+ };
+ 
+-struct Allocation;
+-struct Hold;
+-/// Clear this use; final foreign returns are queued to the owning Lane.
+-/// Temperature guides reclamation; timestamps reject stale advice.
+-void release(Hold&, ReleaseHint = {}) noexcept;
+-void release(Allocation&, ReleaseHint = {}) noexcept;
+-
+ /// Move-only ownership of mutable storage. Destruction releases its physical use.
+ struct Allocation {
+   Storage* storage{};
+   std::byte* address{};
+   std::size_t size{}, readable_padding{};
+   Allocation() = default;
+-  Allocation(Allocation&& other) noexcept
+-      : storage(std::exchange(other.storage, nullptr)), address(std::exchange(other.address, nullptr)),
+-        size(std::exchange(other.size, 0)), readable_padding(std::exchange(other.readable_padding, 0)) {}
++  Allocation(Allocation&&) noexcept;
+   Allocation& operator=(Allocation&&) noexcept;
+   Allocation(const Allocation&) = delete;
+   Allocation& operator=(const Allocation&) = delete;
+-  ~Allocation() { if (storage) release(*this); }
++  ~Allocation();
+ 
+   explicit operator bool() const noexcept { return storage; }
+ };
+@@ -117,9 +107,6 @@ struct Statistics {
+   std::uint64_t mapped_bytes{}, reserved_bytes{}, metadata_bytes{}, idle_bytes{};
+   std::uint64_t preparing_bytes{}, uncertain_bytes{}, preparing_reserved_bytes{};
+   std::uint64_t allocations{}, reuses{}, growths{}, relocations{}, foreign_returns{}, trim_pages{};
+-  /// Arena references this Pool holds for its physical uses: one while any
+-  /// use is live or awaiting its owner return, otherwise zero.
+-  std::uint64_t arena_pins{};
+ };
+ 
+ /// One retirement helper per Arena. An optional CPU selects its placement;
+@@ -147,6 +134,10 @@ struct Statistics {
+ [[nodiscard]] Result<Hold> hold(const Allocation&, ByteRange footprint);
+ /// Duplicate a live Hold on its owner Lane; saturation refuses without mutation.
+ [[nodiscard]] Result<Hold> retain(const Hold&);
++/// Clear this use; final foreign returns are queued to the owning Lane.
++/// Temperature guides reclamation; timestamps reject stale advice.
++void release(Hold&, ReleaseHint = {}) noexcept;
++void release(Allocation&, ReleaseHint = {}) noexcept;
+ /// Starts asynchronous reclamation with a Pool-wide idle-payload floor of keep_bytes.
+ /// Includes relinquished tails not covered by Holds; done concerns currently
+ /// eligible work. Revisit after readers retire. Selects COLD first; poll completion.
+diff --git b/orbital/include/orbital/types.h a/orbital/include/orbital/types.h
+index c2527257..dc1bf40b 100644
+--- b/orbital/include/orbital/types.h
++++ a/orbital/include/orbital/types.h
+@@ -165,8 +165,6 @@ struct Signal {
+ /// On the assigned thread, detach and notify waiters after advancing generation.
+ /// State stays nonterminal; waking grants no resource. Recheck the condition.
+ void pulse(Signal&) noexcept;
+-/// Detach and notify current waiters; pulse's tail for owners that advance generation inline.
+-void notify_waiters(Signal&) noexcept;
+ /// Set a terminal result on the assigned thread, then advance generation and notify.
+ /// Use pulse for reusable capacity/publication changes; complete is permanent.
+ void complete(Signal&, Result<void>) noexcept;
+diff --git b/orbital/include/orbital/worker.h a/orbital/include/orbital/worker.h
+index 4bc482bb..803fa1b7 100644
+--- b/orbital/include/orbital/worker.h
++++ a/orbital/include/orbital/worker.h
+@@ -30,13 +30,7 @@ struct alignas(64) Lane {
+ /// Handoff requires old-owner relinquishment and caller-established happens-before.
+ [[nodiscard]] Result<void> adopt(Lane&, int cpu = -1);
+ void relinquish(Lane&) noexcept;
+-namespace detail {
+-// Trivial per-thread owner token: no TLS guard or call on the ownership check.
+-extern constinit thread_local char lane_token;
+-}
+-[[gnu::always_inline]] inline bool on_lane(const Lane& lane) noexcept {
+-  return lane.owner.load(std::memory_order_acquire) == &detail::lane_token;
+-}
++bool on_lane(const Lane&) noexcept;
+ /// Record must remain stable; cannot repost while queued. Capacity cannot refuse it.
+ /// Capture the optional route hint before publication, then invoke it after
+ /// linking payload. Neither Lane nor Message is accessed after linkage. The
+diff --git b/orbital/src/allocation/allocation.cpp a/orbital/src/allocation/allocation.cpp
+index 13451951..527cef0d 100644
+--- b/orbital/src/allocation/allocation.cpp
++++ a/orbital/src/allocation/allocation.cpp
+@@ -50,28 +50,40 @@ void clear_foreign_hint(Storage& use) noexcept {
+ void activate(Storage& use) noexcept {
+   auto& domain = *route(use);
+   assert(worker::on_lane(*domain.pool->lane) && !use.users.load(std::memory_order_relaxed));
+-  // One Arena pin per Pool while any finite or virtual use is live or returning.
+-  auto& state = *domain.pool->internal;
+-  if (!state.active_uses++) state.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
++  if (domain.finite) {
++    auto& group = *static_cast<Group*>(domain.context);
++    assert(group.active_identities < group_identities);
++    if (!group.active_identities++)
++      group.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
++  } else {
++    auto& window = *static_cast<Window*>(domain.context);
++    window.active_lifetime = Ref<Arena>::retain(*domain.pool->arena);
++  }
+   use.users.store(1, std::memory_order_relaxed);
+ }
+ 
+-[[gnu::always_inline]] inline void recycle(Storage& use, bool notify = true) noexcept {
++void recycle(Storage& use, bool notify = true) noexcept {
+   auto& domain = *route(use);
+   auto& pool = *domain.pool;
+   assert(worker::on_lane(*pool.lane) && !use.users.load(std::memory_order_relaxed));
+   // Detach before identity reuse or notification can grant the same record.
+   // The old pin outlives every touch here, including a final local Hold release.
+   Ref<Arena> retained;
+-  auto& state = *pool.internal;
+-  assert(state.active_uses);
+-  if (!--state.active_uses) [[unlikely]] retained = std::move(state.active_lifetime);
+   if (domain.finite) {
+     auto& group = *static_cast<Group*>(domain.context);
+-    group.geometry->give(use.identity());
++    assert(group.active_identities);
++    if (!--group.active_identities) retained = std::move(group.active_lifetime);
++    const auto home = group.geometry->bound_home({use.identity()});
++    assert(home);
++    verify(group.geometry->release_identity({use.identity()}));
++    verify(group.geometry->release_home(*home));
+     add_available(group);
+-  } else add_idle(*static_cast<Window*>(domain.context));
+-  if (notify) pulse_owner(pool.capacity_changed);
++  } else {
++    auto& window = *static_cast<Window*>(domain.context);
++    retained = std::move(window.active_lifetime);
++    add_idle(window);
++  }
++  if (notify) pulse(pool.capacity_changed);
+ }
+ 
+ bool returned(Domain& domain) noexcept {
+@@ -154,9 +166,7 @@ void post_returns(Domain& domain) noexcept {
+ }
+ 
+ void drop(Storage& use, ReleaseHint value) noexcept {
+-  // Acquire: a foreign Hold's release-decrement must happen-before the owner
+-  // reuses the bytes after observing itself as the sole user.
+-  auto state = use.users.state.load(std::memory_order_acquire);
++  auto state = use.users.state.load(std::memory_order_relaxed);
+   auto& domain = *route(use, state);
+   const bool local = worker::on_lane(*domain.pool->lane);
+   if (supplied(value)) {
+@@ -170,10 +180,7 @@ void drop(Storage& use, ReleaseHint value) noexcept {
+       } else static_cast<Window*>(route(use)->context)->foreign_hint_pending.store(true, std::memory_order_release);
+     }
+   }
+-  if (local && (state & UseState::user_mask) == 1) {
+-    // Sole user on the owner Lane: no other holder can race this final store.
+-    use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
+-  } else for (;;) {
++  for (;;) {
+     const auto users = state & UseState::user_mask;
+     assert(users && users < returning);
+     if (users == 1 && !local) {
+@@ -218,33 +225,27 @@ void release_ref(Arena& arena) noexcept {
+ }
+ 
+ Result<Allocation> allocate(Pool& pool, const AllocationRequest& request) {
+-  if (!pool.lane || !worker::on_lane(*pool.lane)) [[unlikely]] return std::unexpected(Error::conflict);
+-  auto& state = *pool.internal;
+-  if (pool.state != Pool::State::open || state.close_requested) [[unlikely]]
++  if (!pool.lane || !worker::on_lane(*pool.lane)) return std::unexpected(Error::conflict);
++  if (pool.state != Pool::State::open || pool.internal->close_requested)
+     return std::unexpected(Error::unavailable);
+   auto size = extent(request);
+-  if (!size) [[unlikely]] return std::unexpected(size.error());
++  if (!size) return std::unexpected(size.error());
+   const auto reserve = std::max(*size, request.reserved_bytes);
+   Result<Allocation> result(std::in_place);
+   auto& value = *result;
+-  const auto cls = select_class(state.page, reserve, request.alignment, state.floor_class);
+-  if (cls < finite_classes && take_head(state, cls, request, value)) [[likely]] {
+-    // Owner fast path: the Pool pin and first use, without re-routing the Storage.
+-    if (!state.active_uses++) [[unlikely]] state.active_lifetime = Ref<Arena>::retain(*pool.arena);
+-    value.storage->users.store(1, std::memory_order_relaxed);
+-  } else {
+-    auto acquired = cls < finite_classes ? finite_allocate(pool, request, cls, value)
+-        : window_allocate(pool, request, *size, value);
+-    if (!acquired) {
+-      // Returning the same result permits direct payload construction in the caller's slot.
+-      result = std::unexpected(acquired.error());
+-      return result;
+-    }
+-    activate(*value.storage);
++  auto acquired = reserve <= 3072 && request.alignment <= 3072
++      ? finite_allocate(pool, request, reserve, value)
++      : window_allocate(pool, request, *size, value);
++  if (!acquired) {
++    // Returning the same result permits direct payload construction in the caller's slot.
++    result = std::unexpected(acquired.error());
++    return result;
+   }
++  auto& use = *value.storage;
++  activate(use);
+   if (request.initialization == Initialization::zero) std::memset(value.address, 0, *size);
+   else if (request.readable_padding) std::memset(value.address + request.bytes, 0, request.readable_padding);
+-  ++state.counts.allocations;
++  ++pool.internal->counts.allocations;
+   return result;
+ }
+ 
+@@ -262,9 +263,8 @@ Result<void> prepare(Pool& pool, Preparation& request,
+   const auto size = extent(allocation);
+   if (!size) return std::unexpected(size.error());
+   const auto reserve = std::max(*size, allocation.reserved_bytes);
+-  const auto cls = select_class(page_size(), reserve, allocation.alignment);
+-  return cls < finite_classes
+-      ? prepare_finite(pool, request, allocation, cls, preparer)
++  return reserve <= 3072 && allocation.alignment <= 3072
++      ? prepare_finite(pool, request, allocation, preparer)
+       : prepare_window(pool, request, allocation, preparer);
+ }
+ 
+@@ -300,7 +300,7 @@ std::size_t capacity(const Allocation& allocation) noexcept {
+   if (!allocation) return 0;
+   const auto& domain = *route(*allocation.storage);
+   if (domain.finite)
+-    return static_cast<Group*>(domain.context)->geometry->capacity();
++    return static_cast<Group*>(domain.context)->geometry->bound_capacity({allocation.storage->identity()});
+   return static_cast<Window*>(domain.context)->prepared;
+ }
+ 
+@@ -333,8 +333,13 @@ Result<void> grow(Allocation& allocation, const GrowthRequest& request) {
+   }
+   if (!aligned || needed > reserved_bytes(allocation)) {
+     if (held) return std::unexpected(Error::conflict);
+-    // A finite Home holds exactly one class; larger extents move to another
+-    // Home or a Window. Identity is private, not a public address promise.
++    if (route(use)->finite && needed <= 3072 && request.alignment <= 3072) {
++      auto relocated = relocate_finite(allocation, request, needed);
++      if (!relocated) return std::unexpected(relocated.error());
++      if (*relocated) return {};
++      // Private identity is not a public address promise. With no live Holds,
++      // class pressure or local page cost can use ready backing elsewhere.
++    }
+     // Allocate uninitialized replacement bytes. Fresh-allocation padding policy
+     // does not apply to growth; interpretation and initialization belong to its writer.
+     auto replacement = allocate(pool, {.bytes = std::max(*size, previous_extent),
+@@ -463,30 +468,9 @@ Result<Hold> retain(const Hold& original) {
+ 
+ void release(Allocation& allocation, ReleaseHint value) noexcept {
+   if (!allocation.storage) return;
+-  auto& use = *std::exchange(allocation.storage, nullptr);
++  auto* storage = std::exchange(allocation.storage, nullptr);
+   allocation.address = nullptr; allocation.size = allocation.readable_padding = 0;
+-  // Owner fast path: the sole use of a finite Home, released on its own Lane
+-  // without advice. No other holder exists to race the final store; acquire
+-  // orders any foreign Hold's last reads before the Home is reused.
+-  const auto state = use.users.state.load(std::memory_order_acquire);
+-  if ((state & UseState::user_mask) == 1 && !supplied(value)) [[likely]] {
+-    auto& domain = *route(use, state);
+-    auto& pool = *domain.pool;
+-    if (domain.finite && worker::on_lane(*pool.lane)) [[likely]] {
+-      // The checks above are recycle()'s preconditions; repeat none of them.
+-      use.users.state.store(state & ~UseState::user_mask, std::memory_order_relaxed);
+-      auto& internal = *pool.internal;
+-      Ref<Arena> retained;
+-      if (!--internal.active_uses) [[unlikely]] retained = std::move(internal.active_lifetime);
+-      auto& group = *static_cast<Group*>(domain.context);
+-      group.geometry->give(state >> 24);
+-      if (!group.previous_available) [[unlikely]] add_available(group);
+-      ++pool.capacity_changed.generation;
+-      if (pool.capacity_changed.waiters) [[unlikely]] notify_waiters(pool.capacity_changed);
+-      return;
+-    }
+-  }
+-  drop(use, value);
++  drop(*storage, value);
+ }
+ 
+ void release(Hold& hold, ReleaseHint value) noexcept {
+@@ -498,6 +482,8 @@ void release(Hold& hold, ReleaseHint value) noexcept {
+   drop(*storage, value);
+ }
+ 
++Allocation::Allocation(Allocation&& other) noexcept { *this = std::move(other); }
++
+ Allocation& Allocation::operator=(Allocation&& other) noexcept {
+   if (this == &other) return *this;
+   release(*this);
+@@ -507,6 +493,8 @@ Allocation& Allocation::operator=(Allocation&& other) noexcept {
+   return *this;
+ }
+ 
++Allocation::~Allocation() { release(*this); }
++
+ Hold::Hold(Hold&& other) noexcept { *this = std::move(other); }
+ 
+ Hold& Hold::operator=(Hold&& other) noexcept {
+@@ -565,7 +553,7 @@ Progress trim_cold(Pool& pool, std::uint64_t keep_bytes) {
+       const bool cold = group->last_use.temperature.value_or(Temperature::cold) == Temperature::cold;
+       if ((pass == 0) != cold) continue;
+       bool empty = !group->uses.domain.queued.load(std::memory_order_acquire);
+-      for (std::size_t i = 0; empty && i < finite_homes; ++i)
++      for (std::size_t i = 0; empty && i < group->geometry->identity_count(); ++i)
+         empty = group->uses[i].users.load(std::memory_order_acquire) == 0;
+       const auto mapped = group->geometry->mapped_pages() * group->geometry->native_page();
+       if (empty && !group->preparations && mapped <= idle && idle - mapped >= keep_bytes) {
+@@ -646,7 +634,7 @@ Progress close(Pool& pool) {
+   for (auto& group : pool.internal->groups) {
+     if (group->trim_pending || group->uses.domain.queued.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
+     if (group->retiring) continue;
+-    for (std::size_t i = 0; i < finite_homes; ++i)
++    for (std::size_t i = 0; i < group->geometry->identity_count(); ++i)
+       if (group->uses[i].users.load(std::memory_order_acquire)) return Progress::wait(pool.capacity_changed, observed);
+   }
+   for (auto& window : pool.internal->windows)
+@@ -675,7 +663,6 @@ Progress close(Pool& pool) {
+ Statistics statistics(const Pool& pool) noexcept {
+   assert(pool.state == Pool::State::closed || worker::on_lane(*pool.lane));
+   auto result = pool.internal->counts;
+-  result.arena_pins = bool(pool.internal->active_lifetime);
+   result.metadata_bytes += pool.internal->preparation_metadata;
+   for (auto& group : pool.internal->groups) {
+     if (group->control_preparing) {
+diff --git b/orbital/src/allocation/finite.cpp a/orbital/src/allocation/finite.cpp
+index 0fa1e8a9..f19c230f 100644
+--- b/orbital/src/allocation/finite.cpp
++++ a/orbital/src/allocation/finite.cpp
+@@ -1,5 +1,8 @@
+ #include "finite.h"
+ 
++#include <algorithm>
++#include <atomic>
++#include <bit>
+ #include <cassert>
+ #include <cstring>
+ #include <limits>
+@@ -9,228 +12,480 @@
+ 
+ namespace orbital::allocation::detail {
+ namespace {
++constexpr std::array<std::size_t, 15> palette_b{
++    256, 320, 384, 448, 512, 640, 768, 896, 1024, 1280, 1536, 1792, 2048, 2560, 3072};
++constexpr std::array<std::size_t, 15> palette_b_large{
++    256, 320, 384, 448, 512, 640, 768, 896, 1088, 1280, 1536, 1792, 2176, 2560, 3072};
++
++template<std::size_t Entries, std::size_t Classes>
++constexpr auto lookup_table(const std::array<std::size_t, Classes>& capacities,
++                            std::size_t quantum) noexcept {
++  std::array<std::uint8_t, Entries> result{};
++  unsigned cls = 0;
++  for (std::size_t index = 0; index < Entries; ++index) {
++    while ((index + 1) * quantum > capacities[cls]) ++cls;
++    result[index] = static_cast<std::uint8_t>(cls);
++  }
++  return result;
++}
++
++constexpr auto lookup_a = lookup_table<192>(palette_a, 16);
++constexpr auto lookup_b = lookup_table<48>(palette_b, 64);
++constexpr auto lookup_b_large = lookup_table<48>(palette_b_large, 64);
++
+ constexpr std::size_t round_up(std::size_t value, std::size_t unit) noexcept {
+   return (value + unit - 1) & ~(unit - 1);
+ }
++
++// Class starts are multiples of min(native_page, 16 * lowbit(capacity));
++// grid strides are 16 * capacity. The 16 slots have zero alignment phase:
++// if slot zero is unaligned, none of the others can be aligned.
++std::uint16_t aligned_slots(std::size_t capacity, std::size_t offset,
++                            std::size_t alignment) noexcept {
++  constexpr std::array<std::uint16_t, 5> repeating{0xffff, 0x5555, 0x1111, 0x0101, 1};
++  const auto mask = alignment - 1;
++  if ((capacity & mask) == 0) return 0xffff;
++  if (offset & mask) return 0;
++  const auto step = std::countr_zero(alignment) - std::countr_zero(capacity);
++  return repeating[std::min(step, 4)];
++}
++
++std::uint8_t load(std::uint8_t& value) noexcept {
++  return std::atomic_ref<std::uint8_t>(value).load(std::memory_order_acquire);
++}
++
++void store(std::uint8_t& value, std::uint8_t next) noexcept {
++  std::atomic_ref<std::uint8_t>(value).store(next, std::memory_order_release);
++}
+ } // namespace
+ 
+-Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(unsigned cls, std::size_t page_granule) noexcept {
+-  if (cls >= finite_classes) return std::unexpected(Error::invalid_argument);
++Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create(FiniteConfig config) noexcept {
++  return create_geometry(config, 0);
++}
++
++Result<std::unique_ptr<FiniteGroup>> FiniteGroup::create_geometry(
++    FiniteConfig config, std::size_t page_granule) noexcept {
++  if ((config.palette != Palette::a && config.palette != Palette::b) ||
++      (config.identities != 64 && config.identities != 256 && config.identities != 1024))
++    return std::unexpected(Error::invalid_argument);
+   const auto native = ::sysconf(_SC_PAGESIZE);
+   if (native <= 0 || !std::has_single_bit(static_cast<std::size_t>(native)))
+     return std::unexpected(Error::unavailable);
+   const auto page = page_granule ? page_granule : static_cast<std::size_t>(native);
+-  if (!std::has_single_bit(page) || page > 65536 || page < static_cast<std::size_t>(native))
++  if (!std::has_single_bit(page) || page > 65536 || page < static_cast<std::size_t>(native) ||
++      page < config.identities || page < palette_a.back())
+     return std::unexpected(Error::invalid_argument);
+   auto group = std::unique_ptr<FiniteGroup>(new (std::nothrow) FiniteGroup);
+-  if (!group) return std::unexpected(Error::capacity);
+-  group->cls_ = cls;
+-  group->capacity_ = finite_capacities[cls];
++  if (!group)
++    return std::unexpected(Error::capacity);
+   group->host_page_ = static_cast<std::size_t>(native);
+   group->native_page_ = page;
+-  group->page_shift_ = static_cast<unsigned>(std::countr_zero(page));
+-  const auto payload_bytes = round_up(finite_homes * group->capacity_, page);
+-  group->payload_pages_ = payload_bytes / page;
+-  // A larger native granule than the host page needs alignment slack.
++  group->identities_ = config.identities;
++  group->grid_count_ = config.identities / 16;
++  const auto& capacities = config.palette == Palette::a ? palette_a
++      : page >= 16384 ? palette_b_large : palette_b;
++  std::copy(capacities.begin(), capacities.end(), group->capacities_.begin());
++  group->class_lookup_ = config.palette == Palette::a ? lookup_a.data()
++      : page >= 16384 ? lookup_b_large.data() : lookup_b.data();
++  group->class_lookup_shift_ = config.palette == Palette::a ? 4 : 6;
++
++  // The fixed tables, at most 1024 identities and <=64 KiB pages bound offsets to uint32.
++  std::size_t offset = 0;
++  if (config.palette == Palette::a) {
++    // Class runs pack small homes across grids. This order aligns the 64 B
++    // run without padding the mixed-size aperture into five separate pages.
++    for (const auto cls : {3u, 0u, 2u, 1u, 4u}) {
++      group->offsets_[cls] = static_cast<std::uint32_t>(offset);
++      offset += group->identities_ * group->capacities_[cls];
++    }
++  }
++  for (unsigned cls = config.palette == Palette::a ? 5 : 0; cls < 15; ++cls) {
++    offset = round_up(offset, group->native_page_);
++    group->offsets_[cls] = static_cast<std::uint32_t>(offset);
++    offset += group->identities_ * group->capacities_[cls];
++  }
++  const auto payload_bytes = round_up(offset, group->native_page_);
++  group->payload_pages_ = payload_bytes / group->native_page_;
++  // Keep finite page-state inventory bounded independently of trim encoding.
++  if (group->payload_pages_ > std::numeric_limits<std::uint16_t>::max())
++    return std::unexpected(Error::unavailable);
+   group->reserved_bytes_ = payload_bytes + (page > group->host_page_ ? page : 0);
+-  const auto scratch_offset = round_up(group->payload_pages_ * sizeof(Page), alignof(std::uint64_t));
+-  group->control_bytes_ = scratch_offset + 3 * group->live_words() * sizeof(std::uint64_t);
++  const auto grids_offset = round_up(group->identities_, alignof(Grid));
++  const auto grids_bytes = group->grid_count_ * sizeof(Grid);
++  const auto scratch_offset = round_up(grids_offset + grids_bytes + group->payload_pages_ * sizeof(Page),
++                                      alignof(std::uint64_t));
++  group->metadata_bytes_ = scratch_offset + 3 * group->live_words() * sizeof(std::uint64_t);
++  group->control_bytes_ = group->metadata_bytes_;
+   return group;
+ }
+ 
+ Result<void> FiniteGroup::prepare() noexcept {
+   if (reservation_ || metadata_) return std::unexpected(Error::conflict);
++  const auto grids_offset = round_up(identities_, alignof(Grid));
++  const auto grids_bytes = grid_count_ * sizeof(Grid);
++  const auto scratch_offset = round_up(grids_offset + grids_bytes + payload_pages_ * sizeof(Page),
++                                      alignof(std::uint64_t));
+   auto* reservation = ::mmap(nullptr, reserved_bytes_, PROT_NONE,
+                               MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+-  if (reservation == MAP_FAILED) return std::unexpected(Error::io);
++  if (reservation == MAP_FAILED)
++    return std::unexpected(Error::io);
+   reservation_ = static_cast<std::byte*>(reservation);
+   payload_ = reinterpret_cast<std::byte*>(round_up(reinterpret_cast<std::uintptr_t>(reservation_), native_page_));
+-  // Page states and trim scratch share one stable heap block.
+-  auto* metadata = ::operator new(control_bytes_, std::nothrow);
+-  if (!metadata) return std::unexpected(Error::capacity);
++  // Bindings and owner control share one stable heap block. Their accessors stay
++  // distinct; no binding address or payload offset is inferred from the other.
++  // Ordinary new covers the maximum required alignment: the uint64_t scratch.
++  auto* metadata = ::operator new(metadata_bytes_, std::nothrow);
++  if (!metadata)
++    return std::unexpected(Error::capacity);
+   metadata_ = metadata;
+-  std::memset(metadata, 0, control_bytes_);
+-  pages_ = ::new (metadata) Page[payload_pages_]{};
+-  trim_scratch_ = ::new (static_cast<std::byte*>(metadata) +
+-      round_up(payload_pages_ * sizeof(Page), alignof(std::uint64_t))) std::uint64_t[3 * live_words()]{};
+-  free_.fill(~std::uint64_t{0});
+-  ready_.fill(0);
+-  pending_.fill(0);
++  std::memset(metadata, 0, metadata_bytes_);
++  bindings_ = ::new (metadata) std::uint8_t[identities_];
++  std::memset(bindings_, unbound, identities_);
++  grids_ = ::new (static_cast<std::byte*>(metadata) + grids_offset) Grid[grid_count_]{};
++  pages_ = ::new (static_cast<std::byte*>(metadata) + grids_offset + grids_bytes) Page[payload_pages_]{};
++  trim_scratch_ = ::new (static_cast<std::byte*>(metadata) + scratch_offset)
++      std::uint64_t[3 * live_words()]{};
++  available_identity_grids_ = grid_count_ == 64
++      ? ~std::uint64_t{0} : (std::uint64_t{1} << grid_count_) - 1;
+   return {};
+ }
+ 
+-FiniteGroup::~FiniteGroup() { (void)retire(); }
++FiniteGroup::~FiniteGroup() {
++  (void)retire();
++}
+ 
+ Result<void> FiniteGroup::retire() noexcept {
+   bool failed = false;
+   if (reservation_) {
+-    if (::munmap(reservation_, reserved_bytes_) != 0) failed = true;
+-    else { reservation_ = nullptr; payload_ = nullptr; }
++    if (::munmap(reservation_, reserved_bytes_) != 0) {
++      failed = true;
++    } else {
++      reservation_ = nullptr;
++      payload_ = nullptr;
++    }
+   }
+   if (metadata_) {
+     ::operator delete(metadata_);
+-    metadata_ = nullptr; pages_ = nullptr; trim_scratch_ = nullptr;
++    metadata_ = nullptr;
++    bindings_ = nullptr;
++    grids_ = nullptr;
++    pages_ = nullptr;
++    trim_scratch_ = nullptr;
+   }
+-  if (failed) return std::unexpected(Error::io);
++  if (failed)
++    return std::unexpected(Error::io);
+   mapped_pages_ = preparing_pages_ = 0;
+-  free_.fill(0); ready_.fill(0);
+   return {};
+ }
+ 
+-bool FiniteGroup::home_mapped(std::size_t home) const noexcept {
+-  const auto span = pages(home);
+-  for (auto p = span.first; p < span.first + span.count; ++p)
+-    if (pages_[p] != Page::mapped) return false;
+-  return true;
++bool FiniteGroup::valid(Identity identity) const noexcept {
++  return identity.index < identities_ &&
++      (grids_[identity.index / 16].identities & (1u << (identity.index % 16)));
+ }
+ 
+-std::pair<std::size_t, std::size_t> FiniteGroup::homes(PageSpan span) const noexcept {
+-  const auto begin = span.first * native_page_;
+-  const auto end = (span.first + span.count) * native_page_;
+-  const auto last = std::min(finite_homes, (end + capacity_ - 1) / capacity_) - 1;
+-  return {begin / capacity_, last};
++Result<Identity> FiniteGroup::claim_identity(std::uint64_t excluded_grids) noexcept {
++  const auto eligible = available_identity_grids_ & ~excluded_grids;
++  if (!eligible)
++    return std::unexpected(Error::capacity);
++  const auto grid = std::countr_zero(eligible);
++  auto& occupied = grids_[grid].identities;
++  const auto slot = std::countr_zero(static_cast<std::uint16_t>(~occupied));
++  occupied |= static_cast<std::uint16_t>(1u << slot);
++  if (occupied == 0xffff)
++    available_identity_grids_ &= ~(std::uint64_t{1} << grid);
++  return Identity{static_cast<std::uint16_t>(grid * 16 + slot)};
+ }
+ 
+-void FiniteGroup::refresh_ready(PageSpan span) noexcept {
+-  const auto [first, last] = homes(span);
+-  for (auto home = first; home <= last; ++home) {
+-    const auto bit = std::uint64_t{1} << (home % 64);
+-    if ((free_[home / 64] & bit) && home_mapped(home)) ready_[home / 64] |= bit;
+-    else ready_[home / 64] &= ~bit;
+-  }
++Result<void> FiniteGroup::release_identity(Identity identity) noexcept {
++  if (!valid(identity))
++    return std::unexpected(Error::invalid_argument);
++  store(bindings_[identity.index], unbound);
++  const auto grid = identity.index / 16;
++  grids_[grid].identities &= static_cast<std::uint16_t>(~(1u << (identity.index % 16)));
++  available_identity_grids_ |= std::uint64_t{1} << grid;
++  return {};
+ }
+ 
+-std::size_t FiniteGroup::first_unready() const noexcept {
+-  for (std::size_t w = 0; w < finite_words; ++w)
+-    if (const auto word = free_[w] & ~ready_[w]) {
+-      // A free Home on a trimming/preparing page cannot be claimed yet.
+-      for (auto bits = word; bits; bits &= bits - 1) {
+-        const auto home = w * 64 + static_cast<std::size_t>(std::countr_zero(bits));
+-        const auto span = pages(home);
+-        bool usable = true;
+-        for (auto p = span.first; usable && p < span.first + span.count; ++p)
+-          usable = pages_[p] == Page::absent || pages_[p] == Page::mapped;
+-        if (usable) return home;
+-      }
+-    }
+-  return finite_homes;
++Home FiniteGroup::home(std::size_t grid, unsigned cls, unsigned slot) const noexcept {
++  const auto capacity = capacities_[cls];
++  const auto offset = offsets_[cls] + (grid * 16 + slot) * capacity;
++  const auto page_shift = std::countr_zero(native_page_);
++  const auto first = offset >> page_shift;
++  const auto last = (offset + capacity - 1) >> page_shift;
++  return {static_cast<std::uint16_t>(grid), static_cast<std::uint8_t>(cls),
++          static_cast<std::uint8_t>(slot), capacity, payload_ + offset,
++          {first, last - first + 1}};
++}
++
++std::size_t FiniteGroup::class_minimum(std::uint8_t cls) const noexcept {
++  return cls < capacities_.size() ? (cls ? capacities_[cls - 1] + 1 : 1) : 0;
++}
++
++Result<std::uint8_t> FiniteGroup::class_for(std::size_t bytes) const noexcept {
++  if (!bytes || bytes > 3072) return std::unexpected(Error::invalid_argument);
++  return class_lookup_[(bytes - 1) >> class_lookup_shift_];
++}
++
++Result<Home> FiniteGroup::claim_home(Identity identity, std::size_t bytes,
++                                    std::size_t alignment) noexcept {
++  const auto cls = class_for(bytes);
++  if (!cls) return std::unexpected(cls.error());
++  return claim_home_class(identity, *cls, alignment);
+ }
+ 
+-std::size_t FiniteGroup::cheapest_unready() const noexcept {
+-  auto best = finite_homes;
++Result<Home> FiniteGroup::claim_home_class(Identity identity, std::uint8_t cls,
++                                          std::size_t alignment) noexcept {
++  if (!valid(identity) || cls >= 15 || !std::has_single_bit(alignment) || alignment > native_page_)
++    return std::unexpected(Error::invalid_argument);
++  const auto grid = identity.index / 16;
++  auto& occupied = grids_[grid].occupied[cls];
++  auto available = static_cast<std::uint16_t>(~occupied);
++  if (available) available &= aligned_slots(
++      capacities_[cls], offsets_[cls] + grid * 16 * capacities_[cls], alignment);
++  Home selected;
+   std::size_t fewest = std::numeric_limits<std::size_t>::max();
+-  for (std::size_t w = 0; w < finite_words; ++w)
+-    for (auto bits = free_[w] & ~ready_[w]; bits; bits &= bits - 1) {
+-      const auto home = w * 64 + static_cast<std::size_t>(std::countr_zero(bits));
+-      const auto span = pages(home);
+-      std::size_t missing = 0;
+-      bool usable = true;
+-      for (auto p = span.first; usable && p < span.first + span.count; ++p) {
+-        usable = pages_[p] == Page::absent || pages_[p] == Page::mapped;
+-        missing += pages_[p] == Page::absent;
+-      }
+-      if (!usable || missing >= fewest) continue;
+-      best = home; fewest = missing;
+-      if (fewest == 1) return best;
++  while (available) {
++    const auto slot = static_cast<unsigned>(std::countr_zero(available));
++    const auto candidate = home(grid, cls, slot);
++    bool usable = true;
++    std::size_t missing = 0;
++    for (std::size_t page = candidate.pages.first;
++         usable && page < candidate.pages.first + candidate.pages.count; ++page) {
++      usable = pages_[page] != Page::trimming && pages_[page] != Page::preparing;
++      missing += pages_[page] == Page::absent;
++    }
++    if (usable && missing < fewest) {
++      selected = candidate; fewest = missing;
++      if (!missing) break;
+     }
+-  return best;
++    available &= static_cast<std::uint16_t>(available - 1);
++  }
++  if (fewest == std::numeric_limits<std::size_t>::max())
++    return std::unexpected(Error::capacity);
++  occupied |= static_cast<std::uint16_t>(1u << selected.slot);
++  return selected;
+ }
+ 
+-void FiniteGroup::claim(std::size_t home) noexcept {
+-  assert(is_free(home) && home_mapped(home));
+-  free_[home / 64] &= ~(std::uint64_t{1} << (home % 64));
+-  ready_[home / 64] &= ~(std::uint64_t{1} << (home % 64));
++bool FiniteGroup::occupied(const Home& candidate) const noexcept {
++  if (candidate.grid >= grid_count_ || candidate.cls >= 15 || candidate.slot >= 16 ||
++      !(grids_[candidate.grid].occupied[candidate.cls] & (1u << candidate.slot)))
++    return false;
++  const auto expected = home(candidate.grid, candidate.cls, candidate.slot);
++  return candidate.capacity == expected.capacity && candidate.address == expected.address &&
++      candidate.pages.first == expected.pages.first && candidate.pages.count == expected.pages.count;
+ }
+ 
+-std::size_t FiniteGroup::absent_run(std::size_t first, std::size_t limit) const noexcept {
+-  std::size_t count = 0;
+-  while (count < limit && first + count < payload_pages_ && pages_[first + count] == Page::absent) ++count;
+-  return count;
++bool FiniteGroup::bound(const Home& candidate) const noexcept {
++  const auto coordinate = static_cast<std::uint8_t>((candidate.slot << 4) | candidate.cls);
++  auto identities = grids_[candidate.grid].identities;
++  while (identities) {
++    const auto identity = std::countr_zero(identities);
++    if (load(bindings_[candidate.grid * 16 + identity]) == coordinate) return true;
++    identities &= static_cast<std::uint16_t>(identities - 1);
++  }
++  return false;
++}
++
++Result<void> FiniteGroup::release_home(const Home& candidate) noexcept {
++  if (!occupied(candidate)) return std::unexpected(Error::invalid_argument);
++  // Binding and pending preparation each retain the physical coordinate.
++  if ((grids_[candidate.grid].pending[candidate.cls] & (1u << candidate.slot)) || bound(candidate))
++    return std::unexpected(Error::conflict);
++  grids_[candidate.grid].occupied[candidate.cls] &=
++      static_cast<std::uint16_t>(~(1u << candidate.slot));
++  return {};
++}
++
++Result<void> FiniteGroup::bind(Identity identity, const Home& candidate) noexcept {
++  if (!valid(identity) || !occupied(candidate) || identity.index / 16 != candidate.grid)
++    return std::unexpected(Error::invalid_argument);
++  if (grids_[candidate.grid].pending[candidate.cls] & (1u << candidate.slot))
++    return std::unexpected(Error::unavailable);
++  for (auto page = candidate.pages.first; page < candidate.pages.first + candidate.pages.count; ++page)
++    if (pages_[page] != Page::mapped)
++      return std::unexpected(Error::unavailable);
++  const auto coordinate = static_cast<std::uint8_t>((candidate.slot << 4) | candidate.cls);
++  auto identities = grids_[candidate.grid].identities;
++  while (identities) {
++    const auto other = std::countr_zero(identities);
++    if (candidate.grid * 16 + other != identity.index &&
++        load(bindings_[candidate.grid * 16 + other]) == coordinate)
++      return std::unexpected(Error::conflict);
++    identities &= static_cast<std::uint16_t>(identities - 1);
++  }
++  store(bindings_[identity.index], coordinate);
++  return {};
++}
++
++Result<Home> FiniteGroup::bound_home(Identity identity) const noexcept {
++  if (identity.index >= identities_) return std::unexpected(Error::invalid_argument);
++  const auto coordinate = load(bindings_[identity.index]);
++  if (coordinate == unbound) return std::unexpected(Error::unavailable);
++  return home(identity.index / 16, coordinate & 15, coordinate >> 4);
++}
++
++std::byte* FiniteGroup::resolve(Identity identity) const noexcept {
++  if (identity.index >= identities_)
++    return nullptr;
++  const auto coordinate = load(bindings_[identity.index]);
++  if (coordinate == unbound)
++    return nullptr;
++  const auto cls = coordinate & 15;
++  const auto slot = coordinate >> 4;
++  return payload_ + offsets_[cls] + (identity.index / 16 * 16 + slot) * capacities_[cls];
++}
++
++const std::uint8_t* FiniteGroup::descriptor(Identity identity) const noexcept {
++  return identity.index < identities_ ? bindings_ + identity.index : nullptr;
++}
++
++bool FiniteGroup::valid(PageSpan span) const noexcept {
++  return span.count && span.first < payload_pages_ && span.count <= payload_pages_ - span.first;
++}
++
++std::byte* FiniteGroup::page_address(std::size_t page) const noexcept {
++  return page < payload_pages_ ? payload_ + page * native_page_ : nullptr;
+ }
+ 
+-Result<std::size_t> FiniteGroup::begin_prepare(std::size_t home, std::span<PageSpan> output) noexcept {
+-  if (home >= finite_homes || !is_free(home)) return std::unexpected(Error::conflict);
+-  const auto span = pages(home);
+-  const auto end = span.first + span.count;
++bool FiniteGroup::mapped(std::size_t page) const noexcept {
++  return page < payload_pages_ && pages_[page] == Page::mapped;
++}
++
++bool FiniteGroup::trimming(std::size_t page) const noexcept {
++  return page < payload_pages_ && pages_[page] == Page::trimming;
++}
++
++bool FiniteGroup::preparing(std::size_t page) const noexcept {
++  return page < payload_pages_ && pages_[page] == Page::preparing;
++}
++
++bool FiniteGroup::pending(const Home& candidate) const noexcept {
++  return occupied(candidate) &&
++      (grids_[candidate.grid].pending[candidate.cls] & (1u << candidate.slot));
++}
++
++Result<std::size_t> FiniteGroup::begin_prepare(const Home& candidate,
++                                             std::span<PageSpan> output) noexcept {
++  if (!occupied(candidate)) return std::unexpected(Error::invalid_argument);
++  if ((grids_[candidate.grid].pending[candidate.cls] & (1u << candidate.slot)) || bound(candidate))
++    return std::unexpected(Error::conflict);
+   std::size_t runs = 0;
+   bool absent = false;
+-  for (auto p = span.first; p < end; ++p) {
+-    if (pages_[p] != Page::absent && pages_[p] != Page::mapped) return std::unexpected(Error::conflict);
+-    const bool missing = pages_[p] == Page::absent;
++  const auto end = candidate.pages.first + candidate.pages.count;
++  for (auto page = candidate.pages.first; page < end; ++page) {
++    const auto state = pages_[page];
++    if (state != Page::absent && state != Page::mapped)
++      return std::unexpected(Error::conflict);
++    const bool missing = state == Page::absent;
+     runs += missing && !absent;
+     absent = missing;
+   }
+   if (output.size() < runs) return std::unexpected(Error::invalid_argument);
+   std::size_t used = 0;
+-  for (auto p = span.first; p < end;) {
+-    if (pages_[p] == Page::mapped) { ++p; continue; }
+-    const auto first = p;
+-    while (p < end && pages_[p] == Page::absent) { pages_[p++] = Page::preparing; ++preparing_pages_; }
+-    output[used++] = {first, p - first};
++  for (auto page = candidate.pages.first; page < end;) {
++    if (pages_[page] == Page::mapped) { ++page; continue; }
++    const auto first = page;
++    while (page < end && pages_[page] == Page::absent) {
++      pages_[page++] = Page::preparing;
++      ++preparing_pages_;
++    }
++    output[used++] = {first, page - first};
+   }
+-  free_[home / 64] &= ~(std::uint64_t{1} << (home % 64));
+-  ready_[home / 64] &= ~(std::uint64_t{1} << (home % 64));
+-  pending_[home / 64] |= std::uint64_t{1} << (home % 64);
++  grids_[candidate.grid].pending[candidate.cls] |= static_cast<std::uint16_t>(1u << candidate.slot);
+   return used;
+ }
+ 
+-Result<void> FiniteGroup::finish_prepare(std::size_t home, std::span<const PageSpan> spans,
+-    bool prepared) noexcept {
+-  if (!pending(home)) return std::unexpected(Error::conflict);
+-  for (auto span : spans)
+-    for (auto p = span.first; p < span.first + span.count; ++p)
+-      if (pages_[p] != Page::preparing) return std::unexpected(Error::conflict);
+-  if (!prepared) return {};
++Result<std::size_t> FiniteGroup::preparation_spans(const Home& candidate,
++                                                  std::span<const PageSpan> spans) const noexcept {
++  if (!occupied(candidate)) return std::unexpected(Error::invalid_argument);
++  if (!(grids_[candidate.grid].pending[candidate.cls] & (1u << candidate.slot)))
++    return std::unexpected(Error::conflict);
++  const auto end = candidate.pages.first + candidate.pages.count;
++  auto previous_end = candidate.pages.first;
++  std::size_t count = 0;
+   for (auto span : spans) {
+-    for (auto p = span.first; p < span.first + span.count; ++p) pages_[p] = Page::mapped;
+-    mapped_pages_ += span.count; preparing_pages_ -= span.count;
+-    refresh_ready(span);
++    if (!valid(span) || span.first < previous_end || span.first < candidate.pages.first ||
++        span.first >= end || span.count > end - span.first)
++      return std::unexpected(Error::invalid_argument);
++    previous_end = span.first + span.count;
++    for (auto page = span.first; page < previous_end; ++page)
++      if (pages_[page] != Page::preparing) return std::unexpected(Error::conflict);
++    count += span.count;
+   }
+-  return {};
++  return count;
+ }
+ 
+-Result<void> FiniteGroup::discard_preparation(std::size_t home, std::span<const PageSpan> spans) noexcept {
+-  if (!pending(home)) return std::unexpected(Error::conflict);
++Result<void> FiniteGroup::finish_prepare(const Home& candidate,
++                                        std::span<const PageSpan> spans,
++                                        bool prepared) noexcept {
++  const auto checked = preparation_spans(candidate, spans);
++  if (!checked) return std::unexpected(checked.error());
++  const auto count = *checked;
++  const auto end = candidate.pages.first + candidate.pages.count;
++  std::size_t expected = 0;
++  for (auto page = candidate.pages.first; page < end; ++page)
++    expected += pages_[page] == Page::preparing;
++  if (count != expected) return std::unexpected(Error::invalid_argument);
++  if (!prepared) return {};
+   for (auto span : spans)
+-    for (auto p = span.first; p < span.first + span.count; ++p) {
+-      if (pages_[p] != Page::preparing) return std::unexpected(Error::conflict);
+-      pages_[p] = Page::absent; --preparing_pages_;
+-    }
++    for (auto page = span.first; page < span.first + span.count; ++page)
++      pages_[page] = Page::mapped;
++  mapped_pages_ += count;
++  preparing_pages_ -= count;
++  grids_[candidate.grid].pending[candidate.cls] &= static_cast<std::uint16_t>(~(1u << candidate.slot));
+   return {};
+ }
+ 
+-void FiniteGroup::end_prepare(std::size_t home) noexcept {
+-  assert(pending(home));
+-  pending_[home / 64] &= ~(std::uint64_t{1} << (home % 64));
+-  free_[home / 64] |= std::uint64_t{1} << (home % 64);
+-  if (home_mapped(home)) ready_[home / 64] |= std::uint64_t{1} << (home % 64);
++Result<void> FiniteGroup::discard_preparation(const Home& candidate,
++                                             std::span<const PageSpan> spans) noexcept {
++  const auto checked = preparation_spans(candidate, spans);
++  if (!checked) return std::unexpected(checked.error());
++  for (auto span : spans)
++    for (auto page = span.first; page < span.first + span.count; ++page)
++      pages_[page] = Page::absent;
++  preparing_pages_ -= *checked;
++  return {};
+ }
+ 
+-void FiniteGroup::bind_prepared(std::size_t home) noexcept {
+-  assert(pending(home) && home_mapped(home));
+-  pending_[home / 64] &= ~(std::uint64_t{1} << (home % 64));
++Result<void> FiniteGroup::end_prepare(const Home& candidate) noexcept {
++  if (!occupied(candidate)) return std::unexpected(Error::invalid_argument);
++  if (!(grids_[candidate.grid].pending[candidate.cls] & (1u << candidate.slot)))
++    return std::unexpected(Error::conflict);
++  grids_[candidate.grid].pending[candidate.cls] &= static_cast<std::uint16_t>(~(1u << candidate.slot));
++  return {};
+ }
+ 
+ Result<void> FiniteGroup::mark_mapped(PageSpan span) noexcept {
+-  if (!span.count || span.first + span.count > payload_pages_) return std::unexpected(Error::invalid_argument);
+-  for (auto p = span.first; p < span.first + span.count; ++p)
+-    if (pages_[p] == Page::trimming || pages_[p] == Page::preparing) return std::unexpected(Error::conflict);
+-  for (auto p = span.first; p < span.first + span.count; ++p) {
+-    if (pages_[p] == Page::absent) ++mapped_pages_;
+-    pages_[p] = Page::mapped;
++  if (!valid(span))
++    return std::unexpected(Error::invalid_argument);
++  for (auto page = span.first; page < span.first + span.count; ++page)
++    if (pages_[page] == Page::trimming || pages_[page] == Page::preparing)
++      return std::unexpected(Error::conflict);
++  for (auto page = span.first; page < span.first + span.count; ++page) {
++    if (pages_[page] == Page::absent)
++      ++mapped_pages_;
++    pages_[page] = Page::mapped;
+   }
+-  refresh_ready(span);
+   return {};
+ }
+ 
+ Result<void> FiniteGroup::live_pages(std::span<std::uint64_t> live) const noexcept {
+-  if (live.size() < live_words()) return std::unexpected(Error::invalid_argument);
++  if (live.size() < live_words())
++    return std::unexpected(Error::invalid_argument);
+   std::fill(live.begin(), live.end(), 0);
+-  for (std::size_t w = 0; w < finite_words; ++w)
+-    for (auto used = ~free_[w]; used; used &= used - 1) {
+-      const auto span = pages(w * 64 + static_cast<std::size_t>(std::countr_zero(used)));
+-      for (auto p = span.first; p < span.first + span.count; ++p) live[p / 64] |= std::uint64_t{1} << (p % 64);
++  for (std::size_t grid = 0; grid < grid_count_; ++grid) {
++    // Homes may outlive every identity in this grid.
++    for (unsigned cls = 0; cls < 15; ++cls) {
++      auto occupied = grids_[grid].occupied[cls];
++      while (occupied) {
++        const auto slot = static_cast<unsigned>(std::countr_zero(occupied));
++        const auto coverage = home(grid, cls, slot).pages;
++        for (auto page = coverage.first; page < coverage.first + coverage.count; ++page)
++          live[page / 64] |= std::uint64_t{1} << (page % 64);
++        occupied &= static_cast<std::uint16_t>(occupied - 1);
++      }
+     }
++  }
+   return {};
+ }
+ 
+@@ -239,30 +494,52 @@ Result<void> FiniteGroup::begin_trim() noexcept {
+   const auto tail = payload_pages_ % 64;
+   if (tail && (membership.back() >> tail)) return std::unexpected(Error::invalid_argument);
+   const auto live = std::span(trim_scratch_, live_words());
+-  if (const auto counted = live_pages(live); !counted) return std::unexpected(counted.error());
++  const auto counted = live_pages(live);
++  if (!counted) return std::unexpected(counted.error());
+   std::size_t cursor = 0;
+   PageSpan span;
+   while (next_trim_span(membership, cursor, span))
+-    for (auto p = span.first; p < span.first + span.count; ++p)
+-      if (pages_[p] != Page::mapped || (live[p / 64] & (std::uint64_t{1} << (p % 64))))
++    for (auto page = span.first; page < span.first + span.count; ++page)
++      if (pages_[page] != Page::mapped || (live[page / 64] & (std::uint64_t{1} << (page % 64))))
+         return std::unexpected(Error::conflict);
+   // Admit the complete immutable selection before changing any page state.
+   cursor = 0;
+-  while (next_trim_span(membership, cursor, span)) {
+-    for (auto p = span.first; p < span.first + span.count; ++p) pages_[p] = Page::trimming;
+-    refresh_ready(span); // Free Homes on trimming pages leave the ready set.
++  while (next_trim_span(membership, cursor, span))
++    for (auto page = span.first; page < span.first + span.count; ++page)
++      pages_[page] = Page::trimming;
++  return {};
++}
++
++Result<void> FiniteGroup::begin_trim(PageSpan span) noexcept {
++  return begin_trim(std::span(&span, 1));
++}
++
++Result<void> FiniteGroup::begin_trim(std::span<const PageSpan> spans) noexcept {
++  const auto live = std::span(trim_scratch_, live_words());
++  const auto counted = live_pages(live);
++  assert(counted);
++  for (auto span : spans) {
++    if (!valid(PageSpan{span.first, span.count})) return std::unexpected(Error::invalid_argument);
++    for (auto page = span.first; page < span.first + span.count; ++page)
++      if (pages_[page] != Page::mapped || (live[page / 64] & (std::uint64_t{1} << (page % 64))))
++        return std::unexpected(Error::conflict);
+   }
++  for (auto span : spans)
++    for (auto page = span.first; page < span.first + span.count; ++page)
++      pages_[page] = Page::trimming;
+   return {};
+ }
+ 
+ Result<void> FiniteGroup::finish_trim(PageSpan span, bool discarded) noexcept {
+-  if (!span.count || span.first + span.count > payload_pages_) return std::unexpected(Error::invalid_argument);
+-  for (auto p = span.first; p < span.first + span.count; ++p)
+-    if (pages_[p] != Page::trimming) return std::unexpected(Error::conflict);
+-  for (auto p = span.first; p < span.first + span.count; ++p)
+-    pages_[p] = discarded ? Page::absent : Page::mapped;
+-  if (discarded) mapped_pages_ -= span.count;
+-  refresh_ready(span);
++  if (!valid(span))
++    return std::unexpected(Error::invalid_argument);
++  for (auto page = span.first; page < span.first + span.count; ++page)
++    if (pages_[page] != Page::trimming)
++      return std::unexpected(Error::conflict);
++  for (auto page = span.first; page < span.first + span.count; ++page)
++    pages_[page] = discarded ? Page::absent : Page::mapped;
++  if (discarded)
++    mapped_pages_ -= span.count;
+   return {};
+ }
+ 
+diff --git b/orbital/src/allocation/finite.h a/orbital/src/allocation/finite.h
+index f2a8f57d..1a2fdae5 100644
+--- b/orbital/src/allocation/finite.h
++++ a/orbital/src/allocation/finite.h
+@@ -1,15 +1,15 @@
+ #pragma once
+ 
+-// Single-class Group geometry: 256 equal Homes, one per identity, with free,
+-// ready and pending bitmaps and per-page backing state.
+-// finite.cpp owns geometry and VM reservations; group.cpp adds allocation,
+-// preparation and reclamation transactions.
++// Fixed-size-class Group storage, with one-byte slot bindings.
++// finite.cpp owns geometry, slot/page state and VM reservations;
++// group.cpp adds allocation, preparation and reclamation transactions.
+ 
+ #include <orbital/types.h>
+ 
+ #include <algorithm>
+ #include <array>
+ #include <bit>
++#include <atomic>
+ #include <cstddef>
+ #include <cstdint>
+ #include <memory>
+@@ -17,47 +17,42 @@
+ 
+ namespace orbital::allocation::detail {
+ 
+-inline constexpr std::size_t finite_homes = 256;
+-inline constexpr std::size_t finite_words = finite_homes / 64;
+-inline constexpr std::size_t finite_cutoff = 3072;
+-inline constexpr std::array<std::uint16_t, 26> finite_capacities{
+-    16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 448, 512,
+-    640, 768, 896, 1024, 1280, 1536, 1792, 2048, 2560, 3072};
+-inline constexpr unsigned finite_classes = finite_capacities.size();
++enum class Palette : std::uint8_t { a, b };
+ 
+-inline constexpr auto finite_lookup = [] {
+-  std::array<std::uint8_t, finite_cutoff / 16> result{};
++inline constexpr std::array<std::size_t, 15> palette_a{
++    16, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072};
++inline constexpr auto small_a_capacities = [] {
++  std::array<std::uint8_t, 12> result{};
+   unsigned cls = 0;
+   for (unsigned i = 0; i < result.size(); ++i) {
+-    while (16 * (i + 1) > finite_capacities[cls]) ++cls;
+-    result[i] = static_cast<std::uint8_t>(cls);
++    while (16 * (i + 1) > palette_a[cls]) ++cls;
++    result[i] = static_cast<std::uint8_t>(palette_a[cls]);
+   }
+   return result;
+ }();
+ 
+-/// Smallest class whose 256 Homes fill at least one native page, so a Group
+-/// never maps a page it cannot use: 16 B at 4 KiB, 64 B at 16 KiB, 256 B at 64 KiB.
+-[[nodiscard]] constexpr unsigned first_class(std::size_t page) noexcept {
+-  unsigned cls = 0;
+-  while (cls + 1 < finite_classes && finite_capacities[cls] * finite_homes < page) ++cls;
+-  return cls;
++[[nodiscard]] constexpr Palette preferred_palette(std::size_t page, std::size_t bytes,
++                                                 std::size_t alignment) noexcept {
++  // 256 identities × 256 B fill one 64 KiB page, including mixed tiny sizes.
++  if (page >= 65536 || !bytes || bytes > 192 || !alignment) return Palette::b;
++  if (alignment < 64) return Palette::a;
++  const auto capacity = small_a_capacities[(bytes - 1) >> 4];
++  // Choose A when its smallest home meets alignment at every slot. Stronger
++  // alignment can still use B's sparse aligned slots; growth keeps its Group.
++  return (capacity & (alignment - 1)) == 0 ? Palette::a : Palette::b;
+ }
+ 
+-/// Class for a request, or finite_classes when none fits. Homes sit at
+-/// page-aligned base + index × capacity, so alignment a ≤ page holds exactly
+-/// when capacity is a multiple of a.
+-[[nodiscard, gnu::always_inline]] inline unsigned select_class(std::size_t page, std::size_t bytes,
+-    std::size_t alignment, unsigned floor) noexcept {
+-  if (!bytes || bytes > finite_cutoff || alignment > page) [[unlikely]] return finite_classes;
+-  unsigned cls = std::max<unsigned>(finite_lookup[(bytes - 1) >> 4], floor);
+-  // Every capacity is a multiple of 16; only stronger alignment can skip classes.
+-  if (alignment > 16) [[unlikely]]
+-    while (cls < finite_classes && (finite_capacities[cls] & (alignment - 1))) ++cls;
+-  return cls;
+-}
+-[[nodiscard]] inline unsigned select_class(std::size_t page, std::size_t bytes, std::size_t alignment) noexcept {
+-  return select_class(page, bytes, alignment, first_class(page));
+-}
++struct FiniteConfig {
++  Palette palette{Palette::a};
++  std::uint16_t identities{256};
++};
++
++struct FiniteQualification;
++
++struct Identity {
++  std::uint16_t index{};
++  auto operator<=>(const Identity&) const = default;
++};
+ 
+ struct PageSpan {
+   std::size_t first{}, count{};
+@@ -97,15 +92,21 @@ inline void set_trim_span(std::span<std::uint64_t> bits, PageSpan span, bool set
+   }
+ }
+ 
+-/// One size class, 256 Homes. Identity i always means Home i. A Home is free,
+-/// pending (reserved by a preparation) or bound to a live identity. Ready
+-/// Homes are free with every covering page mapped.
++struct Home {
++  std::uint16_t grid{};
++  std::uint8_t cls{}, slot{};
++  std::size_t capacity{};
++  std::byte* address{};
++  PageSpan pages;
++};
++
++/// Fixed palette, binding plane and page state of one Group.
++/// Bindings locate storage; the shared allocation code manages physical uses.
+ class FiniteGroup {
+ public:
+   // Computes geometry without VM ownership. The allocator retains and charges its Group
+   // before helper preparation; geometry stays private until completion.
+-  [[nodiscard]] static Result<std::unique_ptr<FiniteGroup>> create(unsigned cls,
+-      std::size_t page_granule = 0) noexcept;
++  [[nodiscard]] static Result<std::unique_ptr<FiniteGroup>> create(FiniteConfig = {}) noexcept;
+   [[nodiscard]] Result<void> prepare() noexcept;
+   ~FiniteGroup();
+   // The allocator ends helper work and quarantines the group before retirement. Partial
+@@ -114,65 +115,84 @@ public:
+   FiniteGroup(const FiniteGroup&) = delete;
+   FiniteGroup& operator=(const FiniteGroup&) = delete;
+ 
+-  [[nodiscard]] unsigned cls() const noexcept { return cls_; }
+-  [[nodiscard]] std::size_t capacity() const noexcept { return capacity_; }
+-  [[nodiscard]] std::byte* address(std::size_t home) const noexcept { return payload_ + home * capacity_; }
+-  [[nodiscard]] PageSpan pages(std::size_t home) const noexcept {
+-    const auto first = home * capacity_ >> page_shift_;
+-    const auto last = ((home + 1) * capacity_ - 1) >> page_shift_;
+-    return {first, last - first + 1};
++  [[nodiscard]] Result<Identity> claim_identity(std::uint64_t excluded_grids = 0) noexcept;
++  [[nodiscard]] bool has_identity() const noexcept { return available_identity_grids_ != 0; }
++
++  [[nodiscard]] Result<void> release_identity(Identity) noexcept;
++  [[nodiscard]] Result<Home> claim_home(Identity, std::size_t bytes,
++                                      std::size_t alignment) noexcept;
++  // Select once while trying several identity grids in the same Group.
++  [[nodiscard]] Result<std::uint8_t> class_for(std::size_t bytes) const noexcept;
++  [[nodiscard]] Result<Home> claim_home_class(Identity, std::uint8_t cls,
++                                            std::size_t alignment) noexcept;
++  [[nodiscard]] Result<void> release_home(const Home&) noexcept;
++  [[nodiscard]] Result<void> bind(Identity, const Home&) noexcept;
++  // Protected identity only. Read path touches its binding and immutable
++  // geometry, never allocator occupancy; stale aliases are not reopened here.
++  [[nodiscard]] std::byte* resolve(Identity) const noexcept;
++  [[nodiscard]] Result<Home> bound_home(Identity) const noexcept;
++  [[nodiscard]] std::size_t bound_capacity(Identity identity) const noexcept {
++    if (identity.index >= identities_) return 0;
++    const auto coordinate = std::atomic_ref<std::uint8_t>(bindings_[identity.index])
++        .load(std::memory_order_acquire);
++    return coordinate == unbound ? 0 : capacities_[coordinate & 15];
+   }
+ 
+-  [[nodiscard]] bool has_free() const noexcept { return any(free_); }
+-  [[nodiscard]] bool has_ready() const noexcept { return any(ready_); }
+-  [[nodiscard]] bool is_free(std::size_t home) const noexcept { return test(free_, home); }
+-  [[nodiscard]] std::size_t free_count() const noexcept { return count(free_); }
+-
+-  /// Lowest ready Home, now bound to its identity; finite_homes if none.
+-  [[gnu::always_inline]] std::size_t take_ready() noexcept {
+-    for (std::size_t w = 0; w < finite_words; ++w)
+-      if (const auto word = ready_[w]) {
+-        const auto bit = static_cast<std::size_t>(std::countr_zero(word));
+-        ready_[w] = word & (word - 1);
+-        free_[w] &= ~(std::uint64_t{1} << bit);
+-        return w * 64 + bit;
+-      }
+-    return finite_homes;
+-  }
+-  /// Return a bound Home. It is ready again: a bound Home's pages stay mapped.
+-  [[gnu::always_inline]] void give(std::size_t home) noexcept {
+-    free_[home / 64] |= std::uint64_t{1} << (home % 64);
+-    ready_[home / 64] |= std::uint64_t{1} << (home % 64);
++  [[nodiscard]] const std::uint8_t* descriptor(Identity) const noexcept;
++
++  [[nodiscard]] std::size_t class_minimum(std::uint8_t cls) const noexcept;
++
++  [[nodiscard]] std::size_t native_page() const noexcept { return native_page_; }
++
++  [[nodiscard]] std::size_t host_page() const noexcept { return host_page_; }
++  [[nodiscard]] constexpr std::size_t slots_per_grid() const noexcept { return 16; }
++  [[nodiscard]] constexpr std::size_t class_count() const noexcept { return 15; }
++  [[nodiscard]] constexpr std::size_t grid_of(Identity id) const noexcept { return id.index >> 4; }
++  [[nodiscard]] std::size_t capacity(std::size_t cls) const noexcept {
++    return cls < capacities_.size() ? capacities_[cls] : 0;
+   }
+-  /// Lowest free Home whose pages are not all mapped; finite_homes if none.
+-  [[nodiscard]] std::size_t first_unready() const noexcept;
+-  /// Free unready Home needing the fewest absent pages (lowest on ties), so a
+-  /// costly straddling Home cannot hide an affordable one; finite_homes if none.
+-  [[nodiscard]] std::size_t cheapest_unready() const noexcept;
+-  /// Bind a specific free Home whose pages are all mapped.
+-  void claim(std::size_t home) noexcept;
+-
+-  // Preparation reserves a free Home: it leaves the free set until finish or
+-  // discard. Absent pages become preparing; other homes cannot claim them.
+-  [[nodiscard]] Result<std::size_t> begin_prepare(std::size_t home, std::span<PageSpan>) noexcept;
+-  [[nodiscard]] Result<void> finish_prepare(std::size_t home, std::span<const PageSpan>,
+-      bool prepared) noexcept;
+-  // Only confirmed DONTNEED + PROT_NONE bounds become absent/refundable.
+-  [[nodiscard]] Result<void> discard_preparation(std::size_t home, std::span<const PageSpan>) noexcept;
++
++  [[nodiscard]] std::size_t identity_count() const noexcept { return identities_; }
++
++  [[nodiscard]] std::size_t payload_pages() const noexcept { return payload_pages_; }
++
++  [[nodiscard]] std::size_t reserved_bytes() const noexcept { return reservation_ ? reserved_bytes_ : 0; }
++
++  // Exact requested bytes of the stable writable owner metadata heap block.
++  // The separately allocated sizeof(FiniteGroup) is not included.
++  [[nodiscard]] std::size_t control_bytes() const noexcept { return control_bytes_; }
++
++  [[nodiscard]] std::size_t mapped_pages() const noexcept { return mapped_pages_; }
++
++  [[nodiscard]] std::byte* page_address(std::size_t) const noexcept;
++  [[nodiscard]] bool mapped(std::size_t) const noexcept;
++  [[nodiscard]] bool trimming(std::size_t) const noexcept;
++  [[nodiscard]] bool preparing(std::size_t) const noexcept;
++  [[nodiscard]] bool pending(const Home&) const noexcept;
++  [[nodiscard]] std::size_t preparing_pages() const noexcept { return preparing_pages_; }
++
++  // Owner reserves absent pages and the Home before dispatch. The helper uses
++  // the returned immutable spans and initializes only the requested Home bytes.
++  // Only the owner finishes after VM and initialization settle. Failure keeps
++  // both reservations for a same-spans retry or confirmed physical discard.
++  [[nodiscard]] Result<std::size_t> begin_prepare(const Home&, std::span<PageSpan>) noexcept;
++  [[nodiscard]] Result<void> finish_prepare(const Home&, std::span<const PageSpan>,
++                                          bool prepared) noexcept;
++  // Only confirmed DONTNEED + PROT_NONE bounds become absent/refundable. The
++  // Home remains pending while the caller's record retains unsettled bounds.
++  [[nodiscard]] Result<void> discard_preparation(const Home&, std::span<const PageSpan>) noexcept;
+   // Owner calls after helper work ends and every original span is settled;
+-  // the Home becomes free again.
+-  void end_prepare(std::size_t home) noexcept;
+-  /// Pending Home becomes bound to its identity after a successful preparation.
+-  void bind_prepared(std::size_t home) noexcept;
+-  [[nodiscard]] bool pending(std::size_t home) const noexcept { return test(pending_, home); }
++  // already-discarded pages may now belong to a different preparation.
++  [[nodiscard]] Result<void> end_prepare(const Home&) noexcept;
+ 
+-  /// Mark absent/mapped pages mapped and refresh readiness of the free Homes they cover.
++  // The allocator completes mappings/charges before marking them ready. Trim reserves
++  // empty mapped pages first, excluding new claims until completion or failure.
+   [[nodiscard]] Result<void> mark_mapped(PageSpan) noexcept;
+-  /// Absent pages contiguous from first, at most limit of them.
+-  [[nodiscard]] std::size_t absent_run(std::size_t first, std::size_t limit) const noexcept;
+-
+-  // Trim reserves empty mapped pages first, excluding new claims until completion
+-  // or failure. Membership stays immutable through helper completion.
++  [[nodiscard]] Result<void> begin_trim(PageSpan) noexcept;
++  [[nodiscard]] Result<void> begin_trim(std::span<const PageSpan>) noexcept;
++  // Separate from owner scratch. Membership remains immutable through helper
++  // completion; failed membership survives reply/retry. Success is helper-only
++  // until reply and is cleared by the owner before dispatch.
+   [[nodiscard]] std::span<std::uint64_t> trim_membership() noexcept {
+     return {trim_scratch_ + live_words(), live_words()};
+   }
+@@ -189,51 +209,45 @@ public:
+   [[nodiscard]] Result<void> begin_trim() noexcept;
+   [[nodiscard]] Result<void> finish_trim(PageSpan, bool discarded) noexcept;
+   [[nodiscard]] std::size_t live_words() const noexcept { return (payload_pages_ + 63) / 64; }
+-  /// Pages covered by any Home that is bound or pending.
+-  [[nodiscard]] Result<void> live_pages(std::span<std::uint64_t>) const noexcept;
+ 
+-  [[nodiscard]] std::size_t native_page() const noexcept { return native_page_; }
+-  [[nodiscard]] std::size_t host_page() const noexcept { return host_page_; }
+-  [[nodiscard]] std::size_t payload_pages() const noexcept { return payload_pages_; }
+-  [[nodiscard]] std::size_t reserved_bytes() const noexcept { return reservation_ ? reserved_bytes_ : 0; }
+-  [[nodiscard]] std::size_t control_bytes() const noexcept { return control_bytes_; }
+-  [[nodiscard]] std::size_t mapped_pages() const noexcept { return mapped_pages_; }
+-  [[nodiscard]] std::size_t preparing_pages() const noexcept { return preparing_pages_; }
+-  [[nodiscard]] std::byte* page_address(std::size_t page) const noexcept {
+-    return page < payload_pages_ ? payload_ + page * native_page_ : nullptr;
+-  }
+-  [[nodiscard]] bool mapped(std::size_t page) const noexcept { return page < payload_pages_ && pages_[page] == Page::mapped; }
+-  [[nodiscard]] bool trimming(std::size_t page) const noexcept { return page < payload_pages_ && pages_[page] == Page::trimming; }
+-  [[nodiscard]] bool preparing(std::size_t page) const noexcept { return page < payload_pages_ && pages_[page] == Page::preparing; }
++  [[nodiscard]] Result<void> live_pages(std::span<std::uint64_t>) const noexcept;
+ 
+ private:
++  friend struct FiniteQualification;
++  [[nodiscard]] static Result<std::unique_ptr<FiniteGroup>> create_geometry(
++      FiniteConfig, std::size_t page_granule) noexcept;
++  static constexpr std::uint8_t unbound = 0xff;
+   FiniteGroup() = default;
++  struct Grid {
++    std::uint16_t identities{};
++    std::array<std::uint16_t, 15> occupied{};
++    std::array<std::uint16_t, 15> pending{};
++  };
+   enum class Page : std::uint8_t { absent, mapped, trimming, preparing };
+-  using Bits = std::array<std::uint64_t, finite_words>;
+-  static bool any(const Bits& bits) noexcept { return (bits[0] | bits[1] | bits[2] | bits[3]) != 0; }
+-  static bool test(const Bits& bits, std::size_t i) noexcept { return bits[i / 64] >> (i % 64) & 1; }
+-  static std::size_t count(const Bits& bits) noexcept {
+-    std::size_t total = 0;
+-    for (auto word : bits) total += static_cast<std::size_t>(std::popcount(word));
+-    return total;
+-  }
+-  [[nodiscard]] bool home_mapped(std::size_t home) const noexcept;
+-  // Homes overlapping a page span: [first, last].
+-  [[nodiscard]] std::pair<std::size_t, std::size_t> homes(PageSpan) const noexcept;
+-  void refresh_ready(PageSpan) noexcept;
++  [[nodiscard]] bool valid(Identity) const noexcept;
++  [[nodiscard]] bool occupied(const Home&) const noexcept;
++  [[nodiscard]] bool bound(const Home&) const noexcept;
++  [[nodiscard]] bool valid(PageSpan) const noexcept;
++  [[nodiscard]] Result<std::size_t> preparation_spans(
++      const Home&, std::span<const PageSpan>) const noexcept;
++  [[nodiscard]] Home home(std::size_t grid, unsigned cls, unsigned slot) const noexcept;
+ 
+-  // Hot owner state first: bitmaps and address arithmetic share two lines.
+-  alignas(64) Bits free_{}, ready_{};
+-  std::byte* payload_{};
+-  std::size_t capacity_{};
+-  unsigned cls_{}, page_shift_{};
+-  Bits pending_{};
+   std::byte* reservation_{};
++  std::byte* payload_{};
++  std::uint8_t* bindings_{};
++  void* metadata_{};
++  std::size_t metadata_bytes_{};
++  Grid* grids_{};
+   Page* pages_{};
+   std::uint64_t* trim_scratch_{};
+-  void* metadata_{};
+   std::size_t native_page_{}, host_page_{}, reserved_bytes_{}, control_bytes_{};
+-  std::size_t payload_pages_{}, mapped_pages_{}, preparing_pages_{};
++  std::size_t identities_{}, grid_count_{}, payload_pages_{};
++  std::array<std::uint16_t, 15> capacities_{};
++  std::array<std::uint32_t, 15> offsets_{};
++  const std::uint8_t* class_lookup_{};
++  std::uint8_t class_lookup_shift_{};
++  alignas(64) std::uint64_t available_identity_grids_{};
++  std::size_t mapped_pages_{}, preparing_pages_{};
+ };
+ 
+ } // namespace orbital::allocation::detail
+diff --git b/orbital/src/allocation/group.cpp a/orbital/src/allocation/group.cpp
+index 6c8f6e50..77430b34 100644
+--- b/orbital/src/allocation/group.cpp
++++ a/orbital/src/allocation/group.cpp
+@@ -24,7 +24,7 @@ void group_trim_run(Job& job) noexcept {
+   while (next_trim_span(membership, cursor, span)) {
+     auto* address = group.geometry->page_address(span.first);
+     const auto amount = group.geometry->native_page() * span.count;
+-    // No bound or pending Home overlaps a reserved trim page. Even failed protection
++    // No active home overlaps a reserved trim page. Even failed protection
+     // changes cannot invalidate readable contents: this was idle capacity.
+     if (::madvise(address, amount, MADV_DONTNEED) == 0 &&
+         ::mprotect(address, amount, PROT_NONE) == 0)
+@@ -81,12 +81,15 @@ void group_trim_release(worker::Message& message) noexcept {
+ 
+ const worker::MessageOps group_trim_ops{no_retain, group_trim_handle, group_trim_release};
+ 
+-Result<Group*> make_group(Pool& pool, unsigned cls, bool deferred = false) {
+-  auto geometry = FiniteGroup::create(cls);
++Result<Group*> make_group(Pool& pool, Palette palette, bool deferred = false) {
++  auto geometry = FiniteGroup::create({palette, group_identities});
+   if (!geometry) return std::unexpected(geometry.error());
+   try {
+     auto group = std::make_unique<Group>();
++    group->palette = palette;
+     group->geometry = std::move(*geometry);
++    const auto count = group->geometry->identity_count();
++    assert(count == group->uses.size());
+     group->live.resize(group->geometry->live_words());
+     // sizeof(Group) includes its fixed identity records and hints.
+     // Account concrete prepared bookkeeping, separately from sparse VA/RSS.
+@@ -107,14 +110,15 @@ Result<Group*> make_group(Pool& pool, unsigned cls, bool deferred = false) {
+     group->job = {nullptr, group.get(), group_trim_run};
+     group->trimmed.context = group.get();
+     group->trimmed.ops = &group_trim_ops;
+-    for (std::size_t i = 0; i < finite_homes; ++i)
++    for (std::size_t i = 0; i < count; ++i) {
+       group->uses[i].initialize_identity(static_cast<std::uint8_t>(i));
++    }
+     auto* result = group.get();
+     result->owner_index = pool.internal->groups.size();
+     try { pool.internal->groups.push_back(std::move(group)); }
+     catch (...) { refund(pool, result->metadata_charge); throw; }
+     if (deferred) {
+-      auto& preparing = pool.internal->preparing_groups[cls];
++      auto& preparing = pool.internal->preparing_groups[static_cast<std::size_t>(palette)];
+       assert(!preparing);
+       preparing = result;
+       result->control_preparing = true;
+@@ -133,94 +137,6 @@ Result<Group*> make_group(Pool& pool, unsigned cls, bool deferred = false) {
+   } catch (const std::bad_alloc&) { return std::unexpected(Error::capacity); }
+ }
+ 
+-// Map the Home's absent pages plus up to map_ahead following absent pages of
+-// the same Group (no more than it already maps) with one mprotect per run. Every page belongs to this class,
+-// so the run cannot strand another class's pages. Extra pages are charged idle
+-// capacity that trim returns; a refused claim maps only the Home itself.
+-constexpr std::size_t map_ahead = 15;
+-Result<void> map_home(Group& group, std::size_t home) noexcept {
+-  auto& pool = *group.uses.domain.pool;
+-  auto& geometry = *group.geometry;
+-  const auto page = geometry.native_page();
+-  const auto span = geometry.pages(home);
+-  std::size_t missing = 0;
+-  for (auto p = span.first; p < span.first + span.count; ++p) missing += !geometry.mapped(p);
+-  if (!missing) return {};
+-  const auto end = span.first + span.count;
+-  // Runs double with the Group's mapped inventory, so a sparsely used class
+-  // does not map 16 pages for its first Home.
+-  auto ahead = geometry.absent_run(end, std::min(map_ahead, geometry.mapped_pages()));
+-  if (!ahead || !claim(pool, (missing + ahead) * page)) {
+-    ahead = 0;
+-    if (!claim(pool, missing * page)) return std::unexpected(Error::capacity);
+-  }
+-  auto remaining = missing + ahead;
+-  for (auto p = span.first; p < end + ahead;) {
+-    if (geometry.mapped(p)) { ++p; continue; }
+-    auto q = p;
+-    while (q < end + ahead && !geometry.mapped(q)) ++q;
+-    auto* address = geometry.page_address(p);
+-    if (::mprotect(address, (q - p) * page, PROT_READ | PROT_WRITE) != 0) {
+-      refund(pool, remaining * page);
+-      return std::unexpected(Error::io);
+-    }
+-#ifdef ORBITAL_FINITE_POPULATE
+-    (void)::madvise(address, (q - p) * page, MADV_POPULATE_WRITE); // Advisory prefault.
+-#endif
+-    verify(geometry.mark_mapped({p, q - p}));
+-    remaining -= q - p;
+-    p = q;
+-  }
+-  return {};
+-}
+-
+-void bind_home(Pool& pool, Group& group, std::size_t home, const AllocationRequest& request,
+-    Allocation& result) noexcept {
+-  result.storage = &group.uses[home];
+-  result.address = group.geometry->address(home);
+-  result.size = request.bytes;
+-  result.readable_padding = request.readable_padding;
+-  (void)pool;
+-}
+-
+-// Ready Homes in any Group of this class, then unmapped Homes in existing
+-// Groups, then a fresh Group. The inline fast path has already tried the head.
+-Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, unsigned cls,
+-    Allocation& result) {
+-  auto& state = *pool.internal;
+-  for (auto* group = state.available[cls], *next = group; group; group = next) {
+-    next = group->next_available;
+-    if (!group->geometry->has_free()) { remove_available(*group); continue; } // Full head from the fast path.
+-    if (!group->geometry->has_ready()) continue;
+-    const auto home = group->geometry->take_ready();
+-    ++state.counts.reuses;
+-    bind_home(pool, *group, home, request, result);
+-    return {};
+-  }
+-  for (auto* group = state.available[cls]; group; group = group->next_available) {
+-    const auto home = group->geometry->cheapest_unready();
+-    if (home == finite_homes) continue;
+-    auto mapped = map_home(*group, home);
+-    if (!mapped) {
+-      if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
+-      continue;
+-    }
+-    group->geometry->claim(home);
+-    bind_home(pool, *group, home, request, result);
+-    return {};
+-  }
+-  auto made = make_group(pool, cls);
+-  if (!made) return std::unexpected(made.error());
+-  auto& group = **made;
+-  const auto home = group.geometry->first_unready();
+-  assert(home == 0);
+-  auto mapped = map_home(group, home);
+-  if (!mapped) return std::unexpected(mapped.error());
+-  group.geometry->claim(home);
+-  bind_home(pool, group, home, request, result);
+-  return {};
+-}
+-
+ struct FinitePreparation {
+   enum class Phase { control, material, cleanup };
+   Preparation* request{};
+@@ -229,7 +145,8 @@ struct FinitePreparation {
+   worker::Lane* preparer{};
+   worker::Message message;
+   Ref<Arena> lifetime;
+-  std::size_t home{finite_homes};
++  Identity identity;
++  Home home;
+   std::array<PageSpan, 2> spans;
+   std::array<bool, 2> discarded{};
+   std::size_t span_count{};
+@@ -239,34 +156,126 @@ struct FinitePreparation {
+ };
+ 
+ void finite_prepare_post(FinitePreparation&) noexcept;
++// Owner-only candidate traversal shared by direct and prepared allocation.
++// A class-blocked grid cannot hide legal Homes in later grids.
++Result<std::pair<Identity, Home>> claim_finite_candidate(Group& group,
++    std::size_t size, std::size_t alignment, std::uint64_t& excluded) noexcept {
++  const auto cls = group.geometry->class_for(size);
++  if (!cls) return std::unexpected(cls.error());
++  for (;;) {
++    auto identity = group.geometry->claim_identity(excluded);
++    if (!identity) return std::unexpected(identity.error());
++    auto home = group.geometry->claim_home_class(*identity, *cls, alignment);
++    if (home) return std::pair{*identity, *home};
++    excluded |= std::uint64_t{1} << (group.geometry->grid_of(*identity));
++    verify(group.geometry->release_identity(*identity));
++    if (home.error() != Error::capacity) return std::unexpected(home.error());
++  }
++}
++
++void release_finite_candidate(Group& group, const std::pair<Identity, Home>& candidate,
++    std::uint64_t& excluded) noexcept {
++  verify(group.geometry->release_home(candidate.second));
++  verify(group.geometry->release_identity(candidate.first));
++  excluded |= std::uint64_t{1} << (group.geometry->grid_of(candidate.first));
++}
++
++std::size_t missing_pages(const Group& group, const Home& home) noexcept {
++  std::size_t count = 0;
++  for (auto p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
++    count += !group.geometry->mapped(p);
++  return count;
++}
++
++struct FiniteCandidate {
++  Group* group{};
++  Identity identity;
++  Home home;
++};
++
++// Positive selection hints only. Authority remains in the Group's identities,
++// occupied Homes and physical page state; a stale hint cannot hide a fallback.
++Result<std::optional<FiniteCandidate>> claim_ready_candidate(Pool& pool,
++    std::size_t size, std::size_t alignment, Palette palette) noexcept {
++  for (auto& cached : pool.internal->ready_candidates) {
++    if (!cached.group || size < cached.minimum || size > cached.maximum ||
++        alignment != cached.alignment || cached.group->palette != palette) continue;
++    auto& group = *cached.group;
++    if (group.retiring || group.control_preparing || !group.previous_available) {
++      cached.group = nullptr; continue;
++    }
++    auto identity = group.geometry->claim_identity(~(std::uint64_t{1} << cached.grid));
++    if (!identity) {
++      cached.group = nullptr;
++      if (identity.error() != Error::capacity) return std::unexpected(identity.error());
++      continue;
++    }
++    auto home = group.geometry->claim_home(*identity, size, alignment);
++    if (!home) {
++      verify(group.geometry->release_identity(*identity));
++      cached.group = nullptr;
++      if (home.error() != Error::capacity) return std::unexpected(home.error());
++      continue;
++    }
++    if (!missing_pages(group, *home)) return FiniteCandidate{&group, *identity, *home};
++    verify(group.geometry->release_home(*home));
++    verify(group.geometry->release_identity(*identity));
++    cached.group = nullptr;
++  }
++  return std::nullopt;
++}
++
++void remember_ready_candidate(Pool& pool, Group& group, const Home& home,
++    std::size_t alignment) noexcept {
++  if (!group.previous_available || group.retiring || group.control_preparing) return;
++  const auto minimum = static_cast<std::uint16_t>(group.geometry->class_minimum(home.cls));
++  const auto maximum = static_cast<std::uint16_t>(home.capacity);
++  auto& hints = pool.internal->ready_candidates;
++  for (auto& cached : hints) {
++    if (cached.minimum == minimum && cached.maximum == maximum && cached.alignment == alignment) {
++      cached = {&group, minimum, maximum, static_cast<std::uint16_t>(alignment), static_cast<std::uint8_t>(home.grid)};
++      return;
++    }
++  }
++  auto& next = pool.internal->next_candidate;
++  hints[next] = {&group, minimum, maximum, static_cast<std::uint16_t>(alignment), static_cast<std::uint8_t>(home.grid)};
++  next = static_cast<std::uint8_t>((next + 1) % hints.size());
++}
+ 
+-Result<void> reserve_preparation_home(FinitePreparation& record, std::size_t home) noexcept {
++Result<void> reserve_preparation_home(FinitePreparation& record,
++    const std::pair<Identity, Home>& candidate) noexcept {
+   auto& geometry = *record.group->geometry;
+-  const auto span = geometry.pages(home);
+-  if (span.count > record.spans.size()) return std::unexpected(Error::unavailable);
+-  std::size_t missing = 0;
+-  for (auto p = span.first; p < span.first + span.count; ++p) missing += !geometry.mapped(p);
++  const auto& home = candidate.second;
++  if (home.pages.count > record.spans.size()) return std::unexpected(Error::unavailable);
++  const auto missing = missing_pages(*record.group, home);
+   const auto charge = missing * geometry.native_page();
+   if (charge && !claim(*record.pool, charge)) return std::unexpected(Error::capacity);
+   const auto reserved = geometry.begin_prepare(home, record.spans);
+   if (!reserved) { refund(*record.pool, charge); return std::unexpected(reserved.error()); }
+-  record.home = home; record.span_count = *reserved;
++  record.identity = candidate.first; record.home = home; record.span_count = *reserved;
+   record.reused = missing == 0;
+-  if (!geometry.has_free()) remove_available(*record.group);
++  if (!geometry.has_identity()) remove_available(*record.group);
+   return {};
+ }
+ 
+-// Lowest free Home that is ready (or needs pages), without binding it.
+-std::size_t candidate_home(FiniteGroup& geometry, bool ready) noexcept {
+-  if (!ready) return geometry.cheapest_unready();
+-  for (std::size_t home = 0; home < finite_homes; ++home)
+-    if (geometry.is_free(home)) {
+-      const auto span = geometry.pages(home);
+-      bool mapped = true;
+-      for (auto p = span.first; mapped && p < span.first + span.count; ++p) mapped = geometry.mapped(p);
+-      if (mapped) return home;
++Result<void> select_preparation_home(FinitePreparation& record, bool ready) noexcept {
++  const auto& request = record.request->request;
++  std::uint64_t excluded = 0;
++  for (;;) {
++    auto candidate = claim_finite_candidate(*record.group,
++        std::max(request.bytes + request.readable_padding, request.reserved_bytes), request.alignment, excluded);
++    if (!candidate) return std::unexpected(candidate.error());
++    const auto release = [&] { release_finite_candidate(*record.group, *candidate, excluded); };
++    auto& home = candidate->second;
++    if ((missing_pages(*record.group, home) == 0) != ready) { release(); continue; }
++    const auto reserved = reserve_preparation_home(record, *candidate);
++    if (!reserved) {
++      release();
++      if (reserved.error() == Error::capacity) continue;
++      return std::unexpected(reserved.error());
+     }
+-  return finite_homes;
++    return {};
++  }
+ }
+ 
+ void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
+@@ -298,24 +307,24 @@ void finite_prepare_handle(worker::Message& message, worker::Lane&) noexcept {
+   }
+   record.vm_ready = true;
+   const auto& request = record.request->request;
+-  auto* address = geometry.address(record.home);
+   // Legal RW pages may still be physically absent after an untouched direct
+   // uninitialized allocation. Touch only this exclusive Home, never neighbours.
+   if (request.initialization == Initialization::uninitialized) {
+     const auto bytes = request.bytes + request.readable_padding;
+     for (std::size_t offset = 0; offset < bytes;) {
+-      *static_cast<volatile std::byte*>(address + offset) = std::byte{0};
+-      const auto to_boundary = page - reinterpret_cast<std::uintptr_t>(address + offset) % page;
++      auto* address = record.home.address + offset;
++      *static_cast<volatile std::byte*>(address) = std::byte{0};
++      const auto to_boundary = page - reinterpret_cast<std::uintptr_t>(address) % page;
+       offset += std::min(to_boundary, bytes - offset);
+     }
+   }
+   if (request.initialization == Initialization::zero)
+-    std::memset(address, 0, request.bytes + request.readable_padding);
++    std::memset(record.home.address, 0, request.bytes + request.readable_padding);
+   else if (request.readable_padding)
+-    std::memset(address + request.bytes, 0, request.readable_padding);
++    std::memset(record.home.address + request.bytes, 0, request.readable_padding);
+   record.initialized = true;
+   if (auto constructor = record.request->construct) {
+-    const auto result = constructor({{address, request.bytes}, request.readable_padding},
++    const auto result = constructor({{record.home.address, request.bytes}, request.readable_padding},
+         record.request->context);
+     record.initialized = result.has_value();
+     if (!result) record.error = result.error();
+@@ -344,12 +353,6 @@ void finite_prepare_finish(FinitePreparation& record, Result<void> status) noexc
+   complete(request.changed, status);
+ }
+ 
+-Result<void> select_preparation_home(FinitePreparation& record, bool ready) noexcept {
+-  const auto home = candidate_home(*record.group->geometry, ready);
+-  if (home == finite_homes) return std::unexpected(Error::capacity);
+-  return reserve_preparation_home(record, home);
+-}
+-
+ void finite_prepare_reply_release(worker::Message& message) noexcept {
+   auto& record = *static_cast<FinitePreparation*>(message.context);
+   auto& pool = *record.pool;
+@@ -357,7 +360,7 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
+   auto& request = *record.request;
+   const bool cancelled = request.discard || pool.internal->close_requested;
+   if (record.phase == FinitePreparation::Phase::control) {
+-    auto& preparing = pool.internal->preparing_groups[group.geometry->cls()];
++    auto& preparing = pool.internal->preparing_groups[static_cast<std::size_t>(group.palette)];
+     assert(preparing == &group);
+     preparing = nullptr;
+     group.control_preparing = false;
+@@ -395,7 +398,9 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
+       pulse(pool.capacity_changed);
+       return; // Explicit retry only; service stays useful under persistent failure.
+     }
+-    group.geometry->end_prepare(record.home);
++    verify(group.geometry->end_prepare(record.home));
++    verify(group.geometry->release_identity(record.identity));
++    verify(group.geometry->release_home(record.home));
+     add_available(group);
+     finite_prepare_finish(record, std::unexpected(record.error));
+     return;
+@@ -420,15 +425,17 @@ void finite_prepare_reply_release(worker::Message& message) noexcept {
+   }
+   verify(group.geometry->finish_prepare(record.home, spans, true));
+   if (cancelled || !record.initialized) {
+-    group.geometry->end_prepare(record.home);
++    verify(group.geometry->release_identity(record.identity));
++    verify(group.geometry->release_home(record.home));
+     add_available(group);
+     finite_prepare_finish(record, std::unexpected(cancelled ? Error::rejected : record.error));
+     return;
+   }
+-  group.geometry->bind_prepared(record.home);
+-  auto& use = group.uses[record.home];
++  verify(group.geometry->bind(record.identity, record.home));
++  remember_ready_candidate(pool, group, record.home, request.request.alignment);
++  auto& use = group.uses[record.identity.index];
+   activate(use);
+-  request.value.storage = &use; request.value.address = group.geometry->address(record.home);
++  request.value.storage = &use; request.value.address = record.home.address;
+   request.value.size = request.request.bytes; request.value.readable_padding = request.request.readable_padding;
+   request.reused = record.reused;
+   ++pool.internal->counts.allocations;
+@@ -454,30 +461,47 @@ void finite_prepare_post(FinitePreparation& record) noexcept {
+ }
+ 
+ Result<void> prepare_finite(Pool& pool, Preparation& request,
+-    const AllocationRequest& allocation, unsigned cls, worker::Lane& preparer) {
++    const AllocationRequest& allocation, worker::Lane& preparer) {
+   auto owned = std::unique_ptr<FinitePreparation>(new (std::nothrow) FinitePreparation);
+   if (!owned || !claim(pool, sizeof(FinitePreparation))) return std::unexpected(Error::capacity);
+   auto& record = *owned;
+   record.request = &request; record.pool = &pool; record.preparer = &preparer;
+   request.request = allocation;
+   Error refusal = Error::capacity;
+-  // Same order as direct allocation: mapped Homes, then new pages in existing
+-  // Groups, then one fresh control preparation per class.
+-  for (unsigned pass = 0; pass < 3 && !record.group && refusal == Error::capacity; ++pass) {
+-    if (pass == 2) {
+-      // Pending helper work is not budget pressure; wait for that Group.
+-      if (pool.internal->preparing_groups[cls]) {
++  const auto size = std::max(allocation.bytes + allocation.readable_padding, allocation.reserved_bytes);
++  const auto palette = preferred_palette(page_size(), size, allocation.alignment);
++  auto cached = claim_ready_candidate(pool, size, allocation.alignment, palette);
++  if (!cached) refusal = cached.error();
++  else if (*cached) {
++    const auto& choice = **cached;
++    record.group = choice.group;
++    const std::pair candidate{choice.identity, choice.home};
++    auto reserved = reserve_preparation_home(record, candidate);
++    if (!reserved) {
++      std::uint64_t excluded = 0;
++      release_finite_candidate(*record.group, candidate, excluded);
++      record.group = nullptr; refusal = reserved.error();
++    }
++  }
++  // Prefer dense geometry; reuse other ready backing before mapping pages.
++  // Only a refused fresh Group permits new pages in the other palette.
++  for (unsigned pass = 0; pass < 4 && !record.group && refusal == Error::capacity; ++pass) {
++    if (pass == 3) {
++      // One fresh control preparation per palette. Pending helper work is not
++      // budget pressure and must not scatter requests into another geometry.
++      if (pool.internal->preparing_groups[static_cast<std::size_t>(palette)]) {
+         refund(pool, sizeof(FinitePreparation));
+         return std::unexpected(Error::unavailable);
+       }
+-      auto made = make_group(pool, cls, true);
++      auto made = make_group(pool, palette, true);
+       if (made) { record.group = *made; record.phase = FinitePreparation::Phase::control; break; }
+       refusal = made.error();
+-      break;
++      if (refusal != Error::capacity) break;
+     }
+-    for (auto* group = pool.internal->available[cls]; group; group = group->next_available) {
++    for (auto* group = pool.internal->available_groups; group; group = group->next_available) {
++      if ((group->palette == palette) != (pass == 0 || pass == 2)) continue;
+       record.group = group;
+-      auto selected = select_preparation_home(record, pass == 0);
++      auto selected = select_preparation_home(record, pass < 2);
+       if (selected) break;
+       record.group = nullptr;
+       refusal = selected.error();
+@@ -497,6 +521,128 @@ Result<void> prepare_finite(Pool& pool, Preparation& request,
+   return {};
+ }
+ 
++Result<void> map_home(Group& group, const Home& home) noexcept {
++  auto& pool = *group.uses.domain.pool;
++  const auto page = group.geometry->native_page();
++  std::size_t remaining = 0;
++  for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p)
++    remaining += !group.geometry->mapped(p);
++  // Claim the complete candidate before changing any page. Capacity refusal
++  // leaves the budget available to another legal home or packing group.
++  if (remaining && !claim(pool, remaining * page)) return std::unexpected(Error::capacity);
++  for (std::size_t p = home.pages.first; p < home.pages.first + home.pages.count; ++p) {
++    if (group.geometry->mapped(p)) continue;
++    if (::mprotect(group.geometry->page_address(p), page, PROT_READ | PROT_WRITE) != 0) {
++      refund(pool, remaining * page);
++      return std::unexpected(Error::io);
++    }
++    verify(group.geometry->mark_mapped({p, 1}));
++    --remaining;
++  }
++  return {};
++}
++
++Result<void> finite_allocate(Pool& pool, const AllocationRequest& request, std::size_t size,
++    Allocation& result) {
++  const auto alignment = request.alignment;
++  const auto palette = preferred_palette(page_size(), size, alignment);
++  Group* selected = nullptr;
++  Identity identity;
++  Home home;
++  bool prepared = false;
++  auto cached = claim_ready_candidate(pool, size, alignment, palette);
++  if (!cached) return std::unexpected(cached.error());
++  if (*cached) {
++    const auto& choice = **cached;
++    selected = choice.group; identity = choice.identity; home = choice.home;
++    prepared = true;
++  }
++  // Same order as preparation: preferred ready, other ready, preferred new
++  // pages, fresh preferred Group. Fall back to other new pages only on refusal.
++  for (unsigned pass = 0; pass < 4 && !selected; ++pass) {
++    if (pass == 3) {
++      auto made = make_group(pool, palette);
++      if (made) {
++        auto* group = *made;
++        auto id = group->geometry->claim_identity();
++        assert(id);
++        auto candidate = group->geometry->claim_home(*id, size, alignment);
++        if (!candidate) {
++          verify(group->geometry->release_identity(*id));
++          return std::unexpected(candidate.error());
++        }
++        auto mapped = map_home(*group, *candidate);
++        if (mapped) { selected = group; identity = *id; home = *candidate; break; }
++        verify(group->geometry->release_home(*candidate));
++        verify(group->geometry->release_identity(*id));
++        if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
++      } else if (made.error() != Error::capacity) return std::unexpected(made.error());
++    }
++    for (auto* group = pool.internal->available_groups; group; group = group->next_available) {
++      if ((group->palette == palette) != (pass == 0 || pass == 2)) continue;
++      std::uint64_t excluded = 0;
++      for (;;) {
++        auto candidate = claim_finite_candidate(*group, size, alignment, excluded);
++        if (!candidate) {
++          if (candidate.error() != Error::capacity) return std::unexpected(candidate.error());
++          break;
++        }
++        const bool ready = missing_pages(*group, candidate->second) == 0;
++        if (ready != (pass < 2)) { release_finite_candidate(*group, *candidate, excluded); continue; }
++        auto mapped = map_home(*group, candidate->second);
++        if (!mapped) {
++          release_finite_candidate(*group, *candidate, excluded);
++          if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
++          continue;
++        }
++        prepared = ready;
++        selected = group; identity = candidate->first; home = candidate->second; break;
++      }
++      if (selected) break;
++    }
++  }
++  if (!selected) return std::unexpected(Error::capacity);
++  if (prepared) ++pool.internal->counts.reuses;
++  verify(selected->geometry->bind(identity, home));
++  if (!selected->geometry->has_identity()) remove_available(*selected);
++  remember_ready_candidate(pool, *selected, home, alignment);
++  auto& use = selected->uses[identity.index];
++  result.storage = &use;
++  result.address = home.address;
++  result.size = request.bytes;
++  result.readable_padding = request.readable_padding;
++  return {};
++}
++
++Result<bool> relocate_finite(Allocation& allocation, const GrowthRequest& request,
++    std::size_t needed) {
++  auto& use = *allocation.storage;
++  auto& group = *static_cast<Group*>(route(use)->context);
++  auto& pool = *route(use)->pool;
++  const auto old = group.geometry->bound_home({use.identity()});
++  assert(old);
++  auto destination = group.geometry->claim_home({use.identity()}, needed, request.alignment);
++  if (!destination && destination.error() != Error::capacity)
++    return std::unexpected(destination.error());
++  if (destination) {
++    const auto mapped = map_home(group, *destination);
++    if (mapped) {
++      std::memcpy(destination->address, allocation.address,
++          allocation.size + allocation.readable_padding);
++      verify(group.geometry->bind({use.identity()}, *destination));
++      verify(group.geometry->release_home(*old));
++      allocation.address = destination->address;
++      allocation.size = request.bytes; allocation.readable_padding = request.readable_padding;
++      ++pool.internal->counts.relocations;
++      ++pool.internal->counts.growths;
++      return true;
++    }
++    verify(group.geometry->release_home(*destination));
++    if (mapped.error() != Error::capacity) return std::unexpected(mapped.error());
++  }
++  return false;
++}
++
+ } // namespace orbital::allocation::detail
+ 
+ namespace orbital::allocation {
+diff --git b/orbital/src/allocation/internal.h a/orbital/src/allocation/internal.h
+index f54e56dc..fdcc0f3e 100644
+--- b/orbital/src/allocation/internal.h
++++ a/orbital/src/allocation/internal.h
+@@ -17,8 +17,8 @@
+ 
+ namespace orbital::allocation {
+ namespace detail { struct Domain; struct Group; struct Window; }
+-// One immutable identity byte (the Home index within its Group or zero for a
+-// Window) and 24 use-state bits, including the return tag.
++// Physical retention is independent of the dense one-byte binding plane.
++// One immutable identity byte and 24 use-state bits, including the return tag.
+ struct UseState {
+   static constexpr std::uint32_t user_mask = 0x00ffffffu;
+   std::atomic<std::uint32_t> state{};
+@@ -40,10 +40,6 @@ struct Storage {
+ static_assert(sizeof(Storage) == 4);
+ 
+ namespace detail {
+-inline std::size_t page_size() noexcept {
+-  static const auto value = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
+-  return value;
+-}
+ constexpr std::uint32_t returning = std::uint32_t{1} << 23;
+ constexpr std::uint16_t group_identities = 256;
+ 
+@@ -92,6 +88,8 @@ struct Group {
+   Group* next_available{};
+   Group** previous_available{};
+   std::unique_ptr<FiniteGroup> geometry;
++  Ref<Arena> active_lifetime; // Owner-managed pin while any finite identity is live/returning.
++  std::uint16_t active_identities{};
+   ReleaseHint foreign_use;
+   bool advice_pending{};
+   std::vector<std::uint64_t> live;
+@@ -102,6 +100,7 @@ struct Group {
+   Ref<Arena> trim_lifetime;
+   bool trim_pending{}, retiring{};
+   bool retired{}, control_preparing{};
++  Palette palette{};
+   std::uint64_t preparations{};
+   ReleaseHint last_use;
+   std::uint64_t retire_charge{}, retire_mapped{}, retire_reserved{};
+@@ -117,6 +116,7 @@ using WindowSizes = std::map<std::size_t, IdleWindows>;
+ struct Window {
+   StorageOwner<1> uses;
+   std::size_t owner_index{}; // Pool owning-vector position, not an allocation identity.
++  Ref<Arena> active_lifetime;
+   Window* next_idle{};
+   Window** previous_idle{};
+   WindowSizes::value_type* size_entry{};
+@@ -145,21 +145,21 @@ struct Window {
+   ~Window();
+ };
+ 
++struct ReadyCandidate {
++  Group* group{};
++  std::uint16_t minimum{}, maximum{}, alignment{};
++  std::uint8_t grid{};
++};
++
+ struct PoolState {
+-  // Per class, Groups with a free Home; the head serves new allocations.
+-  std::array<Group*, finite_classes> available{};
+-  // The head Group's geometry, so the fast path skips one dependent load.
+-  std::array<FiniteGroup*, finite_classes> head_geometry{};
+-  std::size_t page{page_size()}; // Native page, fixed for the Pool's lifetime.
+-  unsigned floor_class{first_class(page)};
+-  // Owner-managed Arena pin while any use is live or awaiting its owner return.
+-  std::size_t active_uses{};
+-  Ref<Arena> active_lifetime;
++  std::array<ReadyCandidate, 4> ready_candidates;
++  std::uint8_t next_candidate{};
+   Pool* next_interested{};
+   Pool* previous_interested{};
+   std::vector<std::unique_ptr<Group>> groups;
+-  // Owner-only index of the one permitted control preparation per class.
+-  std::array<Group*, finite_classes> preparing_groups{};
++  // Owner-only index of the one permitted control preparation per palette.
++  std::array<Group*, 2> preparing_groups{};
++  Group* available_groups{};
+   // Register sizes before VM publication; returns/reuse never allocate index nodes.
+   // Index and intrusive heads outlive Window destruction, including final-pin teardown.
+   WindowSizes window_sizes;
+@@ -209,22 +209,29 @@ void activate(Storage&) noexcept;
+ 
+ // Fill a fresh output only on success; common allocation code establishes
+ // its physical use before exposing the handle to callers.
+-// Slow path after the inline head-Group attempt; cls comes from select_class.
+-Result<void> finite_allocate(Pool&, const AllocationRequest&, unsigned cls, Allocation&);
++Result<void> finite_allocate(Pool&, const AllocationRequest&, std::size_t,
++    Allocation&);
+ Result<void> window_allocate(Pool&, const AllocationRequest&, std::size_t,
+     Allocation&);
++// False means local capacity was unavailable; common growth may try elsewhere.
++Result<bool> relocate_finite(Allocation&, const GrowthRequest&, std::size_t);
+ Result<void> extend_window(Window&, std::size_t);
+ Result<void> retain_window_range(Window&, ByteRange);
+ void release_window_range(Window&, ByteRange) noexcept;
+ std::size_t window_tail_floor(const Window&) noexcept;
+ void trim_window_tail(Window&, std::size_t);
+-Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, unsigned cls, worker::Lane&);
++Result<void> prepare_finite(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+ Result<void> prepare_window(Pool&, Preparation&, const AllocationRequest&, worker::Lane&);
+ 
+ inline void verify(Result<void> result) noexcept { assert(result.has_value()); (void)result; }
+ 
+ constexpr auto maximum = std::numeric_limits<std::size_t>::max();
+ 
++inline std::size_t page_size() noexcept {
++  static const auto value = static_cast<std::size_t>(::sysconf(_SC_PAGESIZE));
++  return value;
++}
++
+ inline bool round_up(std::size_t value, std::size_t unit, std::size_t& result) noexcept {
+   if (value > maximum - (unit - 1)) return false;
+   result = (value + unit - 1) & ~(unit - 1);
+@@ -292,53 +299,23 @@ inline void remove_idle(Window& window) noexcept {
+   window.previous_size = nullptr;
+ }
+ 
+-// Groups with a free Home, per class. A full head may linger until the slow
+-// path visits it; the fast path only trusts its ready bits.
+ inline void add_available(Group& group) noexcept {
+-  if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_free()) return;
+-  auto& state = *group.uses.domain.pool->internal;
+-  const auto cls = group.geometry->cls();
+-  auto& head = state.available[cls];
++  if (group.previous_available || group.retiring || group.control_preparing || !group.geometry->has_identity()) return;
++  auto& head = group.uses.domain.pool->internal->available_groups;
+   group.next_available = head;
+   group.previous_available = &head;
+   if (head) head->previous_available = &group.next_available;
+   head = &group;
+-  state.head_geometry[cls] = group.geometry.get();
+ }
+ 
+ inline void remove_available(Group& group) noexcept {
++  for (auto& candidate : group.uses.domain.pool->internal->ready_candidates)
++    if (candidate.group == &group) candidate.group = nullptr;
+   if (!group.previous_available) return;
+-  auto& state = *group.uses.domain.pool->internal;
+-  const auto cls = group.geometry->cls();
+   *group.previous_available = group.next_available;
+   if (group.next_available) group.next_available->previous_available = group.previous_available;
+   group.next_available = nullptr;
+   group.previous_available = nullptr;
+-  const auto* head = state.available[cls];
+-  state.head_geometry[cls] = head ? head->geometry.get() : nullptr;
+-}
+-
+-// pulse() on the owner Lane without a call when nobody waits.
+-[[gnu::always_inline]] inline void pulse_owner(Signal& source) noexcept {
+-  assert(source.lane && worker::on_lane(*source.lane));
+-  ++source.generation;
+-  if (source.waiters) [[unlikely]] notify_waiters(source);
+-}
+-
+-// Owner fast path: the lowest ready Home of the class's head Group.
+-[[gnu::always_inline]] inline bool take_head(PoolState& state, unsigned cls,
+-    const AllocationRequest& request, Allocation& result) noexcept {
+-  auto* geometry = state.head_geometry[cls];
+-  if (!geometry) [[unlikely]] return false;
+-  const auto home = geometry->take_ready();
+-  if (home == finite_homes) [[unlikely]] return false;
+-  auto* group = state.available[cls];
+-  result.storage = &group->uses[home];
+-  result.address = geometry->address(home);
+-  result.size = request.bytes;
+-  result.readable_padding = request.readable_padding;
+-  ++state.counts.reuses;
+-  return true;
+ }
+ 
+ template<class T> void erase_owner(std::vector<std::unique_ptr<T>>& owners, T& retired) noexcept {
+diff --git b/orbital/src/types.cpp a/orbital/src/types.cpp
+index a4ec11d8..ec021b8b 100644
+--- b/orbital/src/types.cpp
++++ a/orbital/src/types.cpp
+@@ -4,7 +4,8 @@
+ #include <limits>
+ 
+ namespace orbital {
+-void notify_waiters(Signal& source) noexcept {
++namespace {
++void notify(Signal& source) noexcept {
+   while (source.waiters) {
+     auto* link = source.waiters;
+     source.waiters = link->next;
+@@ -13,12 +14,13 @@ void notify_waiters(Signal& source) noexcept {
+     if (link->notify) link->notify(link->waiter);
+   }
+ }
++}
+ 
+ void pulse(Signal& source) noexcept {
+   assert(source.lane && worker::on_lane(*source.lane));
+   assert(source.generation != std::numeric_limits<std::uint64_t>::max());
+   ++source.generation;
+-  notify_waiters(source);
++  notify(source);
+ }
+ 
+ void complete(Signal& source, Result<void> result) noexcept {
+diff --git b/orbital/src/worker.cpp a/orbital/src/worker.cpp
+index bb3ecf50..0f3b9bba 100644
+--- b/orbital/src/worker.cpp
++++ a/orbital/src/worker.cpp
+@@ -20,11 +20,6 @@ struct Association {
+ };
+ 
+ thread_local Association association;
+-} // namespace
+-namespace detail { constinit thread_local char lane_token{}; }
+-namespace {
+-// Registering the Association's destructor stays on adopt, off the owner check.
+-void* token() noexcept { return &detail::lane_token; }
+ 
+ Result<void> affinity(int cpu) {
+   if (cpu < -1 || cpu >= CPU_SETSIZE) return std::unexpected(Error::invalid_argument);
+@@ -76,11 +71,15 @@ Lane::~Lane() {
+   assert(!owner.load(std::memory_order_relaxed));
+ }
+ 
++bool on_lane(const Lane& lane) noexcept {
++  return lane.owner.load(std::memory_order_acquire) == &association;
++}
++
+ Result<void> adopt(Lane& lane, int cpu) {
+   if (lane.owner.load(std::memory_order_acquire)) return std::unexpected(Error::conflict);
+   if (auto result = affinity(cpu); !result) return result;
+   void* expected = nullptr;
+-  if (!lane.owner.compare_exchange_strong(expected, token(), std::memory_order_acq_rel))
++  if (!lane.owner.compare_exchange_strong(expected, &association, std::memory_order_acq_rel))
+     return std::unexpected(Error::conflict);
+   lane.cpu = cpu;
+   lane.owner_next = association.first;

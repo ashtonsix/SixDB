@@ -20,6 +20,11 @@ struct Association {
 };
 
 thread_local Association association;
+} // namespace
+namespace detail { constinit thread_local char lane_token{}; }
+namespace {
+// Registering the Association's destructor stays on adopt, off the owner check.
+void* token() noexcept { return &detail::lane_token; }
 
 Result<void> affinity(int cpu) {
   if (cpu < -1 || cpu >= CPU_SETSIZE) return std::unexpected(Error::invalid_argument);
@@ -71,15 +76,11 @@ Lane::~Lane() {
   assert(!owner.load(std::memory_order_relaxed));
 }
 
-bool on_lane(const Lane& lane) noexcept {
-  return lane.owner.load(std::memory_order_acquire) == &association;
-}
-
 Result<void> adopt(Lane& lane, int cpu) {
   if (lane.owner.load(std::memory_order_acquire)) return std::unexpected(Error::conflict);
   if (auto result = affinity(cpu); !result) return result;
   void* expected = nullptr;
-  if (!lane.owner.compare_exchange_strong(expected, &association, std::memory_order_acq_rel))
+  if (!lane.owner.compare_exchange_strong(expected, token(), std::memory_order_acq_rel))
     return std::unexpected(Error::conflict);
   lane.cpu = cpu;
   lane.owner_next = association.first;

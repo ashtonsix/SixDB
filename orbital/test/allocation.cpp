@@ -1,5 +1,6 @@
 #include <orbital/allocation.h>
 #include <array>
+#include <atomic>
 #include <cstdio>
 #include <cstdlib>
 #include <chrono>
@@ -158,6 +159,8 @@ void finite_alignment_growth() {
   }
   auto& source = values[1];
   auto* original = source.address;
+  // 320 reserved bytes select the 320-byte class: its second Home is 64- but
+  // not 128-aligned, so a 128-byte alignment request must move it.
   CHECK(reinterpret_cast<std::uintptr_t>(original) % 128 == 64);
   auto held = hold(source, {0, 316}); CHECK(held);
   const GrowthRequest target{305, 320, 128, 15};
@@ -191,6 +194,7 @@ void finite_metadata_budget() {
     auto value = allocate(**pool, {64, 0, 64, 16, Initialization::zero}); CHECK(value);
     std::memset(value->address, 0x61 + round, value->size);
     auto captured = hold(*value, {0, 80}); CHECK(captured);
+    trim(**pool); // Return pages mapped ahead of the Home; only live pages remain.
     const auto charged = (*arena)->charged_bytes.load();
     CHECK(charged <= 32 * 1024 + 3 * page);
     release(*value);
@@ -303,9 +307,44 @@ void finite_growth_prepared_fallback() {
 }
 }
 
+// A foreign Hold reads, then releases, leaving the owner as sole user. The
+// owner learns of that only through a relaxed flag (no other synchronization),
+// releases and reuses the Home. The use count's acquire must order the foreign
+// reads before the reuse; ThreadSanitizer reports a race if it does not.
+void foreign_reads_precede_owner_reuse() {
+  auto arena = open_arena(16 * 1024 * 1024); CHECK(arena);
+  worker::Lane lane; CHECK(worker::adopt(lane));
+  auto pool = add_pool(**arena, lane); CHECK(pool);
+  for (unsigned round = 0; round < 64; ++round) {
+    auto value = allocate(**pool, {64, 0, 16, 0, Initialization::zero}); CHECK(value);
+    std::memset(value->address, 0x40 + round % 64, 64);
+    auto held = hold(*value, {0, 64}); CHECK(held);
+    std::atomic<bool> released{false};
+    std::atomic<unsigned> seen{0};
+    std::thread reader([&, held = std::move(*held)]() mutable {
+      unsigned sum = 0;
+      for (unsigned i = 0; i < 64; ++i) sum += static_cast<unsigned>(held.address[i]);
+      seen.store(sum, std::memory_order_relaxed);
+      release(held);
+      released.store(true, std::memory_order_relaxed);
+    });
+    while (!released.load(std::memory_order_relaxed)) std::this_thread::yield();
+    auto* address = value->address;
+    release(*value);
+    auto reused = allocate(**pool, {64, 0, 16}); CHECK(reused);
+    CHECK(reused->address == address);
+    std::memset(reused->address, 0xee, 64); // Reuse after the foreign reads.
+    reader.join();
+    CHECK(seen.load() == 64u * (0x40 + round % 64));
+    release(*reused);
+  }
+  drain(**pool); CHECK(remove_pool(**pool)); worker::relinquish(lane);
+}
+
 int main() {
   exercise(256, 16); exercise(4096, 64); exercise(256 * 1024, 4096);
   padding_and_rollback(); concurrent_returns(); finite_inventory(); finite_alignment_growth();
   finite_prepared_before_hint(); finite_growth_prepared_fallback(); finite_metadata_budget();
+  foreign_reads_precede_owner_reuse();
   std::cout << "allocation ownership, growth, padding, pressure and foreign retirement pass\n";
 }
