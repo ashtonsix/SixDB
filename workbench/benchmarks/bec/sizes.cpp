@@ -15,13 +15,13 @@ using namespace ikea::bec4096;
 using ikea::bitset4096;
 namespace inputs = bec4096_inputs;
 struct totals {
-    double groups = 0, b4096 = 0, head = 0, table = 0, streams = 0, b256 = 0, terminal = 0;
+    double groups = 0, b4096 = 0, head = 0, table = 0, streams = 0, b256 = 0, terminal = 0, raw = 0;
 };
 void add(totals &t, const bitset4096 &x) {
     detail::plan plan;
     detail::prepare(reinterpret_cast<const std::uint8_t *>(x.words.data()), plan);
     t.groups += 1;
-    t.b4096 += (plan.bits + 7) / 8;
+    t.b4096 += plan.bytes();
     unsigned table = 0, streams = 0;
     for (unsigned k = 0; k < 16; ++k) {
         table += k < 15 ? detail::length_width[plan.population[k]] : 0;
@@ -29,11 +29,14 @@ void add(totals &t, const bitset4096 &x) {
         const auto block = x.block(k);
         auto body = ikea::bec256::encoding::make(block, block.count());
         t.b256 += body->bytes();
-        t.terminal += plan.population[k] == 0 || plan.population[k] == 256;
+        t.terminal += !(plan.raw >> k & 1) && (plan.population[k] == 0 || plan.population[k] == 256);
+        t.raw += plan.raw >> k & 1;
     }
+    // The raw mask counts with the head; raw blocks' plain bytes with the streams.
+    const unsigned mask = plan.prefix ? 2 : 0;
     t.table += table / 8.0;
-    t.streams += streams / 8.0;
-    t.head += (plan.bits - table - streams) / 8.0;
+    t.streams += streams / 8.0 + (plan.prefix - mask);
+    t.head += (plan.bits - table - streams) / 8.0 + mask;
 }
 void print(const std::string &label, const totals &t) {
     const double g = t.groups;
@@ -41,15 +44,16 @@ void print(const std::string &label, const totals &t) {
     // (population-code 8 + length 6 bits) + one 4 B checkpoint. Bec4096 needs
     // population 13 + length 10 bits per group: 3 B packed, or an 8 B word.
     const double b256 = t.b256 / g, b4096 = t.b4096 / g;
-    std::printf("%-28s %6.1f%% %8.1f %8.1f %8.1f %8.1f | %8.1f %8.1f %8.1f | %6.1f %6.1f %6.1f\n",
-                label.c_str(), 100.0 * t.terminal / (16 * g), b256, b256 + 64, b256 + 32, b4096,
+    std::printf("%-28s %6.1f%% %5.1f%% %8.1f %8.1f %8.1f %8.1f | %8.1f %8.1f %8.1f | %6.1f %6.1f %6.1f\n",
+                label.c_str(), 100.0 * t.terminal / (16 * g), 100.0 * t.raw / (16 * g), b256,
+                b256 + 64, b256 + 32, b4096,
                 b4096 + 8, b4096 + 3, b4096 / b256, t.head / g, t.table / g, t.streams / g);
 }
 } // namespace
 
 int main(int argc, char **argv) {
-    std::printf("%-28s %7s %8s %8s %8s %8s | %8s %8s %8s | %6s %6s %6s\n", "input (bytes per 4096)",
-                "term", "256body", "+direct", "+packed", "4096body", "+word", "+packed", "ratio",
+    std::printf("%-28s %7s %6s %8s %8s %8s %8s | %8s %8s %8s | %6s %6s %6s\n",
+                "input (bytes per 4096)", "term", "raw", "256body", "+direct", "+packed", "4096body", "+word", "+packed", "ratio",
                 "head", "table", "blocks");
     for (auto s : inputs::all) {
         totals t;

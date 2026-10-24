@@ -12,8 +12,9 @@ int main() {
     ikea::journal effects{entries};
     unsigned population = 4; // Caller-owned, as with Bec256: one per 4096 positions.
     auto size = bc::encode(bits, population, plane, 3, effects);
-    // Six bytes: the head, the length table and three short block streams.
-    assert(size && *size == 6);
+    // Eight bytes: an empty raw-block mask, the head, the length table and
+    // three short block streams.
+    assert(size && *size == 8);
     assert(effects.entries()[0].offset == 3 && effects.entries()[0].size == *size);
 
     // Binding validates once and keeps the decoded head: every block's

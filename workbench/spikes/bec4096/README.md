@@ -165,6 +165,37 @@ from a retained frame (5×), on Zen 92 against 38 ns. Block-sequential keeps
 block access at Bec256's cost and loses nothing in full decode, since the fused
 walk takes stream starts from the frame. The length table therefore stays.
 
+## Raw blocks (after graduation)
+
+Ashton asked whether a 16-bit per-block escape to raw 256-bit blocks was worth
+its cost. An exact bit count over the real streams (the escape only changes
+framing) gave the answer before any code. On the RealRoaring windows only
+0.08% of blocks exceed 256 bits, so the mask is a small fixed cost there; from
+about 25% density upward it pays for itself, and incompressible groups shrink
+from 652–783 to 514 bytes. A one-bit gate in front of the mask would save 15
+bits only where Bec is a poor choice anyway (sparse data suits a Frame-shaped
+code), so the format spends a fixed 16 bits.
+
+| Bytes per 4096 positions (body) | Before | Raw mask |
+| --- | ---: | ---: |
+| All 14 RealRoaring families | 27.7 | 28.5 |
+| Density 0.05 / 0.10 / 0.20 | 179 / 295 / 457 | 181 / 297 / 459 |
+| Density 0.25 / 0.30 | 520 / 571 | 512 / 521 |
+| Random / worst case | 652 / 783 | 514 / 514 |
+
+The implemented layout puts the mask and raw blocks first so binding can count
+the raw blocks before decoding the head, which then codes only the remaining
+population (raw blocks count as empty). Raw blocks are byte aligned at byte
+2 + 32j, coded streams are at most 256 bits (so length fields narrow), and the
+maximum body falls from 784 to 548 bytes. Raw blocks decode as copies: random
+groups decode in 31 ns on V2 and 18 ns on Zen instead of 797 and 210. Natural
+groups are unchanged within noise. Binding a coded group costs about 9 ns more
+on V2 and 2 ns more on Zen (the mask read now precedes the head); an
+all-raw group binds in 103 / 61 ns, counting its raw blocks. Evidence:
+[V2](../../benchmarks/bec/evidence/bec4096-raw-neoverse-v2/bec4096-samples.json),
+[Zen 5](../../benchmarks/bec/evidence/bec4096-raw-zen5/bec4096-samples.json),
+[AVX2-only](../../benchmarks/bec/evidence/bec4096-raw-avx2/bec4096-samples.json).
+
 ## Negative results and open points
 
 - **Vector head decode** (NEON `tbl4` with 32-bit field windows, AVX-512 with

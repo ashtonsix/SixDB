@@ -250,7 +250,7 @@ int main() {
             subprocess.check_output([str(binary)], text=True).splitlines()]
     (population, bits, head, table), pops, lengths, starts, body = rows
     expected = ([4, 44, 12, 1], [1, 2] + [0] * 13 + [1], [8, 15] + [0] * 13 + [8],
-                [13, 21] + [36] * 14, [0xdb, 0xe2, 0x54, 0x11, 0x07, 0x0e])
+                [29, 37] + [52] * 14, [0, 0, 0xdb, 0xe2, 0x54, 0x11, 0x07, 0x0e])
     if (rows[0], pops, lengths, starts, body) != expected:
         raise RuntimeError("The Bec4096 example changed; revisit the figure, guide and example")
     return pops, lengths, starts, body, head, table, bits
@@ -259,15 +259,17 @@ int main() {
 def framing(pops, lengths, starts, body, head, table, bits):
     stream_colors = {0: BLUE, 1: AMBER, 15: GREEN}
     pale = "#f3f5f8"
-    f = Figure(904, "Bec4096 framing of one body",
+    f = Figure(936, "Bec4096 framing of one body",
                "Positions 29, 300, 301 and 4095 with external population 4. Block populations are "
                "1, 2, thirteen zeros, then 1. Four split levels of the 4096-position tree recover them; "
-               "only regions that are neither empty nor full store a field. The body is twelve head "
-               "bits, one length-table bit (block 1), then the Bec256 streams of blocks 0, 1 and 15, "
-               "8, 15 and 8 bits, packed bit by bit, and four padding bits: six bytes db e2 54 11 07 0e. "
-               "Binding decodes a directory of each block's population and stream start bit.")
+               "only regions that are neither empty nor full store a field. The body is a 16-bit raw "
+               "mask (zero: no block is stored raw), twelve head bits, one length-table bit (block 1), "
+               "then the Bec256 streams of blocks 0, 1 and 15, 8, 15 and 8 bits, packed bit by bit, and "
+               "four padding bits: eight bytes 00 00 db e2 54 11 07 0e. Binding decodes a directory of "
+               "each block's population and stream start bit. Blocks whose stream would exceed 256 bits "
+               "are stored raw: mask bit set, 32 plain bytes after the mask, counted as empty in the head.")
     f.heading(32, 42, "Bec4096: one headless body for sixteen blocks")
-    f.text(32, 80, "Positions 29 · 300, 301 · 4095 · external population 4 · body 6 bytes",
+    f.text(32, 80, "Positions 29 · 300, 301 · 4095 · external population 4 · body 8 bytes",
            22, color=MUTED)
     origin, extent = 224, 1024
     cell = extent / 16
@@ -312,12 +314,14 @@ def framing(pops, lengths, starts, body, head, table, bits):
         x = origin + byte * 8 * scale
         f.text(x + 4 * scale, bar_y - 14, f"{value:02x}", 20, anchor="middle", mono=True)
         f.path(f"M{x},{bar_y - 8} V{bar_y + 64}", color=RULE)
-    segments = [(0, head, PURPLE, "head", f"{head} bits"),
-                (head, table, "#d4dae3", "", ""),
+    mask = 16
+    segments = [(0, mask, "#e6eaf0", "raw mask", "16 bits"),
+                (mask, head, PURPLE, "head", f"{head} bits"),
+                (mask + head, table, "#d4dae3", "", ""),
                 (starts[0], lengths[0], BLUE, "block 0", f"{lengths[0]} bits"),
                 (starts[1], lengths[1], AMBER, "block 1", f"{lengths[1]} bits"),
                 (starts[15], lengths[15], GREEN, "block 15", f"{lengths[15]} bits"),
-                (bits, total - bits, "white", "pad", "")]
+                (mask + bits, total - mask - bits, "white", "pad", "")]
     for start, length, fill, name, size in segments:
         x = origin + start * scale
         f.rect(x + 1, bar_y, length * scale - 2, 56, fill, MUTED if fill == "white" else "white",
@@ -325,26 +329,29 @@ def framing(pops, lengths, starts, body, head, table, bits):
         if name:
             f.text(x + length * scale / 2, bar_y + 25, name, 19, "bold", anchor="middle")
             f.text(x + length * scale / 2, bar_y + 47, size, 17, anchor="middle")
-    table_x = origin + (head + .5) * scale
+    table_x = origin + (mask + head + .5) * scale
     f.path(f"M{table_x},{bar_y + 58} V{bar_y + 92}")
-    f.text(table_x - 6, bar_y + 112, "length table: 1 bit, for block 1 "
-           "(population 1 needs none; block 15's is never stored)", 18, color=MUTED)
+    f.text(table_x - 6, bar_y + 112, "length table: 1 bit, for block 1", 18, color=MUTED)
+    f.text(table_x - 6, bar_y + 136, "(population 1 needs none; block 15's is never stored)", 18,
+           color=MUTED)
+    f.text(origin, bar_y + 112, "no raw blocks: mask 0", 18, color=MUTED)
     for k in stream_colors:
         x0 = origin + (k + .5) * cell
         x1 = origin + (starts[k] + lengths[k] / 2) * scale
         f.path(f"M{x0},{332 + 76} C{x0},{460} {x1},{440} {x1},{bar_y - 34}", arrow=True)
     # 3. The reader's directory.
-    f.text(32, 690, "3. Directory", 24, "bold")
-    f.text(196, 690, "decoded once by bind_reader; every block access starts here", 20, color=MUTED)
+    f.text(32, 706, "3. Directory", 24, "bold")
+    f.text(196, 706, "decoded once by bind_reader; every block access starts here", 20, color=MUTED)
     for row, (name, values) in enumerate((("population", pops), ("start bit", starts))):
-        y = 712 + row * 48
+        y = 724 + row * 48
         f.text(origin - 16, y + 29, name, 19, color=MUTED, anchor="end")
         for k, value in enumerate(values):
             f.rect(origin + k * cell + 2, y, cell - 4, 42, stream_colors.get(k, pale), "white", radius=3)
             f.text(origin + (k + .5) * cell, y + 29, value, 20, anchor="middle", mono=True)
-    f.path("M32,828 H1248", color=RULE)
-    f.text(32, 868, "A dense random group: head 131 bits, length table 135 bits, sixteen streams of "
-           "297–323 bits; 652 bytes.", 21, color=MUTED)
+    f.path("M32,840 H1248", color=RULE)
+    f.lines(32, 876, ["Blocks whose stream would exceed 256 bits are stored raw: their mask bits are set,",
+                      "their 32 plain bytes follow the mask in block order, and the head counts them as empty."],
+            20, 28, color=MUTED)
     f.save(OUT / "framing.svg")
 
 

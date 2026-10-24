@@ -82,22 +82,43 @@ inline std::pair<unsigned, unsigned> extremes(unsigned size, unsigned c) {
     memo[{size, c}] = result;
     return result;
 }
+// Blocks whose stream would exceed 256 bits are raw: listed in a 16-bit mask
+// and stored as plain bits before the head, which then counts them as empty.
 inline std::vector<byte> encode(const bitset4096 &x) {
-    stream out;
-    for (unsigned size = 4096; size > 256; size /= 2)
-        for (unsigned r = 0; r < 4096; r += size) {
-            const unsigned p = count(x, r, size), q = count(x, r, size / 2), h = size / 2;
-            out.put(q - (p > h ? p - h : 0), width_of(std::min(p, size - p)));
-        }
+    const unsigned total = count(x, 0, 4096);
+    if (total == 0 || total == 4096)
+        return {};
     std::vector<stream> blocks(16);
+    std::vector<unsigned> head_count(16);
+    unsigned mask = 0;
     for (unsigned k = 0; k < 16; ++k) {
         const unsigned c = count(x, 256 * k, 256);
         if (c && c != 256)
             block(x, 256 * k, blocks[k]);
+        if (blocks[k].bits.size() > 256) {
+            mask |= 1u << k;
+            blocks[k].bits.clear();
+        } else
+            head_count[k] = c;
     }
+    stream out;
+    out.put(mask, 16);
+    for (unsigned k = 0; k < 16; ++k)
+        if (mask >> k & 1)
+            for (unsigned i = 0; i < 256; ++i)
+                out.put(x.contains(256 * k + i), 1);
+    for (unsigned size = 16; size > 1; size /= 2)
+        for (unsigned first = 0; first < 16; first += size) {
+            unsigned p = 0, q = 0;
+            for (unsigned k = first; k < first + size; ++k)
+                (k < first + size / 2 ? q : p) += head_count[k];
+            p += q;
+            const unsigned h = 128 * size;
+            out.put(q - (p > h ? p - h : 0), width_of(std::min(p, 2 * h - p)));
+        }
     for (unsigned k = 0; k < 15; ++k) {
-        const unsigned c = count(x, 256 * k, 256);
-        auto [lo, hi] = extremes(256, c);
+        auto [lo, hi] = extremes(256, head_count[k]);
+        hi = std::min(hi, 256u);
         out.put(unsigned(blocks[k].bits.size()) - lo, width_of(hi - lo));
     }
     for (auto &b : blocks)

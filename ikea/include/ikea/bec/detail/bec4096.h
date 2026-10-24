@@ -48,18 +48,25 @@ alignas(64) inline constexpr std::array<std::uint16_t, 257> max_bits{
     105, 97, 92, 86, 81, 74, 69, 63, 58, 50, 44, 37, 31, 23, 16, 8,
     0};
 static_assert(max_bits[128] == 374 && min_bits[1] == 8 && max_bits[1] == 8);
+// A block whose stream would exceed 256 bits is stored raw instead, so coded
+// streams are at most 256 bits and their lengths range over min..min(max, 256).
+inline constexpr unsigned raw_bits = 256;
 // Length field width for a block of population c; zero for 0, 1, 255 and 256.
 alignas(64) inline constexpr auto length_width = [] {
     std::array<std::uint8_t, 257> result{};
     for (unsigned c = 0; c <= 256; ++c)
-        result[c] = std::uint8_t(std::bit_width(unsigned(max_bits[c] - min_bits[c])));
+        result[c] = std::uint8_t(std::bit_width(
+            unsigned(std::min<unsigned>(max_bits[c], raw_bits) - min_bits[c])));
     return result;
 }();
 inline constexpr unsigned max_length_width =
     *std::max_element(length_width.begin(), length_width.end());
-// The head splits regions of 4096, 2048, 1024 and 512 positions.
+// The raw mask, then the head over regions of 4096, 2048, 1024 and 512
+// positions, the length table and sixteen streams or raw blocks.
+inline constexpr unsigned mask_bits = 16;
 inline constexpr unsigned head_max_bits = 12 + 2 * 11 + 4 * 10 + 8 * 9;
-inline constexpr unsigned body_max_bits = head_max_bits + 15 * max_length_width + 16 * 374;
+inline constexpr unsigned body_max_bits =
+    mask_bits + head_max_bits + 15 * max_length_width + 16 * raw_bits;
 [[gnu::always_inline]] inline unsigned lower(unsigned parent, unsigned half) {
     return parent > half ? parent - half : 0;
 }

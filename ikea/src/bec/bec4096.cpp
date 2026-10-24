@@ -59,9 +59,28 @@ std::expected<void, error> validate(std::span<const byte> body, unsigned populat
         return std::unexpected(error::population);
     if (body.size() > max_bytes)
         return std::unexpected(error::trailing);
+    // Empty and full values are determined: their bodies have zero bytes.
+    if (population == 0 || population == positions)
+        return body.empty() ? std::expected<void, error>{} : std::unexpected(error::trailing);
     checked_bits bits{body};
+    unsigned raw;
+    if (!bits.take(detail::mask_bits, raw))
+        return std::unexpected(error::truncated);
+    unsigned raw_total = 0;
+    for (unsigned j = 0; j < unsigned(std::popcount(raw)); ++j) {
+        unsigned count = 0;
+        for (unsigned i = 0; i < 4; ++i) {
+            unsigned low, high;
+            if (!bits.take(32, low) || !bits.take(32, high))
+                return std::unexpected(error::truncated);
+            count += std::popcount(low) + std::popcount(high);
+        }
+        raw_total += count;
+    }
+    if (raw_total > population)
+        return std::unexpected(error::population);
     std::array<unsigned, 32> tree{};
-    tree[1] = population;
+    tree[1] = population - raw_total;
     for (unsigned i = 1; i < 16; ++i) {
         const unsigned half = 2048u >> (std::bit_width(i) - 1), p = tree[i];
         const unsigned alternatives = std::min(p, 2 * half - p);
@@ -73,13 +92,17 @@ std::expected<void, error> validate(std::span<const byte> body, unsigned populat
         tree[2 * i] = value + detail::lower(p, half);
         tree[2 * i + 1] = p - tree[2 * i];
     }
+    // A raw block's count is in its plain bits; the head carries zero for it.
+    for (unsigned k = 0; k < 16; ++k)
+        if (raw >> k & 1 && tree[16 + k])
+            return std::unexpected(error::population);
     std::array<unsigned, 16> length{};
     for (unsigned k = 0; k < 15; ++k) {
         const unsigned c = tree[16 + k];
         unsigned value;
         if (!bits.take(detail::length_width[c], value))
             return std::unexpected(error::truncated);
-        if (value > unsigned(detail::max_bits[c] - detail::min_bits[c]))
+        if (value > std::min<unsigned>(detail::max_bits[c], detail::raw_bits) - detail::min_bits[c])
             return std::unexpected(error::length);
         length[k] = detail::min_bits[c] + value;
     }
@@ -87,7 +110,8 @@ std::expected<void, error> validate(std::span<const byte> body, unsigned populat
         const unsigned start = bits.bit;
         if (auto ok = validate_block(bits, tree[16 + k]); !ok)
             return ok;
-        if (k < 15 && bits.bit - start != length[k])
+        // Streams longer than a raw block are stored raw instead.
+        if ((k < 15 && bits.bit - start != length[k]) || bits.bit - start > detail::raw_bits)
             return std::unexpected(error::length);
     }
     if ((bits.bit + 7) / 8 != body.size())
@@ -154,7 +178,7 @@ std::expected<encoding, error> encoding::make(std::span<const byte, 512> input,
     if (detail::prepare(to_u8(input).data(), plan) != population)
         return std::unexpected(error::population);
     encoding result;
-    const unsigned n = (plan.bits + 7) / 8;
+    const unsigned n = plan.bytes();
     detail::access::bytes(result, n);
     if (n)
         detail::emit(plan, detail::access::data(result));
@@ -176,7 +200,7 @@ std::expected<unsigned, error> encode(std::span<const byte, 512> input, unsigned
     detail::plan plan;
     if (detail::prepare(to_u8(input).data(), plan) != population)
         return std::unexpected(error::population);
-    const unsigned n = (plan.bits + 7) / 8;
+    const unsigned n = plan.bytes();
     if (auto admitted = ikea::bec::detail::admit_write(target, offset, n, effects, nullptr, 0);
         !admitted)
         return std::unexpected(admitted.error());

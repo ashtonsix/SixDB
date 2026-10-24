@@ -97,6 +97,13 @@ void check_value(const bitset4096 &x, guarded &guard) {
             decode(*source, k, one);
             CHECK(one == x.block(k));
             CHECK(source->population(k) == x.block(k).count());
+            // A raw block's plain bytes sit, byte aligned, before the head.
+            if (source->frame().raw >> k & 1) {
+                const auto at = source->frame().start[k];
+                std::array<byte, 32> plain;
+                std::memcpy(plain.data(), storage_span.data() + at / 8, 32);
+                CHECK(at % 8 == 0 && bitset256::load(plain) == x.block(k));
+            }
             std::array<std::uint8_t, 32> c;
             counts(*source, k, c);
             for (unsigned j = 0; j < 32; ++j)
@@ -169,6 +176,15 @@ void check_bounds() {
 }
 
 // Zero-byte bodies are ordinary values and may arrive as default spans.
+// Dense random blocks exceed 256 bits and are stored raw; sparse ones never.
+void check_raw_choice() {
+    auto random = inputs::make(inputs::shape::random, 5), sparse = inputs::make(inputs::shape::sparse, 5);
+    auto r = encoding::make(random, random.count()), q = encoding::make(sparse, sparse.count());
+    CHECK(r && r->bytes() == 2 + 512 && std::to_integer<unsigned>(r->body()[0]) == 0xff &&
+          std::to_integer<unsigned>(r->body()[1]) == 0xff);
+    CHECK(q && q->bytes() >= 2 && q->body()[0] == byte{0} && q->body()[1] == byte{0});
+}
+
 void check_terminal_spans() {
     for (unsigned population : {0u, 4096u}) {
         bitset4096 expected;
@@ -256,6 +272,7 @@ int main() {
     check_bounds();
     check_rejections();
     check_terminal_spans();
+    check_raw_choice();
     check_overlapping_encode();
 #if IKEA_BEC4096_NATIVE
     for (auto s : inputs::all)
@@ -279,7 +296,7 @@ int main() {
         check_value(hole, guard);
     }
     std::printf("Bec4096: %u values against the independent reference, default empty spans, "
-                "overlapping encode, %s, exact guard boundaries, %u failures\n",
+                "overlapping encode, raw blocks, %s, exact guard boundaries, %u failures\n",
                 cases, IKEA_BEC4096_NATIVE ? "native blocks" : "native blocks unavailable in this profile",
                 failures);
     return failures != 0;

@@ -19,7 +19,7 @@ using bec::error;
 using bec::view;
 inline constexpr unsigned positions = 4096, blocks = 16,
                           max_bytes = (detail::body_max_bits + 7) / 8, scratch_bytes = 64;
-static_assert(max_bytes == 784);
+static_assert(max_bytes == 548);
 
 /// Validates exact headless framing: head, lengths, every block stream,
 /// padding and length. Population is caller-owned interpretation metadata.
@@ -49,9 +49,11 @@ class const_view {
     [[nodiscard]] std::expected<void, error> validate() const noexcept;
 };
 
-/// Decoded head: each block's population and the bit offset of its stream.
+/// Decoded head: each block's population and the bit offset of its stream;
+/// bit k of raw marks block k stored as 256 plain bits at byte start[k] / 8.
 struct frame {
     std::array<std::uint16_t, 16> population, start;
+    std::uint16_t raw = 0;
 };
 
 /// Reusable admitted source. Binding validates contents once and retains the

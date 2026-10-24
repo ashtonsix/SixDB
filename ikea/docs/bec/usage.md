@@ -5,7 +5,8 @@ concrete variants share one count-tree core and one lifecycle:
 
 - **Bec256**: one 256-position `ikea::bitset256`, at most 47 bytes.
 - **Bec4096**: one 4096-position `ikea::bitset4096` (sixteen 256-position
-  blocks), at most 784 bytes, with a block directory decoded once per reader.
+  blocks), at most 548 bytes, with a block directory decoded once per reader;
+  incompressible blocks are stored raw.
 
 Include `<ikea/bec.h>` and link `ikea::bec`. The variants live in
 `ikea::bec256` and `ikea::bec4096`; both re-export the shared vocabulary in
@@ -21,13 +22,15 @@ is specific to each; the [representation guide](representation.md) defines the
 | Bec256 | Independent small values; fresh, cheap binding; native pairs from two bodies; replacement at 256-position grain | Sixteen populations, lengths and addresses per 4096 positions in the parent |
 | Bec4096 | Reusable 4096-position groups: full scans, repeated block reads, ranks and counts with a retained reader | Binding decodes a head; changing any block re-encodes the whole body; terminal-heavy groups encode slightly slower |
 
-Measured on resident data with retained readers, Bec4096 decoded whole groups
-in 0.50–0.62× the time of sixteen Bec256 decodes on Zen 5 and 0.82–0.84× on
-Neoverse V2, read single blocks at parity, and stored the 14 RealRoaring window
-families in 45% fewer bytes **including the parent's metadata** (packed in both
-cases). Dense random bodies alone are slightly larger than sixteen Bec256
-bodies. A block read without a retained reader pays the head (2–7× a retained
-read), and cold-cache and length-changing mutation costs are not measured. See
+Measured on resident data with retained readers, Bec4096 decoded whole
+natural and dense groups in 0.56–0.66× the time of sixteen Bec256 decodes on
+Zen 5 and 0.83–0.84× on Neoverse V2, read single blocks at parity, and stored
+the 14 RealRoaring window families in 44% fewer bytes **including the parent's
+metadata** (packed in both cases). Blocks whose Bec256 stream would exceed 256
+bits are stored raw: incompressible groups cost 514 bytes instead of 625–752
+for sixteen Bec256 bodies, and decode as copies. A block read without a
+retained reader pays the head (2–9× a retained read), and cold-cache and
+length-changing mutation costs are not measured. See
 the [Bec suite](../../../workbench/benchmarks/bec/README.md#bec4096-against-sixteen-bec256-bodies)
 and the [graduation study](../../../workbench/spikes/bec4096/README.md).
 

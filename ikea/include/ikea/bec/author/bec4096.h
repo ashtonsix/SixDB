@@ -508,7 +508,7 @@ using native::pair;
 // (32-bit field windows, table lookups for the length widths) measured slower
 // on both V2 and Zen 5; see README.md.
 [[gnu::always_inline]] inline void read_frame_scalar(const std::uint8_t *w, unsigned population,
-                                                     frame &out) {
+                                                     frame &out, unsigned offset = 0) {
     unsigned pos = 0;
     auto take = [&](unsigned width) {
         std::uint64_t word;
@@ -527,7 +527,7 @@ using native::pair;
     unsigned table = 0;
     for (unsigned k = 0; k < 15; ++k)
         table += length_width[tree[16 + k]];
-    unsigned start = pos + table;
+    unsigned start = offset + pos + table;
     for (unsigned k = 0; k < 16; ++k) {
         const unsigned c = tree[16 + k];
         out.population[k] = std::uint16_t(c);
@@ -537,18 +537,58 @@ using native::pair;
     }
 }
 
+// Bytes before the head: the raw mask and 32 bytes per raw block, or nothing
+// for an empty or full value, whose body has zero bytes.
+[[gnu::always_inline]] inline unsigned prefix_bytes(unsigned population, unsigned raw) {
+    return population == 0 || population == positions ? 0 : 2 + 32 * std::popcount(raw);
+}
+[[gnu::always_inline]] inline unsigned count32(const std::uint8_t *bytes) {
+#if defined(__aarch64__)
+    return vaddlvq_u8(vaddq_u8(vcntq_u8(vld1q_u8(bytes)), vcntq_u8(vld1q_u8(bytes + 16))));
+#else
+    unsigned result = 0;
+    for (unsigned i = 0; i < 32; i += 8) {
+        std::uint64_t word;
+        std::memcpy(&word, bytes + i, 8);
+        result += std::popcount(word);
+    }
+    return result;
+#endif
+}
+// Raw blocks precede the head and are counted here; the head codes the
+// remaining population, with zero at each raw block.
 [[gnu::always_inline]] inline void read_frame(std::span<const byte> storage, unsigned bytes,
                                               unsigned population, frame &out) {
+    const auto *body = reinterpret_cast<const std::uint8_t *>(storage.data());
+    const unsigned raw = bytes >= 2 ? body[0] | unsigned(body[1]) << 8 : 0;
+    const unsigned base = prefix_bytes(population, raw);
+    std::array<std::uint16_t, 16> raw_count;
+    unsigned raw_total = 0;
+    for (unsigned m = raw, j = 0; m; m &= m - 1, ++j) {
+        const unsigned k = std::countr_zero(m);
+        raw_count[k] = std::uint16_t(count32(body + 2 + 32 * j));
+        raw_total += raw_count[k];
+    }
     alignas(64) std::uint8_t scratch[64];
-    const auto *w = reinterpret_cast<const std::uint8_t *>(storage.data());
-    if (storage.size() < 64) {
+    const std::uint8_t *w = body + base;
+    if (storage.size() < base + 64) {
         std::memset(scratch, 0, 64);
         // Empty and full values have zero-byte bodies, often a default span.
-        if (bytes)
-            std::memcpy(scratch, w, std::min<unsigned>(bytes, 64));
+        if (bytes > base)
+            std::memcpy(scratch, w, std::min<unsigned>(bytes - base, 64));
         w = scratch;
     }
-    read_frame_scalar(w, population, out);
+    read_frame_scalar(w, population - raw_total, out, 8 * base);
+    for (unsigned m = raw, j = 0; m; m &= m - 1, ++j) {
+        const unsigned k = std::countr_zero(m);
+        out.population[k] = raw_count[k];
+        out.start[k] = std::uint16_t(8 * (2 + 32 * j));
+    }
+    out.raw = std::uint16_t(raw);
+}
+[[gnu::always_inline]] inline bool is_raw(const frame &f, unsigned k) { return f.raw >> k & 1; }
+[[gnu::always_inline]] inline const std::uint8_t *raw_block(const reader &input, unsigned k) {
+    return reinterpret_cast<const std::uint8_t *>(input.storage().data()) + input.frame().start[k] / 8;
 }
 
 // A block stream starts at byte `at`, and needs a 64-byte window from there.
@@ -666,6 +706,8 @@ inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
 [[gnu::always_inline]] inline void decode_block(const reader &input, unsigned k,
                                                 std::uint8_t *out) {
     const unsigned c = input.frame().population[k];
+    if (is_raw(input.frame(), k))
+        return void(std::memcpy(out, raw_block(input, k), 32));
     if (terminal(c))
         return fill(out, c);
     native::store_block(out, decode_one(input, k));
@@ -673,7 +715,8 @@ inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
 [[gnu::always_inline]] inline void decode_blocks(const reader &input, std::uint8_t *out) {
     for (unsigned k = 0; k < 16; k += 2) {
         const unsigned a = input.frame().population[k], b = input.frame().population[k + 1];
-        if (!terminal(a) && !terminal(b))
+        if (!terminal(a) && !terminal(b) && !is_raw(input.frame(), k) &&
+            !is_raw(input.frame(), k + 1))
             native::store_pair(out + 32 * k, decode_two(input, k, input, k + 1));
         else {
             decode_block(input, k, out + 32 * k);
@@ -684,6 +727,19 @@ inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
 [[gnu::always_inline]] inline void block_counts(const reader &input, unsigned k,
                                                 std::uint8_t *out) {
     const unsigned c = input.frame().population[k];
+    if (is_raw(input.frame(), k)) {
+#if defined(IKEA_BEC256_AVX512)
+        native::store_counts(out, _mm256_popcnt_epi8(native::load_block(raw_block(input, k))));
+#elif defined(__aarch64__)
+        const auto bits = native::load_block(raw_block(input, k));
+        native::store_counts(out, {{vcntq_u8(bits.val[0]), vcntq_u8(bits.val[1])}});
+#else
+        const auto *bytes = raw_block(input, k);
+        for (unsigned i = 0; i < 32; ++i)
+            out[i] = std::uint8_t(std::popcount(bytes[i]));
+#endif
+        return;
+    }
     if (terminal(c))
         return void(std::memset(out, c ? 8 : 0, 32));
     unsigned pos;
@@ -699,6 +755,10 @@ inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
     if (!within)
         return result;
     const unsigned c = input.frame().population[k];
+    if (is_raw(input.frame(), k))
+        return result + bitset256::load(std::as_bytes(std::span<const std::uint8_t, 32>(
+                                            raw_block(input, k), 32)))
+                            .rank(within);
     if (terminal(c))
         return result + (c ? within : 0);
 #if !IKEA_BEC4096_NATIVE
@@ -733,22 +793,35 @@ inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
 
 // Encoding: blocks are packed first, so the length table and exact size are
 // known before any destination store.
+// population is each block's count in the head (zero for raw blocks); bits
+// counts the head, length table and streams after the raw prefix. words holds
+// each coded block's packed stream, or a raw block's plain bytes, so emission
+// never rereads the input.
 struct plan {
     std::array<std::uint16_t, 16> population;
     std::array<std::uint16_t, 16> length;
     alignas(64) std::uint64_t words[16][8];
-    unsigned bits;
+    unsigned bits, raw, prefix;
+    unsigned bytes() const { return prefix + (bits + 7) / 8; }
 };
 [[gnu::always_inline]] inline unsigned prepare(const std::uint8_t *input, plan &out) {
     unsigned total = 0;
+    out.raw = 0;
     for (unsigned k = 0; k < 16; ++k) {
         const native::counted block(input + 32 * k);
         const unsigned c = block.population();
-        out.population[k] = std::uint16_t(c);
         total += c;
-        out.length[k] =
-            terminal(c) ? 0 : std::uint16_t(block.encode(c, native::pack_sink{out.words[k]}));
+        const unsigned length =
+            terminal(c) ? 0 : block.encode(c, native::pack_sink{out.words[k]});
+        // A stream longer than the block itself is stored raw instead.
+        const bool raw = length > raw_bits;
+        out.raw |= unsigned(raw) << k;
+        if (raw)
+            std::memcpy(out.words[k], input + 32 * k, 32);
+        out.population[k] = std::uint16_t(raw ? 0 : c);
+        out.length[k] = std::uint16_t(raw ? 0 : length);
     }
+    out.prefix = prefix_bytes(total, out.raw);
     std::array<unsigned, 32> tree;
     for (unsigned k = 0; k < 16; ++k)
         tree[16 + k] = out.population[k];
@@ -814,7 +887,7 @@ struct bit_writer {
 [[gnu::always_inline]] inline std::uint64_t first_bytes(unsigned n) {
     return n >= 64 ? ~std::uint64_t{0} : _bzhi_u64(~std::uint64_t{0}, n);
 }
-[[gnu::always_inline]] inline void emit(const plan &in, std::uint8_t *out) {
+[[gnu::always_inline]] inline void emit_coded(const plan &in, std::uint8_t *out) {
     const unsigned n = (in.bits + 7) / 8;
     alignas(64) std::uint64_t group[8], group_width[8];
     head_groups(in, group, group_width);
@@ -842,7 +915,7 @@ struct bit_writer {
 // The eight head groups go through one bit chain into staging words. Each
 // block's packed words then shift into place independently: only its first
 // word merges with what precedes it. The exact body is copied out last.
-[[gnu::always_inline]] inline void emit(const plan &in, std::uint8_t *out) {
+[[gnu::always_inline]] inline void emit_coded(const plan &in, std::uint8_t *out) {
     alignas(64) std::uint64_t staging[max_bytes / 8 + 8];
     auto *bytes = reinterpret_cast<std::uint8_t *>(staging);
     bit_writer bits{bytes};
@@ -873,6 +946,18 @@ struct bit_writer {
     std::memcpy(out, bytes, (in.bits + 7) / 8);
 }
 #endif
+// The raw prefix (mask, then each raw block's plain bytes), then the head,
+// length table and streams from the next byte.
+[[gnu::always_inline]] inline void emit(const plan &in, std::uint8_t *out) {
+    if (in.prefix) {
+        out[0] = std::uint8_t(in.raw);
+        out[1] = std::uint8_t(in.raw >> 8);
+        for (unsigned k = 0, j = 0; k < 16; ++k)
+            if (in.raw >> k & 1)
+                std::memcpy(out + 2 + 32 * j++, in.words[k], 32);
+    }
+    emit_coded(in, out + in.prefix);
+}
 } // namespace ikea::bec4096::detail
 // Fused decode: the top four block levels of all sixteen streams advance
 // together, densely packed in vector lanes (16, 32, 64, 128 nodes), instead of
@@ -887,12 +972,17 @@ struct bit_writer {
 
 namespace ikea::bec4096::detail::fused {
 // Windows: direct when 64 readable bytes follow, else zero-padded scratch.
+// Empty, full and raw blocks need no stream decoding; the fused levels see
+// them as zero-width.
+[[gnu::always_inline]] inline bool quiet(const frame &f, unsigned k) {
+    return detail::terminal(f.population[k]) || detail::is_raw(f, k);
+}
 // Few nonterminal blocks leave the shared upper levels idle; decode them alone.
 inline constexpr unsigned fuse_minimum = 5;
 [[gnu::always_inline]] inline bool sparse(const frame &f) {
     unsigned live = 0;
     for (unsigned k = 0; k < 16; ++k)
-        live += f.population[k] != 0 && f.population[k] != 256;
+        live += !quiet(f, k);
     return live < fuse_minimum;
 }
 [[gnu::always_inline]] inline void windows(const reader &input, std::uint8_t (&scratch)[16][64],
@@ -937,7 +1027,10 @@ struct upper {
         // Level A: 128-position halves, one node per stream.
         uint16x8_t pa[2], qa[2];
         for (unsigned r = 0; r < 2; ++r) {
-            pa[r] = vld1q_u16(f.population.data() + 8 * r);
+            // Raw blocks have no stream: zero-width in every level.
+            const auto raw = vtstq_u16(vdupq_n_u16(std::uint16_t(f.raw >> 8 * r)),
+                                       uint16x8_t{1, 2, 4, 8, 16, 32, 64, 128});
+            pa[r] = vbicq_u16(vld1q_u16(f.population.data() + 8 * r), raw);
             qa[r] = vandq_u16(vld1q_u16(f.start.data() + 8 * r), vdupq_n_u16(7));
         }
         uint16x8_t pb[4], qb[4];
@@ -984,9 +1077,7 @@ struct upper {
     // Bec256's leaf kernel, two blocks at a time with joint register
     // constraints (as bec256's V2 decode2) so their chains interleave.
     for (unsigned k = 0; k < 16; k += 2) {
-        const unsigned a = f.population[k], b = f.population[k + 1];
-        const bool ta = a == 0 || a == 256, tb = b == 0 || b == 256;
-        if (!ta && !tb) {
+        if (!quiet(f, k) && !quiet(f, k + 1)) {
             auto pa16 = u.leaves(k), pb16 = u.leaves(k + 1);
             const auto body_a = vld1q_u8_x4(u.w[k]), body_b = vld1q_u8_x4(u.w[k + 1]);
             asm("" : "+w"(pa16.val[0]), "+w"(pa16.val[1]), "+w"(pb16.val[0]), "+w"(pb16.val[1]));
@@ -998,9 +1089,8 @@ struct upper {
             continue;
         }
         for (unsigned j = k; j < k + 2; ++j) {
-            const unsigned c = f.population[j];
-            if (c == 0 || c == 256)
-                std::memset(out + 32 * j, c ? 255 : 0, 32);
+            if (quiet(f, j))
+                detail::decode_block(input, j, out + 32 * j);
             else {
                 unsigned used;
                 const auto p16 = u.leaves(j);
@@ -1015,9 +1105,8 @@ struct upper {
     const auto &f = input.frame();
     upper u(input);
     for (unsigned k = 0; k < 16; ++k) {
-        const unsigned c = f.population[k];
-        if (c == 0 || c == 256) {
-            std::memset(out + 32 * k, c ? 8 : 0, 32);
+        if (quiet(f, k)) {
+            detail::block_counts(input, k, out + 32 * k);
             continue;
         }
         const auto p16 = u.leaves(k);
@@ -1063,8 +1152,12 @@ template <bool Counts>
         t4[0], _mm512_setr_epi32(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30), t4[1]);
     const auto zero = _mm512_setzero_si512();
     // Level A: one node per stream, sixteen lanes.
+    // Raw blocks have no stream: zero-width in every level.
     const auto parent = _mm512_inserti64x4(
-        zero, _mm256_loadu_si256(reinterpret_cast<const __m256i *>(f.population.data())), 0);
+        zero,
+        _mm256_maskz_mov_epi16(__mmask16(~f.raw),
+                               _mm256_loadu_si256(reinterpret_cast<const __m256i *>(f.population.data()))),
+        0);
     auto pos = _mm512_inserti64x4(
         zero,
         _mm256_and_si256(_mm256_loadu_si256(reinterpret_cast<const __m256i *>(f.start.data())),
@@ -1099,15 +1192,15 @@ template <bool Counts>
         __m512i qe[2]{children<0>(qd[i], qd[i]), children<1>(qd[i], qd[i])};
         for (unsigned half = 0; half < 2; ++half) {
             const unsigned p = 2 * i + half, x = 2 * p, y = x + 1;
-            const unsigned cx = f.population[x], cy = f.population[y];
-            if ((cx == 0 || cx == 256) && (cy == 0 || cy == 256)) {
-                if constexpr (Counts) {
-                    std::memset(pops + 32 * x, cx ? 8 : 0, 32);
-                    std::memset(pops + 32 * y, cy ? 8 : 0, 32);
-                } else {
-                    std::memset(out + 32 * x, cx ? 255 : 0, 32);
-                    std::memset(out + 32 * y, cy ? 255 : 0, 32);
-                }
+            // Raw blocks decode as zero-width here and are copied after the walk.
+            if (quiet(f, x) && quiet(f, y)) {
+                for (unsigned z : {x, y})
+                    if (!detail::is_raw(f, z)) {
+                        if constexpr (Counts)
+                            std::memset(pops + 32 * z, f.population[z] ? 8 : 0, 32);
+                        else
+                            std::memset(out + 32 * z, f.population[z] ? 255 : 0, 32);
+                    }
                 continue;
             }
             __m512i r;
@@ -1134,6 +1227,13 @@ template <bool Counts>
             _mm512_storeu_si512(out + 32 * x,
                                 _mm512_mask_blend_epi8(_mm512_movepi8_mask(slot), low, high));
         }
+    }
+    for (unsigned raw = f.raw; raw; raw &= raw - 1) {
+        const unsigned z = std::countr_zero(raw);
+        if constexpr (Counts)
+            detail::block_counts(input, z, pops + 32 * z);
+        else
+            detail::decode_block(input, z, out + 32 * z);
     }
 }
 [[gnu::always_inline]] inline void decode_all(const reader &input, std::uint8_t *out) {
@@ -1174,6 +1274,9 @@ using ikea::bec256::native::pair;
 /// One block, including empty and full blocks.
 [[gnu::always_inline]] inline block read(const reader &input, unsigned index) {
     const unsigned c = input.frame().population[index];
+    if (detail::is_raw(input.frame(), index))
+        return ikea::bec256::native::load(
+            reinterpret_cast<const byte *>(detail::raw_block(input, index)));
     if (detail::terminal(c))
         return filled(c ? 255 : 0);
     return detail::decode_one(input, index);
@@ -1181,13 +1284,22 @@ using ikea::bec256::native::pair;
 /// Block i of x (low half) and block j of y (high half); one reader or two.
 [[gnu::always_inline]] inline pair read_pair(const reader &x, unsigned i, const reader &y,
                                              unsigned j) {
-    if (detail::terminal(x.frame().population[i]) || detail::terminal(y.frame().population[j]))
+    if (detail::terminal(x.frame().population[i]) || detail::terminal(y.frame().population[j]) ||
+        detail::is_raw(x.frame(), i) || detail::is_raw(y.frame(), j))
         return ikea::bec256::native::join(read(x, i), read(y, j));
     return detail::decode_two(x, i, y, j);
 }
 /// One block's 32 byte populations, from its count tree alone.
 [[gnu::always_inline]] inline block counts(const reader &input, unsigned index) {
     const unsigned c = input.frame().population[index];
+    if (detail::is_raw(input.frame(), index)) {
+        const auto bits = read(input, index);
+#if defined(IKEA_BEC256_AVX512)
+        return _mm256_popcnt_epi8(bits);
+#else
+        return {{vcntq_u8(bits.val[0]), vcntq_u8(bits.val[1])}};
+#endif
+    }
     if (detail::terminal(c))
         return filled(c ? 8 : 0);
     unsigned pos;

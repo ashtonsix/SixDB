@@ -101,9 +101,13 @@ API, not the 4096-position format.
 The [graduation study](../../spikes/bec4096/README.md) owns the findings and
 retained evidence: fused decode at 0.50–0.55× of the Bec256 control on Zen 5
 and 0.83× on Neoverse V2, block reads at parity, and 45% less storage with
-metadata on the windows. The graduated ordinary API reproduces them:
-[V2](evidence/bec4096-neoverse-v2/bec4096-samples.json) full decode 0.82–0.84×,
-[Zen 5](evidence/bec4096-zen5/bec4096-samples.json) 0.50–0.62× on dense and
-natural groups, block reads 0.96–1.04×, rank 0.66–0.92×. The portable path
-([AVX2-only build](evidence/bec4096-avx2/bec4096-samples.json), Zen 5) is
-correct but untuned: 1.1–1.4× the scalar Bec256 control.
+metadata on the windows. The graduated ordinary API, with raw blocks for
+streams over 256 bits, measured:
+[V2](evidence/bec4096-raw-neoverse-v2/bec4096-samples.json) full decode
+0.83–0.84× on natural and dense coded groups,
+[Zen 5](evidence/bec4096-raw-zen5/bec4096-samples.json) 0.56–0.66×; random
+groups, stored raw, 0.03–0.04×; block reads 0.96–1.04× and rank 0.65–0.89×
+on coded groups. The portable path
+([AVX2-only build](evidence/bec4096-raw-avx2/bec4096-samples.json), Zen 5) is
+correct but untuned: 1.1–1.4× the scalar Bec256 control on coded groups.
+The `bec4096-{neoverse-v2,zen5,avx2}` evidence predates raw blocks.

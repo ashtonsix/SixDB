@@ -44,6 +44,6 @@ if [[ ${BEC4096:-1} == 1 ]]; then
   BEC_WINDOWS="$windows" taskset -c "$SIXDB_CPU" "$SIXDB_RESULTS/ikea_bec4096_bench" \
     --benchmark_min_time="${BEC_MIN_TIME:-0.03}s" --benchmark_repetitions="${BEC_REPETITIONS:-3}" \
     --benchmark_enable_random_interleaving=false --benchmark_out_format=json \
-    --benchmark_report_aggregates_only=true \
+    --benchmark_report_aggregates_only=true --benchmark_filter="${BEC4096_FILTER:-.}" \
     --benchmark_out="$SIXDB_RESULTS/bec4096-samples.json" > "$SIXDB_RESULTS/bec4096-timings.log" 2>&1
 fi
