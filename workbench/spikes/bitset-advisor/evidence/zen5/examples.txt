@@ -1,0 +1,6 @@
+Decision packages for Demand(probes=100000.0, ranks=100000.0, hot=8, wholes=10, named=False), no budget
+  random: plain+counts (69632 B); plain (smallest resident bytes, 2.6x time, 0.94x bytes); Bec4096 readers repay binding after 1.0 accesses per group and add 0.1x its bytes
+  eighth-empty: plain+counts (69632 B); plain (smallest resident bytes, 2.6x time, 0.94x bytes); bec4096+retained (next cheapest for this demand, 2.6x time, 1.24x bytes); Bec4096 readers repay binding after 1.0 accesses per group and add 0.2x its bytes
+  census-income: plain+counts (69632 B); bec4096 (smallest resident bytes, 68.7x time, 0.26x bytes); plain (next cheapest for this demand, 2.6x time, 0.94x bytes); Bec4096 readers repay binding after 0.7 accesses per group and add 0.7x its bytes
+  dimension_008: positions (726 B); plain+counts (next cheapest for this demand, 1.4x time, 95.91x bytes); Bec4096 readers repay binding after 1.0 accesses per group and add 11.5x its bytes
+  wikileaks-noquotes: plain+counts (69632 B); bec4096 (smallest resident bytes, 46.7x time, 0.04x bytes); positions (next cheapest for this demand, 2.2x time, 0.07x bytes); Bec4096 readers repay binding after 1.0 accesses per group and add 4.7x its bytes

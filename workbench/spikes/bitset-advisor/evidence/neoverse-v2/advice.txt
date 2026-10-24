@@ -1,0 +1,51 @@
+6660 trace x budget x collection cases; advisor+probe probed 902
+advisor          median    0.0%  p90     0.0%  max     87.4%  >10%:  149  over budget: 0
+advisor-named    median    0.0%  p90     0.0%  max     64.4%  >10%:   93  over budget: 0
+advisor-coarse   median    0.0%  p90     0.0%  max     87.4%  >10%:  146  over budget: 0
+advisor+probe    median    0.0%  p90     0.3%  max     86.3%  >10%:   78  over budget: 0
+preset-smallest  median    0.0%  p90  2735.5%  max  14787.3%  >10%: 3067  over budget: 0
+preset-bec4096   median   38.7%  p90  2732.1%  max   7887.3%  >10%: 3586  over budget: 0
+reuse-rule       median    0.0%  p90   344.8%  max   9095.8%  >10%: 1326  over budget: 0
+
+choices (oracle / advisor)
+  plain                484   438
+  plain+counts        1483  1437
+  positions           2008  2103
+  bec256               115    79
+  bec4096             2133  2145
+  bec4096+retained     437   458
+
+by collection kind
+  synthetic    advisor          median    0.0%  p90     0.0%  max     24.0%  >10%:    5
+  synthetic    advisor-named    median    0.0%  p90     0.0%  max     24.0%  >10%:    5
+  synthetic    advisor-coarse   median    0.0%  p90     0.0%  max     24.0%  >10%:    5
+  synthetic    advisor+probe    median    0.0%  p90     0.5%  max     24.0%  >10%:    5
+  synthetic    preset-smallest  median   22.9%  p90  1840.6%  max  14787.3%  >10%: 1044
+  synthetic    preset-bec4096   median   21.2%  p90  1631.0%  max   7887.3%  >10%: 1054
+  synthetic    reuse-rule       median    0.0%  p90     5.1%  max   9095.8%  >10%:  190
+  probe        advisor          median    0.0%  p90     0.0%  max      6.9%  >10%:    0
+  probe        advisor-named    median    0.0%  p90     0.0%  max      8.0%  >10%:    0
+  probe        advisor-coarse   median    0.0%  p90     0.0%  max      6.9%  >10%:    0
+  probe        advisor+probe    median    0.0%  p90     0.5%  max      6.9%  >10%:    0
+  probe        preset-smallest  median    0.0%  p90  1212.9%  max   6644.0%  >10%:  275
+  probe        preset-bec4096   median    0.0%  p90   295.9%  max   1327.7%  >10%:  312
+  probe        reuse-rule       median    0.0%  p90    26.8%  max   3178.4%  >10%:   78
+  realroaring  advisor          median    0.0%  p90     0.0%  max     87.4%  >10%:  144
+  realroaring  advisor-named    median    0.0%  p90     0.0%  max     64.4%  >10%:   88
+  realroaring  advisor-coarse   median    0.0%  p90     0.0%  max     87.4%  >10%:  141
+  realroaring  advisor+probe    median    0.0%  p90     0.2%  max     86.3%  >10%:   73
+  realroaring  preset-smallest  median    0.0%  p90  2766.8%  max  14063.4%  >10%: 1748
+  realroaring  preset-bec4096   median  147.8%  p90  2766.8%  max   7074.9%  >10%: 2220
+  realroaring  reuse-rule       median    0.0%  p90   812.7%  max   8401.9%  >10%: 1058
+
+prediction error (predicted / measured - 1), median [min, max]
+  bytes plain              +0.00 [+0.00, +0.00]
+  bytes plain+counts       +0.00 [+0.00, +0.00]
+  bytes positions          +0.00 [+0.00, +0.00]
+  bytes bec256             +0.00 [-0.00, +0.04]
+  bytes bec4096            +0.01 [-0.06, +0.26]
+  bytes bec4096+retained   +0.00 [-0.02, +0.22]
+  cost  probe              -0.03 [-0.88, +0.36]
+  cost  rank1              +0.00 [-0.71, +1.91]
+  cost  rank8              -0.00 [-0.72, +0.67]
+  cost  whole              -0.09 [-0.86, +0.25]

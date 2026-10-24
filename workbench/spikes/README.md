@@ -33,6 +33,7 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | --- | --- |
 | [Tuple layout](tuple-layout/README.md) | Point access, scans, checked mutation and layout search behind current TuplePack; analyser work remains experimental. |
 | [Layout analyser](layout-analyser/README.md) | Connected objectives, metadata/plane/placement alternatives, shortlists and worked consumer investigations. |
+| [Bitset advisor](bitset-advisor/README.md) | Prototype Ikea-to-Engine advice for bitset collections: six representation/preparation plans, a calibration-table advisor within 10% of the best fixed plan in 98% of authored traces; presets fail by orders of magnitude. |
 | [StreamPack](streampack/README.md) | Variable-byte geometry and sidecars; comparative evidence plus production Ikea/Loom/Orbital consumers. |
 | [Intervals](intervals/README.md) | Maintained Intervals graduation across StreamPack, Directory and Frame; external filters, sparse checkpoints and complete consumer qualification. |
 | [Intervals search](intervals-search/README.md) | The shared native search step: 64-byte span count, exact short arrays, readable-window grant; varying-count mispredicts; group run buffers and run-start bitmap against per-block search. |
