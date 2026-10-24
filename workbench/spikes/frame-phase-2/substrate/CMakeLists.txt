@@ -31,3 +31,6 @@ target_link_libraries(frame_substrate_geometry PRIVATE frame_bodies ikea::interv
 add_executable(frame_substrate_programs programs.cpp)
 sixdb_target(frame_substrate_programs)
 target_link_libraries(frame_substrate_programs PRIVATE frame_bodies frame_cells_controls ikea::intervals)
+add_executable(frame_substrate_corrections_check corrections_check.cpp)
+sixdb_target(frame_substrate_corrections_check)
+target_link_libraries(frame_substrate_corrections_check PRIVATE frame_bodies ikea::intervals)
