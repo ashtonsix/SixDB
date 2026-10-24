@@ -110,3 +110,10 @@ constant/run/plane/wide blocks, nonzero bases, exact wide sums, coarse all/none/
 scattered/clustered masks, threshold boundaries, both placements, poisoned scratch,
 empty input and wholly excluded payload. It also verifies shared-image points
 against original rows. Functional success supplies no timing rank.
+
+After the frozen native panel, B added `point_intervals` in `d405cdf5`. The
+current check also verifies that candidate on every fixture row: 409,600 point
+values across the two routes, with local optimized and ASan/UBSan passes. The
+control target carries the new image header's `ikea::intervals` dependency.
+This integration check does not update the earlier performance cohort or its
+separately frozen [qualification](qualification.json).

@@ -168,7 +168,9 @@ void check() {
                         for (std::size_t i = 0; i < a.size(); ++i) {
                             if (fc::fi::point(c.a, i) != a[i] || fc::fi::point(c.b, i) != b[i])
                                 throw std::runtime_error("shared-image point mismatch");
-                            points += 2;
+                            if (fc::fi::point_intervals(c.a, i) != a[i] || fc::fi::point_intervals(c.b, i) != b[i])
+                                throw std::runtime_error("Intervals shared-image point mismatch");
+                            points += 4;
                         }
                     }
                 }
