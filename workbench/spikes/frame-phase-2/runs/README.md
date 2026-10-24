@@ -68,6 +68,44 @@ and 8.8–9.0 ns and 35–50 ns on Graviton 4.
 5. **Outliers cost time as well as saving bytes.** Patching adds 8–12 ns per
    point and 6–9 ns per block of SUM.
 
+## Group-continuous series, Bulk, and cold reads
+
+Packing each block's sizes separately left Bulk's 64–256-field tiles mostly
+empty (a run block has 2–128 runs; the mean is 36 on OS and 46–56 elsewhere).
+The group form makes the run sizes of 16 consecutive run blocks one
+SeriesPack series per group, with u16 group checkpoints every G runs and
+each block's first run index. Bulk's tiles then fill, and SUM over runs
+takes one long read per group. A cold condition sweeps 256 MB before each
+timed call. Source `f73b4cef`; jobs `20261024T040921Z-f1ae8dc2` (Zen 5) and
+`20261024T040957Z-de63b810` (Graviton 4);
+[evidence/read-v3-summary.txt](evidence/read-v3-summary.txt).
+
+| Zen 5 | bits per row | point ns | SUM ns per block | cold point / SUM |
+| --- | --- | --- | --- | --- |
+| OS: u8 ends | 1.12 | 3.0 | 26.4 | 5.5 / 26.4 |
+| OS: group sizes, G64, compact, outliers | 0.82 | 50 | 17.8 | 53 / 20.4 |
+| OS: group sizes, G64, Bulk, outliers | 0.85 | 44 | 17.7 | 48 / 18.3 |
+| UserID: u8 ends | 1.69 | 4.8 | 34.1 | 8.0 / 34.6 |
+| UserID: group sizes, G64, compact, outliers | 1.09 | 55 | 26.3 | 59 / 28.9 |
+| UserID: group sizes, G64, Bulk, outliers | 1.15 | 52 | 26.6 | 56 / 26.8 |
+
+6. **In group form, sizes beat u8 ends on SUM over runs as well as on
+   bytes.** On Zen 5 SUM is 1.3–1.5× faster (OS 17.8 against 26.4 ns per
+   block) with 27–36% fewer bytes. On Graviton 4 it is 1.0–1.2× faster. A long
+   read hits SeriesPack's fast paths; the per-block form paid its short-read
+   cost instead.
+7. **Bulk fills its tiles in group form.** It costs 3–6% more bytes than
+   compact (whole-tile rounding per group) and gives SUM a few percent on
+   Graviton 4, parity on Zen 5, and points 5–12% faster.
+8. **Points get slower in group form** (30–70 ns): a G64 region decode plus
+   the group checkpoint search. A point-heavy part keeps u8 ends, or per-block
+   G16 sizes at 16-row placement (20–31 ns).
+9. **Cold barely moves anything.** These structures are a few hundred KB to
+   a few MB, and every form is compute-bound here. u8 ends points rise from
+   3 to 5.5 ns on Zen 5; the composed forms rise by about 3–6 ns. The bytes
+   saved should matter for bandwidth on far larger parts or under shared
+   bandwidth, which this does not measure.
+
 ## What this says about the split
 
 The choices form a frontier rather than a winner. Bytes go down with sizes,
