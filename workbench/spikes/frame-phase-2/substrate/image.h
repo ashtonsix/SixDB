@@ -132,6 +132,37 @@ inline void relocate(image &f, std::span<const u32> ids) {
     f.bytes.resize(f.bytes.size() + suffix);
 }
 
+// Compaction: copy every live body into a fresh buffer in the chosen
+// placement order, repoint descriptors and drop dead bytes. Restores the
+// order relocation decays. Descriptors and logical contents are unchanged.
+inline void compact(image &f, placement where) {
+    std::vector<std::size_t> order(f.blocks);
+    for (std::size_t b = 0; b < f.blocks; ++b)
+        order[b] = b;
+    if (where == placement::by_kind)
+        std::stable_sort(order.begin(), order.end(), [&](std::size_t x, std::size_t y) {
+            return std::pair(f.kind_of[x], f.width[x]) < std::pair(f.kind_of[y], f.width[y]);
+        });
+    const std::size_t suffix = f.bytes.size() - f.body_bytes;
+    std::vector<u8> out;
+    out.reserve(f.body_bytes + suffix);
+    for (std::size_t b : order) {
+        std::size_t len = 0;
+        switch (f.kind_of[b]) {
+        case constant: f.offset[b] = static_cast<u32>(out.size()); continue;
+        case runs: len = bodies::runs_bytes(f.n[b], f.width[b]); break;
+        case plane: len = 32 * std::size_t{f.width[b]}; break;
+        default: len = 8 * block_rows;
+        }
+        const std::size_t at = out.size();
+        out.insert(out.end(), f.bytes.begin() + f.offset[b], f.bytes.begin() + f.offset[b] + len);
+        f.offset[b] = static_cast<u32>(at);
+    }
+    f.body_bytes = out.size();
+    out.resize(out.size() + suffix);
+    f.bytes = std::move(out);
+}
+
 // Exact sum of a u64 lane body by 32-bit halves, optionally over selected rows.
 inline u128 wide_sum(const u8 *p, const u64 *sel = nullptr) {
     u64 lo = 0, hi = 0;

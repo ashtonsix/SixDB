@@ -165,6 +165,19 @@ int main(int argc, char **argv) {
                             if (!ok)
                                 return 1;
                         }
+                    if (cond[0] == 'w') {
+                        // Compaction cost from this decayed state, on fresh copies.
+                        std::vector<double> c;
+                        for (int r = 0; r < std::max(3, rounds / 4); ++r) {
+                            fi::image copy = f;
+                            c.push_back(time_ns([&] { fi::compact(copy, where[0] == 'a' ? fi::placement::address : fi::placement::by_kind); }));
+                            if (fi::sum(copy) != oracle)
+                                return 1;
+                        }
+                        std::printf("{\"column\":\"%s\",\"placement\":\"%s\",\"relocated\":%g,\"condition\":\"warm\",\"arm\":\"compact\","
+                                    "\"ns_per_unit\":%.3f,\"unit\":\"block\",\"live_bytes\":%zu,\"total_bytes\":%zu}\n",
+                                    name.c_str(), where, share, median(c) / blocks, fi::build(v).body_bytes, f.body_bytes);
+                    }
                     for (std::size_t i = 0; i < narms; ++i) {
                         const bool pts = std::string(arms[i].name) == "points";
                         const double ns = median(samples[i]);
