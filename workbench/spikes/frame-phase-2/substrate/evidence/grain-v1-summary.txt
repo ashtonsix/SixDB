@@ -1,0 +1,65 @@
+isa column condition op | global / groups16 / groups64 / groups256
+avx512 EventTime flushed count_ge | 16.14 / 27.95 / 24.36 / 18.32
+avx512 EventTime flushed points | 36.78 / 46.99 / 46.30 / 45.30
+avx512 EventTime flushed sum | 17.98 / 39.02 / 27.08 / 20.97
+avx512 EventTime warm count_ge | 6.37 / 7.61 / 6.87 / 6.52
+avx512 EventTime warm fold_one_group | 9352391.00 / 14930.00 / 53310.00 / 202491.00
+avx512 EventTime warm points | 5.25 / 9.06 / 8.63 / 7.97
+avx512 EventTime warm sum | 6.32 / 8.97 / 7.25 / 6.63
+avx512 OS flushed count_ge | 5.00 / 25.66 / 17.11 / 9.23
+avx512 OS flushed points | 14.28 / 20.01 / 19.15 / 18.53
+avx512 OS flushed sum | 4.97 / 23.80 / 16.49 / 9.67
+avx512 OS warm count_ge | 4.68 / 5.83 / 5.00 / 4.77
+avx512 OS warm fold_one_group | 10486049.00 / 12600.00 / 40721.00 / 151802.00
+avx512 OS warm points | 6.47 / 10.91 / 10.15 / 9.55
+avx512 OS warm sum | 3.11 / 5.13 / 3.71 / 3.31
+avx512 URLHash flushed count_ge | 54.59 / 75.33 / 62.10 / 56.84
+avx512 URLHash flushed points | 30.52 / 41.38 / 40.95 / 40.84
+avx512 URLHash flushed sum | 53.16 / 85.50 / 64.48 / 54.81
+avx512 URLHash warm count_ge | 22.73 / 34.42 / 26.81 / 23.74
+avx512 URLHash warm fold_one_group | 18603490.00 / 20890.00 / 56620.00 / 216932.00
+avx512 URLHash warm points | 6.26 / 10.92 / 10.32 / 9.85
+avx512 URLHash warm sum | 26.47 / 35.37 / 27.13 / 24.08
+avx512 UserID flushed count_ge | 4.26 / 13.63 / 8.26 / 5.30
+avx512 UserID flushed points | 43.23 / 49.21 / 48.58 / 47.85
+avx512 UserID flushed sum | 16.09 / 56.08 / 34.04 / 21.96
+avx512 UserID warm count_ge | 3.43 / 3.42 / 3.36 / 3.37
+avx512 UserID warm fold_one_group | 13271769.00 / 15200.00 / 47410.00 / 189641.00
+avx512 UserID warm points | 9.81 / 16.26 / 15.26 / 14.37
+avx512 UserID warm sum | 7.74 / 11.28 / 9.51 / 8.39
+native EventTime flushed count_ge | 25.04 / 37.35 / 30.90 / 26.69
+native EventTime flushed points | 28.00 / 35.72 / 32.62 / 30.73
+native EventTime flushed sum | 19.94 / 35.50 / 26.62 / 21.59
+native EventTime warm count_ge | 20.15 / 24.09 / 21.33 / 20.28
+native EventTime warm fold_one_group | 12603721.00 / 18772.00 / 65313.00 / 272413.00
+native EventTime warm points | 11.77 / 17.66 / 15.59 / 15.62
+native EventTime warm sum | 12.79 / 19.69 / 14.02 / 12.92
+native OS flushed count_ge | 11.16 / 16.81 / 15.04 / 13.36
+native OS flushed points | 18.47 / 24.71 / 24.58 / 23.69
+native OS flushed sum | 9.93 / 16.59 / 14.60 / 12.75
+native OS warm count_ge | 11.84 / 12.71 / 11.14 / 11.41
+native OS warm fold_one_group | 13484985.00 / 17414.00 / 58923.00 / 231202.00
+native OS warm points | 15.18 / 21.95 / 20.85 / 20.49
+native OS warm sum | 8.89 / 11.79 / 10.34 / 9.72
+native URLHash flushed count_ge | 70.50 / 88.58 / 77.79 / 70.20
+native URLHash flushed points | 28.89 / 36.08 / 35.22 / 34.66
+native URLHash flushed sum | 76.34 / 98.30 / 87.31 / 79.84
+native URLHash warm count_ge | 64.84 / 80.61 / 68.96 / 65.33
+native URLHash warm fold_one_group | 23968858.00 / 25717.00 / 72123.00 / 279029.00
+native URLHash warm points | 13.38 / 25.21 / 26.69 / 19.68
+native URLHash warm sum | 69.61 / 88.78 / 79.47 / 74.40
+native UserID flushed count_ge | 5.74 / 9.48 / 7.37 / 6.37
+native UserID flushed points | 40.06 / 45.78 / 44.82 / 45.07
+native UserID flushed sum | 34.23 / 47.27 / 39.15 / 35.68
+native UserID warm count_ge | 5.31 / 5.38 / 5.21 / 5.20
+native UserID warm fold_one_group | 16158977.00 / 20285.00 / 61373.00 / 263688.00
+native UserID warm points | 21.02 / 27.89 / 27.02 / 25.69
+native UserID warm sum | 28.71 / 34.85 / 30.42 / 28.86
+avx512 EventTime two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [2, 2], 'edited_kinds_after': [2, 1], 'edited_widths_before': [17, 17], 'edited_widths_after': [17, 63], 'new_backing_bytes': 9869, 'copied_unchanged_bytes_group': 9869, 'reclaimable_after_old_reader': 9088, 'global_rebuild_bytes': 18645}
+avx512 OS two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [1, 1], 'edited_kinds_after': [2, 1], 'edited_widths_before': [6, 7], 'edited_widths_after': [9, 63], 'new_backing_bytes': 1184, 'copied_unchanged_bytes_group': 1184, 'reclaimable_after_old_reader': 778, 'global_rebuild_bytes': 1680}
+avx512 URLHash two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [1, 1], 'edited_kinds_after': [1, 1], 'edited_widths_before': [64, 64], 'edited_widths_after': [64, 64], 'new_backing_bytes': 18998, 'copied_unchanged_bytes_group': 18998, 'reclaimable_after_old_reader': 18215, 'global_rebuild_bytes': 36791}
+avx512 UserID two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [1, 1], 'edited_kinds_after': [1, 1], 'edited_widths_before': [64, 57], 'edited_widths_after': [64, 63], 'new_backing_bytes': 4553, 'copied_unchanged_bytes_group': 4553, 'reclaimable_after_old_reader': 3140, 'global_rebuild_bytes': 7442}
+native EventTime two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [2, 2], 'edited_kinds_after': [2, 1], 'edited_widths_before': [17, 17], 'edited_widths_after': [17, 63], 'new_backing_bytes': 9869, 'copied_unchanged_bytes_group': 9869, 'reclaimable_after_old_reader': 9088, 'global_rebuild_bytes': 18645}
+native OS two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [1, 1], 'edited_kinds_after': [2, 1], 'edited_widths_before': [6, 7], 'edited_widths_after': [9, 63], 'new_backing_bytes': 1184, 'copied_unchanged_bytes_group': 1184, 'reclaimable_after_old_reader': 778, 'global_rebuild_bytes': 1680}
+native URLHash two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [1, 1], 'edited_kinds_after': [1, 1], 'edited_widths_before': [64, 64], 'edited_widths_after': [64, 64], 'new_backing_bytes': 18998, 'copied_unchanged_bytes_group': 18998, 'reclaimable_after_old_reader': 18215, 'global_rebuild_bytes': 36791}
+native UserID two_groups_one_fold {'ok': True, 'untouched_group_shared': True, 'edited_blocks': [0, 1], 'edited_kinds_before': [1, 1], 'edited_kinds_after': [1, 1], 'edited_widths_before': [64, 57], 'edited_widths_after': [64, 63], 'new_backing_bytes': 4553, 'copied_unchanged_bytes_group': 4553, 'reclaimable_after_old_reader': 3140, 'global_rebuild_bytes': 7442}

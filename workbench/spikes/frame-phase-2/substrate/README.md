@@ -418,10 +418,83 @@ only (`9f09b3f6`, jobs `20261024T010434Z-994878f0` and
    Frame ahead at every spread.
 2. **The crossover moves with residence.** Warm, native gather overtakes Frame
    from spread 2–4 on UserID and URLHash; flushed, Frame holds to spread 4.
-3. **A fourth route helps but does not close it.** Reading a block's few
+3. **A fourth route helps only on packed blocks.** Reading a block's few
    selected rows as points instead of running the masked leaf (`e8d81a93`,
-   threshold 16 rows) cuts URLHash's spread-16 cost 1.3–1.6× locally; the
-   worker run is pending.
+   thresholds 16 and 64 rows; Graviton 4 job `20261024T011513Z-7892c989`,
+   [evidence/geometry-v2-summary.txt](evidence/geometry-v2-summary.txt)) cuts
+   packed URLHash at spread 16 from 11.8 to 9.9 ns per selected row flushed,
+   but on run-heavy columns it costs 3–8×: OS at spread 4 rises from 0.68 to
+   5.3 ns and UserID from 3.0 to 7.9, because a run point still costs about
+   20 ns. The route must depend on the block's kind, not only its selected
+   count. The Zen 5 rerun (`20261024T012922Z-2c08c0dc`) is pending.
+4. Graviton 4's branch-free native pass runs at 9.8 ns per selected row
+   (0.6 ns per row) for every lane width, so it is not vectorised there and
+   is a weak control on that host; native gather is the control to beat.
+
+## Fold and reclaim grain
+
+PROGRAMS.md's first witness ([`grain.cpp`](grain.cpp), `479c244e`; jobs
+`20261024T012316Z-df4c3979` Zen 5 and `20261024T012411Z-7e9d85a9` Graviton
+4; [evidence/grain-v1-summary.txt](evidence/grain-v1-summary.txt)). An old
+reader holds a two-group view while one constant block becomes a plane and
+one narrow block becomes wide inside group 0. Only group 0 refolds; the
+untouched group stays shared by pointer, both views re-read correctly, and
+the bytes newly allocated equal the edited group's bytes (OS 1,184, URLHash
+18,998) against 1,680 and 36,791 for a global rebuild of the two-group
+image.
+
+| Zen 5, ns per block (points: per point) | global image | groups of 256 | 64 | 16 |
+| --- | ---: | ---: | ---: | ---: |
+| UserID SUM warm / flushed | 7.7 / 16.1 | 8.4 / 22.0 | 9.5 / 34.0 | 11.3 / 56.1 |
+| URLHash SUM warm / flushed | 26.5 / 53.2 | 24.1 / 54.8 | 27.1 / 64.5 | 35.4 / 85.5 |
+| OS SUM warm / flushed | 3.1 / 5.0 | 3.3 / 9.7 | 3.7 / 16.5 | 5.1 / 23.8 |
+| UserID points warm / flushed | 9.8 / 43.2 | 14.4 / 47.9 | 15.3 / 48.6 | 16.3 / 49.2 |
+| Fold one group (UserID) | 13.3 ms rebuild | 190 µs | 47 µs | 15 µs |
+
+1. **Fold cost scales with the group; scans pay for small groups.** A
+   16-block fold costs 13–21 µs against a 9–19 ms whole-image rebuild, about
+   900× less. Warm scans pay 1.0–1.7× for 16-block groups. Flushed scans pay
+   1.6–2.2× on URLHash and EventTime and 3.2–5.1× on UserID and OS, probably because each small group's descriptors,
+   index and bodies sit in separate allocations and the hardware prefetcher
+   restarts per group. Points pay 1.1–1.7× for the extra indirection.
+2. **256-block groups cost little to read.** Their scans stay within 10% of
+   the global image warm on both hosts (URLHash is faster) and within
+   1.03–1.4× flushed except OS (1.9×), while folding in 0.15–0.28 ms; warm
+   points still pay 1.2–1.5×. The
+   flushed penalty of small groups looks like a layout cost rather than a
+   grain law (inferred, not yet measured): groups allocated contiguously, with
+   cross-group descriptors in one column, should remove most of it.
+3. Graviton 4 shows the same order with smaller flushed penalties (16-block
+   SUM 1.3–1.8× flushed).
+
+## Fixed stored programs against the per-operation oracle
+
+Ikea LEAD's direction review ([`programs.cpp`](programs.cpp), source
+`edb8ac24`; jobs `20261024T012340Z-c05116d4` and `20261024T012444Z-9bb0b684`;
+[evidence/programs-v1-summary.txt](evidence/programs-v1-summary.txt)). One
+stored representation per column answers full SUM, COUNT(x ≥ median),
+SUM(B) WHERE A ≥ its 90th percentile and 65,536 random points: native narrow
+FOR with front A's fused pair control, the integer image (smaller of runs and
+packed, kind index), packed only, and sorted part dictionaries. **Mix totals
+are component estimates**: weighted sums of isolated per-operation medians,
+not executed traces. The oracle picks the cheapest program per operation and
+pays nothing to switch.
+
+1. **One program loses 1.0–1.7× to the oracle on scan-heavy mixes and up to
+   2–3× on mixed ones.** Zen 5 scan mixes lose 1.01–1.73× and mixed ones
+   1.04–1.97×; Graviton 4's mixed ones 1.14–2.98×. The gap is points against
+   scans: native wins the point mix in 27 of 28 column, condition and host cells, while
+   the integer or packed image wins most full-scan mixes.
+2. **Native wins narrow columns on Graviton 4** (OS, RegionID, ResolutionWidth:
+   native best in selective, points and mixed mixes; an image only in scans).
+3. **The integer image is also the smallest program** (UserID:OS 6.1 MB
+   against 24 MB native), so the best single program is often also the
+   cheapest to hold. Dictionaries shrink only URLHash (19.5 against 22.1 MB)
+   and win no mix outright.
+4. The two-images arm (both the image and native held; scans on the image,
+   points on native, pairs either way; both images and both constructions
+   charged) is `1b9c95a5`, jobs `20261024T014113Z-5431ae9e` and
+   `20261024T014145Z-a623d18f`.
 
 ## Staged pairs and the remaining pair gap
 
@@ -492,22 +565,13 @@ leaves are near their floor and on DRAM-resident slices.
 
 ## Next
 
-Ikea LEAD's review proposes separating the units before committing to
-descriptor columns or a kind index, with bytes and logical work fixed: the
-ordinary per-block operation; the same leaf called directly over a
-homogeneous run of blocks; preparation hoisted; then kind batching. Traces:
-constants, short and long runs, FOR; homogeneous and mixed kind/width; all,
-none and scattered coarse domains. Charge index construction and maintenance,
-and keep original coordinates: reordering is lawful for exact integer SUM, not
-for ordered outputs, first-match operations, prefix scans or ordered float
-laws. Timing reuses phase 1's [scan schedule](../../frame-phase-1/scan/run.py)
-(balanced positions and predecessors, every call checked) and its independent
-raw-record audit.
-
-- Leaves at their floor, measured against the native array per width:
-  direct Local bit-plane SUM and COUNT for packed blocks (popcount per plane,
-  no unpack), and a vectorised run leaf.
-- Attribute the leaves' residence sensitivity once counters are qualified.
-- Leaves for predicate emission over runs and for masked plane sums, which
-  decide every losing selection cell.
-- The same pairs cold, through front A's conditioning harness.
+- Lifecycle: the timed edit-policy driver over front A's histories
+  ([`lifecycle.cpp`](lifecycle.cpp), `1dc097d9`) compares corrections over the
+  global image, 16-block groups folded at fold opportunities, and adaptive
+  group-local native FOR. Worker jobs `20261024T013526Z-22724b24` and
+  `20261024T013601Z-55437693` are pending.
+- Two images under a fixed routing rule (above) and the Zen 5 geometry rerun.
+- A kind-aware sparse route: points only for packed blocks.
+- Contiguously allocated groups, to test whether small groups' flushed scan
+  penalty is layout.
+- The exact boundary route once front C lands `with_exact_body()`.
