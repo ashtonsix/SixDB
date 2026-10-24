@@ -1,0 +1,80 @@
+{
+  "scope": "Local Linux AArch64 functional and protocol qualification, not a performance ranking or steady ceiling.",
+  "compiler": "Clang21.1.8, C++23",
+  "march": "armv8-a+simd",
+  "tune": "neoverse-v2",
+  "optimized": "O3, assertions retained, no LTO",
+  "sanitizer": "O1 ASan/UBSan, no recover; C++ caller and header leaves, assembly instrumentation limits retained",
+  "checks": {
+    "check-frozen.json": {
+      "event": "check",
+      "cases": 6012,
+      "point_values": 204800,
+      "refusals": 5,
+      "verified": true
+    },
+    "sanitize-frozen.json": {
+      "event": "check",
+      "cases": 6012,
+      "point_values": 204800,
+      "refusals": 5,
+      "verified": true
+    }
+  },
+  "protocol": {
+    "cells": 16,
+    "samples": 576,
+    "counts": [
+      1,
+      2
+    ],
+    "pools": [
+      1,
+      4
+    ],
+    "ms": 5,
+    "masks": "all",
+    "operations": [
+      "sum:OS",
+      "pair:UserID:URLHash"
+    ],
+    "source_sample": "8 evenly spaced complete original blocks",
+    "schedule": "six-arm Williams; positions and ordered predecessors independently audited",
+    "answers": "independent Python row oracle, every timed result flag, exact u128 totals after all timers stop",
+    "allocations": "actual per-arm ranges, independent nonalias checks within arms and between workers",
+    "min_warm_overlap": 0.7652691317282933,
+    "min_cold_batch_overlap": 0.0,
+    "local_limit": "VM not quiet; timings are protocol evidence only; no ceiling or serving-tier assertion"
+  },
+  "negative_auditor": {
+    "rejected": [
+      "sum",
+      "mismatch",
+      "schedule",
+      "alias"
+    ],
+    "baseline_verified": true
+  },
+  "linked_code": "All 16 native pair specializations contain real NEON vector comparisons; narrow byte accumulator avoids excessive widening; unroll disabled in pair loops.",
+  "capture": "64ca40b98037c66b49dbe536084752cb7a54fb09b9238647294c36395a0bd451",
+  "source_sha256": {
+    "workbench/spikes/frame-phase-2/instruments/cells/CMakeLists.txt": "a833845c00771df5f43ae38141bd702f0a3fc2bbd9da4389ed3f6b8f98c47fba",
+    "workbench/spikes/frame-phase-2/instruments/cells/README.md": "b2b4d916d3e9220f89fb0d695f97d58ec9b7c15da8d7550957361f40939d09a0",
+    "workbench/spikes/frame-phase-2/instruments/cells/cells.h": "d8f3693ff1c50f8420887e9a6c6b5c72e8d8606af07775183f9d9d44992d9963",
+    "workbench/spikes/frame-phase-2/instruments/cells/kernels.cpp": "d053db81a418f00cbfbf12fb62a8a62b7b9fb188504889e0443029ab59fb6a17",
+    "workbench/spikes/frame-phase-2/instruments/cells/main.cpp": "5877ee8a3e79ac04ed77cbe2e4aee24448935539211d3fabeffcc46330783167",
+    "workbench/spikes/frame-phase-2/instruments/cells/panel.py": "ed219215980c2ac57b6c4568bc74d75adea452a2acac4502e6e1dd9b0a4a9c9e",
+    "workbench/spikes/frame-phase-2/instruments/cells/worker.sh": "7236506f86c7a8ba85eb92608193ad019f332b3ad24beb613cc6644eb9c6a665",
+    "workbench/spikes/frame-phase-2/substrate/image.h": "48a2b9c1a8c0e7dd4186f98ebee3d8ac113e457c743d1d436ccfad7d270fe5cb",
+    "workbench/spikes/frame-phase-2/bodies/body.h": "528a808ca9bee1a021aaa426813558ce1b3e9ad201226f0fdb06fa8d895817b7",
+    "workbench/spikes/frame-phase-2/bodies/packed.h": "f5735270cf6bb65b172f4471c2e362aaaa1066e3412fe10a023c65bac9575175",
+    "workbench/spikes/frame-phase-2/bodies/runs.h": "637315db708fce8aff7a85841661d39b07bbb47bc08cf8f80df0ca224561041d",
+    "workbench/spikes/frame-phase-2/bodies/simd.h": "ed9f060acbf18306224d86007898ffe694d65b8e7ed33a9150c033257917ef36"
+  },
+  "binary_sha256": {
+    "frame_cells": "526c37e5f2ad6240caf85b6dded0625658d05c991ad7f7f2e2932fe771121172",
+    "frame_cells_sanitize": "fbf8986821f2764af572f05296e92e2b11c6f5e9c201303ce9aed318662a0d4f"
+  },
+  "raw_local": "build/frame-collab/cells-local",
+  "native_worker_evidence": "See FINDINGS.md and evidence/native-cells; separate immutable-capture native worker qualification and timing."
+}

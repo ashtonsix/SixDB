@@ -9,6 +9,8 @@ target_compile_options(frame_bandwidth_check PRIVATE -O1 -fsanitize=address,unde
 target_link_options(frame_bandwidth_check PRIVATE -fsanitize=address,undefined)
 target_link_libraries(frame_bandwidth_check PRIVATE Threads::Threads)
 
+add_subdirectory(cells)
+
 option(SIXDB_FRAME_CODEC_CONTROLS "Build pinned native Frame codec controls" OFF)
 if(SIXDB_FRAME_CODEC_CONTROLS)
   add_subdirectory(codecs)

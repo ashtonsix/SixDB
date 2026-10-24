@@ -1,0 +1,13 @@
+add_library(frame_cells_controls STATIC EXCLUDE_FROM_ALL kernels.cpp)
+sixdb_target(frame_cells_controls)
+target_include_directories(frame_cells_controls PUBLIC . ../../substrate ../../bodies)
+add_executable(frame_cells EXCLUDE_FROM_ALL main.cpp)
+sixdb_target(frame_cells)
+target_link_libraries(frame_cells PRIVATE frame_cells_controls Threads::Threads)
+add_executable(frame_cells_sanitize EXCLUDE_FROM_ALL main.cpp kernels.cpp)
+sixdb_target(frame_cells_sanitize)
+target_include_directories(frame_cells_sanitize PRIVATE ../../substrate ../../bodies)
+target_link_libraries(frame_cells_sanitize PRIVATE Threads::Threads)
+target_compile_options(frame_cells_sanitize PRIVATE
+  -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer)
+target_link_options(frame_cells_sanitize PRIVATE -fsanitize=address,undefined)

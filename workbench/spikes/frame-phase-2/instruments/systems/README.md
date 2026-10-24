@@ -8,6 +8,13 @@ actual Python Polars calls and native narrow-array controls. We reuse its exact
 arithmetic, actual logical dtypes and conditioning distinctions, while adding
 native system-call boundaries instead of attributing Python overhead to codecs.
 
+The [native Rust Polars control](polars/README.md) now qualifies actual optimized
+LazyFrame filter-to-SUM/COUNT/len calls over owned typed columns. Its 12,960
+queries cover narrow/wide, NULL, empty and mismatched chunks, with independently
+bounded natural accumulators and explicit widening when required. This is a
+functional native AArch64 control, not a speed result or reconstruction of the
+historical Python wheel's effective build.
+
 The first DuckDB control uses the normal C query/prepared API over a normally
 loaded typed in-memory table. Setup appends typed data chunks; queries consume
 the table after the input chunks and appender are destroyed. An independent

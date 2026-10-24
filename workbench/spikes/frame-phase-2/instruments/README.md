@@ -29,6 +29,13 @@ Enable `SIXDB_FRAME_SELECTION_CONTROLS` with the phase-1/phase-2 root spike
 configuration to expose `frame_roaring_check` and `frame_vqsort_check`. The
 default is off; the standalone reproduction remains with the controls.
 
+The [complete-query cells](cells/README.md) reuse the shared B/C image, export
+the actual native narrow-FOR controls, and preserve values/answers while varying
+physical working set. Their [first native panel](cells/FINDINGS.md) retains
+small repeated-query losses alongside substantial shared-capacity reversals.
+They distinguish synchronized repeated throughput from flushed completed batches
+and account for actual execution allocations.
+
 The [phase-1 scans](../../frame-phase-1/scan/FINDINGS.md) supply exact native FOR
 and actual Polars controls, balanced treatment order and actual-buffer conditioning.
 They also retain the important scattered-cold loss. The
