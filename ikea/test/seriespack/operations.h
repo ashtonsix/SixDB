@@ -50,6 +50,22 @@ void check_reader_operations(const Reader& reader, const Expected& expected, std
 #endif
 }
 
+#if defined(__aarch64__) || defined(__AVX2__)
+/// A scan group's values to out; returns its rows.
+#if defined(__aarch64__) || (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
+template <unsigned K, unsigned N>
+unsigned store_group(std::uint64_t* out, const ikea::seriespack::native_group::values<K, N>& x) {
+    ikea::seriespack::native_group::store(out, x);
+    return N;
+}
+#else
+template <unsigned K> unsigned store_group(std::uint64_t* out, const ikea::seriespack::native::values<K>& x) {
+    ikea::seriespack::native::store16(out, x);
+    return 16;
+}
+#endif
+#endif
+
 /// Unconditioned range SUM (modulo 2^64, maximum values included) and
 /// one-pass range comparisons of an expression, against expected values.
 template <class Expr, class Expected>
@@ -65,6 +81,26 @@ void check_range_expression(const Expr& expr, const Expected& expected, std::siz
             for (auto i = first; i < first + n; ++i)
                 want += expected[i];
             IKEA_CHECK(cp::total_regions(expr, first, n) == want);
+            // scan_regions visits every row of the range exactly once, in
+            // order, with its value; groups are aligned to their size.
+            {
+                std::size_t next = first;
+                cp::scan_regions(
+                    expr, first, n,
+                    [&](std::size_t row, const auto& x) {
+                        std::array<std::uint64_t, 64> values;
+                        const auto rows = store_group(values.data(), x);
+                        IKEA_CHECK(row == next && row % rows == 0 && row + rows <= first + n);
+                        for (unsigned j = 0; j < rows; ++j)
+                            IKEA_CHECK(values[j] == expected[row + j]);
+                        next += rows;
+                    },
+                    [&](std::size_t row, std::uint64_t value) {
+                        IKEA_CHECK(row == next && value == expected[row]);
+                        ++next;
+                    });
+                IKEA_CHECK(next == first + n);
+            }
             const auto rhs = expected[first + n / 2 < count ? first + n / 2 : 0];
             auto compare = [&]<ikea::comparison Op>() {
                 std::vector<std::uint64_t> words((n + 63) / 64 + 1, 0xbad);

@@ -51,7 +51,7 @@ template <class F> struct local_total {
         std::array<std::array<std::uint8_t, period>, B ? B : 1> m{};
         for (unsigned p = 0; p < period; ++p)
             if (p % T < 8 * B)
-                m[p % T % B][p] = 0xff;
+                m[p % T % (B ? B : 1)][p] = 0xff;
         return m;
     }();
     /// The sum of n periods (n * rows rows) from tile start p.

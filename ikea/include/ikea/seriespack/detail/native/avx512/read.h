@@ -227,6 +227,47 @@ template <class U, unsigned K, unsigned N>
         detail::each<values<sizeof(U) * 8, N>::parts>(
             [&](auto p) { _mm512_storeu_si512(out + p * (64 / sizeof(U)), y.v[p]); });
 }
+/// Whether store_lanes is available for U: lane compression of U-sized lanes
+/// (bytes and u16 lanes need VBMI2).
+#if defined(__AVX512VBMI2__)
+template <class U> inline constexpr bool lane_store = true;
+#else
+template <class U> inline constexpr bool lane_store = sizeof(U) >= 4;
+#endif
+/// Lanes [from, from + n) of a group to out[0, n): each part's wanted lanes
+/// are compressed to the front and stored by a prefix mask at a pointer
+/// inside out, so no address before out is formed.
+template <class U, unsigned K, unsigned N>
+[[gnu::always_inline]] inline void store_lanes(U* __restrict out, values<K, N> x, unsigned from, unsigned n)
+    requires lane_store<U>
+{
+    auto y = widen<sizeof(U) * 8>(x);
+    constexpr unsigned lanes = 64 / sizeof(U);
+    const std::uint64_t wanted = (n == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << n) - 1) << from;
+    unsigned written = 0;
+    detail::each<values<sizeof(U) * 8, N>::parts>([&](auto p) {
+        const auto m = wanted >> (p * lanes) & (lanes == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << lanes) - 1);
+        if (!m)
+            return;
+        const auto c = static_cast<unsigned>(std::popcount(m));
+        const auto prefix = c == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << c) - 1;
+        auto* at = out + written;
+#if defined(__AVX512VBMI2__)
+        if constexpr (sizeof(U) == 1)
+            _mm512_mask_storeu_epi8(at, prefix, _mm512_maskz_compress_epi8(m, y.v[p]));
+        if constexpr (sizeof(U) == 2)
+            _mm512_mask_storeu_epi16(at, static_cast<__mmask32>(prefix),
+                                     _mm512_maskz_compress_epi16(static_cast<__mmask32>(m), y.v[p]));
+#endif
+        if constexpr (sizeof(U) == 4)
+            _mm512_mask_storeu_epi32(at, static_cast<__mmask16>(prefix),
+                                     _mm512_maskz_compress_epi32(static_cast<__mmask16>(m), y.v[p]));
+        if constexpr (sizeof(U) == 8)
+            _mm512_mask_storeu_epi64(at, static_cast<__mmask8>(prefix),
+                                     _mm512_maskz_compress_epi64(static_cast<__mmask8>(m), y.v[p]));
+        written += c;
+    });
+}
 template <unsigned K, unsigned N>
 [[gnu::always_inline]] inline selection<K, N> less(values<K, N> x, std::uint64_t cutoff,
                                                    std::uint64_t active) {

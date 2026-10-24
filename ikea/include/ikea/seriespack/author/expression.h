@@ -432,6 +432,38 @@ std::uint64_t sum_regions(const Source& source, std::size_t first, std::size_t c
     }
     return answer;
 }
+/// One decode, many consumers: group(row, values) receives each complete
+/// aligned group of the widest native grain in [first, first + count), its
+/// values still in registers, so any number of consumers composed inside it
+/// share one reconstruction; edge(row, value) receives every other row.
+/// Groups arrive in row order, inside complete striped tiles at compile-time
+/// positions (as sum_regions). Rows outside the range are not read. Values are
+/// native_group::values<K, grain> on NEON and AVX-512, native::values<K> (16
+/// rows) on AVX2 alone.
+template <class Source, class Group, class Edge>
+[[gnu::always_inline]] inline void scan_regions(const Source& source, std::size_t first, std::size_t count,
+                                                Group&& group, Edge&& edge) {
+    constexpr unsigned K = Source::bit_width;
+#if defined(__aarch64__) ||                                                                        \
+    (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
+    constexpr unsigned grain = K <= 8 ? 64 : K <= 32 ? 32 : 16;
+    wide_ops<grain> ops;
+    constexpr auto all = ~std::uint64_t{0};
+#else
+    constexpr unsigned grain = 16;
+    native_ops ops;
+    constexpr auto all = std::uint16_t{0xffff};
+#endif
+    scalar_ops scalar;
+    std::size_t i = first;
+    for (; count && i % grain; ++i, --count)
+        edge(i, read(scalar, source, i, true).value);
+    each_group<grain, striped_tile_rows<Source>>(i, count, [&](std::size_t row) __attribute__((always_inline)) {
+        group(row, read(ops, source, row, all));
+    });
+    for (; count; ++i, --count)
+        edge(i, read(scalar, source, i, true).value);
+}
 /// The layout of a headless whole-source dense expression, else void.
 template <class E> struct dense_layout {
     using type = void;

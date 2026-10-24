@@ -35,10 +35,31 @@ void dense_range(const void* source, std::size_t first, std::size_t count, U* __
     if (first % 16 == 0 && count == 16)
         return dense_region<F>(data, first, out);
 #if defined(__aarch64__) || defined(__AVX2__)
-    // A partial packet whose tiles hold requested rows exists in full, so it
-    // is decoded whole and the requested part copied (short reads would
-    // otherwise take up to 30 scalar points).
+    // A partial packet whose tiles all hold requested rows exists in full, so
+    // it is decoded whole and the requested part copied (short reads would
+    // otherwise take up to 30 scalar points). The containing tiles run from
+    // the first requested row's tile to the last's; nothing outside is read.
+    const std::size_t lowest = first / F::tile_rows * F::tile_rows;
     const std::size_t backed = (first + count + F::tile_rows - 1) / F::tile_rows * F::tile_rows;
+#if defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
+    // A short read inside its range's tiles: the covering native groups,
+    // stored by lane masks (no scalar or 16-row edges). Only where a group
+    // stays inside one tile: a Local group would start before the first
+    // requested row's tile (Zen 5 compact short reads then lost 5-10%).
+    constexpr unsigned short_grain = F::width <= 8 ? 64 : F::width <= 16 ? 32 : 16;
+    if constexpr (native_group::lane_store<U> && F::tile_rows >= short_grain) {
+        const std::size_t g = first - first % short_grain, end = (first + count + short_grain - 1) / short_grain * short_grain;
+        if (count && count <= 64 && g >= lowest && end <= backed) {
+            for (std::size_t at = g; at < first + count; at += short_grain) {
+                const auto from = at < first ? unsigned(first - at) : 0u;
+                const auto n = unsigned(std::min<std::size_t>(at + short_grain, first + count) - (at + from));
+                native_group::store_lanes(out, native_group::read<F, true, short_grain>(data, F::tile_bytes, at), from, n);
+                out += n;
+            }
+            return;
+        }
+    }
+#endif
     const auto partial = [&](std::size_t from, std::size_t n) __attribute__((always_inline)) {
         const auto p = first - from;
         U packet[16];
@@ -47,7 +68,7 @@ void dense_range(const void* source, std::size_t first, std::size_t count, U* __
             out[j] = packet[from + j];
         first += n, out += n, count -= n;
     };
-    if (count && first % 16 && first - first % 16 + 16 <= backed)
+    if (count && first % 16 && first - first % 16 >= lowest && first - first % 16 + 16 <= backed)
         partial(first % 16, std::min<std::size_t>(count, 16 - first % 16));
 #endif
     while (count && first % 16) {
