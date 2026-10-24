@@ -388,6 +388,17 @@ inline u64 point_intervals(const image &f, std::size_t row) {
     return f.base[b] + v;
 }
 
+// The point path the substrate uses by default, chosen per ISA from the
+// image-v4 comparison (SEAMS.md, run lookup): ikea::intervals on x86, front
+// C's in-leaf count on NEON.
+inline u64 point_default(const image &f, std::size_t row) {
+#if defined(__x86_64__)
+    return point_intervals(f, row);
+#else
+    return point(f, row);
+#endif
+}
+
 // Body extent of block b, for staging.
 inline std::pair<const u8 *, std::size_t> body(const image &f, std::size_t b) {
     std::size_t len = 0;

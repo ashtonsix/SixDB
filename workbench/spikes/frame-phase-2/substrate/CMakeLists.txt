@@ -18,7 +18,7 @@ target_link_libraries(frame_substrate_masks PRIVATE frame_encoding_material)
 # The shared image: substrate descriptor columns over front C's header leaves.
 add_executable(frame_substrate_image image_measure.cpp)
 sixdb_target(frame_substrate_image)
-target_link_libraries(frame_substrate_image PRIVATE frame_bodies ikea::intervals)
+target_link_libraries(frame_substrate_image PRIVATE frame_bodies frame_cells_controls ikea::intervals)
 add_executable(frame_substrate_dict dict_measure.cpp)
 sixdb_target(frame_substrate_dict)
 target_link_libraries(frame_substrate_dict PRIVATE frame_bodies ikea::intervals)

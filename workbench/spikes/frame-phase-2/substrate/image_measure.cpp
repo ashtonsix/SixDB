@@ -6,6 +6,7 @@
 // next replacement). Warm and flushed; every answer checked.
 //
 // usage: frame_substrate_image COLS_DIR ROWS ROUNDS COLUMN[:PREDICATE_COLUMN]...
+#include "cells.h"
 #include "image.h"
 
 #include <algorithm>
@@ -15,6 +16,7 @@
 #include <fstream>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <random>
 #include <string>
 #include <vector>
@@ -133,6 +135,11 @@ int main(int argc, char **argv) {
         const std::size_t n = bv.size(), blocks = n / fi::block_rows;
         const fi::image addr = fi::build(bv, fi::placement::address), grouped = fi::build(bv, fi::placement::by_kind);
         const native nat(bv);
+        // Front A's qualified controls (SEAMS.md, controls): typed owners and an
+        // all-blocks mask, borrowed immutably for the run.
+        const frame_cells::native control_b(bv);
+        const std::vector<u64> all_words((blocks + 63) / 64, ~u64{0});
+        const auto all_blocks = frame_cells::block_mask::bind(all_words, n);
         const fi::kind_index addr_index = fi::index_by_kind(addr), grouped_index = fi::index_by_kind(grouped);
         u128 oracle = 0;
         for (u64 x : bv)
@@ -198,6 +205,10 @@ int main(int argc, char **argv) {
             {"sum", "frame_by_kind", [&] { return fi::sum(grouped); }, evict_image(grouped)},
             {"sum", "frame_address_kind_index", [&] { return fi::sum_indexed(addr, addr_index); }, evict_image(addr)},
             {"sum", "frame_by_kind_kind_index", [&] { return fi::sum_indexed(grouped, grouped_index); }, evict_image(grouped)},
+            {"sum", "native_qualified", [&] { return frame_cells::native_sum_once(control_b, all_blocks).sum; },
+             [&] {
+                 std::visit([](const auto &v) { flush(v.data(), v.size() * sizeof(v[0])); }, control_b.values);
+             }},
             {"sum", "native", [&] {
                  // The strong control: lane-width u32 counters over 65,536-row
                  // chunks for u8/u16 lanes, split halves for wider lanes.
@@ -234,6 +245,13 @@ int main(int argc, char **argv) {
                  return s;
              },
              evict_image(addr)},
+            {"points", "frame_default", [&] {
+                 u128 s = 0;
+                 for (u32 r : rows)
+                     s += fi::point_default(grouped, r);
+                 return s;
+             },
+             evict_image(grouped)},
             {"points", "frame_intervals", [&] {
                  u128 s = 0;
                  for (u32 r : rows)
@@ -261,63 +279,68 @@ int main(int argc, char **argv) {
             if (std::string(arms[i].cell) == "points")
                 expect[i] = point_oracle;
 
-        // SUM(B) WHERE A >= t, fused per block on the address image.
+        // SUM(B) WHERE A >= t at three selectivities, fused per block on both
+        // placements, beside front A's qualified pair control.
         std::vector<u64> av;
         std::optional<native> anat;
+        std::optional<frame_cells::native> control_a;
         fi::image aimg, agrouped;
-        std::vector<u64> masks;
-        u64 t = 0;
+        std::vector<u64> masks(4 * blocks);
+        std::vector<u64> thresholds;
         if (!an.empty()) {
             av = load(dir + "/" + an + ".u64", n);
             aimg = fi::build(av, fi::placement::address);
             agrouped = fi::build(av, fi::placement::by_kind);
+            anat.emplace(av);  // one owner, borrowed by both the timed and the evict callback
+            control_a.emplace(av);
             std::vector<u64> sorted = av;
-            std::nth_element(sorted.begin(), sorted.begin() + static_cast<long>(0.9 * n), sorted.end());
-            t = sorted[static_cast<std::size_t>(0.9 * n)];  // about 10% of rows
-            masks.resize(4 * blocks);
+            std::sort(sorted.begin(), sorted.end());
+            for (double q : {0.01, 0.1, 0.5})
+                thresholds.push_back(sorted[static_cast<std::size_t>((1.0 - q) * (n - 1))]);
+        }
+        static const char *pair_cells[] = {"pair_sum_1pct", "pair_sum_10pct", "pair_sum_50pct"};
+        for (std::size_t qi = 0; qi < thresholds.size(); ++qi) {
+            const u64 t = thresholds[qi];
             u128 pair_oracle = 0;
             for (std::size_t i = 0; i < n; ++i)
                 if (av[i] >= t)
                     pair_oracle += bv[i];
-            anat.emplace(av);  // one owner, borrowed by both the timed and the evict callback
-            arms.push_back({"pair_sum", "frame_fused", [&] {
-                                u128 s = 0;
-                                for (std::size_t b = 0; b < blocks; ++b) {
-                                    if (!fi::mask_ge(aimg, t, b, b + 1, masks.data()))
-                                        continue;
-                                    s += fi::block_masked_sum(addr, b, masks.data() + 4 * b);
-                                }
-                                return s;
-                            },
-                            [&] { evict_image(aimg)(), evict_image(addr)(); }});
-            arms.push_back({"pair_sum", "frame_fused_by_kind", [&] {
-                                u128 s = 0;
-                                for (std::size_t b = 0; b < blocks; ++b) {
-                                    if (!fi::mask_ge(agrouped, t, b, b + 1, masks.data()))
-                                        continue;
-                                    s += fi::block_masked_sum(grouped, b, masks.data() + 4 * b);
-                                }
-                                return s;
-                            },
+            auto fused = [&, t](const fi::image &ai, const fi::image &bi) {
+                return [&, t] {
+                    u128 s = 0;
+                    for (std::size_t b = 0; b < blocks; ++b) {
+                        if (!fi::mask_ge(ai, t, b, b + 1, masks.data()))
+                            continue;
+                        s += fi::block_masked_sum(bi, b, masks.data() + 4 * b);
+                    }
+                    return s;
+                };
+            };
+            arms.push_back({pair_cells[qi], "frame_fused", fused(aimg, addr), [&] { evict_image(aimg)(), evict_image(addr)(); }});
+            arms.push_back({pair_cells[qi], "frame_fused_by_kind", fused(agrouped, grouped),
                             [&] { evict_image(agrouped)(), evict_image(grouped)(); }});
-            arms.push_back({"pair_sum", "native_fused", [&] {
-                                const u64 rhs = t <= anat->min ? 0 : t - anat->min;
-                                return anat->with([&](const auto *x) {
-                                    return nat.with([&](const auto *y) -> u128 {
-                                        u64 lo = 0, hi = 0, c = 0;
-                                        for (std::size_t i = 0; i < n; ++i) {
-                                            const u64 keep = -static_cast<u64>(u64{x[i]} >= rhs);
-                                            const u64 v = u64{y[i]} & keep;
-                                            lo += v & 0xffffffffu, hi += v >> 32, c += keep & 1;
-                                        }
-                                        return static_cast<u128>(lo) + (static_cast<u128>(hi) << 32) + static_cast<u128>(nat.min) * c;
-                                    });
-                                });
-                            },
-                            [&] { flush(anat->bytes.data(), anat->bytes.size()), evict_native(); }});
-            expect.push_back(pair_oracle);
-            expect.push_back(pair_oracle);
-            expect.push_back(pair_oracle);
+            arms.push_back({pair_cells[qi], "native_qualified",
+                            [&, t] { return frame_cells::native_pair_once(*control_a, control_b, t, all_blocks).sum; },
+                            [&] {
+                                std::visit([](const auto &v) { flush(v.data(), v.size() * sizeof(v[0])); }, control_a->values);
+                                std::visit([](const auto &v) { flush(v.data(), v.size() * sizeof(v[0])); }, control_b.values);
+                            }});
+            for (int k = 0; k < 3; ++k)
+                expect.push_back(pair_oracle);
+        }
+        // Optional cell filter (CELLS=sum,points,...) for focused runs.
+        if (const char *keep = std::getenv("CELLS")) {
+            const std::string list = std::string(",") + keep + ",";
+            std::vector<arm> kept;
+            std::vector<u128> kept_expect;
+            for (std::size_t i = 0; i < arms.size(); ++i) {
+                std::string cell = arms[i].cell;
+                if (cell.rfind("pair_sum", 0) == 0)
+                    cell = "pair_sum";
+                if (list.find("," + cell + ",") != std::string::npos)
+                    kept.push_back(arms[i]), kept_expect.push_back(expect[i]);
+            }
+            arms = kept, expect = kept_expect;
         }
 
         for (std::size_t i = 0; i < arms.size(); ++i)

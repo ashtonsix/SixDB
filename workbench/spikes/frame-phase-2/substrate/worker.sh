@@ -50,6 +50,23 @@ for isa in $isas; do
         | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/image.jsonl"
       continue
     fi
+    if [ -n "${SCALING_IMAGE:-}" ]; then
+      # Concurrent streams over the shared image (front C's leaves), full SUM only.
+      img="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_image"
+      ncpu=$(nproc)
+      for k in 1 2 4 $ncpu; do
+        pids=()
+        for j in $(seq 0 $((k - 1))); do
+          CELLS=sum taskset -c "$j" "$img" "$cols" 2999808 "${ROUNDS:-21}" OS EventTime UserID URLHash WatchID \
+            | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",\"streams\":$k,\"stream\":$j,/" > "$out/iscale-$repeat-$k-$j.jsonl" &
+          pids+=($!)
+        done
+        wait "${pids[@]}"
+        cat "$out"/iscale-$repeat-$k-*.jsonl >> "$out/image-scaling.jsonl"
+        rm -f "$out"/iscale-$repeat-$k-*.jsonl
+      done
+      continue
+    fi
     if [ -n "${SCALING_ONLY:-}" ]; then
       # Concurrent independent streams: k processes, one per core, each with
       # its own copy of the data, timing the same full-slice scans at once.
