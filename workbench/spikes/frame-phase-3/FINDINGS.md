@@ -90,8 +90,26 @@ tried two of the fixes:
   inside SeriesPack's one-decode scan (`author::scan_regions`), which is a
   SeriesPack kernel, not Frame glue.
 
-So delta still needs a fused weighted SUM and a fused checkpoint-plus-prefix
-read before it lands; its bytes are now competitive. The runs
+A third round ([measure-v5-zen5.txt](proto/evidence/measure-v5-zen5.txt),
+[measure-v5-graviton4.txt](proto/evidence/measure-v5-graviton4.txt)) adds
+the **relative-ends form**: each row stores its offset from the region's
+checkpoint instead of its delta from the previous row, so a point is one
+add and SUM is n·c plus one child SUM, with no prefix pass.
+
+| relative ends against sizes, G16 | Zen 5 | Graviton 4 |
+| --- | --- | --- |
+| SUM | 1.2–6.4× faster | 1.1–8.1× faster |
+| point | 1.6–3.4× faster | 1.4–2.9× faster |
+| COUNT ≥, read | 0.99–1.17× | 0.95–1.17× |
+
+It costs bytes where offsets grow faster than deltas: ClientIP 21 → 32 bits
+per value, UserID 29 → 48, RegionID 12 → 18, gen_ts 12 → 17, flat on the
+other seven columns. Which form wins is a per-column fit choice the census
+can report, not a fixed default. Even relative SUM (23–167 ns per block on Zen 5)
+stays above `bound → pack` on most columns, and READ and COUNT still decode.
+
+So delta still needs a fused weighted SUM (for the sizes form) and a fused
+checkpoint-plus-prefix read before it lands; its bytes are now competitive. The runs
 thread found the same short-read cost from the other side
 ([runs §3](../frame-phase-2/runs/README.md#findings)).
 
@@ -334,6 +352,30 @@ is a per-ISA choice, not a free win.
   so even perfect overlap leaves about 2×. Closing it needs descriptors that
   stay resident (smaller entries, or entries co-located with bodies), which
   is a representation question for points, not a seam question.
+- Smaller entries alone do not do it. A third run
+  ([seams-v3-zen5.jsonl](proto/evidence/seams-v3-zen5.jsonl),
+  [seams-v3-graviton4.jsonl](proto/evidence/seams-v3-graviton4.jsonl))
+  packs the plan entry into 24 bytes and compares against front A's
+  materialising gather (`native_gather_once`, every output checked), which
+  is the like-for-like control. The pipelined plan is unchanged flushed
+  (Zen 5 23–42 ns, Graviton 4 23–39), and the gather takes 5.1–6.6 and
+  7.5–9.4, so Frame is 3.8–6.4× behind on Zen 5 and 2.6–5.2× on Graviton 4.
+  The entry is still a separate random line; co-locating it with the body
+  is the remaining experiment.
+- "Warm" is not a stable condition at 24 M rows: the arms evict each other,
+  and the same arm moves 3–4× between runs (OS ready plan 19 → 65 ns on
+  Zen 5; the u64 array 4.5 → 9 on Graviton 4). Only the flushed numbers are
+  comparable across runs.
+
+**SUM with MAX in one pass.** `summarise_selected` returns sum, count, min
+and max from one pass over the selected rows, instead of a SUM law and then
+a `select` for MAX. On Graviton 4 it is 1.8–2.1× faster than two passes when
+the predicate is clustered (133–166 against 279–308 ns per block, level with
+the native scalar control at 156–159), and 1.0–1.2× elsewhere. On Zen 5 it
+is mixed (0.89–1.15×): Zen 5's `select` is already fast. MAX still has no
+law of its own; one would skip blocks whose bound (lo + 2^width − 1, or the
+exception area's maximum) cannot beat the running maximum, which is B6's
+remaining step.
 
 The COUNT case now uses front A's count-only control (`native_count_once`):
 on Zen 5 the descriptor pass matches or beats it on UserID, CounterID and
