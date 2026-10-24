@@ -393,9 +393,11 @@ template <bool UseIntervals> u64 point_with(const image &f, std::size_t row);
 // SUM over the rows selected by per-block masks (four words per block),
 // hoisted per address segment of B; empty masks skip the block before its
 // body is addressed, full masks take the block SUM leaf, and blocks with at
-// most `sparse` selected rows read those rows as points (the fourth route the
-// geometry probe asked for: a masked leaf costs about a full block however
-// few rows it keeps).
+// most `sparse` selected rows of a packed or wide body read those rows as
+// points (the fourth route the geometry probe asked for: a masked leaf costs
+// about a full block however few rows it keeps). Run blocks keep the masked
+// leaf: a run point costs more than the whole masked run sum (README,
+// selection geometry).
 inline u128 masked_sum(const image &f, const u64 *masks, unsigned sparse = 0) {
     u128 total = 0;
     const u8 *img = f.bytes.data();
@@ -408,7 +410,7 @@ inline u128 masked_sum(const image &f, const u64 *masks, unsigned sparse = 0) {
                 const unsigned cnt = std::popcount(m[0]) + std::popcount(m[1]) + std::popcount(m[2]) + std::popcount(m[3]);
                 total += static_cast<u128>(f.base[b]) * cnt;
                 const u8 *p = img + f.offset[b];
-                if (cnt <= sparse && k != constant) {
+                if (cnt <= sparse && (k == plane || k == wide)) {
                     u128 t = 0;
                     for (unsigned q = 0; q < 4; ++q)
                         for (u64 x = m[q]; x; x &= x - 1)
