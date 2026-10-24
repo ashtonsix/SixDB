@@ -240,13 +240,14 @@ struct dict_program final : program {
                 const unsigned cnt = sel ? std::popcount(sel[0]) + std::popcount(sel[1]) + std::popcount(sel[2]) + std::popcount(sel[3]) : fi::block_rows;
                 return static_cast<u128>(d[0]) * cnt;
             }
-            case fi::runs:
-                if (!sel) {
-                    u128 r = 0;
-                    fi::with_runs(w, [&](auto rr) { r = bodies::runs_weighted<decltype(run_value(rr))>::weighted_sum(p, codes.n[b], d); });
-                    return r;
-                }
-                break;
+            case fi::runs: {
+                u128 r = 0;
+                fi::with_runs(w, [&](auto rr) {
+                    using W = bodies::runs_weighted<decltype(run_value(rr))>;
+                    r = sel ? W::masked_weighted_sum(p, codes.n[b], sel, d) : W::weighted_sum(p, codes.n[b], d);
+                });
+                return r;
+            }
             case fi::plane:
                 if (w <= 16) {
                     u128 r = 0;
