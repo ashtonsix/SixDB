@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <functional>
+#include <optional>
 #include <random>
 #include <string>
 #include <vector>
@@ -168,6 +169,7 @@ int main(int argc, char **argv) {
                             const u32 b = random_ids[i + 8];
                             __builtin_prefetch(f.base.data() + b), __builtin_prefetch(f.offset.data() + b);
                             __builtin_prefetch(f.n.data() + b), __builtin_prefetch(f.kind_of.data() + b);
+                            __builtin_prefetch(f.width.data() + b);
                         }
                         if (i + 4 < k) {
                             const auto [p, len] = fi::body(f, random_ids[i + 4]);
@@ -254,6 +256,7 @@ int main(int argc, char **argv) {
 
         // SUM(B) WHERE A >= t, fused per block on the address image.
         std::vector<u64> av;
+        std::optional<native> anat;
         fi::image aimg, agrouped;
         std::vector<u64> masks;
         u64 t = 0;
@@ -269,7 +272,7 @@ int main(int argc, char **argv) {
             for (std::size_t i = 0; i < n; ++i)
                 if (av[i] >= t)
                     pair_oracle += bv[i];
-            const native anat(av);
+            anat.emplace(av);  // one owner, borrowed by both the timed and the evict callback
             arms.push_back({"pair_sum", "frame_fused", [&] {
                                 u128 s = 0;
                                 for (std::size_t b = 0; b < blocks; ++b) {
@@ -290,9 +293,9 @@ int main(int argc, char **argv) {
                                 return s;
                             },
                             [&] { evict_image(agrouped)(), evict_image(grouped)(); }});
-            arms.push_back({"pair_sum", "native_fused", [&, anat] {
-                                const u64 rhs = t <= anat.min ? 0 : t - anat.min;
-                                return anat.with([&](const auto *x) {
+            arms.push_back({"pair_sum", "native_fused", [&] {
+                                const u64 rhs = t <= anat->min ? 0 : t - anat->min;
+                                return anat->with([&](const auto *x) {
                                     return nat.with([&](const auto *y) -> u128 {
                                         u64 lo = 0, hi = 0, c = 0;
                                         for (std::size_t i = 0; i < n; ++i) {
@@ -304,7 +307,7 @@ int main(int argc, char **argv) {
                                     });
                                 });
                             },
-                            [&, anat] { flush(anat.bytes.data(), anat.bytes.size()), evict_native(); }});
+                            [&] { flush(anat->bytes.data(), anat->bytes.size()), evict_native(); }});
             expect.push_back(pair_oracle);
             expect.push_back(pair_oracle);
             expect.push_back(pair_oracle);

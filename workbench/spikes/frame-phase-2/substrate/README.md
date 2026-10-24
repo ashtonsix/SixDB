@@ -266,16 +266,22 @@ substrate's cells on it (`2281816d`, `1efa2ef8`; jobs
    EventTime 1.7× and ResolutionWidth 1.3× faster than the native array on
    Zen 5 (UserID 2.0× and EventTime 1.8× on Graviton 4); OS is within 1.3×;
    incompressible WatchID and URLHash are at parity.
-3. **Fused predicate → SUM wins 10× where A clusters** (URLHash summed over
+3. *Correction (Ikea LEAD):* the flushed native pair arm in these runs
+   flushed a copy of the A array rather than the one it read, so its
+   flushed `native_fused` pair numbers (image-v1 to v3) are warm numbers in
+   disguise; fixed in the commit after `649482f5`. Warm pair numbers stand.
+   Kind-index arms also hold an id list (4 bytes per block) not counted in
+   the image bytes, and only the image planes are flushed.
+4. **Fused predicate → SUM wins 10× where A clusters** (URLHash summed over
    UserID's top 10%: 12.1 vs 120.1 ns per block warm on Zen 5) and loses
    2.6× where A spreads (ClientIP over RegionID: 63.5 vs 24.8).
-4. **Points are 5–15 ns resident** against 2–4 ns native, down from
+5. **Points are 5–15 ns resident** against 2–4 ns native, down from
    26–38 ns on phase 1's leaves; cold they are 13–38 ns against 13–14 ns.
-5. **Random-order visits with extent staging match the staged native
+6. **Random-order visits with extent staging match the staged native
    array** on Zen 5 and beat it 2–4× on Graviton 4 for run-heavy columns
    (UserID 54 vs 218 ns per block).
 
-6. **Grouped placement costs points and fused pairs nothing here.** With
+7. **Grouped placement costs points and fused pairs nothing here.** With
    bodies grouped by kind (descriptors still in block order), random points
    and fused predicate → SUM stay within ±7% of address placement, warm and
    flushed, on both hosts (`c6b8d687`; jobs `20261023T235354Z-bc29c0b1` and
