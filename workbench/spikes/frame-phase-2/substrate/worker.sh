@@ -25,12 +25,18 @@ for isa in $isas; do
   mkdir -p "$out"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release '-DSIXDB_SPIKES=frame-phase-1;frame-phase-2' $flags \
     > "$out/configure.txt" 2>&1
-  cmake --build "$build" --target frame_substrate_measure frame_substrate_select frame_substrate_points frame_substrate_masks frame_substrate_image -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
+  cmake --build "$build" --target frame_substrate_measure frame_substrate_select frame_substrate_points frame_substrate_masks frame_substrate_image frame_substrate_dict -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_measure"
   sel="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_select"
   pts="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_points"
   msk="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_masks"
   for repeat in 1 2 3; do
+    if [ -n "${DICT_ONLY:-}" ]; then
+      dct="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_dict"
+      taskset -c "$SIXDB_CPU" "$dct" "$cols" 2999808 "${ROUNDS:-21}" OS ResolutionWidth RegionID ClientIP UserID URLHash \
+        | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/dict.jsonl"
+      continue
+    fi
     if [ -n "${IMAGE_ONLY:-}" ]; then
       img="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_image"
       taskset -c "$SIXDB_CPU" "$img" "$cols" 2999808 "${ROUNDS:-21}" \
