@@ -211,8 +211,11 @@ Compact preset; every answer checked.
 19. **Bytes alone is the wrong objective; the exception penalty is Engine's
     lever.** Penalty 0 buys its bytes with exceptions that make points up to
     2.2× and SUM up to 1.3× slower. A penalty of 4 bytes per exception lands
-    within −3% to +7% of the inline bytes and is as fast or faster
-    everywhere: OS SUM 15.0 against 27.9 ns per block, points 16 against 30.
+    within −3% to +7% of the inline bytes. Its SUM is as fast or faster on
+    every column on Zen 5 (within 3% on Graviton 4) and COUNT within 3%.
+    Points are faster except on ResolutionWidth (8% slower on Zen 5, 17% on
+    Graviton 4). OS SUM takes 15.0 against 27.9 ns per block, and points 16
+    against 30.
     The inline search, minimising bytes, had kept many exceptions. A penalty
     of 16 goes further (OS SUM 10.9, points 10) for 8% more bytes than
     inline. Graviton 4 shows the same order.
