@@ -1,0 +1,176 @@
+
+avx512 ClientIP: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             126/    0/11592 |  31.659 |   26.06 |   20.55 |   6.24
+  no_rle_bulk_x86            126/    0/11592 |  31.659 |   25.59 |   18.32 |   6.26
+  no_rle_bulk_arm            126/    0/11592 |  31.659 |   26.83 |   17.99 |   6.30
+  rle_then_compact           126/11288/  304 |   9.886 |   56.23 |   47.80 |  42.90
+  rle_then_bulk_x86          126/11288/  304 |   9.886 |   57.24 |   48.95 |  42.67
+  rle_then_bulk_arm          126/11288/  304 |   9.886 |   56.96 |   47.64 |  42.78
+  group_rle_then_compact     126/11288/  304 |   8.920 |   11.38 |   12.82 |  57.49
+  group_rle_then_bulk_x86    126/11288/  304 |   8.920 |   12.42 |   11.74 |  58.30
+  group_rle_then_bulk_arm    126/11288/  304 |   8.920 |   12.11 |   11.67 |  57.23
+
+avx512 EventTime: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact               0/    0/11718 |  17.226 |   18.21 |   11.87 |   5.64
+  no_rle_bulk_x86              0/    0/11718 |  17.226 |   17.87 |   11.57 |   5.73
+  no_rle_bulk_arm              0/    0/11718 |  17.226 |   17.87 |   11.80 |   5.67
+  rle_then_compact             0/   12/11706 |  17.218 |   17.96 |   11.71 |   5.68
+  rle_then_bulk_x86            0/   12/11706 |  17.218 |   18.07 |   11.88 |   5.80
+  rle_then_bulk_arm            0/   12/11706 |  17.218 |   17.99 |   11.75 |   5.76
+  group_rle_then_compact       0/   12/11706 |  17.219 |   17.75 |   12.07 |   5.77
+  group_rle_then_bulk_x86      0/   12/11706 |  17.219 |   17.86 |   11.77 |   5.70
+  group_rle_then_bulk_arm      0/   12/11706 |  17.219 |   17.90 |   12.03 |   5.83
+
+avx512 OS: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             177/    0/11541 |   7.038 |   22.92 |   22.74 |  28.20
+  no_rle_bulk_x86            177/    0/11541 |   7.038 |   23.75 |   20.96 |  31.56
+  no_rle_bulk_arm            177/    0/11541 |   7.038 |   24.43 |   22.28 |  30.17
+  rle_then_compact           177/11516/   25 |   2.504 |   47.40 |   42.28 |  41.24
+  rle_then_bulk_x86          177/11516/   25 |   2.504 |   47.23 |   43.51 |  41.06
+  rle_then_bulk_arm          177/11516/   25 |   2.504 |   47.39 |   42.56 |  41.06
+  group_rle_then_compact     177/11516/   25 |   2.120 |    7.03 |    8.88 |  50.71
+  group_rle_then_bulk_x86    177/11516/   25 |   2.120 |    8.01 |    8.23 |  50.86
+  group_rle_then_bulk_arm    177/11516/   25 |   2.120 |    7.84 |    8.13 |  50.05
+
+avx512 RegionID: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             151/    0/11567 |  10.388 |   24.79 |   24.77 |  34.07
+  no_rle_bulk_x86            151/    0/11567 |  10.388 |   24.78 |   23.54 |  34.77
+  no_rle_bulk_arm            151/    0/11567 |  10.388 |   24.71 |   24.07 |  33.26
+  rle_then_compact           151/11296/  271 |   4.938 |   60.65 |   53.39 |  47.10
+  rle_then_bulk_x86          151/11296/  271 |   4.938 |   61.10 |   53.74 |  47.41
+  rle_then_bulk_arm          151/11296/  271 |   4.938 |   60.48 |   53.07 |  47.22
+  group_rle_then_compact     151/11296/  271 |   4.706 |   10.75 |   12.78 |  57.53
+  group_rle_then_bulk_x86    151/11296/  271 |   4.706 |   11.92 |   12.00 |  58.74
+  group_rle_then_bulk_arm    151/11296/  271 |   4.706 |   11.75 |   11.91 |  57.19
+
+avx512 ResolutionWidth: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact            1013/    0/10705 |  10.178 |   16.78 |   16.88 |   8.66
+  no_rle_bulk_x86           1013/    0/10705 |  10.178 |   16.30 |   16.27 |   8.68
+  no_rle_bulk_arm           1013/    0/10705 |  10.178 |   16.06 |   16.04 |   8.68
+  rle_then_compact          1013/10501/  204 |   3.518 |   50.98 |   45.33 |  39.05
+  rle_then_bulk_x86         1013/10501/  204 |   3.518 |   51.58 |   45.69 |  39.43
+  rle_then_bulk_arm         1013/10501/  204 |   3.518 |   51.10 |   45.21 |  39.54
+  group_rle_then_compact    1013/10501/  204 |   3.240 |    9.03 |   10.75 |  49.90
+  group_rle_then_bulk_x86   1013/10501/  204 |   3.240 |    9.91 |   10.18 |  50.17
+  group_rle_then_bulk_arm   1013/10501/  204 |   3.240 |    9.80 |   10.03 |  48.88
+
+avx512 URLHash: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact               4/    0/11714 |  64.275 |  221.58 |  168.78 | 100.86
+  no_rle_bulk_x86              4/    0/11714 |  64.275 |  231.26 |  161.53 | 101.59
+  no_rle_bulk_arm              4/    0/11714 |  64.275 |  217.69 |  157.25 |  97.12
+  rle_then_compact             4/ 1836/ 9878 |  59.406 |  201.22 |  149.20 | 100.32
+  rle_then_bulk_x86            4/ 1836/ 9878 |  59.406 |  219.65 |  139.05 | 101.14
+  rle_then_bulk_arm            4/ 1836/ 9878 |  59.406 |  199.74 |  139.74 |  99.70
+  group_rle_then_compact       4/ 1836/ 9878 |  59.279 |  203.55 |  146.06 | 104.01
+  group_rle_then_bulk_x86      4/ 1836/ 9878 |  59.279 |  206.45 |  135.80 | 105.93
+  group_rle_then_bulk_arm      4/ 1836/ 9878 |  59.279 |  202.28 |  137.17 | 102.16
+
+avx512 UserID: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             136/    0/11582 |  51.073 |   74.28 |    4.26 |  18.73
+  no_rle_bulk_x86            136/    0/11582 |  51.073 |   80.02 |    3.78 |  18.43
+  no_rle_bulk_arm            136/    0/11582 |  51.073 |   79.58 |    4.10 |  18.38
+  rle_then_compact           136/11303/  279 |  15.012 |   68.36 |   24.17 |  50.18
+  rle_then_bulk_x86          136/11303/  279 |  15.012 |   69.51 |   24.67 |  49.92
+  rle_then_bulk_arm          136/11303/  279 |  15.012 |   68.19 |   23.96 |  50.15
+  group_rle_then_compact     136/11303/  279 |  14.298 |   38.03 |   14.96 |  63.55
+  group_rle_then_bulk_x86    136/11303/  279 |  14.298 |   38.86 |   13.89 |  64.67
+  group_rle_then_bulk_arm    136/11303/  279 |  14.298 |   38.88 |   14.00 |  63.14
+
+avx512 WatchID: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact               0/    0/11718 |  62.312 |   68.34 |   37.91 |   8.24
+  no_rle_bulk_x86              0/    0/11718 |  62.312 |   66.70 |   37.14 |   8.93
+  no_rle_bulk_arm              0/    0/11718 |  62.312 |  110.68 |   37.16 |   9.03
+  rle_then_compact             0/    0/11718 |  62.312 |   67.21 |   36.28 |   8.13
+  rle_then_bulk_x86            0/    0/11718 |  62.312 |   67.12 |   36.65 |   9.44
+  rle_then_bulk_arm            0/    0/11718 |  62.312 |  110.25 |   36.58 |   9.14
+  group_rle_then_compact       0/    0/11718 |  62.312 |   67.30 |   36.57 |   9.30
+  group_rle_then_bulk_x86      0/    0/11718 |  62.312 |   67.25 |   36.33 |   9.00
+  group_rle_then_bulk_arm      0/    0/11718 |  62.312 |  110.24 |   36.09 |   8.74
+
+native ClientIP: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             126/    0/11592 |  31.659 |   43.94 |   48.18 |  21.14
+  no_rle_bulk_x86            126/    0/11592 |  31.659 |   43.54 |   48.39 |  21.40
+  no_rle_bulk_arm            126/    0/11592 |  31.659 |   43.45 |   48.08 |  21.55
+  rle_then_compact           126/11288/  304 |   9.886 |   85.84 |  206.79 |  77.12
+  rle_then_bulk_x86          126/11288/  304 |   9.886 |   86.67 |  205.52 |  75.41
+  rle_then_bulk_arm          126/11288/  304 |   9.886 |   86.41 |  205.99 |  72.83
+  group_rle_then_compact     126/11288/  304 |   8.920 |   48.54 |   38.47 |  77.43
+  group_rle_then_bulk_x86    126/11288/  304 |   8.920 |   48.84 |   38.54 |  78.37
+  group_rle_then_bulk_arm    126/11288/  304 |   8.920 |   48.61 |   38.60 |  79.43
+
+native EventTime: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact               0/    0/11718 |  17.226 |   39.04 |   62.42 |  17.95
+  no_rle_bulk_x86              0/    0/11718 |  17.226 |   39.12 |   63.13 |  18.07
+  no_rle_bulk_arm              0/    0/11718 |  17.226 |   38.15 |   62.88 |  17.91
+  rle_then_compact             0/   12/11706 |  17.218 |   39.37 |   61.88 |  17.99
+  rle_then_bulk_x86            0/   12/11706 |  17.218 |   39.30 |   62.68 |  17.54
+  rle_then_bulk_arm            0/   12/11706 |  17.218 |   38.23 |   63.73 |  18.36
+  group_rle_then_compact       0/   12/11706 |  17.219 |   38.67 |   62.70 |  17.85
+  group_rle_then_bulk_x86      0/   12/11706 |  17.219 |   38.68 |   63.30 |  18.30
+  group_rle_then_bulk_arm      0/   12/11706 |  17.219 |   38.30 |   64.61 |  17.96
+
+native OS: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             177/    0/11541 |   7.038 |   32.07 |   42.98 |  37.74
+  no_rle_bulk_x86            177/    0/11541 |   7.038 |   35.88 |   46.16 |  41.17
+  no_rle_bulk_arm            177/    0/11541 |   7.038 |   36.09 |   46.15 |  40.43
+  rle_then_compact           177/11516/   25 |   2.504 |   67.32 |  113.32 |  53.44
+  rle_then_bulk_x86          177/11516/   25 |   2.504 |   67.16 |  113.89 |  52.79
+  rle_then_bulk_arm          177/11516/   25 |   2.504 |   67.03 |  113.82 |  53.99
+  group_rle_then_compact     177/11516/   25 |   2.120 |   27.14 |   22.37 |  63.95
+  group_rle_then_bulk_x86    177/11516/   25 |   2.120 |   27.18 |   22.25 |  63.98
+  group_rle_then_bulk_arm    177/11516/   25 |   2.120 |   27.28 |   22.05 |  63.62
+
+native RegionID: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             151/    0/11567 |  10.388 |   34.15 |   48.29 |  51.38
+  no_rle_bulk_x86            151/    0/11567 |  10.388 |   33.93 |   48.70 |  52.35
+  no_rle_bulk_arm            151/    0/11567 |  10.388 |   33.34 |   48.18 |  54.24
+  rle_then_compact           151/11296/  271 |   4.938 |   92.64 |  196.82 |  63.33
+  rle_then_bulk_x86          151/11296/  271 |   4.938 |   93.10 |  196.40 |  62.61
+  rle_then_bulk_arm          151/11296/  271 |   4.938 |   93.05 |  197.39 |  61.72
+  group_rle_then_compact     151/11296/  271 |   4.706 |   48.82 |   38.57 |  72.41
+  group_rle_then_bulk_x86    151/11296/  271 |   4.706 |   48.78 |   38.56 |  72.74
+  group_rle_then_bulk_arm    151/11296/  271 |   4.706 |   48.93 |   38.50 |  73.45
+
+native ResolutionWidth: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact            1013/    0/10705 |  10.178 |   32.21 |   34.56 |  14.48
+  no_rle_bulk_x86           1013/    0/10705 |  10.178 |   32.13 |   34.97 |  14.79
+  no_rle_bulk_arm           1013/    0/10705 |  10.178 |   31.69 |   36.36 |  15.48
+  rle_then_compact          1013/10501/  204 |   3.518 |   80.04 |  162.26 |  52.89
+  rle_then_bulk_x86         1013/10501/  204 |   3.518 |   79.93 |  161.50 |  53.52
+  rle_then_bulk_arm         1013/10501/  204 |   3.518 |   79.10 |  162.52 |  53.05
+  group_rle_then_compact    1013/10501/  204 |   3.240 |   38.58 |   32.87 |  64.95
+  group_rle_then_bulk_x86   1013/10501/  204 |   3.240 |   38.71 |   32.58 |  65.22
+  group_rle_then_bulk_arm   1013/10501/  204 |   3.240 |   38.82 |   32.40 |  64.53
+
+native URLHash: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact               4/    0/11714 |  64.275 |  332.05 |  192.93 | 219.25
+  no_rle_bulk_x86              4/    0/11714 |  64.275 |  330.20 |  194.26 | 219.23
+  no_rle_bulk_arm              4/    0/11714 |  64.275 |  328.84 |  194.37 | 220.91
+  rle_then_compact             4/ 1836/ 9878 |  59.406 |  287.36 |  229.76 | 210.89
+  rle_then_bulk_x86            4/ 1836/ 9878 |  59.406 |  301.51 |  231.35 | 209.49
+  rle_then_bulk_arm            4/ 1836/ 9878 |  59.406 |  270.20 |  230.60 | 209.20
+  group_rle_then_compact       4/ 1836/ 9878 |  59.279 |  290.90 |  177.45 | 210.54
+  group_rle_then_bulk_x86      4/ 1836/ 9878 |  59.279 |  292.33 |  177.32 | 209.29
+  group_rle_then_bulk_arm      4/ 1836/ 9878 |  59.279 |  301.85 |  176.77 | 211.28
+
+native UserID: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact             136/    0/11582 |  51.073 |  116.93 |    8.05 |  44.86
+  no_rle_bulk_x86            136/    0/11582 |  51.073 |  117.55 |    7.83 |  44.77
+  no_rle_bulk_arm            136/    0/11582 |  51.073 |  116.79 |    7.97 |  45.39
+  rle_then_compact           136/11303/  279 |  15.012 |  108.41 |   49.23 |  93.64
+  rle_then_bulk_x86          136/11303/  279 |  15.012 |  107.69 |   49.45 |  96.64
+  rle_then_bulk_arm          136/11303/  279 |  15.012 |  107.74 |   48.92 |  94.89
+  group_rle_then_compact     136/11303/  279 |  14.298 |   76.90 |   41.91 |  95.52
+  group_rle_then_bulk_x86    136/11303/  279 |  14.298 |   77.22 |   42.23 |  95.01
+  group_rle_then_bulk_arm    136/11303/  279 |  14.298 |   77.44 |   42.52 |  96.74
+
+native WatchID: arm | constant/runs/packed blocks | bits per value | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact               0/    0/11718 |  62.312 |  181.35 |  197.18 |  30.87
+  no_rle_bulk_x86              0/    0/11718 |  62.312 |  181.74 |  197.94 |  32.06
+  no_rle_bulk_arm              0/    0/11718 |  62.312 |  181.84 |  197.90 |  31.11
+  rle_then_compact             0/    0/11718 |  62.312 |  182.93 |  197.53 |  31.02
+  rle_then_bulk_x86            0/    0/11718 |  62.312 |  181.98 |  197.18 |  32.28
+  rle_then_bulk_arm            0/    0/11718 |  62.312 |  181.22 |  197.75 |  31.10
+  group_rle_then_compact       0/    0/11718 |  62.312 |  182.93 |  199.28 |  31.12
+  group_rle_then_bulk_x86      0/    0/11718 |  62.312 |  185.20 |  198.28 |  31.90
+  group_rle_then_bulk_arm      0/    0/11718 |  62.312 |  181.22 |  198.60 |  31.34

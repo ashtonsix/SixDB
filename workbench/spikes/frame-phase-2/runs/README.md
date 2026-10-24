@@ -125,21 +125,21 @@ against 22–48 now). Group RLE's SUM accumulates in u64 where the widths allow.
 
 **Measurement note.** `worker.py run` snapshots the live working tree. My
 pipeline jobs before `8cb975dc` shipped the SeriesPack thread's uncommitted
-SeriesPack edits; those results are superseded. The numbers below come from a
-capture with SeriesPack pinned to HEAD (`build/captures/runs-pinned`; jobs
-`20261024T045435Z-c54c9e60` on Zen 5 and `20261024T045509Z-7d1f5308` on
-Graviton 4; [evidence/pipelines-v4-pinned-summary.txt](evidence/pipelines-v4-pinned-summary.txt)).
-The read probe's pinned rerun matched its earlier results within 1% on Zen 5
-and 2–6% on Graviton 4
-([evidence/read-v4-pinned-summary.txt](evidence/read-v4-pinned-summary.txt)).
+SeriesPack edits, and those results are superseded. The numbers below use
+SeriesPack `7d34f479`, its reviewed range `sum` and `count`, launched from a
+capture pinned to HEAD (`build/captures/runs-pinned3`). Source `9ab2ef5a`;
+jobs `20261024T065635Z-63fad5b8` (Zen 5) and `20261024T065710Z-7af22c12`
+(Graviton 4); [evidence/pipelines-v5-summary.txt](evidence/pipelines-v5-summary.txt).
+The earlier pinned run on the previous SeriesPack is
+[evidence/pipelines-v4-pinned-summary.txt](evidence/pipelines-v4-pinned-summary.txt).
 
 | Zen 5 (no RLE under its best preset) | blocks taking RLE | bits per value: no RLE / RLE | SUM ns per block | COUNT ≥ ns per block | point ns |
 | --- | --- | --- | --- | --- | --- |
-| OS | 98% | 7.04 / 2.12 | 24.9 / 7.0 | 40.2 / 8.7 | 28 / 50 |
-| RegionID | 96% | 10.39 / 4.71 | 29.2 / 11.2 | 29.5 / 13.0 | 34 / 57 |
-| ResolutionWidth | 90% | 10.18 / 3.24 | 17.7 / 9.1 | 32.7 / 11.0 | 8.7 / 50 |
-| ClientIP | 96% | 31.66 / 8.92 | 20.3 / 11.1 | 16.9 / 12.3 | 6.3 / 57 |
-| UserID | 96% | 51.07 / 14.30 | 125.7 / 38.8 | 3.9 / 14.6 | 19 / 63 |
+| OS | 98% | 7.04 / 2.12 | 22.9 / 7.0 | 22.3 / 8.9 | 28 / 51 |
+| RegionID | 96% | 10.39 / 4.71 | 24.7 / 10.8 | 24.1 / 12.8 | 33 / 58 |
+| ResolutionWidth | 90% | 10.18 / 3.24 | 16.1 / 9.0 | 16.0 / 10.8 | 8.7 / 50 |
+| ClientIP | 96% | 31.66 / 8.92 | 26.1 / 11.4 | 18.0 / 12.8 | 6.2 / 57 |
+| UserID | 96% | 51.07 / 14.30 | 74.3 / 38.0 | 4.1 / 15.0 | 18 / 64 |
 | URLHash | 16% | 64.28 / 59.28 | see evidence | | |
 | EventTime, WatchID | 0% | unchanged | unchanged | unchanged | unchanged |
 
@@ -148,20 +148,24 @@ and 2–6% on Graviton 4
     EventTime or WatchID. Where it applies it cuts bytes 2.2–3.6×. Where it
     doesn't, the stage costs nothing.
 11. **In group form, RLE scans faster as well as smaller on Zen 5.** SUM is
-    1.8–3.6× faster than no RLE and COUNT ≥ 1.4–4.6× faster, because one run's
-    work covers all of its rows. UserID's COUNT is the exception (3.7×
+    1.8–3.3× faster than no RLE and COUNT ≥ 1.4–2.5× faster, because one run's
+    work covers all of its rows. UserID's COUNT is the exception (3.6×
     slower), since without RLE its blocks are settled wholesale by their
-    base.
-12. **On Graviton 4 the result splits by operation.** COUNT ≥ is 1.5–3.4×
-    faster with RLE. SUM is 1.7× faster on OS, 1.3× on ResolutionWidth and
-    2.6× on UserID, at parity on ClientIP, and 1.3× slower on RegionID.
+    base. SeriesPack's new range sum and count narrowed these margins from
+    1.8–3.6× and 1.4–4.6×.
+12. **On Graviton 4 the result splits by operation.** COUNT ≥ is 1.05–1.9×
+    faster with RLE. SUM is 1.2× faster on OS and 1.5× on UserID, but
+    1.1–1.5× slower on ClientIP, RegionID and ResolutionWidth. The no-RLE path
+    gained most from the new SeriesPack (OS SUM 46 → 32 ns per block, COUNT
+    74 → 43).
 13. **Per-block RLE loses on scans** (pinned: SUM 1.9–2.7× slower than no RLE
     on OS, RegionID and ClientIP). It reads sizes and values in short per-block
     calls, so group-continuous placement is a requirement, not a tuning
     option.
-14. **Bulk against Local matters on Graviton 4 behind no RLE.** OS SUM takes
-    45.7 ns per block under bulk_arm against 61.1 under compact, and COUNT 74
-    against 98. On Zen 5 the presets are within about 12%.
+14. **Bulk against Local behind no RLE.** On the previous SeriesPack,
+    Bulk led on Graviton 4 (OS SUM 46 against 61 ns per block). With the new
+    range sum, compact reaches 32 against Bulk's 36, and the presets sit
+    within about 12% of each other on both hosts.
 15. **Points are RLE's cost** (50–63 ns on Zen 5 against 6–34 without RLE).
     A point-heavy part should skip RLE, or keep u8 run ends (3–5 ns per
     point). Packed-block points here (19–34 ns on OS, RegionID and UserID)
@@ -171,11 +175,11 @@ and 2–6% on Graviton 4
 ## What this says about the split
 
 RLE is a column-specific stage, not a default. On columns with runs it is
-2.2–3.6× smaller and, placed group-continuously, faster to scan (on Zen 5
-throughout; on Graviton 4 for COUNT and most SUMs), but 2–9× slower for
-points. That makes it a weighted choice on the point/scan axis rather than
+2.2–3.6× smaller and, placed group-continuously, faster to scan on Zen 5 and
+for COUNT on Graviton 4 (Graviton 4's SUM splits by column), but 2–9× slower
+for points. That makes it a weighted choice on the point/scan axis rather than
 the bytes axis. Both pipelines need optimising: the no-RLE path under Bulk
-and Local (they differ by up to 1.3× on Graviton 4), and the RLE path in
+and Local (within about 12% on both hosts with SeriesPack's range sum), and the RLE path in
 group-continuous form.
 
 
