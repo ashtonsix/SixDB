@@ -28,6 +28,15 @@ for isa in $isas; do
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release "-DSIXDB_SPIKES=frame-phase-1;frame-phase-2;frame-phase-3" $flags > "$out/configure.txt" 2>&1
   /usr/bin/time -v cmake --build "$build" --target frame3_check frame3_measure frame3_writes frame3_calibrate frame3_e2e frame3_seams -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-3/proto"
+  # Ikea LEAD's owner and control checks share this build (OWNER_TARGETS=1).
+  if [ -n "${OWNER_TARGETS:-}" ] && [ "$isa" = "${isas%% *}" ]; then
+    cmake --build "$build" --target frame3_owner_validate frame3_native_controls_check -j "$SIXDB_BUILD_JOBS" > "$out/owner-build.txt" 2>&1 || true
+    ctest --test-dir "$build" -R "frame3_owner|frame3_native_controls" --output-on-failure > "$out/owner-ctest.txt" 2>&1 || true
+    for t in frame3_owner_validate frame3_native_controls_check; do
+      f=$(find "$build/workbench/spikes/frame-phase-3" -type f -name "$t" -perm -u+x | head -1)
+      [ -n "$f" ] && { "$f" > "$out/$t.txt" 2>&1; echo "exit $?" >> "$out/$t.txt"; }
+    done
+  fi
   [ "$isa" = "${isas%% *}" ] && { "$bin/frame3_check" > "$out/check.txt" 2>&1 || true; }
   [ "$isa" = "${isas%% *}" ] && for col in ${E2E_COLUMNS:-OS UserID ClientIP EventTime}; do
     taskset -c "$SIXDB_CPU" "$bin/frame3_e2e" "$cols" "$col" >> "$out/e2e.jsonl" 2>> "$out/e2e.err" || true
