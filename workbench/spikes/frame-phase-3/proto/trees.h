@@ -16,8 +16,9 @@ struct tree {
 template <sp::preset P> inline std::unique_ptr<stage> bound_pack(unsigned penalty = 0) {
     return std::make_unique<bound>(std::make_unique<pack<P>>(), penalty);
 }
+// Deltas through bound -> pack, checkpoints through bound -> pack of their own.
 template <sp::preset P> inline std::unique_ptr<stage> delta_bound_pack(unsigned G, unsigned penalty = 0) {
-    return std::make_unique<intervals>(bound_pack<P>(penalty), G);
+    return std::make_unique<intervals>(bound_pack<P>(penalty), bound_pack<P>(), G);
 }
 
 inline std::vector<tree> trees() {

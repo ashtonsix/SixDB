@@ -42,6 +42,9 @@ struct width_array {
     virtual ~width_array() = default;
     virtual std::size_t bytes() const = 0;
     virtual u128 sum(const bitset256 &members, const bitset256 &blocks) const = 0;
+    // Selected rows: per block (rows) or one pattern for all of them.
+    virtual u128 sum_selected(const bitset256 &blocks, const u8 *slot, const u16 *rows, const block_rows_set &selected) const = 0;
+    virtual u128 sum_pattern(const bitset256 &members, const bitset256 &blocks, const bitset256 &pattern) const = 0;
     // slot and rows: each block's slot in this array and its row count.
     virtual u64 count(comparison, const bitset256 &blocks, const u8 *slot, const u16 *rows, const block_args &rhs) const = 0;
     virtual void filter(comparison, const bitset256 &blocks, const u8 *slot, const u16 *rows, const block_args &rhs, block_rows_set &out) const = 0;
@@ -156,6 +159,23 @@ template <sp::preset P> class pack final : public stage {
         each_width(parts_[p], blocks, [&](const group &q, unsigned K, const bitset256 &m) {
             if (K)
                 t += q.arrays[K]->sum(q.members[K], m);
+        });
+        return t;
+    }
+    u128 sum_selected(unsigned p, const bitset256 &blocks, const block_rows_set &rows) const override {
+        const part &s = parts_[p];
+        u128 t = 0;
+        each_width(s, blocks, [&](const group &q, unsigned K, const bitset256 &m) {
+            if (K)
+                t += q.arrays[K]->sum_selected(m, s.slot.data(), s.rows.data(), rows);
+        });
+        return t;
+    }
+    u128 sum_pattern(unsigned p, const bitset256 &blocks, const bitset256 &pattern) const override {
+        u128 t = 0;
+        each_width(parts_[p], blocks, [&](const group &q, unsigned K, const bitset256 &m) {
+            if (K)
+                t += q.arrays[K]->sum_pattern(q.members[K], m, pattern);
         });
         return t;
     }
@@ -501,6 +521,37 @@ class bound final : public stage {
         });
         return t;
     }
+    // SUM over selected rows: the child's fields, lo for every selected
+    // non-exception row, and each selected exception's own value.
+    u128 sum_selected(unsigned p, const bitset256 &blocks, const block_rows_set &rows) const override {
+        const part &s = parts_[p];
+        u128 t = child_->sum_selected(p, blocks, rows);
+        each(blocks, [&](unsigned b) {
+            const bitset256 r = rows[b] & first_n(rows_in(p, b));
+            unsigned n = r.count();
+            each_exception(s, b, [&](u8 pos, u64 v) {
+                if (r.contains(pos))
+                    t += v, --n;
+            });
+            t += static_cast<u128>(s.lo[b]) * n;
+        });
+        return t;
+    }
+    u128 sum_pattern(unsigned p, const bitset256 &blocks, const bitset256 &pattern) const override {
+        const part &s = parts_[p];
+        u128 t = child_->sum_pattern(p, blocks, pattern);
+        const unsigned full = pattern.count();
+        each(blocks, [&](unsigned b) {
+            const unsigned m = rows_in(p, b);
+            unsigned n = m == block_rows ? full : (pattern & first_n(m)).count();
+            each_exception(s, b, [&](u8 pos, u64 v) {
+                if (pattern.contains(pos))
+                    t += v, --n;
+            });
+            t += static_cast<u128>(s.lo[b]) * n;
+        });
+        return t;
+    }
     template <comparison Op> static settle classify_as(u64 t, u64 lo, unsigned K, u64 &d) {
         const u64 m = mask(K);
         if (t < lo)
@@ -704,28 +755,39 @@ class bound final : public stage {
 
 class intervals final : public stage {
     static constexpr u64 bias = u64{1} << 63;  // offset binary for signed deltas
-    std::unique_ptr<stage> child_;
+    // Children: the deltas, and the checkpoints (the value at every G-th row)
+    // as a series of their own, so they are framed like any other values.
+    std::unique_ptr<stage> children_[2];
     unsigned G_;
     struct part {
-        std::vector<u64> checkpoints;  // the value at every G-th row
-        std::vector<u64> last;         // each block's last value (evidence for the monotone law)
-        std::vector<u8> monotone;      // per block: non-decreasing
+        std::vector<u64> last;     // each block's last value (evidence for the monotone law)
+        std::vector<u8> monotone;  // per block: non-decreasing
+        std::vector<u8> exact;     // per block: every delta fits int64, so prefix sums are exact integers
     };
     std::vector<part> parts_;
+    // The checkpoints of block b.
+    unsigned checkpoints(unsigned p, unsigned b, u64 *cp) const {
+        const unsigned n = (rows_in(p, b) + G_ - 1) / G_;
+        children_[1]->read(p, b * block_rows / G_, n, cp);
+        return n;
+    }
 
   public:
-    explicit intervals(std::unique_ptr<stage> child, unsigned G = 16) : child_(std::move(child)), G_(G) { assert(G && block_rows % G == 0); }
+    intervals(std::unique_ptr<stage> deltas, std::unique_ptr<stage> checkpoints, unsigned G = 16)
+        : children_{std::move(deltas), std::move(checkpoints)}, G_(G) {
+        assert(G >= 2 && block_rows % G == 0);
+    }
     const char *name() const override { return "intervals"; }
-    std::span<const std::unique_ptr<stage>> children() const override { return {&child_, 1}; }
+    std::span<const std::unique_ptr<stage>> children() const override { return children_; }
     void build(unsigned p, const build_input &in) override {
         if (parts_.size() <= p)
             parts_.resize(p + 1);
         part &s = parts_[p];
         sized(p, in.values.size());
-        std::vector<u64> d(in.values.size());
+        std::vector<u64> d(in.values.size()), cp;
         for (std::size_t r = 0; r < in.values.size(); ++r) {
             if (r % G_ == 0)
-                s.checkpoints.push_back(in.values[r]), d[r] = bias;
+                cp.push_back(in.values[r]), d[r] = bias;
             else
                 d[r] = (in.values[r] - in.values[r - 1]) ^ bias;
         }
@@ -734,29 +796,31 @@ class intervals final : public stage {
             const unsigned m = rows_in(p, b);
             s.last.push_back(x[m - 1]);
             s.monotone.push_back(std::is_sorted(x, x + m));
+            bool fits = true;
+            for (unsigned r = 1; r < m; ++r)
+                fits &= x[r] >= x[r - 1] ? x[r] - x[r - 1] < bias : x[r - 1] - x[r] <= bias;
+            s.exact.push_back(fits);
         }
-        child_->build(p, {d});
+        children_[0]->build(p, {d});
+        children_[1]->build(p, {cp});
     }
-    std::size_t bytes(unsigned p) const override {
-        const part &s = parts_[p];
-        return s.checkpoints.size() * 8 + blocks_in(p) * 9;
-    }
+    std::size_t bytes(unsigned p) const override { return blocks_in(p) * 9; }
     void clear(unsigned p) override {
         parts_[p] = {};
-        child_->clear(p);
+        stage::clear(p);
     }
     void describe(unsigned p, census &c) const override {
         const part &s = parts_[p];
-        c.checkpoints += s.checkpoints.size();
+        c.checkpoints += (rows(p) + G_ - 1) / G_;
         for (u8 m : s.monotone)
             c.monotone += m;
-        child_->describe(p, c);
+        children_[0]->describe(p, c);
     }
     void decode(unsigned p, unsigned b, u64 *out) const override {
-        const part &s = parts_[p];
-        child_->decode(p, b, out);
+        children_[0]->decode(p, b, out);
+        alignas(64) u64 cp[block_rows];
+        checkpoints(p, b, cp);
         const unsigned m = rows_in(p, b);
-        const u64 *cp = s.checkpoints.data() + b * block_rows / G_;
         for (unsigned r0 = 0, g = 0; r0 < m; r0 += G_, ++g) {
             u64 acc = out[r0] = cp[g];
             for (unsigned r = r0 + 1; r < std::min(m, r0 + G_); ++r)
@@ -764,15 +828,50 @@ class intervals final : public stage {
         }
     }
     u64 get(unsigned p, unsigned row) const override {
-        const part &s = parts_[p];
-        u64 acc = s.checkpoints[row / G_];
+        u64 acc = children_[1]->get(p, row / G_);
         if (const unsigned k = row % G_) {
             alignas(64) u64 w[block_rows];
-            child_->read(p, row - k + 1, k, w);
+            children_[0]->read(p, row - k + 1, k, w);
             for (unsigned i = 0; i < k; ++i)
                 acc += w[i] ^ bias;
         }
         return acc;
+    }
+    // SUM over whole blocks, from masked sums of the deltas: within a region
+    // of G rows starting at checkpoint c, sum x = G c + sum_j (G - j) delta_j,
+    // and (G - j) = G - sum_k 2^k [bit k of j], so one masked sum per bit of j
+    // (plus one for every non-checkpoint row) replaces the prefix. Deltas are
+    // offset binary: delta = d - 2^63 exactly. Partial blocks, and blocks
+    // whose deltas wrap (their prefixes are exact only modulo 2^64), decode.
+    u128 sum(unsigned p, const bitset256 &blocks) const override {
+        bitset256 full, partial;
+        each(blocks, [&](unsigned b) { (rows_in(p, b) == block_rows && parts_[p].exact[b] ? full : partial).set(b); });
+        __int128 t = partial.empty() ? 0 : static_cast<__int128>(stage::sum(p, partial));
+        if (full.empty())
+            return static_cast<u128>(t);
+        const __int128 nb = full.count();
+        // The checkpoints of the full blocks.
+        each(full, [&](unsigned b) {
+            alignas(64) u64 cp[block_rows];
+            const unsigned n = checkpoints(p, b, cp);
+            for (unsigned g = 0; g < n; ++g)
+                t += static_cast<__int128>(G_) * cp[g];
+        });
+        auto masked = [&](const bitset256 &pattern) {
+            const __int128 d = static_cast<__int128>(children_[0]->sum_pattern(p, full, pattern));
+            return d - static_cast<__int128>(pattern.count()) * nb * static_cast<__int128>(bias);
+        };
+        bitset256 rest;
+        for (unsigned r = 0; r < block_rows; ++r)
+            rest.set(r, r % G_ != 0);
+        t += static_cast<__int128>(G_) * masked(rest);
+        for (unsigned k = 0; (1u << k) < G_; ++k) {
+            bitset256 bit;
+            for (unsigned r = 0; r < block_rows; ++r)
+                bit.set(r, (r % G_) >> k & 1);
+            t -= (static_cast<__int128>(1) << k) * masked(bit);
+        }
+        return static_cast<u128>(t);
     }
     // Monotone blocks: settle by the first and last values, else search the
     // checkpoints and read one G-row region. Other blocks decode.
@@ -787,16 +886,16 @@ class intervals final : public stage {
                 return other.set(b);
             const u64 t = rhs[b];
             const unsigned m = rows_in(p, b);
-            const u64 *cp = s.checkpoints.data() + b * block_rows / G_;
+            alignas(64) u64 cp[block_rows];
+            const unsigned regions = checkpoints(p, b, cp);
             if (cp[0] >= t)
                 c += m;
             else if (s.last[b] >= t) {
                 // The last region whose checkpoint is below t holds the boundary.
-                const unsigned regions = (m + G_ - 1) / G_;
                 const unsigned g = static_cast<unsigned>(std::lower_bound(cp, cp + regions, t) - cp) - 1;
                 const unsigned k = std::min(G_, m - g * G_) - 1;
                 alignas(64) u64 w[block_rows];
-                child_->read(p, b * block_rows + g * G_ + 1, k, w);
+                children_[0]->read(p, b * block_rows + g * G_ + 1, k, w);
                 u64 acc = cp[g];
                 unsigned below = 1;
                 for (unsigned i = 0; i < k; ++i)

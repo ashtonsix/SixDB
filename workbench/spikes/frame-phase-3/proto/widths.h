@@ -102,6 +102,53 @@ template <unsigned K, sp::preset P> class width_array_at final : public width_ar
             s += range_sum(std::size_t{run_first} * block_rows, view_->size() - std::size_t{run_first} * block_rows);
         return s;
     }
+    // A 16-row word of a block's selection, for SeriesPack's prefiltered SUM.
+    static u16 word16(const bitset256 &r, std::size_t at) { return static_cast<u16>(r.words[at / 64] >> (at % 64)); }
+    u128 masked_range(std::size_t first, std::size_t n, const bitset256 &pattern, std::size_t origin) const {
+        if constexpr (exact_rows != 0) {
+            u128 s = 0;
+            for (std::size_t at = 0; at < n; at += exact_rows)
+                s += reader_->sum_unchecked(first + at, std::min(exact_rows, n - at), ~u64{0},
+                                            [&](std::size_t row) __attribute__((always_inline)) { return word16(pattern, (row - origin) % block_rows); });
+            return s;
+        } else {
+            alignas(64) u64 x[block_rows];
+            u128 s = 0;
+            for (std::size_t at = 0; at < n; at += block_rows) {
+                const std::size_t m = std::min<std::size_t>(block_rows, n - at);
+                reader_->read_unchecked(first + at, m, x);
+                for (std::size_t i = 0; i < m; ++i)
+                    s += pattern.contains(static_cast<unsigned>((first + at + i - origin) % block_rows)) ? x[i] : 0;
+            }
+            return s;
+        }
+    }
+    u128 sum_selected(const bitset256 &blocks, const u8 *slot, const u16 *rows, const block_rows_set &selected) const override {
+        u128 s = 0;
+        each(blocks, [&](unsigned b) {
+            const std::size_t first = std::size_t{slot[b]} * block_rows;
+            s += masked_range(first, rows[b], selected[b], first);
+        });
+        return s;
+    }
+    u128 sum_pattern(const bitset256 &members, const bitset256 &blocks, const bitset256 &pattern) const override {
+        // Consecutive slots form one range; the pattern repeats every 256 rows.
+        u128 s = 0;
+        unsigned slot = 0, run_first = 0, run = 0;
+        each(members, [&](unsigned b) {
+            if (blocks.contains(b)) {
+                if (!run)
+                    run_first = slot;
+                ++run;
+            } else if (run) {
+                s += masked_range(std::size_t{run_first} * block_rows, std::size_t{run} * block_rows, pattern, 0), run = 0;
+            }
+            ++slot;
+        });
+        if (run)
+            s += masked_range(std::size_t{run_first} * block_rows, view_->size() - std::size_t{run_first} * block_rows, pattern, 0);
+        return s;
+    }
     u64 count(comparison op, const bitset256 &blocks, const u8 *slot, const u16 *rows, const block_args &rhs) const override {
         switch (op) {
         case comparison::equal: return count_as<comparison::equal>(blocks, slot, rows, rhs);

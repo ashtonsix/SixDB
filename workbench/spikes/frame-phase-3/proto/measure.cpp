@@ -271,9 +271,11 @@ int main(int argc, char **argv) {
                             },
                             nullptr, nullptr, nullptr, {}});
         };
+        std::vector<std::pair<std::string, const column *>> frames;
         auto add_frame = [&](const std::string &tname, std::unique_ptr<stage> root) {
             auto c = std::make_shared<column>(std::move(root), v);
             keep.push_back(c);
+            frames.emplace_back("frame_" + tname, c.get());
             const auto *q = c.get();
             arms.push_back({"frame_" + tname, q->bytes(), [q] { return q->sum(); }, [q, t] { return q->count(comparison::greater_equal, t); },
                             [q, eq] { return q->count(comparison::equal, eq); },
@@ -407,6 +409,46 @@ int main(int argc, char **argv) {
                     return 1;
                 }
             }
+        // SUM over a selection: a random 10% mask, and the column's own
+        // FILTER(x >= median) mask (materialised, then summed).
+        {
+            u128 masked_oracle = 0, where_oracle = 0;
+            for (std::size_t i = 0; i < n; ++i) {
+                if (mask[i / 64] >> (i % 64) & 1)
+                    masked_oracle += v[i];
+                if (v[i] >= t)
+                    where_oracle += v[i];
+            }
+            std::vector<std::pair<std::string, std::function<u128(bool)>>> sums;
+            for (const auto &[fname, c] : frames)
+                sums.emplace_back(fname, [c, &mask, &words, t](bool where) {
+                    if (!where)
+                        return c->sum(mask.data());
+                    c->filter(comparison::greater_equal, t, words.data());
+                    return c->sum(words.data());
+                });
+            sums.emplace_back("native_u64", [&v, &mask, t](bool where) {
+                u128 s = 0;
+                for (std::size_t i = 0; i < v.size(); ++i)
+                    s += where ? (v[i] >= t ? v[i] : 0) : (mask[i / 64] >> (i % 64) & 1 ? v[i] : 0);
+                return s;
+            });
+            std::vector<std::vector<double>> tm(sums.size()), tw(sums.size());
+            for (int r = 0; r < rounds; ++r)
+                for (std::size_t j = 0; j < sums.size(); ++j) {
+                    const std::size_t i = (j + static_cast<std::size_t>(r)) % sums.size();
+                    u128 a = 0, b = 0;
+                    tm[i].push_back(time_ns([&] { a = sums[i].second(false); }));
+                    tw[i].push_back(time_ns([&] { b = sums[i].second(true); }));
+                    if (a != masked_oracle || b != where_oracle) {
+                        std::fprintf(stderr, "%s %s: wrong selected sum\n", name.c_str(), sums[i].first.c_str());
+                        return 1;
+                    }
+                }
+            for (std::size_t i = 0; i < sums.size(); ++i)
+                std::printf("{\"column\":\"%s\",\"selected\":\"%s\",\"sum_masked\":%.2f,\"sum_where\":%.2f}\n", name.c_str(), sums[i].first.c_str(),
+                            median(tm[i]) / static_cast<double>(blocks), median(tw[i]) / static_cast<double>(blocks));
+        }
         for (const auto &x : arms) {
             auto per_block = [&](const std::vector<double> &ts) { return ts.empty() ? -1.0 : median(ts) / static_cast<double>(blocks); };
             std::printf("{\"column\":\"%s\",\"arm\":\"%s\",\"rows\":%zu,\"bits_per_value\":%.3f,\"sum\":%.2f,\"count_ge\":%.2f,\"count_eq\":%.2f,"

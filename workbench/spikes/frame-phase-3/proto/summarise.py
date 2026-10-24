@@ -7,6 +7,8 @@ from collections import defaultdict
 ops = ["sum", "count_ge", "count_eq", "filter", "select", "read", "ns_per_point"]
 for path in sys.argv[1:]:
     rows = [json.loads(l) for l in open(path) if l.startswith("{")]
+    selected = [r for r in rows if "selected" in r]
+    rows = [r for r in rows if "arm" in r]
     cells = defaultdict(lambda: defaultdict(list))
     bits = {}
     for r in rows:
@@ -32,3 +34,12 @@ for path in sys.argv[1:]:
             if glue and fr:
                 print(f"{'':16} {'ratio frame/glue (compact)':34} {'':6} " + " ".join(
                     f"{fr[op] / glue[op]:8.2f}" if op in glue and op in fr and glue[op] > 0 else f"{'':8}" for op in ops))
+        sel = defaultdict(lambda: defaultdict(list))
+        for r in selected:
+            if r.get("isa") == isa:
+                sel[(r["column"], r["selected"])]["m"].append(r["sum_masked"])
+                sel[(r["column"], r["selected"])]["w"].append(r["sum_where"])
+        if sel:
+            print(f"-- {isa}: SUM over a selection, ns per 256 rows: random 10% mask / FILTER(x >= median) then SUM")
+            for (c, arm), d in sel.items():
+                print(f"{c:16} {arm:34} {statistics.median(d['m']):8.2f} {statistics.median(d['w']):8.2f}")

@@ -202,6 +202,15 @@ class stage {
 
     // Laws. The defaults are the reference definitions over decode.
     virtual u128 sum(unsigned part, const bitset256 &blocks) const;
+    // SUM over the selected rows of the selected blocks (SUM ... WHERE).
+    virtual u128 sum_selected(unsigned part, const bitset256 &blocks, const block_rows_set &rows) const;
+    // The same with one row pattern for every block (a parent's fixed law,
+    // such as delta's position weights). Leaves can cover runs of blocks.
+    virtual u128 sum_pattern(unsigned part, const bitset256 &blocks, const bitset256 &pattern) const {
+        block_rows_set rows;
+        each(blocks, [&](unsigned b) { rows[b] = pattern; });
+        return sum_selected(part, blocks, rows);
+    }
     virtual u64 count(comparison, unsigned part, const bitset256 &blocks, const block_args &rhs) const;
     virtual void filter(comparison, unsigned part, const bitset256 &blocks, const block_args &rhs, block_rows_set &out) const;
     virtual u64 get(unsigned part, unsigned row) const;
@@ -217,6 +226,15 @@ inline u128 stage::sum(unsigned part, const bitset256 &blocks) const {
         decode(part, b, x);
         for (unsigned r = 0; r < rows_in(part, b); ++r)
             s += x[r];
+    });
+    return s;
+}
+inline u128 stage::sum_selected(unsigned part, const bitset256 &blocks, const block_rows_set &rows) const {
+    alignas(64) u64 x[block_rows];
+    u128 s = 0;
+    each(blocks, [&](unsigned b) {
+        decode(part, b, x);
+        each(rows[b] & first_n(rows_in(part, b)), [&](unsigned r) { s += x[r]; });
     });
     return s;
 }
@@ -329,6 +347,24 @@ class column {
         u128 s = 0;
         for (unsigned p = 0; p < parts_; ++p)
             s += root_->sum(p, blocks(p));
+        return s;
+    }
+    /// SUM of the rows selected by words (bit r of words[r / 64] is row r).
+    u128 sum(const u64 *words) const {
+        block_rows_set rows;
+        u128 s = 0;
+        for (unsigned p = 0; p < parts_; ++p) {
+            bitset256 bl;
+            each(blocks(p), [&](unsigned b) {
+                const u64 *w = words + (p * part_rows + b * block_rows) / 64;
+                rows[b] = {};
+                std::copy_n(w, (root_->rows_in(p, b) + 63) / 64, rows[b].words.data());
+                if (!rows[b].empty())
+                    bl.set(b);
+            });
+            if (!bl.empty())
+                s += root_->sum_selected(p, bl, rows);
+        }
         return s;
     }
     u64 count(comparison op, u64 t) const {

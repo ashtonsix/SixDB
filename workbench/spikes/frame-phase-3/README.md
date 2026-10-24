@@ -272,6 +272,42 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 | Placeholders | `runs`, `split`, `map`, `domain`, `presence`, `route`, TuplePack leaf: each with its shape, children and parameters stated, and a reference decode in the spike |
 | Integration | An Orbital material for a frame part and an end-to-end check through ObjectStore and Loom: bulk load, `SUM(b) WHERE a ≥ t`, points, updates with summaries published, a group re-encode adopted |
 
+## Interface sketch
+
+For reaction, not settled. It follows Ikea's lifecycle
+([interfaces](../../../ikea/docs/interfaces.md#follow-one-lifecycle)) so Frame
+adds nouns only for its own ideas: stage, law, group, census. The prototype's
+`frame.h` is the contract underneath it.
+
+```cpp
+namespace fr = ikea::frame;
+// Describe: a headless law for a column's parts, stored once in the schema.
+auto law = fr::layout::make({fr::intervals{.form = fr::sizes, .checkpoints = 16},
+                             fr::bound{.penalty = 2, .cap = 64, .slack = 32},
+                             fr::pack{.preset = ikea::seriespack::preset::compact}});
+// Build: fit and emit one part into group images (one Orbital Part each).
+auto images = fr::encode(*law, values, prior);
+// Place: attach to the Parts a Scope selected, borrowing the arrays.
+auto part = fr::const_view::attach(*law, rows, parts);
+// Bind: laws compose at block grain; plans for critical paths (points).
+auto reader = fr::bind_reader(*part);
+reader->sum(blocks);                  reader->sum(selection);
+reader->count<ge>(blocks, t);         reader->filter<ge>(blocks, t, selection);
+reader->get(row);                     reader->read(first, out);
+reader->select(selection, out);
+// Change: classify from interpretation, declare, apply or re-encode.
+auto writer = fr::bind_writer(*draft);
+auto plan = writer->classify(row, value);  // absorb, redirect or refuse
+plan.envelope();                           // possible reads, stores, records
+writer->apply(plan, effects, contribution);
+// Describe: what Engine's analysis reads.
+fr::census(*part);
+```
+
+Coarse `blocks` and fine `selection` are Ikea's existing selection types;
+`effects` is `ikea::journal`; `contribution` is the exact SUM and COUNT
+change plus statistics precision.
+
 ## Landing plan
 
 1. **Contract and fallback.** Stage concept, operation reference semantics,
