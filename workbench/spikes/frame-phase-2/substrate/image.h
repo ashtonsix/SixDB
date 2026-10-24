@@ -476,15 +476,11 @@ template <bool UseIntervals> [[gnu::always_inline]] inline u64 point_with(const 
 inline u64 point(const image &f, std::size_t row) { return point_with<false>(f, row); }
 inline u64 point_intervals(const image &f, std::size_t row) { return point_with<true>(f, row); }
 
-// The point path the substrate uses by default (SEAMS.md, run lookup); per
-// ISA until the inlined comparison settles it.
-inline u64 point_default(const image &f, std::size_t row) {
-#if defined(__x86_64__)
-    return point_with<true>(f, row);
-#else
-    return point_with<false>(f, row);
-#endif
-}
+// The point path the substrate uses by default (SEAMS.md, run lookup):
+// ikea::intervals on every ISA. With the search out of line it wins on Zen 5
+// and Graviton 4 alike (image-v6); the earlier Graviton loss was dispatcher
+// code shape.
+inline u64 point_default(const image &f, std::size_t row) { return point_with<true>(f, row); }
 
 // Body extent of block b, for staging.
 inline std::pair<const u8 *, std::size_t> body(const image &f, std::size_t b) {
