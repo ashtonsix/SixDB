@@ -29,11 +29,12 @@ small full SUM still loses about 2.1×. Graviton 4's larger-pool pair advantage
 is modest, not Zen's large reversal. These are capacity/conditioning
 observations, not identification of a servicing cache or measured bus traffic.
 
-I favour **a compact set of lawful representations with strong complete
-consumers and inexpensive transitions**. Universal compressed hot-loop
-dominance is neither established nor necessary. Native narrow/FOR must be an
-ordinary candidate inside that set. This preserves the broad operation-family
-goal; it changes the order of investigation, not the eventual surface.
+The architectural goal remains **Engine-composable encoding stages with
+efficient operations over their combinations**. The current integer image is
+a benchmark scaffold, not a fixed Frame pipeline. Native narrow/FOR belongs
+among the compositions we test. Universal compressed hot-loop dominance is
+neither established nor necessary; useful composition must preserve the
+workload-dependent choices instead of hiding them inside a monolithic format.
 
 ## Choose one stored image across a workload
 
@@ -54,10 +55,11 @@ and writes. Start with a few named mixes and vary their frequency, rather than
 the Cartesian product of every codec and operation. The account is construction
 plus preparation, queries, edits and folds, with retained bytes beside it.
 Compare the best fixed candidate with the unattainable per-operation winner.
-That gap measures the cost of committing to one representation. A small gap
-supports a few useful presets; a large gap identifies where an extra index,
-different grain or real transition might pay. It does not justify storing all
-representations.
+That gap measures the cost of committing to one composition. A small gap can
+support useful presets; a large gap identifies where an extra index, different
+grain or real transition might pay. The finite roster forces a comparable
+experiment, not a closed menu of Frame formats or a reason to store every
+representation.
 
 Body choice and width rounding are weighted decisions, not invisible fitting
 details merely because logical operations agree. Grouped placement and
@@ -140,7 +142,10 @@ construction and any size penalty.
 
 The next breadth should test different laws: real floats/decimals and time
 series for domain mapping, ALP opt-out and predictor/checkpoint choices;
-encoded transforms, grouping and reorder for structure-preserving consumers.
+presence with original-row selections; independently readable filtering
+evidence; encoded transforms, grouping and reorder for structure-preserving
+consumers. These must exercise shared seams with genuinely different stage
+combinations, rather than add wrappers around the current integer image.
 Another integer SUM matrix cannot answer those questions. The ALP audit's
 negative results mean an automatic decimal path is not a general-IEEE control;
 correct RD fallback and declared aggregate semantics remain necessary.

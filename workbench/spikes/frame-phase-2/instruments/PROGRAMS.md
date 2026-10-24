@@ -5,6 +5,13 @@ Claude owns the shared-image implementation; A owns these traces and accounts.
 These are forcing experiments, not production workload frequencies, a selected
 group size or a new lifecycle framework.
 
+The named policies below are experimental compositions, not a closed set of
+Frame formats. Engine must still be able to compose encoding stages, with
+efficient consumers over their combinations. The integer image is a scaffold
+for measuring those seams; a policy comparison cannot settle composition laws
+that it does not exercise. Prediction/checkpoints, presence with original-row
+selections and independent filtering evidence remain distinct seam challengers.
+
 ## The first architectural witness
 
 Keep four grains explicit: 256-row body; logical correction group; body-placement
