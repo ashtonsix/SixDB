@@ -19,6 +19,9 @@
 #include "packed.h"
 #include "runs.h"
 
+#include <ikea/intervals.h>
+#include <ikea/intervals/author/search.h>
+
 #include <algorithm>
 #include <bit>
 #include <cstring>
@@ -364,6 +367,24 @@ inline u64 point(const image &f, std::size_t row) {
     case plane: with_plane(f.width[b], [&](auto K) { v = P<K>::point(p, i); }); break;
     default: std::memcpy(&v, p + 8 * i, 8);
     }
+    return f.base[b] + v;
+}
+
+// The same point read, but run blocks find their run through ikea::intervals'
+// native search over the u8 (end - 1) plane, with a 32-byte readable window
+// that the image's whole-image read grant covers (SEAMS.md, read envelope).
+inline u64 point_intervals(const image &f, std::size_t row) {
+    const std::size_t b = row / block_rows;
+    if (f.kind_of[b] != runs)
+        return point(f, row);
+    namespace iv = ikea::intervals;
+    const u8 *p = f.bytes.data() + f.offset[b];
+    const unsigned n = f.n[b];
+    const auto ends = iv::author::with_readable_window<32>(iv::direct_source<std::uint8_t>{p, n});
+    const unsigned r = iv::lower_bound(ends, static_cast<unsigned>(row % block_rows));
+    const unsigned lane = bodies::run_lane(f.width[b]);
+    u64 v = 0;
+    std::memcpy(&v, p + n + std::size_t{r} * lane, lane);
     return f.base[b] + v;
 }
 

@@ -234,6 +234,13 @@ int main(int argc, char **argv) {
                  return s;
              },
              evict_image(addr)},
+            {"points", "frame_intervals", [&] {
+                 u128 s = 0;
+                 for (u32 r : rows)
+                     s += fi::point_intervals(addr, r);
+                 return s;
+             },
+             evict_image(addr)},
             {"points", "frame_by_kind", [&] {
                  u128 s = 0;
                  for (u32 r : rows)
