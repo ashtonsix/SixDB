@@ -34,6 +34,8 @@ Engine's analyser will later solve (data distribution, access patterns) →
   residence, unpredictable access and staging, point-read attribution.
 - [SeriesPack remeasured](seriespack/README.md): SeriesPack's own reader under
   every preset against native, the starting gaps for SeriesPack's performance work.
+- [Run boundaries as composed stages](runs/README.md): Intervals forms, the
+  bounds stage and SeriesPack packing, with the bytes/speed frontier Engine chooses on.
 - [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
   and packed bodies across operation families.
 - [Cross-thread seams](SEAMS.md): the contracts every thread shares, with owners.
