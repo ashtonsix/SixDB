@@ -48,6 +48,7 @@ step, not proof of DRAM service.
 | Bit-sliced COUNT on stored Local planes (NEON; residual-only and one-byte bodies) | — | compact K ≤ 7 26–49 → 1.7–19.3, K 10–15 67–83 → 17.5–32.7 (native 17–19) |
 | Striped points at odd widths: a per-group table of the residual's two byte fields replaces a branch on the random group, which mispredicted | bulk K = 3, 5, 6, 7 1.9–3.7 → 1.1–1.2; K = 14, 15 3.2–4.6 → 2.1–2.2 (native 0.26) | bulk K = 3–7 2.8–4.5 → 1.8; K = 14, 15 4.3–5.2 → 3.2–3.3 (native 0.28–0.40) |
 | NEON bit-sliced COUNT for two-byte Local bodies (u16 compares narrowed to masks) | — | compact K = 20 103 → 28 (native 23) |
+| AVX-512 short reads of at most 64 rows: the covering native groups, written by compressed prefix stores, only where a group stays inside one tile (striped) | bulk 24–33 → 13–24 ns per read (native 16–17); compact keeps partial packets and pays 25–29, up from 24–27, because a packet that would start before the first requested row's tile now falls back to points (the exact containing-tile law); evidence/performance-batch3-zen5-avx512.txt, job `20261024T083648Z-03509033` | — |
 | Short reads decode their partial edge packets | — | 10–22% faster locally; 0.9–1.2× native on Graviton 4 |
 
 Flushed, Zen 5 range SUM tracks bandwidth: compact K ≤ 7 takes 0.7–5.4, K 10–15 7.9–10.5 (native 11) and K = 24 23 (native 22, before 57). The group-driver SUM had left compact 2–3.5× behind bulk there.
@@ -61,6 +62,23 @@ Flushed, Zen 5 range SUM tracks bandwidth: compact K ≤ 7 takes 0.7–5.4, K 10
 5. **Masked loads are not the cold-scan cost on Zen 5.** Masked and plain 64-byte loads time the same cold and warm (masked-load evidence: [evidence/maskload-zen5.jsonl](evidence/maskload-zen5.jsonl)). The cold compact gap came from the group-driver SUM path itself; the range kernel removes it.
 6. **Some routes lose and stay off.** On AVX-512, the striped range kernel at body-bearing widths mixes roles within vectors and runs slower than the group driver (K = 12: 4.6 against 3.3), so it is used there only at residual-only widths.
 
+## One decode, many consumers
+
+Ashton's multi-yield idea is now `author::scan_regions(source, first, count, group, edge)`. The source is decoded once, in the widest native group (16-row packets on AVX2 alone), and every consumer composed inside `group` reads the same registers. [`yield/bench.cpp`](yield/bench.cpp) feeds four consumers: SUM, COUNT ≥ t, COUNT = t and MAX. It compares that against separate passes (range SUM kernel, two one-pass counts and a MAX-only scan). Every timed arm returns all four results, after Codex found an earlier version let the compiler drop unobserved consumers.
+
+| ns per 256 rows, warm | Zen 5 fused | Zen 5 separate | Graviton 4 fused | Graviton 4 separate |
+| --- | --- | --- | --- | --- |
+| compact K = 3, 7, 8 | 2.0–3.2 | 4.8–7.9 | 17–51 | 26–64 |
+| compact K = 12 | 14.3 | 20.0 | 74 | 100 |
+| bulk K = 3, 7 | 2.9–3.1 | 5.2–6.7 | 20–24 | 55–65 |
+| bulk K = 12, 14 | 8.8 | 13.8 | 38–39 | 105–109 |
+
+Evidence: [evidence/yield-zen5.jsonl](evidence/yield-zen5.jsonl) (job `20261024T081714Z-f1bc8f9b`) and [evidence/yield-graviton4.jsonl](evidence/yield-graviton4.jsonl) (job `20261024T081810Z-af5439a6`).
+
+- One decode feeding four consumers beats separate passes on Zen 5 everywhere, by 1.4–3.1×. On Graviton 4 it wins by 1.3–3.2×, except compact K = 3, where the plane-popcount SUM and bit-sliced counts already avoid decoding (40 against 26).
+- The bench's native arm, the same four consumers fused over the byte-lane array, is a scalar loop the compiler does not vectorise once every result is used: 18 ns per 256 rows on Zen 5 and 137–151 on Graviton 4. It is not a bar for this comparison.
+- On NEON, consumers should count in lane masks (a compare and a widening add). On my local Arm machine that made the fused scan 1.6–6× faster than per-group bit words. The standalone one-pass COUNT is the exception: bit words won there, so the reader keeps them.
+
 ## Compose or fuse: what this suggests for Engine
 
 - Compose at the expression level: fields, joins, compares and SUM's linearity. These are cheap to keep general when everything inlines.
@@ -69,8 +87,7 @@ Flushed, Zen 5 range SUM tracks bandwidth: compact K ≤ 7 takes 0.7–5.4, K 10
 
 ## Remaining gaps
 
-- Graviton 4 compact decode (`read_u32`) runs 1.5–3.5× native at non-byte widths, and bulk decode 1.6–1.8× at K 10–20.
+- Graviton 4 compact decode (`read_u32`) runs 1.5–3.5× native at non-byte widths, and bulk decode 1.6–1.8× at K 10–20. [`decode/bench.cpp`](decode/bench.cpp) (job `20261024T074015Z-6b0665db`, [evidence](evidence/decode-graviton4.jsonl)) splits the cost. The rebuild alone takes 10–29 ns per 256 rows against a 21 ns widening-store floor, so K ≥ 5 is bound by rebuilding the bits. Spreading each plane byte across lanes instead runs 1.3–2.6× slower than the shipped transpose, and Bulk avoids the transpose altogether.
 - Bulk points at odd striped widths still run 4–8× native (compact 2–3.6×). Points need at least two dependent loads (body and a stripe) per row.
 - On NEON, two-byte-body Local range SUM (K 17–23) stays on the group driver: masking each body byte apart lost there (locally 26–40 against 18–29).
-- Short reads at 1.1–1.5× native warm.
-- Ashton's multi-yield decode (consumers fed per filled vector with residuals in registers) is untried. The range kernels here are the single-consumer form of it.
+- Short reads: compact 1.5–1.7× native on Zen 5 and 1.1–1.2× on Graviton 4. Local reads starting in the second half of a 16-row packet take up to seven points under the containing-tile law.
