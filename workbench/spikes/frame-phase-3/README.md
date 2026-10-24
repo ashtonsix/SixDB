@@ -194,8 +194,11 @@ point plan on Graviton 4 ([findings §1](FINDINGS.md#1-runtime-composed-laws-aga
 
 Coarse selections (one bit per block) are tested before any descriptor or body
 address is formed, as [SEAMS: selections](../frame-phase-2/SEAMS.md) requires.
-The same mechanism carries Ashton's row-level protection: an access mask is a
-selection supplied by the owner.
+A selection states demand, not read authority: a delta row needs its
+checkpoint and earlier residuals, and a packed write reads its neighbours.
+Row-level protection is therefore an owner-supplied grant, enforced before
+address formation and kept separate from query selections
+([checklist A5, B14](CHECKLIST.md)).
 
 ### 4. Change: classify, declare, apply, publish
 

@@ -1,76 +1,81 @@
 # Before the initial implementation: what to explore or decide
 
-Draft, 2026-10-24, for Ashton. Each item says why it matters, what would
-settle it, and where it stands. "Decided" means Ashton decided; "evidence"
-means a prototype answered it, with the caveat noted; "open" means nothing
-settles it yet. Ikea LEAD's reply will be folded in when it arrives.
+2026-10-24, for Ashton. Merges this thread's draft with Ikea LEAD's reply
+(`build/frame-collab/phase3/CODEX-REPLY.md`); items from that reply are
+marked **[LEAD]**. Each item says why it matters, what settles it, and where
+it stands: **decided** (Ashton), **evidence** (a prototype answered it, with
+its caveat), **partial** or **open**.
 
-## Composition and execution (ideas 1 and 2)
+The checklist has three parts, following Ikea LEAD's split, which I agree with:
+commitments that are expensive to change once public; evidence that the
+first core is useful; and choices that stay reversible after landing.
 
-| # | Item | Why it matters | What settles it | Status |
-| --- | --- | --- | --- | --- |
-| C1 | Seam comparison on one stage stack: virtual calls per part, whole-tree template inlining, CPS (`ikea::author::chain`), bind-time plans, Loom staging/prefetch and rings | The seam decides speed, compile cost and how research slots in; only two seams were measured on Frame stages | Points, SUM WHERE and COUNT through each seam, warm and flushed, Zen 5 and Graviton 4, plus compile time | Open; earlier spikes measured each in isolation |
-| C2 | When a cell earns a bind-time plan | Plans are the "critical paths hand-fused"; too many re-create a fixed pipeline | A rule from C1: which operations and shapes lose more than a threshold through laws | Points: evidence (plan beats hand glue on Graviton 4) |
-| C3 | A standard pipeline description | Engine must name a pipeline, the schema must store it, Frame must rebuild the same tree from it | A headless encoded description (Ikea's envelope) round-tripping every prototype tree, placeholders included | Open (only C++ constructors today) |
-| C4 | Operation vocabulary for the first landing | Fixes what laws exist and what Engine can ask | List with reference semantics: get, read, select, filter, count, sum, sum over a selection, min, max; which comparisons; NULL behaviour | Partial: all but min/max prototyped |
-| C5 | COUNT and FILTER bookkeeping | 3–8 ns per block over the hand glue where blocks settle from descriptors | A fused descriptor pass over lo and width columns, timed | Open |
-| C6 | Leaf kernels compiled once in Ikea | Each 16-width TU costs 4–7 GB to compile in Frame | SeriesPack erased range operations | Decided: yes; request routed to the SeriesPack owner |
-| C7 | Multi-consumer scans (one decode, several results) | Phase 2's `scan_regions` gave 1.4–3.1×; laws currently run one operation per pass | A law form for several aggregates in one pass, timed against separate calls | Open |
-| C8 | Predicate on A then work on B across columns | The cold-scan thesis and SUM WHERE; selection is not read authority | Pair through two trees with coarse skipping and fine masks, against front A's fused pair control | Open (single-column only) |
-
-## Stages (idea 1)
+## A. Decide before fixing the public contract
 
 | # | Item | Why it matters | What settles it | Status |
 | --- | --- | --- | --- | --- |
-| S1 | Delta (intervals) laws: fused weighted SUM, fused checkpoint-plus-prefix point read, monotone filter | Delta on the fallback is 5–6× slower than bound → pack | SeriesPack weighted consumer in `scan_regions`; a point plan for delta; timings | Partial: framed checkpoints pay; masked-sum SUM law loses |
-| S2 | Relative-ends form and G16 vs G64 for value series | Ashton named both forms; phase 2 found relative ends widen at G64 | Bytes and laws for both forms on time-series and key columns | Open |
-| S3 | Signed values and offset binary | Delta needs it; bound must keep windows contiguous | Domain stage or fused into intervals; checks on signed columns | Partial: offset binary inside intervals |
-| S4 | Bound's admitted set and Engine's weights (penalty, cap, slack) | These are the choices Engine tunes | Defaults per preset with evidence; exposure in the description | Partial: slack decided; penalty/cap open |
-| S5 | Width 0 and constant blocks | 41% of ClickBench blocks; CounterID shows 2–7× overhead per block | A constant fast path in laws and plans | Open |
-| S6 | Placeholder shapes the contract must admit beyond runs, split and record: map (dictionary with part state), presence (rank map), route (n children), domain (ALP with exceptions) | Shapes not tried may force more contract changes | Fit/emit/decode for each through the contract | Partial: three of seven tried |
+| A1 | **Five descriptions, kept apart [LEAD]**: logical contract, admitted fitting policy, actual representation, bound execution, evidence and costs | Today one C++ tree plays all five roles. Recalibrating policy, rebinding or converting must not reinterpret stored bytes | Change policy and rebind over unchanged bytes; old and new readers each keep their own interpretation | Open |
+| A2 | **A standard pipeline description** with stage identifiers, parameters, child identities and coordinates, including shared state | Engine must name, store and rebuild a pipeline. Independent trees cannot describe a shared TuplePack record or a framed-checkpoint child | Encoded description (Ikea's envelope) round-trips into fresh bindings for the landing pipeline, shared record and rank map | Open (only C++ constructors today) |
+| A3 | **Logical types and operation results [LEAD]** | NULL, ordering, overflow, empty aggregates and selection order cannot be added later by relabelling u64 | State the first domain (unsigned integers), SUM result width, empty MIN/MAX, `select` order and count; declare what is unsupported | Partial |
+| A4 | **The composition byte law is Frame's [LEAD]**: descriptors, offsets, exception membership, slack, group sections | Leaf-valid bytes can still be inconsistent; calling it glue pushes the obligation onto Engine | Canonical encoding, versioning, `validate()`; malformed or partial images refused before unsafe access | Prototyped informally (group images) |
+| A5 | **Selection is demand, not read authority [LEAD]** | A late delta row needs earlier residuals and a checkpoint; a packed write reads neighbours. The README conflated access masks with query selections | A delta read under a broad and a restricted grant: dependency closure admitted explicitly, or an early refusal | Open; README to be corrected |
+| A6 | **Partial binding [LEAD]**: attach metadata, leave unselected group payload absent | Eager attach of every group defeats coarse skipping and Loom staging | Sparse group selection works with excluded payload inaccessible | Open |
+| A7 | **Change protocol in full**: metadata classify → admit reads → payload-dependent proof → admit stores and resources → apply without failure → resolve effects → publish | Classification alone is not admission; a rebuild after refusal is real work that also needs admission | Multi-child change refuses on value, capacity or effects with all state unchanged | Partial: metadata classify, envelopes, capability check before rebuild |
+| A8 | **Preparation lifetime across waits [LEAD]** | A plan built on one basis can be wrong after another publication | Prepare, interleave a publication, resume with the original proof or revalidate | Open |
+| A9 | **Update versus pure conversion** | A SET that rebuilds advances logical time; compaction must not | Slack-exhausting SET publishes N+1 with one contribution; compaction-only re-encode adopts N with none | Open |
+| A10 | **Interpretation travels with the material [LEAD]** | In the prototype the driver, not the Representation, knows the tree | Hold an old selection, append, convert between two programs, drop transient objects, read both histories | Open |
+| A11 | **Ownership and grains are recipe facts, not assumptions**: fitting block, checkpoint, leaf batch, re-encode region, allocation, Part, Object | A shared record or dictionary need not follow one column/group split | One shared-record update and one independently retained group under one contract | Open |
+| A12 | **Three published outputs** of a change: logical contributions, issued bytes, evidence invalidations | An unchanged field can still change a summary; metadata-only changes can change every answer | Data published with matching COUNT/SUM/extrema validity, including abort and removed-extremum cases | Partial: SUM exact, extrema precision |
+| A13 | **What replay promises [LEAD]** | Equal digests on one layout do not prove representation-independent replay | Same ordered commands on two legal representations give the same results and contributions | Partial: digest-equal replay |
+| A14 | **Laws that decline; costs that are unknown [LEAD]** | A map that does not preserve order must not inherit an ordered compare; an unpriceable child must not look free (split did) | One law declines on a false premise; an unpriced child is "unknown" or refused, never zero | Open |
+| A15 | **Leaf kernels compiled once in Ikea** | Each 16-width TU costs 4–7 GB to build inside Frame | SeriesPack erased range operations; curated compiled operations kept distinct from the author route | Decided; owner work in progress |
+| A16 | **Reserved capacity for point writes outside bounds** | Writes must not force re-encode | Per-group exception slack | Decided |
 
-## Geometry and publication (idea 3)
+## B. Establish through the first complete consumer
 
-| # | Item | Why it matters | What settles it | Status |
+| # | Item | Why it matters | Small evidence that settles it | Status |
 | --- | --- | --- | --- | --- |
-| G1 | Part-wide versus group-local width arrays | Group-local costs scans 1.1–1.6×; part-wide makes every outlier rebuild a part | A leaf call spanning groups, or a scan/write weight Engine sets | Open |
-| G2 | Group image layout as an Ikea byte law | Headless images are what Orbital stores and replicas exchange | An encoded, versioned law per stage section; validate() over contents | Prototyped informally |
-| G3 | Attach cost and group-local drafts | 26–40 µs per version attach; most of an UPDATE's 9–17 µs | Attach only touched groups; lazy attach | Open |
-| G4 | Group and block sizes (16 × 256) | Fixed early, expensive to change | Sweep 8/16/32 blocks per group for scans, writes and publication | Open |
-| G5 | Row protection and access masks as coarse selections | Ashton listed row-level protection as Frame's | Owner-supplied masks applied before address formation, checked | Open |
+| B1 | **Three seam cases on the same images [LEAD narrowing]**: (1) descriptor-heavy COUNT in one traversal; (2) predicate on A then selected work on B, retained mask against fused consumption; (3) independent points through the real dependency chain, adding Loom staging only where there is a wait to hide | Ashton asked which seams we compared; only virtual calls and one point plan were. Templates, CPS, plans and Loom are partly orthogonal, so a full matrix would not settle an interface | Each case with the ready path, then CPS or inlining where a handoff is the identified cost, then Loom where acquisition waits | Open |
+| B2 | When a cell earns a bind-time plan | Plans are "critical paths hand-fused"; too many re-create a fixed pipeline | Rule from B1 | Points: evidence |
+| B3 | **Delta lands with useful routes, not a mandated algebra**: sizes and relative ends; fused weighted consumer or fused prefix-and-consume; monotone predicates | Delta on the fallback is 5–6× slower; the masked-sum law lost to decoding | Point, selected aggregate and monotone predicate for both forms, fastest sound route | Partial: framed checkpoints pay |
+| B4 | Signed values and offset binary | Delta needs contiguous windows | Checks on signed columns | Partial |
+| B5 | Constants, and incompressible full-width values | Common boundaries; CounterID costs 2–7× per block; URLHash SUM loses 2.6× to u64 | Descriptor-only work stays cheap; an identity leaf where compression cannot repay | Open |
+| B6 | One traversal, several results | Phase 2's one-decode scan gave 1.4–3.1× | SUM with COUNT and MAX on one selected input | Open |
+| B7 | Cross-column selected movement | Frame's stated strength; tests the row-domain contract | A filters B; B reduced and projected; clustered and dispersed at equal selected counts | Open (single column only) |
+| B8 | **Group-local draft [LEAD]**: prepare once, draft the touched group, several ordered changes, emit once | Draft/apply/emit costs 9–17 µs per write, mostly attaching all groups | Copied, new and retained bytes reported per publication | Open |
+| B9 | A complete write/read history | Cheap reserved writes can hide deferred cost | Exhaustion, fold or conversion, old readers, exact derived state, on one history | Partial (e2e) |
+| B10 | Scan over many groups through one prepared operation | Group-local placement costs scans 1.1–1.6× from calls per group and width | A leaf call spanning groups, or a scan/write weight | Open |
+| B11 | **One consequential Engine choice, judged by regret [LEAD]** | Ashton's bar is analysis that makes impactful decisions; the preset test was too easy and absolute costs were off 34–83% | Choose delta or identity, or scan- or point-oriented policy, across a workload reversal, charging build, change and conversion | Open |
+| B12 | Strong controls and honest residence | This thread's own controls are weak; the brief's 2× bar is untested | Front A's native and fused pair controls; existing Polars and DuckDB controls timed; resident, flushed and bandwidth-bound runs labelled | Open |
+| B13 | Placeholder shapes not yet tried: map (part state), presence (rank map), route (n children), domain (ALP exceptions) | Untried shapes may force more contract changes | Fit, emit, decode and a declining law for each | Partial: runs, split, record done |
+| B14 | Row protection as an owner-supplied grant, separate from selection | Ashton listed row-level protection as Frame's | Grant enforced before address formation | Open |
+| B15 | Concurrency over one group | Real workloads | Overlapping envelopes admitted or refused | Open |
 
-## Change and MVCC (idea 4)
+## C. Keep reversible after landing
 
-| # | Item | Why it matters | What settles it | Status |
-| --- | --- | --- | --- | --- |
-| M1 | Reserved capacity for point writes outside bounds | Writes must not force re-encode | Per-group exception slack, size per preset | Decided |
-| M2 | Range writes, appends to a plain tail, seal | Bulk ingest and streaming | Writer commands with envelopes and contributions | Open |
-| M3 | Envelope before payload, metadata-only classification | Locks project onto physical envelopes; payload-dependent steps need admitted reads first | Contract split: metadata classify, admitted reads, then store envelope (Ikea LEAD's point) | Partial: metadata classify done |
-| M4 | Summaries published with data: SUM, COUNT, MIN/MAX precision | Engine summaries and indexes need exact contributions | Contribution law per stage, checked over all workloads | Partial: SUM exact, stats precision |
-| M5 | Re-encode as conversion (Orbital `adopt`) versus a new version | Compaction must not change logical time | An adopt path for compaction-only re-encodes | Open |
-| M6 | Concurrency: two writers, one group | Real workloads | Admission over overlapping envelopes, conflict behaviour | Open |
-| M7 | Replay from admitted input | Recovery basis | Deterministic fit and write paths; replay checks | Evidence (digest-equal replay) |
+Group and block size, slack amount, checkpoint spacing, fusion thresholds,
+fit speed versus quality, cost coefficients and plan caching. Each can change
+locally once its interpretation and invalidation rules are explicit (A1, A4).
+Deferred encodings and operation families stay in research; their
+placeholders need only the shape, sharing, coordinate, dependency and
+ownership hooks.
 
-## Description and Engine (idea 5)
+## Not required for the first landing
 
-| # | Item | Why it matters | What settles it | Status |
-| --- | --- | --- | --- | --- |
-| D1 | Cost tables per residence tier with a per-call term | Absolute predictions were off by a median 34–83% | Tier-calibrated tables predicting within a set error | Open |
-| D2 | A consequential decision Engine can make from the description | Ashton's bar: analysis that makes impactful decisions | Predict delta-or-not, penalty and placement per column and workload, check against measurement | Open (the tested choice was too easy) |
-| D3 | Census contents and cost | The cheapest planning input | Which statistics, how they update under writes | Partial |
+A universal kernel registry, a general optimizer, user-defined operation
+compilation, every topology sweep, a new lock manager, or durable
+transactions and recovery. Existing owners' contracts are the boundary.
 
-## Baselines and the brief's bar
+## Division of work Ikea LEAD proposes
 
-| # | Item | Why it matters | What settles it | Status |
-| --- | --- | --- | --- | --- |
-| B1 | Polars and DuckDB timed on the landing operations | The brief's ≥ 2× bar is still untested | Front A's controls timed at each tier | Open (functional controls exist) |
-| B2 | Front A's native controls replace this thread's | Own controls are weak (scalar masked sum) | Rerun with `frame_cells_controls` | Open |
-| B3 | Cold and shared-bandwidth tiers | Wins on bytes show only there | Flushed and concurrent-stream runs | Open |
+- **Ikea LEAD:** the public description and binding contract (A1, A2, A4,
+  A6, A10), one maintained owner-composition example and conformance fixture
+  (A7–A9, B8, B9), and a complete-program scorecard against qualified
+  controls (B12). First concrete step: the group-local draft and
+  interpretation-lifetime witness.
+- **This thread:** stage laws, the execution driver and seam cases (B1–B7,
+  B10, B13), and the Engine-choice witness (B11).
+- **SeriesPack owner:** compiled leaf operations (A15).
 
-## End to end
-
-| # | Item | Why it matters | What settles it | Status |
-| --- | --- | --- | --- | --- |
-| E1 | Orbital material and update path | Basic DB operations end to end | Prototype passes with older Scopes live | Evidence (embedded, single owner) |
-| E2 | Loom leases and staging around reads | Real readers go through Loom | A Loom-driven read and update | Open |
-| E3 | An Engine-side table driver over several columns | "Basic database operations through the whole database" | Load, SELECT SUM(b) WHERE a ≥ t, point lookup, UPDATE, across columns | Open |
+This is Ashton's call. It matches the Claude/Codex split by strength that
+he proposed for phase 2.
