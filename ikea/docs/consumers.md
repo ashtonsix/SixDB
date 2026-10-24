@@ -31,7 +31,7 @@ choices below are supported by the linked complete-consumer measurements.
 
 The module guides turn these starting points into concrete calls:
 [SeriesPack](seriespack/usage.md), [TuplePack](tuplepack/usage.md),
-[StreamPack](streampack/usage.md), [Bec256](bec256/usage.md) and
+[StreamPack](streampack/usage.md), [Bec](bec/usage.md) and
 [Hashtable](hashtable/usage.md).
 
 ## Move stable work out of the loop

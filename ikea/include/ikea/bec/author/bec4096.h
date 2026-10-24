@@ -1,13 +1,15 @@
 #pragma once
-// Bec4096 bodies: framing, block access, encoding and the fused walk. The
-// ordinary API in <ikea/bec/bec4096.h> is compiled from these; composing
-// callers may include them to inline the same work.
+// Bec4096 author surface: native block values for composing callers (the
+// native namespace at the end, NEON and AVX-512 profiles), over the detail
+// bodies that the ordinary API in <ikea/bec/bec4096.h> is compiled from.
 #include <ikea/bec/bec4096.h>
 #include <ikea/bec/author/native.h>
 #include <ikea/bec/detail/scalar.h>
 #include <ikea/bec/detail/write.h>
 #if defined(IKEA_BEC256_AVX512) || defined(__aarch64__)
 #define IKEA_BEC4096_NATIVE 1
+#else
+#define IKEA_BEC4096_NATIVE 0
 #endif
 // Native glue: Bec256's split, leaf and packing kernels unchanged, entered at
 // an arbitrary bit within a 64-byte window. Only the root step differs from
@@ -541,7 +543,9 @@ using native::pair;
     const auto *w = reinterpret_cast<const std::uint8_t *>(storage.data());
     if (storage.size() < 64) {
         std::memset(scratch, 0, 64);
-        std::memcpy(scratch, w, std::min<unsigned>(bytes, 64));
+        // Empty and full values have zero-byte bodies, often a default span.
+        if (bytes)
+            std::memcpy(scratch, w, std::min<unsigned>(bytes, 64));
         w = scratch;
     }
     read_frame_scalar(w, population, out);
@@ -573,11 +577,13 @@ struct source {
     const auto w = window(input, s / 8);
     return native::decode_at(w.body, w.first, s % 8, input.frame().population[k]);
 }
-[[gnu::always_inline]] inline pair decode_two(const reader &input, unsigned k, unsigned j) {
-    const unsigned s = input.frame().start[k], t = input.frame().start[j];
-    const auto a = window(input, s / 8), b = window(input, t / 8);
-    return native::decode2_at(a.body, a.first, s % 8, input.frame().population[k], b.body, b.first,
-                              t % 8, input.frame().population[j]);
+// Blocks k of x and j of y: one reader or two, nonterminal.
+[[gnu::always_inline]] inline pair decode_two(const reader &x, unsigned k, const reader &y,
+                                              unsigned j) {
+    const unsigned s = x.frame().start[k], t = y.frame().start[j];
+    const auto a = window(x, s / 8), b = window(y, t / 8);
+    return native::decode2_at(a.body, a.first, s % 8, x.frame().population[k], b.body, b.first,
+                              t % 8, y.frame().population[j]);
 }
 [[gnu::always_inline]] inline __m256i tree_one(const reader &input, unsigned k, unsigned &pos) {
     const unsigned s = input.frame().start[k];
@@ -605,12 +611,13 @@ struct source {
     const auto *w = window(input, s / 8, scratch);
     return native::decode_at(w, first16(w), s % 8, input.frame().population[k]);
 }
-[[gnu::always_inline]] inline pair decode_two(const reader &input, unsigned k, unsigned j) {
+[[gnu::always_inline]] inline pair decode_two(const reader &x, unsigned k, const reader &y,
+                                              unsigned j) {
     alignas(64) std::uint8_t sa[64], sb[64];
-    const unsigned s = input.frame().start[k], t = input.frame().start[j];
-    const auto *a = window(input, s / 8, sa), *b = window(input, t / 8, sb);
-    return native::decode2_at(a, first16(a), s % 8, input.frame().population[k], b, first16(b),
-                              t % 8, input.frame().population[j]);
+    const unsigned s = x.frame().start[k], t = y.frame().start[j];
+    const auto *a = window(x, s / 8, sa), *b = window(y, t / 8, sb);
+    return native::decode2_at(a, first16(a), s % 8, x.frame().population[k], b, first16(b),
+                              t % 8, y.frame().population[j]);
 }
 [[gnu::always_inline]] inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
     alignas(64) std::uint8_t scratch[64];
@@ -638,10 +645,10 @@ inline block decode_one(const reader &input, unsigned k) {
     ikea::bec::detail::decode_scalar(stream, input.frame().population[k], result.data());
     return result;
 }
-inline pair decode_two(const reader &input, unsigned k, unsigned j) {
+inline pair decode_two(const reader &x, unsigned k, const reader &y, unsigned j) {
     pair result;
-    native::store_block(result.data(), decode_one(input, k));
-    native::store_block(result.data() + 32, decode_one(input, j));
+    native::store_block(result.data(), decode_one(x, k));
+    native::store_block(result.data() + 32, decode_one(y, j));
     return result;
 }
 inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
@@ -667,7 +674,7 @@ inline block tree_one(const reader &input, unsigned k, unsigned &pos) {
     for (unsigned k = 0; k < 16; k += 2) {
         const unsigned a = input.frame().population[k], b = input.frame().population[k + 1];
         if (!terminal(a) && !terminal(b))
-            native::store_pair(out + 32 * k, decode_two(input, k, k + 1));
+            native::store_pair(out + 32 * k, decode_two(input, k, input, k + 1));
         else {
             decode_block(input, k, out + 32 * k);
             decode_block(input, k + 1, out + 32 * k + 32);
@@ -1147,3 +1154,44 @@ inline void counts_all(const reader &input, std::uint8_t *out) {
 }
 #endif
 } // namespace ikea::bec4096::detail::fused
+
+#if IKEA_BEC4096_NATIVE
+namespace ikea::bec4096::native {
+// Blocks of an admitted Bec4096 reader as Bec256's native values, so the same
+// Boolean, population and encoding bodies consume both variants. Stream
+// addressing stays behind the reader; block < 16 is trusted. Reads use the
+// reader's granted span (exact bodies adapt the tail as decode does) and may
+// load neighbouring stream bytes without decoding them.
+using ikea::bec256::native::block;
+using ikea::bec256::native::pair;
+[[gnu::always_inline]] inline block filled(std::uint8_t value) {
+#if defined(IKEA_BEC256_AVX512)
+    return _mm256_set1_epi8(char(value));
+#else
+    return {{vdupq_n_u8(value), vdupq_n_u8(value)}};
+#endif
+}
+/// One block, including empty and full blocks.
+[[gnu::always_inline]] inline block read(const reader &input, unsigned index) {
+    const unsigned c = input.frame().population[index];
+    if (detail::terminal(c))
+        return filled(c ? 255 : 0);
+    return detail::decode_one(input, index);
+}
+/// Block i of x (low half) and block j of y (high half); one reader or two.
+[[gnu::always_inline]] inline pair read_pair(const reader &x, unsigned i, const reader &y,
+                                             unsigned j) {
+    if (detail::terminal(x.frame().population[i]) || detail::terminal(y.frame().population[j]))
+        return ikea::bec256::native::join(read(x, i), read(y, j));
+    return detail::decode_two(x, i, y, j);
+}
+/// One block's 32 byte populations, from its count tree alone.
+[[gnu::always_inline]] inline block counts(const reader &input, unsigned index) {
+    const unsigned c = input.frame().population[index];
+    if (detail::terminal(c))
+        return filled(c ? 8 : 0);
+    unsigned pos;
+    return detail::tree_one(input, index, pos);
+}
+} // namespace ikea::bec4096::native
+#endif

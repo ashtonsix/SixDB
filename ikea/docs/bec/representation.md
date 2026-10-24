@@ -1,5 +1,8 @@
 # Bec256 representation
 
+Both Bec variants use this law: Bec256 bodies are one such stream, and
+[Bec4096](bec4096.md#representation) concatenates sixteen of them behind a head.
+
 Bec256 (Bisection–Enumerative Code) represents a subset of positions 0..255.
 The ordinary value is `ikea::bitset256`: position i is numeric bit `i%64` of
 word `i/64`. Its canonical 32-byte bridge maps position `8*j+b` to bit b of
@@ -10,7 +13,7 @@ positions unknown.
 
 The encoded **body** resolves that uncertainty in two parts: counts describe the
 distribution among fixed regions; then an integer identifies each byte's exact
-pattern. The decoder receives the total population separately. See [usage](usage.md)
+pattern. The decoder receives the total population separately. See [Using Bec](usage.md)
 for storing, reading and replacing bodies.
 
 ## Divide the positions and recover their counts

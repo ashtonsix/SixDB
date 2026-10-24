@@ -1,5 +1,6 @@
 // Bec4096 wire, access and mutation checks against an independent reference.
 #include "bec4096_reference.h"
+#include <ikea/bec/author/bec4096.h>
 #include <ikea/bec/bec4096.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -166,11 +167,101 @@ void check_bounds() {
         CHECK(detail::min_bits[c] == lo && detail::max_bits[c] == hi);
     }
 }
+
+// Zero-byte bodies are ordinary values and may arrive as default spans.
+void check_terminal_spans() {
+    for (unsigned population : {0u, 4096u}) {
+        bitset4096 expected;
+        if (population)
+            for (auto &w : expected.words)
+                w = ~std::uint64_t{0};
+        for (bool checked : {true, false}) {
+            auto source = checked ? bind_reader({}, 0, population)
+                                  : std::expected<reader, error>(bind_reader_unchecked({}, 0, population));
+            CHECK(source);
+            if (!source)
+                continue;
+            bitset4096 all;
+            decode(*source, all);
+            CHECK(all == expected);
+            std::array<std::uint8_t, 512> c;
+            counts(*source, c);
+            CHECK(std::all_of(c.begin(), c.end(), [&](auto v) { return v == (population ? 8 : 0); }));
+            for (unsigned k = 0; k < 16; ++k) {
+                bitset256 one;
+                decode(*source, k, one);
+                CHECK(one == expected.block(k));
+            }
+            CHECK(rank(*source, 0) == 0 && rank(*source, 4096) == population);
+            CHECK(rank(*source, 1000) == (population ? 1000u : 0u));
+            CHECK(ikea::bec4096::population(*source, 0, 4096) == population);
+        }
+    }
+}
+
+// Immediate encode prepares every stream before storing, so the input may
+// overlap the destination, as with Bec256.
+void check_overlapping_encode() {
+    for (auto shape : {inputs::shape::random, inputs::shape::mixed, inputs::shape::sparse}) {
+        const auto x = inputs::make(shape, 3);
+        const auto expected = reference::encode(x);
+        for (std::size_t offset : {0u, 5u, 200u}) {
+            std::vector<byte> storage(max_bytes + 512 + 64, byte{0x3c});
+            x.store(std::span<byte, 512>(storage.data() + 100, 512));
+            view target{storage};
+            std::array<ikea::journal::entry, 1> records;
+            ikea::journal effects{records};
+            auto written = encode(std::span<const byte, 512>(storage.data() + 100, 512), x.count(),
+                                  target, offset, effects);
+            CHECK(written && *written == expected.size() &&
+                  std::equal(expected.begin(), expected.end(), storage.begin() + offset));
+        }
+    }
+}
+
+#if IKEA_BEC4096_NATIVE
+// Native block values are Bec256's carrier: its Boolean and population
+// bodies consume blocks of Bec4096 readers directly.
+void check_native(const bitset4096 &x, const bitset4096 &y) {
+    const auto bx = reference::encode(x), by = reference::encode(y);
+    std::vector<byte> px(bx.begin(), bx.end()), py(by.begin(), by.end());
+    auto rx = bind_reader(px, unsigned(bx.size()), x.count());
+    auto ry = bind_reader(py, unsigned(by.size()), y.count());
+    CHECK(rx && ry);
+    if (!rx || !ry)
+        return;
+    namespace bn = ikea::bec256::native;
+    for (unsigned k = 0; k < 16; ++k) {
+        std::array<byte, 32> one;
+        bn::store(one.data(), ikea::bec4096::native::read(*rx, k));
+        CHECK(bitset256::load(one) == x.block(k));
+        std::array<byte, 32> c;
+        bn::store(c.data(), ikea::bec4096::native::counts(*rx, k));
+        for (unsigned j = 0; j < 32; ++j)
+            CHECK(std::to_integer<unsigned>(c[j]) ==
+                  unsigned(std::popcount(unsigned(x.words[4 * k + j / 8] >> (8 * (j % 8)) & 255))));
+        const unsigned j = 15 - k;
+        const auto both = ikea::bec4096::native::read_pair(*rx, k, *ry, j);
+        auto a = x.block(k), b = y.block(j);
+        for (unsigned w = 0; w < 4; ++w)
+            a.words[w] &= b.words[w];
+        CHECK(bn::population(bn::intersection(both, bn::join(bn::part<1>(both), bn::part<0>(both)))) ==
+              2 * a.count());
+    }
+}
+#endif
 } // namespace
 
 int main() {
     check_bounds();
     check_rejections();
+    check_terminal_spans();
+    check_overlapping_encode();
+#if IKEA_BEC4096_NATIVE
+    for (auto s : inputs::all)
+        for (unsigned seed = 0; seed < 4; ++seed)
+            check_native(inputs::make(s, seed), inputs::make(inputs::all[(unsigned(s) + 3) % 8], seed + 9));
+#endif
     guarded guard;
     unsigned cases = 0;
     for (auto s : inputs::all)
@@ -187,6 +278,9 @@ int main() {
         hole.set(p, false);
         check_value(hole, guard);
     }
-    std::printf("Bec4096: %u values against the independent reference, exact guard boundaries, %u failures\n", cases, failures);
+    std::printf("Bec4096: %u values against the independent reference, default empty spans, "
+                "overlapping encode, %s, exact guard boundaries, %u failures\n",
+                cases, IKEA_BEC4096_NATIVE ? "native blocks" : "native blocks unavailable in this profile",
+                failures);
     return failures != 0;
 }

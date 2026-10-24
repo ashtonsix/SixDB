@@ -1,6 +1,5 @@
 #pragma once
-#include <ikea/effects.h>
-#include <ikea/bytes.h>
+#include <ikea/bec/common.h>
 #include <ikea/bitset256.h>
 #include <bit>
 #include <array>
@@ -20,19 +19,9 @@ namespace detail = ::ikea::bec::detail;
 using ikea::byte;
 inline constexpr unsigned positions = 256, max_bytes = 47, scratch_bytes = 64;
 
-enum class error {
-    population,
-    truncated,
-    split,
-    rank,
-    padding,
-    trailing,
-    capacity,
-    effects,
-    overlap,
-    length // Bec4096: a block length outside its range or unlike its stream
-};
-std::string_view describe(error) noexcept;
+using bec::describe;
+using bec::error;
+using bec::view;
 
 /// Validates exact headless framing without reading beyond body. Population is
 /// caller-owned interpretation metadata, not authenticated original content.
@@ -94,12 +83,6 @@ void decode(const reader &, std::span<byte, 32> output) noexcept;
 /// Both bodies are decoded before any output store, permitting byte overlap.
 void decode_pair(const reader &, const reader &, std::span<byte, 64> output) noexcept;
 
-/// Caller-owned destination plane. Effects use this named object's identity and
-/// byte offsets relative to storage. Keep it alive until effects are resolved.
-struct view {
-    std::span<byte> storage;
-    std::span<const byte> plane_storage(unsigned) const noexcept { return storage; }
-};
 
 /// Transient encoded bytes for one complete block, not a persisted header or a
 /// storage owner. The caller retains population and records bytes() separately.

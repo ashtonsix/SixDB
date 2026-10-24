@@ -22,7 +22,7 @@ int main() {
     assert(input);
     assert(input->population(0) == 1 && input->population(1) == 2 && input->population(15) == 1);
 
-    // One 256-position block, without touching the other fifteen streams.
+    // One 256-position block; no other block is decoded.
     ikea::bitset256 block;
     bc::decode(*input, 1, block);
     assert(block.contains(300 - 256) && block.contains(301 - 256) && block.count() == 2);

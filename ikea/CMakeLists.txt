@@ -74,7 +74,7 @@ target_compile_features(ikea_tuplepack PUBLIC cxx_std_23)
 target_link_libraries(ikea_tuplepack PUBLIC ikea_core)
 
 add_library(ikea_bec STATIC src/bec/bec256.cpp src/bec/validation.cpp src/bec/analysis.cpp
-  src/bec/bec4096.cpp)
+  src/bec/bec4096.cpp src/bec/common.cpp)
 add_library(ikea::bec ALIAS ikea_bec)
 sixdb_target(ikea_bec)
 target_include_directories(ikea_bec PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

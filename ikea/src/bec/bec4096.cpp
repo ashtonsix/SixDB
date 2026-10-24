@@ -1,4 +1,5 @@
 #include <ikea/bec/author/bec4096.h>
+#include <cassert>
 
 namespace ikea::bec4096 {
 namespace detail {
@@ -128,18 +129,22 @@ void decode(const reader &input, std::span<byte, 512> output) noexcept {
     detail::fused::decode_all(input, to_u8(output).data());
 }
 void decode(const reader &input, unsigned block, std::span<byte, 32> output) noexcept {
+    assert(block < blocks);
     detail::decode_block(input, block, to_u8(output).data());
 }
 void counts(const reader &input, unsigned block, std::span<std::uint8_t, 32> output) noexcept {
+    assert(block < blocks);
     detail::block_counts(input, block, output.data());
 }
 void counts(const reader &input, std::span<std::uint8_t, 512> output) noexcept {
     detail::fused::counts_all(input, output.data());
 }
 unsigned rank(const reader &input, unsigned position) noexcept {
+    assert(position <= positions);
     return detail::rank(input, position);
 }
 unsigned population(const reader &input, unsigned first, unsigned count) noexcept {
+    assert(first <= positions && count <= positions - first);
     return detail::rank(input, first + count) - detail::rank(input, first);
 }
 
@@ -172,7 +177,7 @@ std::expected<unsigned, error> encode(std::span<const byte, 512> input, unsigned
     if (detail::prepare(to_u8(input).data(), plan) != population)
         return std::unexpected(error::population);
     const unsigned n = (plan.bits + 7) / 8;
-    if (auto admitted = ikea::bec::detail::admit_write(target, offset, n, effects, input.data(), 512);
+    if (auto admitted = ikea::bec::detail::admit_write(target, offset, n, effects, nullptr, 0);
         !admitted)
         return std::unexpected(admitted.error());
     if (n) {

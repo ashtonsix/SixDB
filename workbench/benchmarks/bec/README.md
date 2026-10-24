@@ -94,6 +94,9 @@ weather_sept_85 and wikileaks-noquotes windows. `ikea_bec4096_sizes WINDOWS`
 reports bytes per 4096 positions, with modelled parent metadata, for every
 shape and window family. The [run helper](run.sh) runs both after the Bec256
 routines (`BEC4096=0` skips them); `summarise_bec4096.py` pairs the medians.
+The rank control decodes a Bec256 block and ranks the plain value, since
+Bec256 exposes no count-tree rank: part of Bec4096's rank advantage is that
+API, not the 4096-position format.
 
 The [graduation study](../../spikes/bec4096/README.md) owns the findings and
 retained evidence: fused decode at 0.50–0.55× of the Bec256 control on Zen 5

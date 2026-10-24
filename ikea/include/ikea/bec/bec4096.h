@@ -14,9 +14,9 @@ namespace detail {
 struct access;
 }
 using ikea::byte;
-using bec256::describe;
-using bec256::error;
-using bec256::view;
+using bec::describe;
+using bec::error;
+using bec::view;
 inline constexpr unsigned positions = 4096, blocks = 16,
                           max_bytes = (detail::body_max_bits + 7) / 8, scratch_bytes = 64;
 static_assert(max_bytes == 784);
@@ -82,13 +82,21 @@ inline reader bind_reader_unchecked(std::span<const byte> storage, unsigned byte
     return bind_reader_unchecked(const_view::attach_unchecked(storage, bytes, population));
 }
 
-/// Materializes all 512 bytes. Output may not overlap the source.
+// Coordinates are trusted and asserted: block < 16, position <= 4096,
+// first <= 4096 and count <= 4096 - first. Reads use the reader's granted
+// span; a block's 64-byte window may load neighbouring streams' bytes, which
+// are never decoded.
+
+/// Materializes all 512 bytes. Output may not overlap the source: later
+/// blocks are still borrowed while earlier ones are stored.
 void decode(const reader &, std::span<byte, 512> output) noexcept;
-/// One 256-position block, without reading other blocks' streams.
+/// One 256-position block without decoding the others. Output may overlap
+/// the source: the block is decoded before it is stored.
 void decode(const reader &, unsigned block, std::span<byte, 32> output) noexcept;
 /// Populations of one block's 32 bytes, from its count tree alone.
 void counts(const reader &, unsigned block, std::span<std::uint8_t, 32> output) noexcept;
-/// Populations of all 512 bytes, from the count tree alone.
+/// Populations of all 512 bytes, from the count trees alone. Output may not
+/// overlap the source.
 void counts(const reader &, std::span<std::uint8_t, 512> output) noexcept;
 /// Set positions strictly before position; rank(r, 4096) is the population.
 unsigned rank(const reader &, unsigned position) noexcept;
@@ -126,8 +134,9 @@ class encoding {
 };
 
 /// Checked construction/replacement. Returns emitted byte length; rejection
-/// leaves destination and journal unchanged. Input may not overlap the
-/// destination; other command metadata must be disjoint.
+/// leaves destination and journal unchanged. All sixteen streams are prepared
+/// before the first store, so input may overlap the destination, as with
+/// Bec256; command and journal storage must be disjoint.
 [[nodiscard]] std::expected<unsigned, error> encode(std::span<const byte, 512> input,
                                                     unsigned population, view &,
                                                     std::size_t offset, journal &) noexcept;

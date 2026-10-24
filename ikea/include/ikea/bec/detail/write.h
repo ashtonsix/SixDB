@@ -2,9 +2,8 @@
 #include <ikea/bec/bec256.h>
 #include <ikea/bec/detail/native/emit.h>
 namespace ikea::bec::detail {
-// Bec256's checked destinations; Bec4096 reuses the same admission.
-using ::ikea::bec256::error;
-using ::ikea::bec256::view;
+using ::ikea::bec::error;
+using ::ikea::bec::view;
 // Immediate admission stays visible to the operation body: no call boundary
 // spills native groups merely to check byte/control geometry. The deferred
 // encoding API still exposes a compiled cold admission entry.

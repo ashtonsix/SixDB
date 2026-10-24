@@ -144,6 +144,7 @@ unless marked `src/`.
 
 | Responsibility | Owning files |
 | --- | --- |
+| Shared vocabulary: failures, diagnostics, destination plane | `common.h`; `src/bec/common.cpp` |
 | Bec256 ordinary sources, destinations and prepared replacements | `bec256.h`; `src/bec/bec256.cpp` |
 | Statistical size estimates and cutoff calibration statistic | `analysis.h`, `author/analysis.h`; `src/bec/analysis.cpp`, `detail/estimate.h` |
 | Exact framing validation and diagnostics | `src/bec/validation.cpp` |
@@ -153,7 +154,7 @@ unless marked `src/`.
 | Register bitstream assembly and exact stores | `detail/native/{assemble,emit}.h` |
 | Native pipeline carrier | `author/chain.h` |
 | Bec4096 ordinary API, validation and prepared replacements | `bec4096.h`; `src/bec/bec4096.cpp` |
-| Bec4096 framing, block access, fused sixteen-stream walk and emission | `author/bec4096.h`; `detail/bec4096.h` |
+| Bec4096 native blocks over Bec256's carrier; framing, block access, fused sixteen-stream walk and emission | `author/bec4096.h`; `detail/bec4096.h` |
 
 The [representation guide](bec/representation.md) defines Bec256's fixed wire
 format; the [Bec4096 guide](bec/bec4096.md) builds on it. Population, body length, placement and directory schema belong to the
