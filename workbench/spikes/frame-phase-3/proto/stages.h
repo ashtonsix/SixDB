@@ -387,8 +387,11 @@ class bound final : public stage {
                 u64 lo = *mn;
                 unsigned K = 0;
                 if (*mx != *mn) {
+                    // The prior is the previous block's window within the
+                    // group only: a group's first block fits without one, so a
+                    // group rebuilt or attached alone fits as its build did.
                     std::optional<frame_bounds::choice> prior;
-                    if (b && s.width[b - 1])
+                    if (b % group_blocks && s.width[b - 1])
                         prior = frame_bounds::choice{s.lo[b - 1], s.width[b - 1], 0, 0, 0};
                     const auto c = frame_bounds::fast::choose<32>(x, m, priced, sample, prior ? &*prior : nullptr);
                     lo = c.lo, K = std::max(1u, c.width);
@@ -463,8 +466,10 @@ class bound final : public stage {
         const area &a = s.areas[g];
         put<u16>(out, static_cast<u16>(a.pos.size())), put<u16>(out, static_cast<u16>(a.used));
         const auto *pos = reinterpret_cast<const std::byte *>(a.pos.data()), *val = reinterpret_cast<const std::byte *>(a.val.data());
-        out.insert(out.end(), pos, pos + a.pos.size());
-        out.insert(out.end(), val, val + a.val.size() * 8);
+        if (!a.pos.empty()) {
+            out.insert(out.end(), pos, pos + a.pos.size());
+            out.insert(out.end(), val, val + a.val.size() * 8);
+        }
         child_->emit(p, g, out);
     }
     std::size_t attach(unsigned p, std::size_t rows, unsigned g, std::span<const std::byte> in, std::span<std::byte> writable) override {
@@ -481,8 +486,11 @@ class bound final : public stage {
         const unsigned capacity = take<u16>(in, at);
         a.used = take<u16>(in, at);
         a.pos.resize(capacity), a.val.resize(capacity);
-        std::memcpy(a.pos.data(), in.data() + at, capacity), at += capacity;
-        std::memcpy(a.val.data(), in.data() + at, capacity * 8), at += capacity * 8;
+        if (capacity) {
+            std::memcpy(a.pos.data(), in.data() + at, capacity);
+            std::memcpy(a.val.data(), in.data() + at + capacity, std::size_t{capacity} * 8);
+        }
+        at += std::size_t{capacity} * 9;
         return at + child_->attach(p, rows, g, in.subspan(at), writable.empty() ? writable : writable.subspan(at));
     }
     void describe(unsigned p, census &c) const override {

@@ -1,6 +1,22 @@
 # Prototype 1: the stage contract with runtime-composed block-grain laws.
 # Width-specialised SeriesPack arrays compile once, in their own TUs.
-add_library(frame3_widths STATIC EXCLUDE_FROM_ALL widths.cpp widths_compact_1.cpp widths_compact_17.cpp widths_compact_33.cpp widths_compact_49.cpp widths_bulk_x86_1.cpp widths_bulk_x86_17.cpp widths_bulk_x86_33.cpp widths_bulk_x86_49.cpp widths_bulk_arm_1.cpp widths_bulk_arm_17.cpp widths_bulk_arm_33.cpp widths_bulk_arm_49.cpp)
+# FRAME3_PRESETS limits the width TUs (each ~4-7 GB to compile) to the
+# presets a build needs, e.g. -DFRAME3_PRESETS=compact for local checks.
+set(FRAME3_PRESETS "compact;bulk_x86;bulk_arm" CACHE STRING "SeriesPack presets to instantiate width arrays for")
+set(frame3_width_sources widths.cpp)
+foreach(preset compact bulk_x86 bulk_arm)
+    if(preset IN_LIST FRAME3_PRESETS)
+        set(frame3_has_${preset} 1)
+        foreach(first 1 17 33 49)
+            list(APPEND frame3_width_sources widths_${preset}_${first}.cpp)
+        endforeach()
+    else()
+        set(frame3_has_${preset} 0)
+    endif()
+endforeach()
+add_library(frame3_widths STATIC EXCLUDE_FROM_ALL ${frame3_width_sources})
+target_compile_definitions(frame3_widths PRIVATE FRAME3_HAS_COMPACT=${frame3_has_compact}
+    FRAME3_HAS_BULK_X86=${frame3_has_bulk_x86} FRAME3_HAS_BULK_ARM=${frame3_has_bulk_arm})
 sixdb_target(frame3_widths)
 target_link_libraries(frame3_widths PUBLIC ikea::seriespack)
 add_executable(frame3_check check.cpp)
