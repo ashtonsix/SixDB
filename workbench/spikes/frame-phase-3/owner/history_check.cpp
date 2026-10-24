@@ -81,8 +81,14 @@ fo::Store::Owner build(fo::Store &store, Memory &memory, orbital::ObjectId id,
     fo::interpretation meaning{take(fo::encode(description)), values.size(), {}, schema, id};
     for (unsigned g = 0; g < built.root().groups_in(0); ++g) {
         images.push_back(built.image(0, g));
-        meaning.group_extents.push_back(images.back().size());
+        meaning.part_extents.push_back(images.back().size());
     }
+    fo::stream_manifest stream{description.root, values.size(), {}};
+    for (unsigned g = 0; g < images.size(); ++g)
+        stream.groups.push_back({g, 0, images[g].size()});
+    meaning.streams.push_back(std::move(stream));
+    check(bool(fo::validate_manifest(description, meaning.rows, meaning.part_extents, meaning.streams)),
+        "constructed basic material manifest refused");
     auto metadata = take(fo::interpretation_owner::make(memory, std::move(meaning)));
     std::vector<orbital::PartSource> sources;
     for (unsigned g = 0; g < images.size(); ++g)
@@ -93,7 +99,12 @@ fo::Store::Owner replace_group(fo::Store &store, Memory &memory, fo::Selection b
     unsigned g, Bytes image, std::size_t rows) {
     auto meaning = basis.control().meaning();
     meaning.rows = rows;
-    meaning.group_extents[g] = image.size();
+    meaning.part_extents[g] = image.size();
+    check(meaning.streams.size() == 1, "basic publication lost its one stream");
+    meaning.streams[0].rows = rows;
+    meaning.streams[0].groups[g].extent = image.size();
+    check(bool(fo::validate_manifest(take(fo::decode(meaning.pipeline)), rows, meaning.part_extents, meaning.streams)),
+        "replacement basic material manifest refused");
     auto metadata = take(fo::interpretation_owner::make(memory, std::move(meaning)));
     std::vector<orbital::PartSource> sources;
     for (unsigned i = 0; i < basis.part_count(); ++i) {
@@ -166,13 +177,6 @@ std::size_t old_extra_capacity(fo::Selection old, fo::Selection current) {
         if (!shared) result += capacity_of(address);
     }
     return result;
-}
-bool same_sources(fo::Selection a, fo::Selection b) {
-    if (a.part_count() != b.part_count() || a.control().meaning().rows != b.control().meaning().rows ||
-        a.control().meaning().pipeline != b.control().meaning().pipeline) return false;
-    for (unsigned g = 0; g < a.part_count(); ++g)
-        if (group(a, g).data() != group(b, g).data() || group(a, g).size() != group(b, g).size()) return false;
-    return true;
 }
 void refusals(fo::Selection selected, std::span<const fo::command> commands,
     fo::fitting_policy policy, std::span<const u64> original) {
@@ -288,7 +292,7 @@ int main() {
             check(!refused && refused.error() == orbital::Error::stale, "original preparation Scope was silently replaced");
             check(!store.install(stale) && stale.disposition() == orbital::PublicationState::empty,
                 "unaccepted stale work installed");
-            check(same_sources(old, store.borrow().bind(object)) && published_contribution == 0,
+            check(fo::same_material(old, store.borrow().bind(object)) && published_contribution == 0,
                 "private or stale preparation exposed changes or contributions");
             answers(*attach(store.borrow().bind(object)), original);
         }
@@ -297,7 +301,7 @@ int main() {
         // revalidated before rerunning preparation. No hidden publication helper.
         fo::Store::Scope retry_basis(store);
         const auto retry_source = retry_basis.bind(object);
-        check(same_sources(old, retry_source), "unrelated publication changed the source to be retried");
+        check(fo::same_material(old, retry_source), "unrelated publication changed the source to be retried");
         auto prepared = take(fo::prepare_group(program(retry_source), original.size(), 0, group(retry_source, 0),
             commands, budget(group(retry_source, 0), commands.size()), policy));
         check(prepared.contribution == contribution && prepared.rebuilds != 0, "retry changed ordered command semantics");

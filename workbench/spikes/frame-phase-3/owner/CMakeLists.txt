@@ -10,9 +10,17 @@ add_library(frame3_owner_images STATIC EXCLUDE_FROM_ALL group_image.cpp)
 sixdb_target(frame3_owner_images)
 target_link_libraries(frame3_owner_images PUBLIC ikea::seriespack)
 
+add_library(frame3_owner_manifest STATIC EXCLUDE_FROM_ALL manifest.cpp)
+sixdb_target(frame3_owner_manifest)
+target_link_libraries(frame3_owner_manifest PUBLIC frame3_owner_description)
+
 add_library(frame3_owner_binding STATIC EXCLUDE_FROM_ALL binding.cpp)
 sixdb_target(frame3_owner_binding)
-target_link_libraries(frame3_owner_binding PUBLIC frame3_owner_description frame3_owner_images frame3_widths ikea::tuplepack)
+target_link_libraries(frame3_owner_binding PUBLIC frame3_owner_manifest frame3_owner_images frame3_widths ikea::tuplepack)
+
+add_library(frame3_owner_streams STATIC EXCLUDE_FROM_ALL stream_binding.cpp)
+sixdb_target(frame3_owner_streams)
+target_link_libraries(frame3_owner_streams PUBLIC frame3_owner_binding)
 
 add_executable(frame3_owner_description_check EXCLUDE_FROM_ALL description_check.cpp)
 sixdb_target(frame3_owner_description_check)
@@ -29,14 +37,33 @@ add_executable(frame3_owner_history_check EXCLUDE_FROM_ALL history_check.cpp)
 sixdb_target(frame3_owner_history_check)
 target_link_libraries(frame3_owner_history_check PRIVATE frame3_owner_binding frame3_owner_material)
 
+add_executable(frame3_owner_manifest_check EXCLUDE_FROM_ALL manifest_check.cpp)
+sixdb_target(frame3_owner_manifest_check)
+target_link_libraries(frame3_owner_manifest_check PRIVATE frame3_owner_manifest)
+
+add_executable(frame3_owner_stream_binding_check EXCLUDE_FROM_ALL stream_binding_check.cpp)
+sixdb_target(frame3_owner_stream_binding_check)
+target_link_libraries(frame3_owner_stream_binding_check PRIVATE frame3_owner_streams)
+add_executable(frame3_owner_stream_history_check EXCLUDE_FROM_ALL stream_history_check.cpp)
+sixdb_target(frame3_owner_stream_history_check)
+target_link_libraries(frame3_owner_stream_history_check PRIVATE frame3_owner_streams frame3_owner_material)
+
+add_executable(frame3_owner_prepare_measure EXCLUDE_FROM_ALL measure.cpp)
+sixdb_target(frame3_owner_prepare_measure)
+target_link_libraries(frame3_owner_prepare_measure PRIVATE frame3_owner_binding)
+
 add_custom_target(frame3_owner_validate
   COMMAND $<TARGET_FILE:frame3_owner_description_check>
   COMMAND $<TARGET_FILE:frame3_owner_material_check>
   COMMAND $<TARGET_FILE:frame3_owner_image_check>
+  COMMAND $<TARGET_FILE:frame3_owner_manifest_check>
   COMMAND $<TARGET_FILE:frame3_owner_history_check>
+  COMMAND $<TARGET_FILE:frame3_owner_stream_binding_check>
+  COMMAND $<TARGET_FILE:frame3_owner_stream_history_check>
   DEPENDS frame3_owner_description_check frame3_owner_material_check
-    frame3_owner_image_check frame3_owner_history_check
+    frame3_owner_image_check frame3_owner_manifest_check frame3_owner_history_check
+    frame3_owner_stream_binding_check frame3_owner_stream_history_check
   USES_TERMINAL)
-foreach(check description material image history)
+foreach(check description material image manifest history stream_binding stream_history)
   add_test(NAME frame3_owner_${check} COMMAND frame3_owner_${check}_check)
 endforeach()

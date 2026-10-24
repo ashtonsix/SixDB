@@ -1,4 +1,5 @@
 #pragma once
+#include "description.h"
 
 #include <array>
 #include <cstddef>
@@ -8,7 +9,7 @@
 
 namespace frame3_owner {
 enum class image_error { geometry, truncated, descriptor, membership, leaf, contents, trailing };
-enum class image_preset { compact, bulk_x86, bulk_arm };
+using image_preset = pack_preset;
 struct array_section {
     std::size_t offset{}, size{}, rows{};
 };

@@ -99,7 +99,7 @@ void escaping(orbital::PartRetention policy) {
         escaped = take(bound.export_part(1, policy));
         {
             auto grown = meaning(3);
-            grown.group_extents[1] = 16;
+            grown.part_extents[1] = 16;
             auto next = take(fo::interpretation_owner::make(memory, std::move(grown)));
             std::array sources{take(fo::reuse(selected, 0)), appended(next.control().id(1), replacement)};
             const auto owner = take(fo::capture(store, next, sources));
@@ -138,6 +138,77 @@ void escaping(orbital::PartRetention policy) {
         "final Part release leaked bytes or interpretation");
 }
 
+std::size_t interpretation_vector_bytes(const fo::interpretation &meaning) {
+    std::size_t bytes = meaning.pipeline.capacity() * sizeof(std::byte) +
+        meaning.part_extents.capacity() * sizeof(std::size_t) +
+        meaning.streams.capacity() * sizeof(fo::stream_manifest);
+    for (const auto &stream : meaning.streams)
+        bytes += stream.groups.capacity() * sizeof(fo::section_location);
+    return bytes;
+}
+
+void manifest_lifetime(orbital::PartRetention policy) {
+    Memory memory;
+    Witness packed, sibling;
+    orbital::Part<fo::Control> *escaped{};
+    std::size_t vector_bytes = 0;
+    const std::vector<fo::stream_manifest> expected{
+        {4, 8192, {{0, 0, 8}, {1, 0, 8}}},
+        {1, 512, {{0, 16, 8}}}};
+    {
+        fo::Store store(memory);
+        {
+            // This material-only fixture treats payloads as opaque bytes. Node
+            // identities/cardinalities and actual Frame decode are checked by
+            // the separate manifest/binding fixtures, not this storage adapter.
+            auto value = meaning(8192);
+            value.part_extents = {24, 8};
+            value.streams = expected;
+            auto metadata = take(fo::interpretation_owner::make(memory, std::move(value)));
+            vector_bytes = interpretation_vector_bytes(metadata.meaning());
+            auto bytes = std::make_shared<const std::array<std::uint64_t, 3>>(
+                std::array<std::uint64_t, 3>{11, 12, 13});
+            packed = bytes;
+            const std::array sources{
+                orbital::PartSource{metadata.control().id(0), std::as_bytes(std::span(*bytes)), bytes},
+                fresh(metadata.control().id(1), 99, sibling)};
+            const auto owner = take(fo::capture(store, metadata, sources));
+            publish(store, owner);
+        }
+        fo::Store::Scope scope(store);
+        auto selected = take(store.bound(scope, object));
+        const auto &meaning = selected.selection().control().meaning();
+        check(meaning.streams == expected && meaning.part_extents == std::vector<std::size_t>{24, 8},
+            "material lost canonical node/section coordinates");
+        escaped = take(selected.export_part(0, policy));
+    }
+    check(!packed.expired() && sibling.expired(), "co-packed export retained an unrelated physical Part");
+    check(memory.allocations == 2 && memory.live != 0,
+        "co-packed export retained catalog or duplicate interpretation state");
+    const auto &meaning = escaped->control.meaning();
+    check(meaning.streams == expected && meaning.pipeline == original_pipeline && meaning.rows == 8192,
+        "stream manifest depended on builder/Scope/Store lifetime");
+    check(interpretation_vector_bytes(meaning) == vector_bytes && vector_bytes != 0,
+        "retained vector-capacity accounting lost nested section metadata");
+    const auto first_section = meaning.streams[0].groups[0], checkpoint_section = meaning.streams[1].groups[0];
+    check(first_section.owner_part == 0 && checkpoint_section.owner_part == 0 &&
+        first_section.offset == 0 && checkpoint_section.offset == 16,
+        "manifest silently imposed one stream per Part");
+    std::uint64_t first_value, checkpoint;
+    const auto *data = orbital::view(escaped).address();
+    std::memcpy(&first_value, data + first_section.offset, sizeof(first_value));
+    std::memcpy(&checkpoint, data + checkpoint_section.offset, sizeof(checkpoint));
+    check(first_value == 11 && checkpoint == 13, "co-packed section addresses changed after teardown");
+    // Deduplicate by &Control::meaning() before summing vector capacities across
+    // live selections/exports. PMR live includes the shared state header and
+    // Orbital metadata; it excludes these ordinary-vector buffers and payloads.
+    std::printf("manifest lifetime: pmr_bytes=%zu interpretation_vector_capacity_bytes=%zu (distinct state, payload excluded)\n",
+        memory.live, vector_bytes);
+    orbital::release(escaped);
+    check(packed.expired() && memory.live == 0 && memory.allocations == 0,
+        "manifest/payload metadata leaked after final export release");
+}
+
 void identity_and_adoption() {
     Memory memory;
     {
@@ -172,7 +243,7 @@ void identity_and_adoption() {
         // two logical values: one 16-byte group instead of two 8-byte groups.
         auto repacked = meaning();
         repacked.pipeline.push_back(std::byte{9});
-        repacked.group_extents = {16};
+        repacked.part_extents = {16};
         auto converted_metadata = take(fo::interpretation_owner::make(memory, std::move(repacked)));
         auto values = std::make_shared<const std::array<std::uint64_t, 2>>(std::array<std::uint64_t, 2>{1, 2});
         const std::array converted_source{orbital::PartSource{converted_metadata.control().id(0), std::as_bytes(std::span(*values)), values}};
@@ -235,6 +306,8 @@ void refusals() {
 int main() {
     escaping(orbital::PartRetention::shared_control);
     escaping(orbital::PartRetention::selected_copy);
+    manifest_lifetime(orbital::PartRetention::shared_control);
+    manifest_lifetime(orbital::PartRetention::selected_copy);
     identity_and_adoption();
     refusals();
     std::puts("Frame owner material: public two-TU capture, interpretation/Part lifetime, identity, append/adopt and refusal checks pass");

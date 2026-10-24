@@ -28,6 +28,11 @@ Intervals' two forms (sizes with checkpoints, or ends relative to checkpoints),
 with the identity form for series that do not benefit. Run boundaries are one
 consumer of that stage; ordinary columns are another.
 
+The [owner-side contract and fixtures](owner/README.md) cover canonical pipeline
+descriptions, partial binding, retained interpretation and publication. The
+[control scorecard](controls/SCORECARD.md) keeps measured comparisons and their
+remaining qualification limits together.
+
 ## How far phase 2 fell short
 
 Phase 2's brief (2026-10-23) asked for a "how we win" hypothesis for every
@@ -183,9 +188,10 @@ point plan on Graviton 4 ([findings §1](FINDINGS.md#1-runtime-composed-laws-aga
   ([interfaces](../../../ikea/docs/interfaces.md#keep-data-headless-and-frame-shared-descriptions)).
 - **Group**: 16 blocks, the unit of placement, slack, compaction and
   copy-on-write. Bodies of equal width sit together inside a group, so one
-  SeriesPack call covers each width run. A group's headless **image** (its
-  descriptors, exception area and arrays) is one Orbital Part; readers attach
-  a tree to the Parts their Scope selects, borrowing the arrays in place
+  SeriesPack call covers each width run. In the first owner recipe, a group's
+  headless **image** occupies one Orbital Part. Checkpoints use their own row
+  domain and image stream; the retained material maps sections to Parts, and
+  can co-pack disjoint sections. Readers borrow the arrays their Scope selects
   ([findings §6](FINDINGS.md#6-end-to-end-through-orbital)).
 - **Block**: 256 rows, the unit of fitting. Every per-block parameter lives in
   a descriptor column owned by its stage (bound's lo and exception offset,
@@ -256,8 +262,8 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 | --- | --- | --- |
 | Engine planning | Laws, capabilities, costs, statistics, presets | Ideas 2 and 5 |
 | Engine summaries and indexes | Exact logical contributions, extrema with precision, invalidation | Idea 4 publish |
-| Engine locks and access control | Lock projection onto physical envelopes before stores; row protections | Idea 4 declare; idea 3 selections as authority |
-| Orbital Objects | Part as Object; groups as Parts or page ranges; material Control; conversion | Idea 3; idea 4 re-encode as `adopt` |
+| Engine locks and access control | Lock projection onto physical envelopes before stores; row protections | Idea 4 declare; owner grants separate from query demand |
+| Orbital Objects | Part as Object; groups as Parts or page ranges; material Control; conversion | Idea 3; logical updates publish, pure equivalent conversion adopts |
 | Orbital Journal | Deterministic writes and fits for replay from admitted input | Idea 4 |
 | Loom | Staged dependent loads (descriptor → body → exceptions), bulk windows, leases | Point laws expose a prepare/finish split like Intervals' `prepare_lower_bound` |
 | Port | Few bytes; group-local damage | Idea 3 geometry; idea 4 effects |

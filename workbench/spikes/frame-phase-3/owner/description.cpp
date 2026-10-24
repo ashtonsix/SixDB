@@ -218,8 +218,12 @@ std::expected<description, error> decode(std::span<const std::byte> input) {
 }
 
 std::expected<bound_pack_recipe, error> binding_recipe(const description &d) noexcept {
+    return binding_recipe(d, d.root);
+}
+std::expected<bound_pack_recipe, error> binding_recipe(const description &d, std::uint16_t root_node) noexcept {
     if (auto v = validate(d); !v) return std::unexpected(v.error());
-    const node *leaf = &d.nodes[d.root];
+    if (root_node >= d.nodes.size()) return std::unexpected(error::root);
+    const node *leaf = &d.nodes[root_node];
     bool bounded = leaf->kind == node_kind::bound;
     if (bounded) leaf = &d.nodes[leaf->children[0].child];
     if (leaf->kind != node_kind::pack) return std::unexpected(error::unsupported);

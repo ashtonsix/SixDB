@@ -40,7 +40,7 @@ const interpretation &Control::meaning() const noexcept {
 }
 bool Control::valid(std::pmr::memory_resource &memory) const noexcept {
     return state_ && state_->memory == &memory && !meaning().pipeline.empty() &&
-        first_ <= meaning().group_extents.size() && count_ <= meaning().group_extents.size() - first_;
+        first_ <= meaning().part_extents.size() && count_ <= meaning().part_extents.size() - first_;
 }
 std::pmr::memory_resource *Control::resource() const noexcept { return state_ ? state_->memory : nullptr; }
 orbital::PartId Control::id(std::size_t index) const noexcept {
@@ -51,7 +51,7 @@ orbital::PartId Control::id(std::size_t index) const noexcept {
 }
 orbital::Result<std::size_t> Control::extent(std::size_t index) const noexcept {
     if (!state_ || index >= count_) return std::unexpected(orbital::Error::absent);
-    return meaning().group_extents[first_ + index];
+    return meaning().part_extents[first_ + index];
 }
 void Control::retain() const noexcept { detail::retain(state_); }
 void Control::release() const noexcept { detail::release(state_); }
@@ -86,7 +86,7 @@ orbital::Result<interpretation_owner> interpretation_owner::make(
 }
 const interpretation &interpretation_owner::meaning() const noexcept { return control().meaning(); }
 Control interpretation_owner::control() const noexcept {
-    return state_ ? Control{state_, 0, state_->value.group_extents.size()} : Control{};
+    return state_ ? Control{state_, 0, state_->value.part_extents.size()} : Control{};
 }
 
 void Physical::retain(Value *value) noexcept { orbital::retain(value); }
@@ -114,6 +114,18 @@ Physical::Footprint Physical::footprint(Value *value) noexcept {
 orbital::Result<orbital::Part<Control> *> Physical::export_part(Selection selected,
     std::size_t index, orbital::ObjectBinding binding, ExportPolicy policy) noexcept {
     return orbital::object_detail::retain_part(selected, index, binding, policy);
+}
+bool same_material(Selection a, Selection b) noexcept {
+    if (!a || !b || a.part_count() != b.part_count()) return false;
+    const auto ac = a.control(), bc = b.control();
+    if (ac.resource() != bc.resource() || ac.meaning() != bc.meaning()) return false;
+    for (std::size_t i = 0; i < a.part_count(); ++i) {
+        const auto ae = ac.extent(i), be = bc.extent(i);
+        const auto av = a.part(i), bv = b.part(i);
+        if (ac.id(i) != bc.id(i) || !ae || !be || *ae != *be || !av || !bv || av->address() != bv->address())
+            return false;
+    }
+    return true;
 }
 orbital::Result<Store::Owner> capture(Store &store, const interpretation_owner &meaning,
     std::span<const orbital::PartSource> parts) {

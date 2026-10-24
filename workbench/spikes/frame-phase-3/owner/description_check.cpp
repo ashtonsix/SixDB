@@ -54,6 +54,15 @@ std::vector<std::byte> literal(std::initializer_list<unsigned> values) {
     return result;
 }
 void wire_contract() {
+    // Independent lists fix Fr/v1 geometry even if a future library's tuning
+    // recommendations choose a different preset mapping.
+    for (unsigned k = 1; k <= 64; ++k) {
+        const bool x = (k >= 1 && k <= 7) || k == 12 || k == 20;
+        const bool a = x || k == 10 || k == 14 || k == 15;
+        expect(fo::packing_geometry(fo::pack_preset::compact, k) == fo::pack_geometry::local, "Fr/v1 compact geometry is fixed");
+        expect((fo::packing_geometry(fo::pack_preset::bulk_x86, k) == fo::pack_geometry::striped) == x, "Fr/v1 x86 family is a resolved law");
+        expect((fo::packing_geometry(fo::pack_preset::bulk_arm, k) == fo::pack_geometry::striped) == a, "Fr/v1 ARM family is a resolved law");
+    }
     // Written independently from the serializer: Fr/v1, body15, UInt64,
     // block256/group16, one node/root0, pack compact with no children.
     const auto golden = literal({0x46, 0x72, 1, 15, 0, 1, 0, 1, 16, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0});
@@ -116,6 +125,9 @@ void placeholder_contract() {
                                 {{0, fo::coordinate::identity}, {1, fo::coordinate::checkpoints}}}};
             intervals.root = 2;
             roundtrip(intervals, false);
+            expect(fo::binding_recipe(intervals, 0).has_value() && fo::binding_recipe(intervals, 1).has_value(),
+                   "basic subtree admission preserves original node identities");
+            refused(fo::binding_recipe(intervals, 65535), fo::error::root, "subtree root is range checked");
         }
     auto bad = shared;
     bad.nodes[2].parameter = 2;

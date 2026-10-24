@@ -21,8 +21,8 @@ timings do not establish this candidate's performance.
 | --- | --- |
 | Logical contract | Ordered non-null UInt64 rows; exact unsigned 128-bit SUM, UInt64 COUNT; empty SUM/COUNT zero. Signed, floating, NULL and alternate orderings are not admitted here. |
 | Fitting policy | Exception penalty/cap and reserved slack; supplied when constructing or rebuilding. Changing policy cannot reinterpret an existing image. |
-| Actual representation | Immutable canonical pipeline bytes, logical row extent, group extents and logical schema identity. Retained by the material, not a transient builder. Per-block fitted bases/widths and exception membership are data in its group images. |
-| Bound execution | Reader/stage objects and borrowed image addresses, availability and any operation plan. Invalidated by mutation or replacement of the interpretation they were built from. |
+| Actual representation | Immutable canonical pipeline bytes, logical row extent/schema identity, physical `part_extents` and the stream manifest. Retained by the material, not a transient builder. Per-block fitted bases/widths and exception membership are data in its sections. |
+| Bound execution | Reader/stage objects and borrowed image addresses with explicit availability. An old binding remains valid under its retained immutable basis; it cannot be retargeted to a changed draft or interpretation. |
 | Evidence and costs | Measured costs, fitted statistics and their validity/basis. They are neither decoding parameters nor zero when unknown. |
 
 [description.h](description.h) provides a bounded, versioned description in
@@ -31,14 +31,48 @@ ordered edges preserve sharing; child coordinates distinguish identity,
 checkpoint, present-rank and record-field relationships. Decode checks exact
 length, parameters, topology and reachability before a binding is attempted.
 This is an envelope for composition, not a replacement SeriesPack format.
+Fr version 1 freezes the resolved geometry per width for its packing families;
+a future SeriesPack preset recommendation cannot reinterpret old bytes:
 
-The executable subset is group-local `pack`, optionally under `bound`, with
-the three existing SeriesPack presets. Intervals/checkpoints, shared tuple
-records, rank maps and split nodes can describe an extension's **shape**;
-they round-trip but execution admission refuses them. Shape validation does
-not pretend to prove their future byte law or operation semantics. Intervals
-attachment and its own metadata remain work with the stage owner; the
-prototype's generic child attach is insufficient when child coordinates differ.
+| Fr/v1 packing family | Striped widths | Remaining widths 1–64 |
+| --- | --- | --- |
+| `compact` | None | Local |
+| `bulk_x86` | 1–7, 12, 20 | Local |
+| `bulk_arm` | 1–7, 10, 12, 14, 15, 20 | Local |
+
+These laws use no separated head planes (`H=0`). Width 0 is a constant with no
+leaf body. The CPU-oriented names identify byte-law families, not the CPU on
+which they must execute. The checked factory verifies compiled-family
+availability and equality with the frozen mapping before passing a SeriesPack
+preset to the shared backend; a changed recommendation refuses rather than
+reinterprets the image. The compiled runtime leaf accepts resolved geometry.
+The 256-row blocks, 16-block groups and current 65,536-root-row limit are experimental
+admission bounds, stated independently of addresses and physical Part counts.
+
+The executable subset is group-local `pack`, optionally under `bound`, and
+an `intervals_sizes` root with separate basic delta/checkpoint children. It uses
+the existing SeriesPack presets; an omitted compiled preset refuses before any
+payload access. Relative ends, shared tuple records, rank maps, split nodes and
+nested interval programs can describe an extension's **shape**, but the checked
+factory refuses their execution until the corresponding stage contract exists.
+Shape validation is distinct from executable byte-law and operation support.
+
+[manifest.h](manifest.h) retains each stream's node identity, actual row count
+and group sections as `(owner Part, offset, extent)`. `part_extents` bounds
+physical backings; section locations use original material Part ordinals,
+including after selected-Part projection. The manifest is image metadata, not
+another persisted stage graph: the program owns G and child-coordinate laws,
+and local prototype roles map explicitly to its node IDs. Validation checks
+the complete stream set, row/group counts, Part bounds and non-overlap without
+reading payload. Section byte validity and owner read grants remain separate.
+A different row domain
+does not require a different Part: disjoint sections may co-pack, while the
+first interval recipe places checkpoint sections separately. For G16, each
+parent group needs 256 checkpoints, while the default checkpoint group can
+contain 4096. That larger copy/retention grain is a recipe cost, not hidden work
+or a mandatory layout for future children. For R=4,367/G64, root group 1 uses
+checkpoint rows 64–68 in checkpoint group 0; a root group number is not a
+checkpoint group number.
 
 ## Admission and partial binding
 
@@ -70,11 +104,44 @@ Range reads validate the entire request before writing output. Fine masks
 use original-row coordinates and cannot select beyond a final partial block.
 
 Selections express demanded work, not physical read authority. This first
-recipe admits the entire attached group window; it does not claim fine-mask
-isolation within that group. Future delta/checkpoint binding must admit its
-dependency closure before address formation. A point plan borrows the complete
-immutable binding and cannot be reused after a private draft changes its
-exception arrays, even when the image address happens to stay the same.
+recipe admits entire available section windows; it does not claim fine-mask
+isolation within them. [stream_binding](stream_binding.h) validates complete
+metadata before resolving addresses, and attaches only explicitly available
+sections. A whole Part span is a placement bound; physical co-location grants
+no other section. Its copied program, manifest and available-key set can
+outlive the caller's transient metadata containers. Payload addresses and
+read-isolated bytes remain borrowed from the owner's retained Scope/Parts.
+There is no mutation or escaping point-plan API on this binding.
+
+The stream binding checks each child in its own row domain. With complete
+dependencies, ordinary decode proves stored last values and the soundness of
+true monotone/exact flags before shortcut laws are used. Exact here means each
+adjacent logical difference fits signed64; it does not promise that every
+relative prefix fits signed64. False flags may conservatively decline a law.
+Available roots with missing checkpoint sections may attach structurally, but
+payload-dependent queries refuse. A new binding can be formed after the owner
+acquires the missing sections. Cached
+per-group proofs keep repeated points allocation-free. These are validation
+and binding costs, charged separately from a repeated query.
+
+The stream facade exposes `get`, `read`, coarse `sum`/`count`/`filter`, fine
+`sum_selected` and `select`. Coarse bits name original root blocks; fine bits
+name original rows within each block. FILTER updates only requested coarse
+slots, clears unused high bits in a final partial block, and preserves excluded
+slots. SELECT gathers fine-selected values in original row order and returns
+their count. It checks output capacity before writing and preserves output
+beyond that count; shortage returns `binding_error::resources`. Range, mask,
+availability and capacity refusals leave output unchanged. The caller proves
+output disjoint from source, binding storage and input masks. Empty fine demand
+needs no payload for selected SUM or SELECT, even with unavailable coarse blocks.
+
+COUNT and FILTER can settle four predicates from the non-null UInt64 logical
+contract alone: `>=0` and `<=UINT64_MAX` select every live requested row; `<0`
+and `>UINT64_MAX` select none. Comparison and coarse-domain checks still run
+first. These operations need no payload or fitted evidence and work with every
+section unavailable. Other predicates require the admitted immutable closure.
+`required(row_ranges)` reports conservative point/read dependencies; it is not
+a minimum-acquisition claim for every operation.
 
 ## One group, one private draft, ordered commands
 
@@ -117,9 +184,11 @@ needs explicit descriptor placement/workspace and owner-store admission.
 
 [material.h](material.h) supplies a concrete compile-once public Orbital
 material. Immutable interpretation is retained independently of payload;
-selected Parts retain what they need to decode and dispose themselves without
-keeping sibling payloads. The resource outlives every owner, Scope and escaped
-Part. The material's identity/resource checks are necessary admission, not a
+physical Parts retain their immutable interpretation and own backing without
+keeping sibling payloads. A logical read outside a Scope must retain its whole
+required section closure, including separately placed checkpoints; a lone root
+Part does not silently pin every dependency. Missing dependencies refuse. The
+resource outlives every owner, Scope and escaped Part. The material's identity/resource checks are necessary admission, not a
 proof of logical equivalence.
 
 The original Scope/basis remains alive through Frame preparation and Orbital
@@ -127,6 +196,17 @@ packet preparation. An unrelated publication during Frame preparation makes
 that basis stale: the owner must reject or explicitly revalidate and retry.
 Orbital admits only one accepted packet at once, so there is no invented
 competing-publication race between successful `Store::prepare` and `install`.
+
+`same_material(a,b)` compares two live protected material bases: resource,
+the complete immutable interpretation (including stream placement), Part
+identities/extents and selected addresses. It reads no payload. Equal pipeline
+bytes, row counts and addresses alone are insufficient: a valid manifest can
+swap equal-sized groups and change logical row values without moving bytes.
+The helper detects that remap, but neither proves logical equivalence nor
+validates the Store cut, another participant or a read grant. Absence provides
+no basis proof, even against another absent selection. The retry fixture names
+a fresh Scope, compares the actual source material, then reruns preparation
+against that basis; it never silently substitutes a new Scope at publication.
 
 A SET that exhausts slack and rebuilds is still a logical change: publish the
 next logical version and its exact contribution. A pure equivalent conversion
@@ -141,8 +221,17 @@ row extent and pipeline through append and conversion.
 malformed descriptions, shared identity and placeholder refusal.
 `frame3_owner_material_check` checks interpretation/payload/resource lifetime,
 escaping selected Parts, append, source reuse and adoption compatibility.
-Group-image and complete-history checks extend these to real stage images;
-only completed checks are evidence, not this description of intended coverage.
+Group-image and complete-history checks extend these to real stage images.
+`frame3_owner_manifest_check` tests metadata-only dependency/placement admission;
+`frame3_owner_stream_binding_check` and `frame3_owner_stream_history_check`
+exercise real G16/G64 images, constant/zero-body cases, partial tails, guarded
+missing dependencies and atomic two-section replacement with old readers.
+The latest facade tests also cover FILTER/SELECT output guarantees,
+payload-free domain settles and metadata-only basis changes. Matching frozen
+normal and ASan/UBSan checks pass with the compiled runtime leaf; the linked
+SeriesPack archive remains uninstrumented and is covered by hardware guards.
+See [evidence status](EVIDENCE.md) for exact scopes; interval writes here use
+full rebuilds for correctness, not a claimed optimized setter.
 
 Configure the existing spike with `-DSIXDB_SPIKES=frame-phase-3`, then build
 the needed `frame3_owner_*_check` targets. Use the pinned Linux toolchain;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "manifest.h"
+
 #include <orbital/object.h>
 #include <orbital/representation.h>
 
@@ -17,9 +19,13 @@ namespace frame3_owner {
 struct interpretation {
     std::vector<std::byte> pipeline;
     std::size_t rows{};
-    std::vector<std::size_t> group_extents;
+    std::vector<std::size_t> part_extents;
     std::uint64_t logical_schema{};
     orbital::ObjectId object{};
+    // Locations use original material ordinals, including after selected-Part
+    // projection. Metadata describes sections; it never retains their payloads.
+    std::vector<stream_manifest> streams{};
+    bool operator==(const interpretation &) const = default;
 };
 
 namespace detail { struct interpretation_state; }
@@ -96,6 +102,12 @@ struct Physical {
         Selection, std::size_t, orbital::ObjectBinding, ExportPolicy) noexcept;
 };
 using Store = orbital::ObjectStore<Physical>;
+
+/// Compare two live, protected Frame bases, including all immutable meaning and
+/// Part geometry/addresses. This reads no payload and supplies no byte grant,
+/// proof for another participant, or validation of the enclosing Store cut.
+/// An absent Selection supplies no material-basis proof, even against absence.
+[[nodiscard]] bool same_material(Selection, Selection) noexcept;
 
 /// Sources name destination Control::id(index). Retained source certificates
 /// and their selected backing stay alive and fixed through synchronous capture.

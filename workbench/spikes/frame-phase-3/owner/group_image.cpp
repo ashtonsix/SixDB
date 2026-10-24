@@ -28,13 +28,8 @@ struct cursor {
         return true;
     }
 };
-sp::preset preset(image_preset p) {
-    switch (p) {
-    case image_preset::compact: return sp::preset::compact;
-    case image_preset::bulk_x86: return sp::preset::bulk_x86;
-    case image_preset::bulk_arm: return sp::preset::bulk_arm;
-    }
-    return sp::preset::compact;
+sp::geometry geometry(image_preset p, unsigned width) {
+    return packing_geometry(p, width) == pack_geometry::striped ? sp::geometry::striped : sp::geometry::local;
 }
 } // namespace
 
@@ -105,7 +100,7 @@ std::expected<group_manifest, image_error> validate_group(std::span<const std::b
         previous = k;
         std::size_t need = 0;
         if (k) {
-            const auto g = sp::resolve(preset(p), k);
+            const auto g = geometry(p, k);
             const auto tile = g == sp::geometry::local ? 8u : 32u * (8u / std::gcd(k % 8, 8u));
             need = ((std::size_t{rows} + tile - 1) / tile) * (tile * k / 8);
         }
@@ -122,7 +117,7 @@ std::expected<group_manifest, image_error> validate_group(std::span<const std::b
         std::array<std::optional<sp::erased_reader<std::uint64_t>>, 65> readers;
         for (unsigned k = 1; k <= 64; ++k) if (present[k]) {
             const auto &a = m.arrays[k];
-            auto reader = sp::bind_reader<std::uint64_t>({k, sp::resolve(preset(p), k), bytes.subspan(a.offset, a.size), a.rows});
+            auto reader = sp::bind_reader<std::uint64_t>({k, geometry(p, k), bytes.subspan(a.offset, a.size), a.rows});
             if (!reader) return std::unexpected(image_error::leaf);
             readers[k].emplace(*reader);
         }

@@ -30,6 +30,17 @@ inline constexpr std::size_t maximum_children = 2;
 
 enum class logical_domain : std::uint8_t { uint64 = 1 };
 enum class pack_preset : std::uint8_t { compact = 0, bulk_x86 = 1, bulk_arm = 2 };
+enum class pack_geometry : std::uint8_t { local, striped };
+// Fr/version1 freezes these resolved byte-law families. The CPU-oriented names
+// are construction conveniences, not a promise to consult a future version of
+// SeriesPack's tuning presets when decoding existing material.
+constexpr pack_geometry packing_geometry(pack_preset p, unsigned width) noexcept {
+    const bool narrow = width > 0 && width < 8;
+    const bool x86 = narrow || width == 12 || width == 20;
+    const bool arm = x86 || width == 10 || width == 14 || width == 15;
+    return (p == pack_preset::bulk_x86 && x86) || (p == pack_preset::bulk_arm && arm)
+        ? pack_geometry::striped : pack_geometry::local;
+}
 enum class node_kind : std::uint8_t {
     pack = 1,
     bound = 2,
@@ -98,5 +109,9 @@ struct bound_pack_recipe {
 // the existing proto pack (placement=16), optionally wrapping it in bound;
 // its separately admitted fit policy supplies penalty/cap/slack.
 std::expected<bound_pack_recipe, error> binding_recipe(const description &) noexcept;
+// The same admission at an identified basic subtree of one validated program;
+// node identities stay those of the original DAG. It does not clone a child
+// description or claim a different row domain for a shared executable node.
+std::expected<bound_pack_recipe, error> binding_recipe(const description &, std::uint16_t root_node) noexcept;
 
 } // namespace frame3_owner

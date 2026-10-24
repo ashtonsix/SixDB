@@ -1,4 +1,5 @@
 #include "binding.h"
+#include "manifest.h"
 #include "../proto/stages.h"
 #include <limits>
 #include <new>
@@ -19,22 +20,42 @@ frame3::bitset256 group_blocks(unsigned group, std::size_t rows) {
     return blocks;
 }
 } // namespace
-std::expected<std::unique_ptr<frame3::stage>, binding_error> make_tree(const description &d, fitting_policy policy) try {
-    const auto r = binding_recipe(d);
-    if (!r) return std::unexpected(binding_error::description);
-    if (policy.exception_cap > 256 || policy.slack > 4096) return std::unexpected(binding_error::resources);
+namespace {
+std::expected<std::unique_ptr<frame3::stage>, binding_error> make_basic(bound_pack_recipe recipe, fitting_policy policy) {
     using namespace frame3;
-    const auto preset = r->preset == pack_preset::compact ? sp::preset::compact :
-        r->preset == pack_preset::bulk_x86 ? sp::preset::bulk_x86 : sp::preset::bulk_arm;
+    const auto preset = recipe.preset == pack_preset::compact ? sp::preset::compact :
+        recipe.preset == pack_preset::bulk_x86 ? sp::preset::bulk_x86 : sp::preset::bulk_arm;
     if (!width_preset_available(preset)) return std::unexpected(binding_error::unsupported);
+    // The temporary template backend still takes a SeriesPack preset. Refuse
+    // a changed recommendation instead of silently reinterpreting Fr/v1 bytes.
+    // The compiled runtime backend can consume the frozen geometry directly.
+    for (unsigned k = 1; k <= 64; ++k)
+        if ((sp::resolve(preset, k) == sp::geometry::striped) !=
+            (packing_geometry(recipe.preset, k) == pack_geometry::striped))
+            return std::unexpected(binding_error::unsupported);
     std::unique_ptr<stage> leaf;
-    switch (r->preset) {
+    switch (recipe.preset) {
     case pack_preset::compact: leaf = std::make_unique<pack<sp::preset::compact>>(16); break;
     case pack_preset::bulk_x86: leaf = std::make_unique<pack<sp::preset::bulk_x86>>(16); break;
     case pack_preset::bulk_arm: leaf = std::make_unique<pack<sp::preset::bulk_arm>>(16); break;
     }
-    if (r->bounded) leaf = std::make_unique<bound>(std::move(leaf), policy.penalty, policy.exception_cap, policy.slack);
+    if (recipe.bounded) leaf = std::make_unique<bound>(std::move(leaf), policy.penalty, policy.exception_cap, policy.slack);
     return leaf;
+}
+} // namespace
+std::expected<std::unique_ptr<frame3::stage>, binding_error> make_tree(const description &d, fitting_policy policy) try {
+    if (!validate(d)) return std::unexpected(binding_error::description);
+    if (policy.exception_cap > 256 || policy.slack > 4096) return std::unexpected(binding_error::resources);
+    if (!validate_program_shape(d)) return std::unexpected(binding_error::unsupported);
+    const auto &root = d.nodes[d.root];
+    if (root.kind != node_kind::intervals_sizes)
+        return make_basic(*binding_recipe(d), policy);
+    auto deltas = make_basic(*binding_recipe(d, root.children[0].child), policy);
+    if (!deltas) return std::unexpected(deltas.error());
+    auto checkpoints = make_basic(*binding_recipe(d, root.children[1].child), policy);
+    if (!checkpoints) return std::unexpected(checkpoints.error());
+    return std::unique_ptr<frame3::stage>(std::make_unique<frame3::intervals>(std::move(*deltas),
+        std::move(*checkpoints), root.parameter));
 } catch (const std::bad_alloc &) { return std::unexpected(binding_error::resources); }
 binding::binding(std::unique_ptr<frame3::stage> root, std::size_t rows, frame3::bitset256 blocks)
     : root_(std::move(root)), rows_(rows), available_(blocks) {}
