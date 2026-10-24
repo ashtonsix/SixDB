@@ -91,12 +91,12 @@ timed call. Source `f73b4cef`; jobs `20261024T040921Z-f1ae8dc2` (Zen 5) and
 
 6. **In group form, sizes beat u8 ends on SUM over runs as well as on
    bytes.** On Zen 5 SUM is 1.3–1.5× faster (OS 17.8 against 26.4 ns per
-   block) with 27–36% fewer bytes. On Graviton 4 it is 1.0–1.2× faster. A long
+   block) with 27–36% fewer bytes. On Graviton 4 it is 1.1–1.2× faster. A long
    read hits SeriesPack's fast paths; the per-block form paid its short-read
    cost instead.
-7. **Bulk fills its tiles in group form.** It costs 3–6% more bytes than
-   compact (whole-tile rounding per group) and gives SUM a few percent on
-   Graviton 4, parity on Zen 5, and points 5–12% faster.
+7. **Bulk fills its tiles in group form.** It costs 4–6% more bytes than
+   compact (whole-tile rounding per group). In return SUM is 7–8% faster on
+   Graviton 4 (parity on Zen 5) and points are 3–12% faster.
 8. **Points get slower in group form** (30–70 ns): a G64 region decode plus
    the group checkpoint search. A point-heavy part keeps u8 ends, or per-block
    G16 sizes at 16-row placement (20–31 ns).
