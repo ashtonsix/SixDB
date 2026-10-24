@@ -319,13 +319,18 @@ int main(int argc, char **argv) {
             arms.push_back({pair_cells[qi], "frame_fused", fused(aimg, addr), [&] { evict_image(aimg)(), evict_image(addr)(); }});
             arms.push_back({pair_cells[qi], "frame_fused_by_kind", fused(agrouped, grouped),
                             [&] { evict_image(agrouped)(), evict_image(grouped)(); }});
+            arms.push_back({pair_cells[qi], "frame_staged_by_kind", [&, t] {
+                                fi::mask_ge(agrouped, t, 0, blocks, masks.data());
+                                return fi::masked_sum(grouped, masks.data());
+                            },
+                            [&] { evict_image(agrouped)(), evict_image(grouped)(); }});
             arms.push_back({pair_cells[qi], "native_qualified",
                             [&, t] { return frame_cells::native_pair_once(*control_a, control_b, t, all_blocks).sum; },
                             [&] {
                                 std::visit([](const auto &v) { flush(v.data(), v.size() * sizeof(v[0])); }, control_a->values);
                                 std::visit([](const auto &v) { flush(v.data(), v.size() * sizeof(v[0])); }, control_b.values);
                             }});
-            for (int k = 0; k < 3; ++k)
+            for (int k = 0; k < 4; ++k)
                 expect.push_back(pair_oracle);
         }
         // Optional cell filter (CELLS=sum,points,...) for focused runs.

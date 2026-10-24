@@ -386,47 +386,83 @@ inline u128 block_masked_sum(const image &f, std::size_t b, const u64 *sel) {
     return s;
 }
 
-// One point read.
-inline u64 point(const image &f, std::size_t row) {
+// SUM over the rows selected by per-block masks (four words per block),
+// hoisted per address segment of B; empty masks skip the block before its
+// body is addressed, full masks take the block SUM leaf.
+inline u128 masked_sum(const image &f, const u64 *masks) {
+    u128 total = 0;
+    const u8 *img = f.bytes.data();
+    segments(f, 0, f.blocks, [&](u8 k, unsigned w, std::size_t s0, std::size_t s1) {
+        auto each = [&](auto &&full, auto &&part) {
+            for (std::size_t b = s0; b < s1; ++b) {
+                const u64 *m = masks + 4 * b;
+                if (!(m[0] | m[1] | m[2] | m[3]))
+                    continue;
+                const unsigned cnt = std::popcount(m[0]) + std::popcount(m[1]) + std::popcount(m[2]) + std::popcount(m[3]);
+                total += static_cast<u128>(f.base[b]) * cnt;
+                const u8 *p = img + f.offset[b];
+                total += cnt == block_rows ? full(p, b) : part(p, b, m);
+            }
+        };
+        switch (k) {
+        case constant: each([](const u8 *, std::size_t) { return u128{0}; }, [](const u8 *, std::size_t, const u64 *) { return u128{0}; }); break;
+        case runs:
+            with_runs(w, [&](auto r) {
+                using R = decltype(r);
+                each([&](const u8 *p, std::size_t b) { return u128{R::sum(p, f.n[b])}; },
+                     [&](const u8 *p, std::size_t b, const u64 *m) { return u128{R::masked_sum(p, f.n[b], m)}; });
+            });
+            break;
+        case plane:
+            with_plane(w, [&](auto K) {
+                each([K](const u8 *p, std::size_t) { return u128{P<K>::sum(p)}; },
+                     [K](const u8 *p, std::size_t, const u64 *m) { return u128{P<K>::masked_sum(p, m)}; });
+            });
+            break;
+        default: each([](const u8 *p, std::size_t) { return wide_sum(p); }, [](const u8 *p, std::size_t, const u64 *m) { return wide_sum(p, m); });
+        }
+    });
+    return total;
+}
+
+// One point read. UseIntervals finds a run block's run through
+// ikea::intervals' native search over the u8 (end - 1) plane with a 32-byte
+// readable window (covered by the image's whole-image read grant; SEAMS.md);
+// otherwise front C's in-leaf count. One inlined body for both, so the
+// comparison measures the search rather than call shape.
+template <bool UseIntervals> [[gnu::always_inline]] inline u64 point_with(const image &f, std::size_t row) {
     const std::size_t b = row / block_rows;
     const unsigned i = static_cast<unsigned>(row % block_rows);
     const u8 *p = f.bytes.data() + f.offset[b];
     u64 v = 0;
     switch (f.kind_of[b]) {
     case constant: break;
-    case runs: with_runs(f.width[b], [&](auto r) { v = decltype(r)::point(p, f.n[b], i); }); break;
+    case runs:
+        if constexpr (UseIntervals) {
+            namespace iv = ikea::intervals;
+            const unsigned n = f.n[b];
+            const auto ends = iv::author::with_readable_window<32>(iv::direct_source<std::uint8_t>{p, n});
+            const unsigned r = iv::lower_bound(ends, i);
+            std::memcpy(&v, p + n + std::size_t{r} * bodies::run_lane(f.width[b]), bodies::run_lane(f.width[b]));
+        } else {
+            with_runs(f.width[b], [&](auto rr) { v = decltype(rr)::point(p, f.n[b], i); });
+        }
+        break;
     case plane: with_plane(f.width[b], [&](auto K) { v = P<K>::point(p, i); }); break;
     default: std::memcpy(&v, p + 8 * i, 8);
     }
     return f.base[b] + v;
 }
+inline u64 point(const image &f, std::size_t row) { return point_with<false>(f, row); }
+inline u64 point_intervals(const image &f, std::size_t row) { return point_with<true>(f, row); }
 
-// The same point read, but run blocks find their run through ikea::intervals'
-// native search over the u8 (end - 1) plane, with a 32-byte readable window
-// that the image's whole-image read grant covers (SEAMS.md, read envelope).
-inline u64 point_intervals(const image &f, std::size_t row) {
-    const std::size_t b = row / block_rows;
-    if (f.kind_of[b] != runs)
-        return point(f, row);
-    namespace iv = ikea::intervals;
-    const u8 *p = f.bytes.data() + f.offset[b];
-    const unsigned n = f.n[b];
-    const auto ends = iv::author::with_readable_window<32>(iv::direct_source<std::uint8_t>{p, n});
-    const unsigned r = iv::lower_bound(ends, static_cast<unsigned>(row % block_rows));
-    const unsigned lane = bodies::run_lane(f.width[b]);
-    u64 v = 0;
-    std::memcpy(&v, p + n + std::size_t{r} * lane, lane);
-    return f.base[b] + v;
-}
-
-// The point path the substrate uses by default, chosen per ISA from the
-// image-v4 comparison (SEAMS.md, run lookup): ikea::intervals on x86, front
-// C's in-leaf count on NEON.
+// The point path the substrate uses by default (SEAMS.md, run lookup); per
+// ISA until the inlined comparison settles it.
 inline u64 point_default(const image &f, std::size_t row) {
 #if defined(__x86_64__)
-    return point_intervals(f, row);
+    return point_with<true>(f, row);
 #else
-    return point(f, row);
+    return point_with<false>(f, row);
 #endif
 }
 
