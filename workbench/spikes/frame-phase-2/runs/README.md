@@ -135,8 +135,9 @@ Constant blocks exit early in both. Source `376672e8`; jobs
     EventTime or WatchID. Where it applies it cuts bytes 2.1–3.4×. Where it
     doesn't, the stage costs nothing.
 11. **Today RLE trades those bytes for time.** SUM is 2.1–4.2× slower and
-    COUNT 1.2–1.5× slower on Zen 5 (2–3.4× on Graviton 4), and points are
-    1.3–6.7× slower. The exception is UserID, where unencoded blocks need
+    COUNT 1.2–1.7× slower on Zen 5 (1.2–3.4× on Graviton 4), and points are
+    1.3–6.7× slower. UserID's COUNT is 5.5× slower, because unencoded blocks
+    are settled wholesale by their base. The exception is UserID, where unencoded blocks need
     about 51 bits and RLE SUM is 1.8× faster. These RLE blocks read their
     sizes and values per block, the short-read path that finding 6 shows is
     slow. The group-continuous form took SUM over sizes from about 50 to 18 ns
