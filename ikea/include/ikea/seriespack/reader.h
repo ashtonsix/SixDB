@@ -127,10 +127,31 @@ template <class Expression> class reader {
         read_unchecked(first, output.size(), output.data());
         return {};
     }
+  private:
+    // A whole-view headless source at its tight stride is a dense array; its
+    // reconstruction then takes the dense native groups (e.g. GFNI Local
+    // residuals), which a general placed stride cannot use. The temporary
+    // expression never escapes: f returns a value.
+    template <class F> auto with_physical(F&& f) const {
+        if constexpr (std::is_pointer_v<physical_type>) {
+            if (physical_) {
+                using V = std::remove_cv_t<std::remove_pointer_t<physical_type>>;
+                using L = typename V::layout_type;
+                if constexpr (!requires { physical_->data; } && L::heads == 0)
+                    if (physical_->stream(0).stride == L::tile_bytes) {
+                        const dense_source<L> dense{physical_->stream(0).bytes.data(), count_};
+                        return f(author::expression(dense));
+                    }
+            }
+        }
+        return f(expression_);
+    }
+
+  public:
     template <comparison Op>
     std::uint64_t filter_unchecked(std::size_t first, unsigned count, std::uint64_t rhs,
                                    std::uint64_t active = ~std::uint64_t{0}) const {
-        return author::filter_unchecked<Op>(expression_, first, count, rhs, active);
+        return with_physical([&](const auto& e) { return author::filter_unchecked<Op>(e, first, count, rhs, active); });
     }
     template <comparison Op>
     [[nodiscard]] std::expected<std::uint64_t, error>
@@ -140,6 +161,57 @@ template <class Expression> class reader {
             return std::unexpected(error::range);
         return filter_unchecked<Op>(first, count, rhs, active);
     }
+#if defined(__aarch64__) || defined(__AVX2__)
+    /// Rows of [first, first + count) satisfying Op against rhs, in one pass.
+    template <comparison Op> std::uint64_t count_unchecked(std::size_t first, std::size_t count, std::uint64_t rhs) const {
+        return with_physical([&](const auto& e) {
+            std::uint64_t n = 0;
+            // Bit-sliced Local blocks count in vectors; the rest emit words.
+            using F = typename author::dense_layout<std::remove_cvref_t<decltype(e)>>::type;
+            if constexpr (!std::is_void_v<F>)
+                if constexpr (detail::local_planes<F>::supported)
+                    if (first % 64 == 0 && rhs < (std::uint64_t{1} << F::payload)) {
+                        const std::size_t blocks = count / detail::local_planes<F>::rows;
+                        n = detail::local_planes<F>::template count<Op>(
+                            ikea::to_u8(e.payload.body.source.data) + first / 8 * F::tile_bytes, blocks, rhs);
+                        first += blocks * detail::local_planes<F>::rows;
+                        count -= blocks * detail::local_planes<F>::rows;
+                    }
+            author::filter_regions<Op>(e, first, count, rhs,
+                                       [&](std::size_t, std::uint64_t bits) __attribute__((always_inline)) { n += std::popcount(bits); });
+            return n;
+        });
+    }
+    /// The filter bits of [first, first + count) into (count + 63) / 64 words.
+    template <comparison Op>
+    void filter_words_unchecked(std::size_t first, std::size_t count, std::uint64_t rhs, std::uint64_t* __restrict words) const {
+        with_physical([&](const auto& e) {
+            author::filter_regions<Op>(e, first, count, rhs,
+                                       [&](std::size_t w, std::uint64_t bits) __attribute__((always_inline)) { words[w] = bits; });
+            return 0;
+        });
+    }
+    template <comparison Op>
+    [[nodiscard]] std::expected<std::uint64_t, error> count(std::size_t first, std::size_t count,
+                                                            std::uint64_t rhs) const {
+        if (first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return count_unchecked<Op>(first, count, rhs);
+    }
+    /// Bit i of word i / 64 is row first + i. Writes exactly the first
+    /// count / 64 + (count % 64 != 0) words, the last word's unused high bits
+    /// zero; later words, and the output on failure, are left unchanged.
+    template <comparison Op>
+    [[nodiscard]] std::expected<void, error> filter_words(std::size_t first, std::size_t count, std::uint64_t rhs,
+                                                          std::span<std::uint64_t> words) const {
+        if (first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        if (words.size() < count / 64 + (count % 64 != 0))
+            return std::unexpected(error::capacity);
+        filter_words_unchecked<Op>(first, count, rhs, words.data());
+        return {};
+    }
+#endif
     unsigned indexof_unchecked(std::size_t first, unsigned count, std::uint64_t rhs,
                               std::uint64_t active = ~std::uint64_t{0}) const {
         return author::indexof_unchecked(expression_, first, count, rhs, active);
@@ -155,8 +227,7 @@ template <class Expression> class reader {
     std::uint64_t sum_unchecked(std::size_t first, std::size_t count, std::uint64_t cutoff,
                                 Prefilter&& mask) const {
 #if defined(__aarch64__) || defined(__AVX2__)
-        return author::sum_regions(expression_, first, count, cutoff,
-                                   std::forward<Prefilter>(mask));
+        return with_physical([&](const auto& e) { return author::sum_regions(e, first, count, cutoff, mask); });
 #else
         std::uint64_t result = 0;
         for (std::size_t row = first; row < first + count; ++row)
@@ -167,6 +238,18 @@ template <class Expression> class reader {
         return result;
 #endif
     }
+#if defined(__aarch64__) || defined(__AVX2__)
+    /// The sum, modulo 2^64, of every row of [first, first + count). Unlike the
+    /// cutoff overload, no row is excluded (the maximum value included).
+    std::uint64_t sum_unchecked(std::size_t first, std::size_t count) const {
+        return with_physical([&](const auto& e) { return author::total_regions(e, first, count); });
+    }
+    [[nodiscard]] std::expected<std::uint64_t, error> sum(std::size_t first, std::size_t count) const {
+        if (first > count_ || count > count_ - first)
+            return std::unexpected(error::range);
+        return sum_unchecked(first, count);
+    }
+#endif
     template <class Prefilter>
     [[nodiscard]] std::expected<std::uint64_t, error>
     sum(std::size_t first, std::size_t count, std::uint64_t cutoff, Prefilter&& mask) const {
@@ -284,6 +367,33 @@ template <class L> class reader<dense_source<L>> {
     sum(std::size_t first, std::size_t count, std::uint64_t cutoff, Prefilter&& mask) const {
         return composed().sum(first, count, cutoff, std::forward<Prefilter>(mask));
     }
+#if defined(__aarch64__) || defined(__AVX2__)
+    template <comparison Op>
+    std::uint64_t count_unchecked(std::size_t first, std::size_t count, std::uint64_t rhs) const {
+        return composed().template count_unchecked<Op>(first, count, rhs);
+    }
+    template <comparison Op>
+    [[nodiscard]] std::expected<std::uint64_t, error> count(std::size_t first, std::size_t count,
+                                                            std::uint64_t rhs) const {
+        return composed().template count<Op>(first, count, rhs);
+    }
+    template <comparison Op>
+    void filter_words_unchecked(std::size_t first, std::size_t count, std::uint64_t rhs,
+                                std::uint64_t* __restrict words) const {
+        composed().template filter_words_unchecked<Op>(first, count, rhs, words);
+    }
+    template <comparison Op>
+    [[nodiscard]] std::expected<void, error> filter_words(std::size_t first, std::size_t count, std::uint64_t rhs,
+                                                          std::span<std::uint64_t> words) const {
+        return composed().template filter_words<Op>(first, count, rhs, words);
+    }
+    std::uint64_t sum_unchecked(std::size_t first, std::size_t count) const {
+        return composed().sum_unchecked(first, count);
+    }
+    [[nodiscard]] std::expected<std::uint64_t, error> sum(std::size_t first, std::size_t count) const {
+        return composed().sum(first, count);
+    }
+#endif
     template <class U> erased_reader<U> erase() const {
         return detail::erase_dense_reader<U>(source_);
     }

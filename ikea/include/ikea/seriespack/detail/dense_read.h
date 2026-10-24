@@ -34,6 +34,22 @@ void dense_range(const void* source, std::size_t first, std::size_t count, U* __
     // measured, including these branches and arbitrary prefix/suffix handling.
     if (first % 16 == 0 && count == 16)
         return dense_region<F>(data, first, out);
+#if defined(__aarch64__) || defined(__AVX2__)
+    // A partial packet whose tiles hold requested rows exists in full, so it
+    // is decoded whole and the requested part copied (short reads would
+    // otherwise take up to 30 scalar points).
+    const std::size_t backed = (first + count + F::tile_rows - 1) / F::tile_rows * F::tile_rows;
+    const auto partial = [&](std::size_t from, std::size_t n) __attribute__((always_inline)) {
+        const auto p = first - from;
+        U packet[16];
+        dense_region<F>(data, p, packet);
+        for (std::size_t j = 0; j < n; ++j)
+            out[j] = packet[from + j];
+        first += n, out += n, count -= n;
+    };
+    if (count && first % 16 && first - first % 16 + 16 <= backed)
+        partial(first % 16, std::min<std::size_t>(count, 16 - first % 16));
+#endif
     while (count && first % 16) {
         *out++ =
             point_payload<F>(data + (first / F::tile_rows) * F::tile_bytes, first % F::tile_rows);
@@ -86,6 +102,10 @@ void dense_range(const void* source, std::size_t first, std::size_t count, U* __
         out += 16;
         count -= 16;
     }
+#if defined(__aarch64__) || defined(__AVX2__)
+    if (count && first + 16 <= backed)
+        partial(0, count);
+#endif
     while (count--) {
         *out++ =
             point_payload<F>(data + (first / F::tile_rows) * F::tile_bytes, first % F::tile_rows);

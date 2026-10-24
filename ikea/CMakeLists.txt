@@ -131,6 +131,7 @@ target_link_libraries(ikea_tuplepack_ownership_check PRIVATE ikea::tuplepack)
 
 add_executable(ikea_seriespack_check EXCLUDE_FROM_ALL
   test/seriespack/support.cpp test/seriespack/read/wire.cpp test/seriespack/read/composition.cpp
+  test/seriespack/read/range.cpp
   test/seriespack/mutation/range.cpp test/seriespack/mutation/substitution.cpp
   test/seriespack/execution/chain.cpp test/seriespack/mutation/construction.cpp
   test/seriespack/mutation/widths_1_8.cpp test/seriespack/mutation/widths_9_16.cpp

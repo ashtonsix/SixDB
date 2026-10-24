@@ -1,5 +1,6 @@
 #include "../support.h"
 #include "../fixture.h"
+#include "../operations.h"
 #include "../../scope.h"
 
 template <class Reader>
@@ -47,6 +48,9 @@ template <class F> void check_placed() {
     for (std::size_t i = 0; i < storage.count; ++i)
         IKEA_CHECK(sp::get_unchecked(source, i) == storage.truth[i]);
     check_expression(expr, storage.truth, storage.count);
+    // A guard changes filtering only; its SUM keeps the child's meaning.
+    if constexpr (F::heads == 8 && F::width > 8)
+        check_expression(cp::guarded(expr), storage.truth, storage.count);
     auto typed_reader = sp::bind_reader(source);
     auto decoder = typed_reader.template erase<std::uint64_t>();
     std::vector<std::uint64_t> output(storage.count + 2, 0xbad);
@@ -100,6 +104,8 @@ void check_substitution() {
     auto bound = sp::bind_reader(replacement, a.count);
     IKEA_CHECK(bound);
     IKEA_CHECK(!sp::bind_reader(replacement, a.count + 1));
+    check_reader_operations(*bound, truth, a.count);
+    check_range_expression(replacement, truth, a.count);
     // The unused parent payload is PROT_NONE. Typed and erased whole reads,
     // scalar edges and searches must evaluate only the substituted leaves.
     const auto erased = bound->erase<std::uint64_t>();

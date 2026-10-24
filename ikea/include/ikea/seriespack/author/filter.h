@@ -86,6 +86,13 @@ template <class Ops, class E, class Rows, class Mask>
                                  Mask active) {
     return author::read(ops, source.expression, rows, active);
 }
+/// A guard changes only filtering; a SUM's fieldwise total is its child's.
+template <class Ops, class E, class Rows>
+[[gnu::always_inline]] auto total(Ops& ops, const guarded_expression<E>& source, Rows rows)
+    requires totalled<Ops, E>
+{
+    return total(ops, source.expression, rows);
+}
 namespace detail {
 template <class E> inline constexpr bool guarded_filter<guarded_expression<E>> = true;
 } // namespace detail
@@ -263,8 +270,9 @@ filter_unchecked(const Expression& expression, std::size_t first, unsigned count
                        ikea::to_u8(expression.payload.body.source.data) + first * bytes, count, rhs) &
                    active;
     }
-    if constexpr (!detail::guarded_filter<Expression> && Expression::bit_width >= 8 &&
-                  std::has_single_bit(Expression::bit_width)) {
+    if constexpr (!detail::guarded_filter<Expression>) {
+        // One 64-row group reconstruction and compare at every width (before,
+        // only standard widths; others took four 16-row reads and compares).
         if (count == 64 && first % 16 == 0) {
             wide_ops<64> ops;
             return filter_values<Op>(author::read(ops, expression, first, ~std::uint64_t{0}),
@@ -308,5 +316,77 @@ filter_unchecked(const Expression& expression, std::size_t first, unsigned count
         point();
     return result & active;
 }
+#if defined(__aarch64__) || defined(__AVX2__)
+/// Filter any range in one call: emit(word, bits) receives the result bits of
+/// rows [first + 64 * word, first + 64 * word + 64) of the range, in order, for
+/// every word (the last may be partial). The values of each group are
+/// reconstructed once, in the widest native group, inside complete striped
+/// tiles at compile-time group positions (as sum_regions), and compared in
+/// registers; no per-window call or setup. Rows outside the range are not read.
+template <comparison Op, class Source, class Emit>
+[[gnu::always_inline]] inline void filter_regions(const Source& source, std::size_t first,
+                                                  std::size_t count, std::uint64_t rhs, Emit&& emit) {
+    constexpr unsigned K = Source::bit_width;
+    const std::size_t words = (count + 63) / 64;
+    if constexpr (K < 64)
+        if (rhs >> K) {
+            const bool all = ikea::compare<Op>(0, rhs);
+            for (std::size_t w = 0; w < words; ++w) {
+                const auto n = std::min<std::size_t>(64, count - 64 * w);
+                emit(w, all ? (n == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << n) - 1) : 0);
+            }
+            return;
+        }
+    // Edges and an unaligned first: the ordinary 64-row windows.
+    std::size_t w = 0;
+    if (first % 64) {
+        for (; w < words; ++w) {
+            const auto n = static_cast<unsigned>(std::min<std::size_t>(64, count - 64 * w));
+            emit(w, author::filter_unchecked<Op>(source, first + 64 * w, n, rhs));
+        }
+        return;
+    }
+    // Dense Local up to a one-byte body: bit-sliced comparison of the stored planes.
+    using F = typename dense_layout<Source>::type;
+    if constexpr (!std::is_void_v<F>) {
+        using kernel = ikea::seriespack::detail::local_planes<F>;
+        if constexpr (kernel::supported) {
+            const std::size_t blocks = count / kernel::rows;
+            kernel::template run<Op>(ikea::to_u8(source.payload.body.source.data) + first / 8 * F::tile_bytes, blocks,
+                                     rhs, 0, emit);
+            for (w = 2 * blocks; w < words; ++w) {
+                const auto n = static_cast<unsigned>(std::min<std::size_t>(64, count - 64 * w));
+                emit(w, author::filter_unchecked<Op>(source, first + 64 * w, n, rhs));
+            }
+            return;
+        }
+    }
+#if defined(__aarch64__) ||                                                                        \
+    (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
+    if constexpr (!detail::guarded_filter<Source>) {
+        constexpr unsigned grain = K <= 8 ? 64 : K <= 32 ? 32 : 16;
+        wide_ops<grain> wide;
+        std::size_t i = first, left = count / 64 * 64;
+        std::uint64_t word = 0;
+        each_group<grain, striped_tile_rows<Source>>(i, left, [&](std::size_t row) __attribute__((always_inline)) {
+            const auto bits = filter_values<Op>(author::read(wide, source, row, ~std::uint64_t{0}), rhs);
+            if constexpr (grain == 64)
+                emit((row - first) / 64, bits);
+            else {
+                const unsigned at = (row - first) % 64;
+                word |= bits << at;
+                if (at + grain == 64)
+                    emit((row - first) / 64, word), word = 0;
+            }
+        });
+        w = count / 64;
+    }
+#endif
+    for (; w < words; ++w) {
+        const auto n = static_cast<unsigned>(std::min<std::size_t>(64, count - 64 * w));
+        emit(w, author::filter_unchecked<Op>(source, first + 64 * w, n, rhs));
+    }
+}
+#endif
 } // namespace author
 } // namespace ikea::seriespack

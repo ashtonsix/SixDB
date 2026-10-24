@@ -41,6 +41,19 @@ template <unsigned K, unsigned N, class Reader>
     }
     return out;
 }
+// Two consecutive 32-row groups as one 64-row group, in row order.
+template <unsigned K>
+[[gnu::always_inline]] inline values<K, 64> concat(values<K, 32> low, values<K, 32> high) {
+    values<K, 64> out;
+    if constexpr (sizeof(uint_for<K>) == 1)
+        out.v[0] = _mm512_inserti64x4(low.v[0], _mm512_castsi512_si256(high.v[0]), 1);
+    else
+        detail::each<values<K, 32>::parts>([&](auto p) {
+            out.v[p] = low.v[p];
+            out.v[p + values<K, 32>::parts] = high.v[p];
+        });
+    return out;
+}
 template <class F, bool Dense, unsigned N>
 [[gnu::always_inline]] inline values<F::tail, N> tail(const std::uint8_t* base, std::size_t stride,
                                                       std::size_t i) {
@@ -49,8 +62,33 @@ template <class F, bool Dense, unsigned N>
         if (i % 32 == 0)
             return {{_mm512_zextsi256_si512(x86::striped_tail32<F, Dense>(base, stride, i))}};
     }
+    // A 64-row group is two complete stripe row groups: without this, odd
+    // residual widths rebuilt each 16 rows through the dynamic-group path.
+    if constexpr (F::storage == geometry::striped && N == 64) {
+        if (i % 64 == 0)
+            return concat<R>(tail<F, Dense, 32>(base, stride, i), tail<F, Dense, 32>(base, stride, i + 32));
+    }
 #if defined(__AVX512VBMI__) && defined(__GFNI__)
-    if constexpr (N == 64 && Dense && F::storage == geometry::local && F::body == 0) {
+    // Mixed Local, 32 rows: four tiles fit one masked load; one permute
+    // places each tile's residual planes as a bit matrix and one affine
+    // transposes them (instead of two 16-row loads, shuffles and affines).
+    if constexpr (N == 32 && Dense && F::storage == geometry::local && F::body != 0 &&
+                  4 * F::tile_bytes <= 64) {
+        constexpr unsigned T = F::tile_bytes;
+        static constexpr auto map = [] {
+            std::array<std::uint8_t, 64> a{};
+            for (unsigned t = 0; t < 4; ++t)
+                for (unsigned b = 0; b < R; ++b)
+                    a[t * 8 + 7 - b] = t * T + 8 * F::body + b;
+            return a;
+        }();
+        constexpr std::uint64_t present = (0x0101010101010101ULL * ((1u << R) - 1) << (8 - R)) & 0xffffffffULL;
+        const auto window = _mm512_maskz_loadu_epi8((std::uint64_t{1} << (4 * T)) - 1, base + (i / 8) * T);
+        const auto matrices =
+            _mm512_maskz_permutexvar_epi8(present, _mm512_loadu_si512(map.data()), window);
+        return {
+            {_mm512_gf2p8affine_epi64_epi8(_mm512_set1_epi64(0x8040201008040201ULL), matrices, 0)}};
+    } else if constexpr (N == 64 && Dense && F::storage == geometry::local && F::body == 0) {
         static constexpr auto map = [] {
             std::array<std::uint8_t, 64> a{};
             for (unsigned t = 0; t < 8; ++t)
@@ -84,6 +122,25 @@ template <class F, bool Dense, unsigned N>
             out.v[p] = _mm512_loadu_si512(base + i * F::body + p * 64);
         });
         return out;
+    }
+#if defined(__AVX512VBMI__)
+    // One-byte Local bodies, 32 rows: the four tiles' body bytes by one
+    // masked load and one permute (stride gaps and residuals skipped).
+    if constexpr (N == 32 && Dense && F::storage == geometry::local && F::body == 1 && 4 * F::tile_bytes <= 64) {
+        constexpr unsigned T = F::tile_bytes;
+        static constexpr auto map = [] {
+            std::array<std::uint8_t, 64> a{};
+            for (unsigned r = 0; r < 32; ++r)
+                a[r] = (r / 8) * T + r % 8;
+            return a;
+        }();
+        const auto window = _mm512_maskz_loadu_epi8((std::uint64_t{1} << (4 * T)) - 1, base + (i / 8) * T);
+        return {{_mm512_maskz_permutexvar_epi8(0xffffffffULL, _mm512_loadu_si512(map.data()), window)}};
+    }
+#endif
+    if constexpr (F::storage == geometry::striped && N == 64) {
+        if (i % 64 == 0)
+            return concat<F::body * 8>(body<F, Dense, 32>(base, stride, i), body<F, Dense, 32>(base, stride, i + 32));
     }
     if constexpr (F::storage == geometry::striped && N == 32) {
         if (i % 32 == 0) {
@@ -202,6 +259,9 @@ struct sum_state {
         return _mm512_reduce_add_epi64(value);
     }
 };
+template <unsigned S> [[gnu::always_inline]] inline sum_state shifted(sum_state x) {
+    return {_mm512_slli_epi64(x.value, S)};
+}
 template <unsigned K, unsigned N>
 [[gnu::always_inline]] inline sum_state sum(values<K, N> x, selection<K, N> mask) {
     constexpr unsigned L = sizeof(uint_for<K>);

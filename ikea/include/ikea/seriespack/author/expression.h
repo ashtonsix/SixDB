@@ -1,5 +1,7 @@
 #pragma once
 #include <ikea/seriespack/author/native.h>
+#include <ikea/seriespack/detail/native/planes.h>
+#include <ikea/seriespack/detail/native/total.h>
 
 namespace ikea::seriespack::author {
 enum class field_kind { body, tail, head0, head1 };
@@ -50,14 +52,18 @@ template <class Source> auto expression(const Source& source) {
 }
 template <class Source> auto expression(const Source&&) = delete;
 
+// Expression traversal is always inlined: an outlined read takes its row at
+// run time, so a striped group's position in its tile cannot fold, and native
+// accumulators spill around the call (Zen 5: striped K = 3 SUM 9 ns per 256
+// rows against 1.3 inlined).
 template <class Ops, class S, field_kind F, class Rows, class Mask>
-auto read(Ops& ops, const leaf<S, F>& source, Rows rows, Mask active) {
+[[gnu::always_inline]] inline auto read(Ops& ops, const leaf<S, F>& source, Rows rows, Mask active) {
     return ops.read(source, rows, active);
 }
 template <class Ops, unsigned K, unsigned H, class P, class H0, class H1, class Rows, class Mask>
-auto read(Ops& ops, const value_expression<K, H, P, H0, H1>& source, Rows rows, Mask active);
+[[gnu::always_inline]] inline auto read(Ops& ops, const value_expression<K, H, P, H0, H1>& source, Rows rows, Mask active);
 template <class Ops, unsigned K, class B, class T, class Rows, class Mask>
-auto read(Ops& ops, const payload_expression<K, B, T>& source, Rows rows, Mask active) {
+[[gnu::always_inline]] inline auto read(Ops& ops, const payload_expression<K, B, T>& source, Rows rows, Mask active) {
     if constexpr (K < 8)
         return read(ops, source.tail, rows, active);
     else if constexpr (K % 8 == 0)
@@ -67,7 +73,7 @@ auto read(Ops& ops, const payload_expression<K, B, T>& source, Rows rows, Mask a
                                         read(ops, source.tail, rows, active));
 }
 template <class Ops, unsigned K, unsigned H, class P, class H0, class H1, class Rows, class Mask>
-auto read(Ops& ops, const value_expression<K, H, P, H0, H1>& source, Rows rows, Mask active) {
+[[gnu::always_inline]] inline auto read(Ops& ops, const value_expression<K, H, P, H0, H1>& source, Rows rows, Mask active) {
     if constexpr (H == 0)
         return read(ops, source.payload, rows, active);
     else {
@@ -87,11 +93,15 @@ auto read(Ops& ops, const value_expression<K, H, P, H0, H1>& source, Rows rows, 
 
 /// Author once; recording, native evaluation and scalar evaluation use this body.
 template <class Ops, class Source, class Rows, class Mask, class Cutoff>
-auto selected_sum(Ops& ops, const Source& source, Rows rows, Mask active, Cutoff cutoff) {
+[[gnu::always_inline]] inline auto selected_sum(Ops& ops, const Source& source, Rows rows, Mask active, Cutoff cutoff) {
     auto values = read(ops, source, rows, active);
     auto keep = ops.unsigned_less(values, cutoff, active);
     return ops.sum(values, keep);
 }
+
+/// An unconditioned SUM's admission: every active row, the maximum value
+/// included (a cutoff of ~0 is strict and excludes it at 64 bits).
+struct all_rows {};
 
 template <unsigned K> struct scalar_value {
     std::uint64_t value;
@@ -134,6 +144,9 @@ struct scalar_ops {
     template <unsigned K>
     bool unsigned_less(scalar_value<K> x, std::uint64_t cutoff, bool active) const {
         return active && x.value < cutoff;
+    }
+    template <unsigned K> bool unsigned_less(scalar_value<K>, all_rows, bool active) const {
+        return active;
     }
     template <unsigned K> std::uint64_t sum(scalar_value<K> x, bool active) const {
         return active ? x.value : 0;
@@ -197,6 +210,10 @@ struct native_ops {
         return native::less(x, cutoff, active);
     }
     template <unsigned K>
+    [[gnu::always_inline]] auto unsigned_less(native::values<K>, all_rows, std::uint16_t active) const {
+        return native::mask16<K>(active);
+    }
+    template <unsigned K>
     [[gnu::always_inline]] auto sum(native::values<K> x, native::values<K> mask) const {
         return native::sum(x, mask);
     }
@@ -242,19 +259,118 @@ template <unsigned N> struct wide_ops {
         return native_group::less(x, cutoff, active);
     }
     template <unsigned K>
+    [[gnu::always_inline]] auto unsigned_less(native_group::values<K, N>, all_rows, std::uint64_t active) const {
+        return native_group::active_mask<K, N>(active);
+    }
+    template <unsigned K>
     [[gnu::always_inline]] auto sum(native_group::values<K, N> x,
                                     native_group::selection<K, N> mask) const {
         return native_group::sum(x, mask);
     }
+    template <class S, field_kind Field>
+    [[gnu::always_inline]] auto total(const leaf<S, Field>& field, std::size_t row) const {
+        const auto x = read(field, row, ~std::uint64_t{0});
+        return native_group::sum(x, unsigned_less(x, all_rows{}, ~std::uint64_t{0}));
+    }
+    template <unsigned S>
+    [[gnu::always_inline]] auto shifted(native_group::sum_state x) const {
+        return native_group::shifted<S>(x);
+    }
 };
 #endif
+
+/// The unconditioned sum of a group. A sum is linear, so a join's total is
+/// its high child's total shifted plus its low child's: fields are summed
+/// apart and never joined or widened.
+template <class Ops, class S, field_kind F, class Rows>
+[[gnu::always_inline]] inline auto total(Ops& ops, const leaf<S, F>& source, Rows rows)
+    requires requires { ops.total(source, rows); }
+{
+    return ops.total(source, rows);
+}
+/// A node has a total when every child it reads has one (found at
+/// instantiation, so later overloads such as a guard's take part).
+template <class Ops, class E>
+concept totalled = requires(Ops& ops, const E& e) { total(ops, e, std::size_t{}); };
+template <class Ops, unsigned S, class High, class Low>
+[[gnu::always_inline]] inline auto total_join(Ops& ops, High high, Low low) {
+    auto out = ops.template shifted<S>(high);
+    out.add(low);
+    return out;
+}
+template <class Ops, unsigned K, class B, class T, class Rows>
+[[gnu::always_inline]] inline auto total(Ops& ops, const payload_expression<K, B, T>& source, Rows rows)
+    requires((K < 8 || totalled<Ops, B>) && (K % 8 == 0 || totalled<Ops, T>))
+{
+    if constexpr (K < 8)
+        return total(ops, source.tail, rows);
+    else if constexpr (K % 8 == 0)
+        return total(ops, source.body, rows);
+    else
+        return total_join<Ops, K % 8>(ops, total(ops, source.body, rows), total(ops, source.tail, rows));
+}
+template <class Ops, unsigned K, unsigned H, class P, class H0, class H1, class Rows>
+[[gnu::always_inline]] inline auto total(Ops& ops, const value_expression<K, H, P, H0, H1>& source, Rows rows)
+    requires((K == H || totalled<Ops, P>) && (H == 0 || totalled<Ops, H0>) && (H < 16 || totalled<Ops, H1>))
+{
+    if constexpr (H == 0)
+        return total(ops, source.payload, rows);
+    else {
+        auto high = [&] {
+            if constexpr (H == 8)
+                return total(ops, source.head0, rows);
+            else
+                return total_join<Ops, 8>(ops, total(ops, source.head0, rows), total(ops, source.head1, rows));
+        }();
+        if constexpr (K == H)
+            return high;
+        else
+            return total_join<Ops, K - H>(ops, high, total(ops, source.payload, rows));
+    }
+}
+
+/// Rows per physical tile of a striped payload, or 0 (Local, heads, or a
+/// substituted expression). Traversal can then fix each group's position in
+/// its tile at compile time.
+template <class E> inline constexpr std::size_t striped_tile_rows = 0;
+template <unsigned K, class S>
+inline constexpr std::size_t
+    striped_tile_rows<value_expression<K, 0, payload_expression<K, leaf<S, field_kind::body>, leaf<S, field_kind::tail>>,
+                                       leaf<S, field_kind::head0>, leaf<S, field_kind::head1>>> =
+        S::layout_type::storage == geometry::striped ? S::layout_type::tile_rows : 0;
+
+/// Calls body(row) for consecutive aligned groups of Grain rows. Inside
+/// complete striped tiles a row is written as tile * tile_rows + constant, so
+/// its stripe row group, fragment shifts and branches fold at compile time;
+/// otherwise they are computed per group.
+template <unsigned Grain, std::size_t Tile, class Body>
+[[gnu::always_inline]] inline void each_group(std::size_t& i, std::size_t& count, Body&& body) {
+    if constexpr (Tile > Grain && Tile % Grain == 0) {
+        while (count >= Grain && i % Tile) {
+            body(i);
+            i += Grain, count -= Grain;
+        }
+        for (; count >= Tile; count -= Tile) {
+            const std::size_t t = i / Tile;
+            detail::each<Tile / Grain>([&](auto j) __attribute__((always_inline)) { body(t * Tile + j * Grain); });
+            i = (t + 1) * Tile;
+        }
+    }
+    for (; count >= Grain; i += Grain, count -= Grain)
+        body(i);
+}
 
 /// The driver owns traversal, empty-mask skipping and result finalization.
 /// Scalar remainders use the same authored operation, with no reads beyond the
 /// logical extent. Prefilters name sixteen original positions at the given origin.
-template <bool Wide = true, class Source, class Prefilter>
+/// Groups whose expression has a fieldwise total (author::total); others,
+/// such as a guarded or substituted node without one, reconstruct and sum.
+template <class Ops, class Source>
+inline constexpr bool has_total = totalled<Ops, Source>;
+
+template <bool Wide = true, class Source, class Cutoff, class Prefilter>
 std::uint64_t sum_regions(const Source& source, std::size_t first, std::size_t count,
-                          std::uint64_t cutoff, Prefilter&& mask) {
+                          Cutoff cutoff, Prefilter&& mask) {
     native_ops ops;
     native::sum_state result;
     scalar_ops scalar;
@@ -273,25 +389,39 @@ std::uint64_t sum_regions(const Source& source, std::size_t first, std::size_t c
 #if defined(__aarch64__) ||                                                                        \
     (defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__))
     if constexpr (Wide) {
-        constexpr unsigned grain = Source::bit_width <= 8 ? 64 : Source::bit_width <= 16 ? 32 : 16;
+        // 32 rows up to 32 bits: complete striped row groups and full ZMM lanes.
+        constexpr unsigned grain = Source::bit_width <= 8 ? 64 : Source::bit_width <= 32 ? 32 : 16;
         wide_ops<grain> wide;
         native_group::sum_state partial;
-        for (; count >= grain; i += grain, count -= grain) {
+        constexpr std::uint64_t full = grain == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << grain) - 1;
+        const bool open = [&] {
+            if constexpr (std::is_same_v<Cutoff, all_rows>)
+                return true;
+            else
+                return Source::bit_width < 64 && cutoff >> (Source::bit_width % 64);
+        }();
+        each_group<grain, striped_tile_rows<Source>>(i, count, [&](std::size_t row) __attribute__((always_inline)) {
             std::uint64_t active = 0;
             detail::each<grain / 16>([&](auto p) {
-                active |= std::uint64_t(static_cast<std::uint16_t>(mask(i + p * 16))) << (p * 16);
+                active |= std::uint64_t(static_cast<std::uint16_t>(mask(row + p * 16))) << (p * 16);
             });
+            // Complete unconditioned groups sum their fields apart.
+            if constexpr (has_total<decltype(wide), Source>)
+                if (active == full && open) {
+                    partial.add(total(wide, source, row));
+                    return;
+                }
             if (active)
-                partial.add(selected_sum(wide, source, i, active, cutoff));
-        }
+                partial.add(selected_sum(wide, source, row, active, cutoff));
+        });
         answer += partial.finish();
     }
 #endif
-    for (; count >= 16; i += 16, count -= 16) {
-        const auto active = static_cast<std::uint16_t>(mask(i));
+    each_group<16, striped_tile_rows<Source>>(i, count, [&](std::size_t row) __attribute__((always_inline)) {
+        const auto active = static_cast<std::uint16_t>(mask(row));
         if (active)
-            result.add(selected_sum(ops, source, i, active, cutoff));
-    }
+            result.add(selected_sum(ops, source, row, active, cutoff));
+    });
     answer += result.finish();
     if (count) {
         const auto active = static_cast<std::uint16_t>(mask(i));
@@ -302,8 +432,45 @@ std::uint64_t sum_regions(const Source& source, std::size_t first, std::size_t c
     }
     return answer;
 }
-template <bool Wide = true, class Source, class Prefilter>
-std::uint64_t sum_regions(const Source& source, std::size_t count, std::uint64_t cutoff,
+/// The layout of a headless whole-source dense expression, else void.
+template <class E> struct dense_layout {
+    using type = void;
+};
+template <unsigned K, class F>
+struct dense_layout<value_expression<K, 0,
+                                     payload_expression<K, leaf<dense_source<F>, field_kind::body>,
+                                                        leaf<dense_source<F>, field_kind::tail>>,
+                                     leaf<dense_source<F>, field_kind::head0>,
+                                     leaf<dense_source<F>, field_kind::head1>>> {
+    using type = F;
+};
+
+/// The sum of every row of [first, first + count). Whole periods of complete
+/// tiles take a one-pass field sum; edges use the group driver with every
+/// row active.
+template <class Source>
+std::uint64_t total_regions(const Source& source, std::size_t first, std::size_t count) {
+    const auto all = [](std::size_t) { return std::uint16_t{0xffff}; };
+    using F = typename dense_layout<Source>::type;
+    if constexpr (!std::is_void_v<F>) {
+        using kernel = std::conditional_t<F::storage == geometry::local, ikea::seriespack::detail::local_total<F>,
+                                          ikea::seriespack::detail::striped_total<F>>;
+        if constexpr (kernel::supported) {
+            const std::size_t start = (first + F::tile_rows - 1) / F::tile_rows * F::tile_rows;
+            const std::size_t periods = count >= start - first ? (count - (start - first)) / kernel::rows : 0;
+            if (periods) {
+                const auto* tiles = ikea::to_u8(source.payload.body.source.data) + start / F::tile_rows * F::tile_bytes;
+                const std::size_t end = start + periods * kernel::rows;
+                return sum_regions(source, first, start - first, all_rows{}, all) + kernel::run(tiles, periods) +
+                       sum_regions(source, end, first + count - end, all_rows{}, all);
+            }
+        }
+    }
+    return sum_regions(source, first, count, all_rows{}, all);
+}
+
+template <bool Wide = true, class Source, class Cutoff, class Prefilter>
+std::uint64_t sum_regions(const Source& source, std::size_t count, Cutoff cutoff,
                           Prefilter&& mask) {
     return sum_regions<Wide>(source, 0, count, cutoff, std::forward<Prefilter>(mask));
 }

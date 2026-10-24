@@ -296,6 +296,9 @@ struct sum_state {
         return vaddvq_u64(value);
     }
 };
+template <unsigned S> [[gnu::always_inline]] inline sum_state shifted(sum_state x) {
+    return {vshlq_n_u64(x.value, S)};
+}
 template <unsigned K> [[gnu::always_inline]] inline sum_state sum(values<K> x, values<K> mask) {
     sum_state out;
     constexpr auto L = values<K>::bytes;

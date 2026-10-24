@@ -3,6 +3,7 @@
 #include "../reference/physical.h"
 #include <array>
 #include "../support.h"
+#include "../operations.h"
 #include "../../scope.h"
 #include <iostream>
 #include <random>
@@ -54,6 +55,7 @@ template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
         IKEA_CHECK(sp::get_unchecked(*v, i) == expected[i]);
         IKEA_CHECK(decoder.get_unchecked(i) == expected[i]);
     }
+    check_reader_operations(typed_reader, expected, N);
 #if defined(__aarch64__) || defined(__AVX2__)
     const auto expression = sp::author::expression(*dense);
     for (auto count : {std::size_t{0}, std::size_t{1}, std::size_t{17}, std::size_t{511}, N})
@@ -71,12 +73,14 @@ template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
 #endif
 }
 void check_composition();
+void check_ranges();
 void check_mutation();
 void check_composed_mutation();
 void check_chain();
 void check_construction();
 int main() {
     check_composition();
+    check_ranges();
     check_mutation();
     check_composed_mutation();
     check_chain();

@@ -8,6 +8,7 @@ template <unsigned K, unsigned N> struct values {
 };
 template <unsigned K, unsigned N> using selection = values<K, N>;
 using sum_state = neon::sum_state;
+using neon::shifted;
 
 template <unsigned K, unsigned N, class Reader>
 [[gnu::always_inline]] inline values<K, N> packets(Reader&& read) {
@@ -175,6 +176,13 @@ template <class F, bool Dense, unsigned N>
 template <class U, unsigned K, unsigned N>
 [[gnu::always_inline]] inline void store(U* __restrict out, values<K, N> x) {
     detail::each<N / 16>([&](auto p) { neon::store16(out + p * 16, x.block[p]); });
+}
+template <unsigned K, unsigned N>
+[[gnu::always_inline]] inline selection<K, N> active_mask(std::uint64_t active) {
+    selection<K, N> out;
+    detail::each<N / 16>(
+        [&](auto p) { out.block[p] = neon::mask16<K>(static_cast<std::uint16_t>(active >> (p * 16))); });
+    return out;
 }
 template <unsigned K, unsigned N>
 [[gnu::always_inline]] inline selection<K, N> less(values<K, N> x, std::uint64_t cutoff,
