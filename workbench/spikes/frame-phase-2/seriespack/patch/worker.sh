@@ -2,10 +2,11 @@
 # Patched point reads over the bounds stage's representation, on phase 1's columns.
 # Usage: worker.py run workbench/spikes/frame-phase-2/seriespack/patch/worker.sh --machine zen5|neoverse-v2
 set -euo pipefail
+# Inputs go to the worker's shared data cache, never into collected results.
 inputs=workbench/spikes/frame-phase-1/encoding/worker-inputs.json
 cp "$inputs" "$SIXDB_RESULTS/input-artifact.json"
-python3 workbench/tools/artifacts.py fetch "$SIXDB_RESULTS/input-artifact.json" "$SIXDB_RESULTS/in" > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
-cols="$SIXDB_RESULTS/in/inputs/cols"
+python3 workbench/tools/artifacts.py fetch "$inputs" "$SIXDB_DATA_CACHE/frame-phase-1-encoding" > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
+cols="$SIXDB_DATA_CACHE/frame-phase-1-encoding/inputs/cols"
 case "$(uname -m)" in
   x86_64) flags="-DSIXDB_MARCH=znver5 -DSIXDB_TUNE=zen5"; march=znver5 ;;
   *) flags=""; march=armv8-a+simd ;;
