@@ -11,6 +11,7 @@
 //
 // usage: frame_substrate_corrections_trace COLS_DIR A B
 #include "corrections.h"
+#include "dict.h"
 #include "history.h"
 
 #include <cstdio>
@@ -104,6 +105,53 @@ struct candidate {
     }
 };
 
+// The coded candidate: sorted part dictionaries for A and B, with logical
+// corrections over them (novel values never enter the dictionaries).
+struct coded_candidate {
+    const frame_dict::dict_column &ad, &bd;
+    fi::corrected_over<frame_dict::dict_column> a, b;
+    coded_candidate(const frame_dict::dict_column &x, const frame_dict::dict_column &y)
+        : ad(x), bd(y), a(x, x.codes.blocks), b(y, y.codes.blocks) {}
+    h::answer query(const h::read &r) const {
+        const std::size_t blocks = bd.codes.blocks;
+        const auto coarse = coarse_rows(r.coarse, blocks);
+        const auto &c = r.column == h::field::a ? a : b;
+        h::answer out;
+        std::vector<u64> m(4 * blocks);
+        switch (r.op) {
+        case h::operation::sum:
+            out.sum = c.masked_sum(coarse.data());
+            for (u64 w : coarse)
+                out.count += std::popcount(w);
+            break;
+        case h::operation::count_ge:
+            c.mask_ge(r.threshold, m.data());
+            for (std::size_t i = 0; i < m.size(); ++i)
+                out.count += std::popcount(m[i] & coarse[i]);
+            break;
+        case h::operation::pair:
+            a.mask_ge(r.threshold, m.data());
+            for (std::size_t i = 0; i < m.size(); ++i)
+                m[i] &= coarse[i], out.count += std::popcount(m[i]);
+            out.sum = b.masked_sum(m.data());
+            break;
+        case h::operation::points:
+            for (std::size_t row : r.point_rows) {
+                const std::size_t blk = row / fi::block_rows;
+                if (!r.coarse.empty() && !(r.coarse[blk / 64] >> (blk % 64) & 1))
+                    continue;
+                out.sum += b.point(row), ++out.count;
+            }
+            break;
+        }
+        return out;
+    }
+    void apply(const h::batch &batch) {
+        for (const auto &e : batch.edits)
+            (e.column == h::field::a ? a : b).write(e.row, e.value);
+    }
+};
+
 bool run(const char *label, const h::columns &original, const h::trace &trace) {
     const auto expected = h::prepare_expected(original, trace);
     if (!expected) {
@@ -135,9 +183,30 @@ bool run(const char *label, const h::columns &original, const h::trace &trace) {
                              (unsigned long long)x.current.sum, (unsigned long long)x.current.count);
         }
     }
-    std::printf("{\"case\":\"%s\",\"ok\":%s,\"queries\":%zu,\"failed\":%zu,\"corrections_a\":%zu,\"corrections_b\":%zu}\n", label,
+    std::printf("{\"case\":\"%s\",\"candidate\":\"integer\",\"ok\":%s,\"queries\":%zu,\"failed\":%zu,\"corrections_a\":%zu,\"corrections_b\":%zu}\n", label,
                 failed ? "false" : "true", checked, failed, cur.a.entries, cur.b.entries);
-    return !failed;
+    // The same trace over dictionary-coded A and B.
+    const frame_dict::dict_column ad(original.a), bd(original.b);
+    coded_candidate ccur(ad, bd);
+    const coded_candidate cold(ad, bd);
+    std::size_t cfailed = 0;
+    next = 0;
+    for (std::size_t e = 0; e < trace.events.size(); ++e) {
+        const auto &ev = trace.events[e];
+        if (ev.kind == h::event_kind::edits) {
+            ccur.apply(trace.batches[ev.index]);
+            continue;
+        }
+        while (next < expected->size() && (*expected)[next].event_index < e)
+            ++next;
+        const auto &x = (*expected)[next];
+        const auto &r = trace.reads[x.read_index];
+        if (!(ccur.query(r) == x.current) || !(cold.query(r) == x.original))
+            ++cfailed;
+    }
+    std::printf("{\"case\":\"%s\",\"candidate\":\"dictionary\",\"ok\":%s,\"queries\":%zu,\"failed\":%zu}\n", label,
+                cfailed ? "false" : "true", checked, cfailed);
+    return !failed && !cfailed;
 }
 }  // namespace
 

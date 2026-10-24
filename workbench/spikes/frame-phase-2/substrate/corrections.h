@@ -110,4 +110,84 @@ struct corrected {
         return static_cast<u128>(s);
     }
 };
+
+// The same corrections over any stored program that answers point, sum,
+// count_ge, mask_ge and masked_sum for its whole column (for example a
+// dictionary-coded column, whose novel values live only in the corrections:
+// base translations and bounds describe the base, never the combined image).
+template <class Base> struct corrected_over {
+    const Base *base = nullptr;
+    std::size_t blocks = 0;
+    std::vector<std::vector<std::pair<u8, u64>>> fix;
+    std::vector<u64> dirty;
+    std::vector<__int128> sum_delta;
+    std::size_t entries = 0;
+
+    corrected_over(const Base &b, std::size_t nblocks)
+        : base(&b), blocks(nblocks), fix(nblocks), dirty((nblocks + 63) / 64, 0), sum_delta(nblocks, 0) {}
+    bool is_dirty(std::size_t b) const { return dirty[b / 64] >> (b % 64) & 1; }
+    template <class F> void each_correction(F &&f) const {
+        for (std::size_t w = 0; w < dirty.size(); ++w)
+            for (u64 x = dirty[w]; x; x &= x - 1) {
+                const std::size_t b = w * 64 + static_cast<std::size_t>(std::countr_zero(x));
+                for (const auto &[i, v] : fix[b])
+                    f(b, i, v);
+            }
+    }
+    u64 point(std::size_t row) const {
+        const std::size_t b = row / block_rows;
+        if (is_dirty(b)) {
+            const auto &l = fix[b];
+            const u8 i = static_cast<u8>(row % block_rows);
+            const auto at = std::lower_bound(l.begin(), l.end(), i, [](const auto &e, u8 r) { return e.first < r; });
+            if (at != l.end() && at->first == i)
+                return at->second;
+        }
+        return base->point(row);
+    }
+    void write(std::size_t row, u64 value) {
+        const std::size_t b = row / block_rows;
+        const u8 i = static_cast<u8>(row % block_rows);
+        const u64 old = point(row);
+        auto &l = fix[b];
+        const auto at = std::lower_bound(l.begin(), l.end(), i, [](const auto &e, u8 r) { return e.first < r; });
+        if (at != l.end() && at->first == i)
+            at->second = value;
+        else
+            l.insert(at, {i, value}), ++entries;
+        sum_delta[b] += static_cast<__int128>(value) - static_cast<__int128>(old);
+        dirty[b / 64] |= u64{1} << (b % 64);
+    }
+    u128 sum() const {
+        __int128 d = 0;
+        for (std::size_t w = 0; w < dirty.size(); ++w)
+            for (u64 x = dirty[w]; x; x &= x - 1)
+                d += sum_delta[w * 64 + static_cast<std::size_t>(std::countr_zero(x))];
+        return static_cast<u128>(static_cast<__int128>(base->sum()) + d);
+    }
+    u64 mask_ge(u64 t, u64 *masks) const {
+        u64 n = base->mask_ge(t, masks);
+        each_correction([&](std::size_t b, u8 i, u64 v) {
+            u64 &word = masks[4 * b + i / 64];
+            const u64 bit = u64{1} << (i % 64);
+            const bool was = word & bit, now = v >= t;
+            word = now ? word | bit : word & ~bit;
+            n += now - was;
+        });
+        return n;
+    }
+    u64 count_ge(u64 t) const {
+        u64 n = base->count_ge(t);
+        each_correction([&](std::size_t b, u8 i, u64 v) { n += (v >= t) - (base->point(b * block_rows + i) >= t); });
+        return n;
+    }
+    u128 masked_sum(const u64 *masks) const {
+        __int128 s = static_cast<__int128>(base->masked_sum(masks));
+        each_correction([&](std::size_t b, u8 i, u64 v) {
+            if (masks[4 * b + i / 64] >> (i % 64) & 1)
+                s += static_cast<__int128>(v) - static_cast<__int128>(base->point(b * block_rows + i));
+        });
+        return static_cast<u128>(s);
+    }
+};
 }  // namespace frame_image
