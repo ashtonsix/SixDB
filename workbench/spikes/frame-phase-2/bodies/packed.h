@@ -320,13 +320,13 @@ template <layout L, unsigned K> struct packed {
                     cand[g] = simd::eq(slice(body, gs.x, B - 1, g), best);
                     left += static_cast<unsigned>(std::popcount(cand[g]));
                 }
-                // With one slice the planes narrow branch-free below. Point reads
-                // of the few candidates only pay with lower slices left, and
-                // only where masked byte reductions are dear (NEON): their
-                // data-dependent loop mispredicts, which throttles memory
-                // parallelism beyond L2 (Zen 5 v6: 17-20 ns per block at
-                // K >= 8 against 4 at L2).
-                if (B >= 2 && !BODIES_ISA_AVX512 && left <= 8) {
+                // K = 8: the top byte is the value. Otherwise point reads of
+                // the few candidates beat branch-free narrowing beyond L2 (Zen 5
+                // v7 DRAM, K = 12 / 20 / 32: 19.7 / 22 / 26 ns against 29.7 / 42.6
+                // / 79.6), though their loop mispredicts.
+                if constexpr (B == 1 && R == 0)
+                    return best;
+                if (left <= 8) {
                     u64 e = is_max ? 0 : ~u64{0};
                     for (unsigned g = 0; g < 4; ++g)
                         for (u64 c = cand[g]; c; c &= c - 1) {

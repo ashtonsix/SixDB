@@ -122,14 +122,19 @@ through the same lane leaves, a control of my own (front A's corrected bridge
 replaces it). `u64` is the logical array. Workers: [worker.sh](worker.sh) on
 Zen 5 (c8a.2xlarge, AVX-512 and AVX2 builds) and Graviton 4 (c8g.2xlarge).
 
-Evidence (medians): Zen 5 job `20261023T233103Z-ab8ecf15`,
-[packed](evidence/zen5-v4-packed.txt), [runs](evidence/zen5-v4-runs.txt),
-[patched](evidence/zen5-v4-patched.txt), [peers](evidence/zen5-v4-peers.txt),
-[columns](evidence/zen5-v4-columns.txt). Graviton 4 job
-`20261023T234028Z-176a448e`, [packed](evidence/g4-v4-packed.txt),
-[runs](evidence/g4-v4-runs.txt), [patched](evidence/g4-v4-patched.txt),
-[peers](evidence/g4-v4-peers.txt), [columns](evidence/g4-v4-columns.txt).
-The earlier Zen 5 v2 files show the before state of each fix below.
+Evidence (medians): Zen 5 job `20261024T003628Z-9fa10b9b` (v6),
+[packed](evidence/zen5-v6-packed.txt), [runs](evidence/zen5-v6-runs.txt),
+[patched](evidence/zen5-v6-patched.txt), [peers](evidence/zen5-v6-peers.txt),
+[wide](evidence/zen5-v6-wide.txt), [weighted](evidence/zen5-v6-weighted.txt),
+[columns](evidence/zen5-v6-columns.txt). Graviton 4 job
+`20261024T003705Z-050e5a24` (v6), [packed](evidence/g4-v6-packed.txt),
+[runs](evidence/g4-v6-runs.txt), [patched](evidence/g4-v6-patched.txt),
+[peers](evidence/g4-v6-peers.txt), [wide](evidence/g4-v6-wide.txt),
+[weighted](evidence/g4-v6-weighted.txt), [columns](evidence/g4-v6-columns.txt).
+Targeted reruns of compaction and MIN/MAX: jobs `20261024T011854Z-217c194b`
+(Zen 5) and `20261024T011923Z-1dce6c9f` (Graviton 4). Tables below that came
+from v4 (`20261023T233103Z-ab8ecf15`) reproduce in v6 within 5%. The Zen 5 v2
+files show the state before each fix.
 
 ### Packed bodies, Zen 5 AVX-512
 
@@ -263,14 +268,18 @@ needs 32 bits (`native` is then a u32 lane).
 
 ### Compaction, histograms, MIN/MAX, first match (Zen 5 AVX-512)
 
-14. **Compaction to an encoded result is 2–2.5× behind native narrow
-    compaction.** At L2 and K = 8 it costs 11.9 ns per block against native u8
-    VPCOMPRESSB 5.3 and u64 (Polars-like) 30.8, so it is 2.6× ahead of u64. At
-    K = 16 it is 23.2 against 9.3 native and level with u64 (22.6). At K = 20
-    it is behind u64. Per group it compresses B slices and
-    PEXTs R planes into a bit-appended stream, so it pays bit-granular appends
-    that a byte lane doesn't. The masked-store rewrite of the slice copy is in
-    the working tree, not yet measured.
+14. **Compaction to an encoded result beats native narrow compaction where
+    the width is whole bytes, and loses where planes must be bit-appended.**
+    Masked stores of each compressed slice cost 6.0 ns per block at K = 8
+    (native u8 VPCOMPRESSB 4.2) and win at K = 16 (8.1 vs 9.9) and K = 32
+    (12.4 vs 23.8), at L2 on Zen 5. With residual planes, each group's PEXT
+    result is ORed into the output plane: 14.7 / 19.5 / 18.5 / 20.8 ns at
+    K = 3 / 5 / 12 / 20 (native 4.0–19.6). Concatenating a block's four
+    extracts in registers and ORing once was slower (K = 5: 39 ns) because of
+    the u128 variable shifts and data-dependent deposit loops. Against u64
+    (Polars-like) compaction, Frame is 1.1–5.3× faster at every width. At DRAM
+    it is 1.1–2.3× behind native narrow. On Graviton 4, SVE2 BEXT makes plane
+    compaction beat native u16/u32 lanes 1.3–2.3× from K = 12 to 20.
 15. **Narrow-key histograms are bit-sliced 2.3–3.9× faster than the best native.**
     A 2^K-bin histogram of a block (the radix partition and counting-sort
     core) is a prefix tree of plane ANDs: 1.4 / 2.8 / 5.7 / 10.9 ns at
@@ -280,12 +289,18 @@ needs 32 bits (`native` is then a u32 lane).
     block of narrow keys is a runs body built from the histogram, with no row
     movement.
 16. **MIN/MAX from a body is a fallback.** Bit-sliced narrowing is 0.2–2 ns at
-    K ≤ 5, but from K = 8 the top-slice-then-points path costs 4–8 ns at L2 and
-    17–50 beyond (native 1.5–7). Exact block statistics answer MIN/MAX without
-    the body (MECHANISMS.md), so this leaf only serves selected rows.
-17. **First match** (`first_ge`) costs the same as the compare it is built on,
-    with an early exit per group: 0.3–2.5 ns at K ≤ 5, 2.3–8.4 above (native
-    0.8–4.9).
+    K ≤ 5. At K = 8 the top byte is the value: 1.5 ns at L2 and 6.5 at DRAM
+    (native 1.6 and 6.6; it was 18.9 at DRAM while it still read candidates).
+    From K = 12 the few rows sharing the top byte are read as points: 6–9 ns
+    at L2, 20–26 at DRAM (native 3.5–7.3 and 11–23). A branch-free narrowing
+    instead was worse at DRAM (29.7–79.6 ns), so it is not used. Exact block
+    statistics answer MIN/MAX without the body (MECHANISMS.md), so this leaf
+    only serves selected rows.
+17. **First match** (`first_ge`) is a compare plus a branch-free position over
+    the four groups. It beats native at DRAM on Zen 5 (3.3 / 6.4 / 9.6 / 20.1
+    ns at K = 4 / 8 / 12 / 20 against 4.2 / 7.9 / 14.7 / 26.9). Before, it cost
+    13–44, because a mispredicted loop exit throttled memory parallelism. At
+    L2 it costs 1.6 ns more than the branchy loop (2.5 vs 0.9 native at K = 4).
 
 ### Peers (front A's pinned TurboPFor and FastLanes)
 
@@ -314,28 +329,71 @@ needs 32 bits (`native` is then a u32 lane).
 
 ### Graviton 4 (NEON, SVE2 bit permutes)
 
-21. **The same laws hold with NEON's costs.** plane256 SUM at L2 is 1.73 /
-    3.52 / 7.44 / 10.9 ns at K = 2 / 4 / 12 / 20, against native 4.18 / 4.18 /
-    7.36 / 21.9 (byte-count popcounts; u64 popcounts had cost 4.53 at K = 4).
-    Compares lose from K = 8, because NEON has no movemask: each byte-compare
-    to row bits costs an AND and three pairwise adds.
-22. **SVE2 BDEP makes run masks constant-cost on ARM too.** 15.8 ns per block
-    at any run count (ends-only: 25–59), against native u8 12.3. On real
-    columns RegionID masks run 1.9× native and ClientIP 1.6×; OS stays 0.7×.
-    The bit permutes run behind a HWCAP check through non-inlined SVE
-    functions; a whole-SVE leaf is the next step.
-23. **NEON prefix masked SUM** runs 15.4 ns at 24 runs, against native 11.3 and
+21. **NEON leaves needed their own compare and decode.** NEON has no movemask,
+    so byte compares stay as byte masks across slices and become row bits
+    once per group; COUNT sums byte masks and converts only the equal-prefix
+    rows. COUNT ≥ is now 4.7 / 5.2 / 16.0 / 30.5 ns at K = 4 / 8 / 12 / 32
+    (native 7.1 / 7.0 / 8.0 / 14.8), and masks 3.4 / 5.5 / 15.9 / 34.8 (native
+    12.3 / 12.3 / 15.7 / 25.6). Below K = 9 Frame now wins. From 9 to 32 it
+    is at parity to 2× behind, because each slice adds two byte compares that a u16 or
+    u32 lane does in one. SUM uses byte popcounts weighted per plane: 3.5 /
+    4.3 / 7.5 / 10.9 ns at K = 4 / 8 / 12 / 20, against native 4.2 / 4.2 / 7.3
+    / 21.9.
+22. **Decode stays 2–5× behind on NEON, a layout limit.** Expanding a plane to
+    bytes is a table lookup, a test and a shift-insert per 16 rows (the SRI
+    chain saves one op of four), and B = 1 bodies combine in u16 lanes before
+    one widening. K = 12 unpack fell from 65 to 52 ns (native 12.3, TurboPFor
+    vertical 17.4). Decode-heavy blocks on ARM want SeriesPack's striped or a
+    vertical layout.
+23. **SVE2 BDEP makes run masks native-speed on Graviton 4.** The run-start
+    mask leaf is compiled for SVE2 and AES as a whole, so BDEP and the PMULL
+    prefix inline: 12.5–12.8 ns per block at 4–64 runs, native u8 12.3, both
+    at L2 and DRAM (ends-only: 12.6 / 31.0 / 59.7). On real columns RegionID
+    masks run 1.8× native and ClientIP 1.5×. The vector popcount rank makes
+    run points 2.6 ns at L2 at any run count; from DRAM the extra evidence
+    line costs 32–36 ns against 10–41 from the ends alone.
+24. **NEON prefix masked SUM** runs 15.4 ns at 24 runs, against native 11.3 and
     the per-run loop's 28.8.
+
+### Widths above 32 bits (Zen 5 AVX-512)
+
+25. **Planes to K = 64 keep paying until about K = 48.** With u128 sums, SUM
+    is 6.0 / 9.0 / 10.8 / 14.1 ns at K = 33 / 40 / 48 / 63 against the u64
+    array's 14.5 at L2. At DRAM it is 25.9 / 30.6 / 35.6 / 49.3 against 44.5.
+    COUNT wins to K = 40, and masked SUM and MAX to K = 56. Points (1.3–2.9 ns at L2,
+    14–34 at DRAM, native 0.3 and 4.0) and unpack lose. Only blocks whose span
+    stays below 48 bits pay; 64-bit hashes are left as u64 lanes.
+
+### Weighted code SUM (the dictionary seam)
+
+26. **SUM of D[code] avoids per-row gathers wherever the codes are narrow or
+    run.** [weighted.h](weighted.h) has four paths:
+    - Runs: one weight per run. 9–12 ns per block at L2 and 15–18 at DRAM,
+      against 14.5 and 44.5 for the materialised u64 values.
+    - K ≤ 6: the bit-sliced histogram dotted with D, 6.7 ns at K = 4.
+    - K ≤ 8 with D prepared once per part as byte tables (VBMI permutes): 13–17
+      ns at L2 and 13–14 at DRAM, 3.2× the materialised values there.
+    - Uniform codes above 8 bits: decode and gather (VPGATHERDQ) costs 55–77 ns
+      and loses to materialised values (4× at L2).
+    Graviton 4: runs 12–18 against 26–62, and the histogram at parity at
+    K = 4. NEON's four-register table lookups make byte tables slower than
+    gathers there (83–212 ns). Masked forms exist for runs, tables and
+    gathers.
+
+### The exact boundary route
+
+27. **A body copy costs 2–10 ns per scanned block and up to 40 per point**
+    (Zen 5: runs SUM 2.0 → 11.7 ns, local8 SUM at K = 12 3.6 → 14.9, local8
+    points 0.4 → 3.1 at L2 and 5.1 → 24.6 at DRAM). It is meant for the last
+    body of a slice or one next to a protected neighbour, not every read.
+    A point near a boundary should use exact-length loads of its tile instead.
 
 ## Still open
 
-- Compaction's remaining gap to native narrow (the masked-store slice copy is
-  committed but not yet measured on Zen 5); MIN/MAX and first match past L2
-  from K = 8.
-- NEON: compares from K = 8 (movemask emulation), decode (vertical or striped
-  layouts), SVE-vector leaves for run masks and points.
-- K > 32 packing (only 64-bit hashes need it here).
+- Compaction with residual planes (bit-granular appends) and MIN/MAX at
+  K ≥ 12 beyond L2 remain behind native.
+- NEON compares from K = 9 (two byte compares per slice) and NEON decode
+  (a layout question: striped or vertical bodies for decode-heavy blocks).
+- Weighted SUM over uniform codes wider than 8 bits (gather-bound).
+- Exact-length point loads for boundary bodies.
 - The saturated DRAM tier and front A's corrected native controls.
-- The exact boundary route, `with_exact_body` in [body.h](body.h): leaves with
-  a halo read a zero-tailed copy of their body when the image cannot admit the
-  halo. It is unmeasured.
