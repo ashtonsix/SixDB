@@ -23,8 +23,9 @@ thread-local.
   scans 2.5× faster, and on the measured columns they cost points and fused
   predicate → SUM nothing (within ±7%, warm and flushed, both hosts). Grouped
   placement is the working default. Relocating rewrites decay it: 10% of
-  blocks relocated costs cold scans 1.3–2.2×, points nothing, so compaction
-  is a per-group policy triggered by the relocated share
+  blocks relocated costs cold scans 1.3–2.2×, points nothing. Compaction
+  repays after C/d future scans; the edit-policy comparison (corrections vs
+  repair vs relocation vs native groups) is front A's with B
   ([relocation](substrate/README.md#placement-under-relocating-writes)).
 - **Exact boundary route** (C with B): front C is adding `with_exact_body()`
   in `bodies/body.h` (halo leaves read a zero-tailed copy; plane and lane

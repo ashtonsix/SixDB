@@ -4,10 +4,23 @@ Ikea LEAD owns front A and Ikea-side change support; Claude owns the execution
 substrate. These instruments support complete Frame comparisons, not a separate
 performance target for the module.
 
+The [direction review](DIRECTION.md) proposes the next decision-changing work:
+one stored representation across mixed queries and edits, construction costs,
+and corrections versus relocation, using the controls already established.
+
 The [calibration findings](FINDINGS.md) retain the fixed-work caveat, corrected
 common-window Zen 5 rates, PMU limits and the smaller-instance experiment plan.
 [Native codec controls](codecs/README.md) establish pinned functional baselines;
 their boot checks are not speed comparisons.
+The [pinned native Calico controls](calico/README.md) now supply callable exact
+signed and unsigned whole-SUM paths, with local optimized/sanitizer qualification
+and an explicit upstream extreme-range-predicate limitation. They establish no
+timing or Frame parity yet. Prepare their source with the owning runner's
+`--prepare`, then enable `SIXDB_FRAME_CALICO_CONTROLS` in the phase-1/phase-2
+root spike configuration for `frame_calico_controls` and `frame_calico_check`.
+The default is off. The parent route also builds and passes the positive
+1,638-case functional witness; preparation and private retained capacity limits
+remain explicit in the owning README.
 The [ALP IEEE audit](alp-audit/README.md) supplies a tested complete RD path and
 retains automatic decimal ALP failures at the pin. Decimal boot round trips do
 not qualify a general-IEEE control.

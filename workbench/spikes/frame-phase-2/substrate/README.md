@@ -348,11 +348,14 @@ blocks that way (answers unchanged) under both placements (`5f9722bb`, jobs
    bodies, UserID's kind index reads blocks out of address order and runs
    2.5× slower than address segments (41.4 vs 16.6); over grouped bodies it is
    the fastest arm (15.3).
-3. **So compaction has a scan-driven cadence.** Keeping a group's relocated
-   share near 1% holds scans within about 10%; a part that serves mostly
-   points and random selections can let relocation accumulate. This is a
-   per-group, workload-dependent policy (Engine's), with the relocated share
-   as the cheap trigger statistic.
+3. **Relocation here isolates spatial damage, not an edit policy.** It moves
+   unchanged whole bodies. Compaction (copying live bodies back into
+   placement order) costs about 25–100 ns per block; with a saving of d ns
+   per block per scan it repays after C/d future scans, before counting extra
+   storage and retained old bytes. The real comparison against bounded group
+   corrections, fitting in-place repair and native mutable groups on
+   identical histories is front A's, with this image's mechanics (Ikea
+   LEAD's direction review).
 
 ## Points through ikea::intervals
 

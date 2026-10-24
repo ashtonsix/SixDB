@@ -11,6 +11,11 @@ target_link_libraries(frame_bandwidth_check PRIVATE Threads::Threads)
 
 add_subdirectory(cells)
 
+option(SIXDB_FRAME_CALICO_CONTROLS "Build pinned native Calico Frame controls" OFF)
+if(SIXDB_FRAME_CALICO_CONTROLS)
+  add_subdirectory(calico)
+endif()
+
 option(SIXDB_FRAME_CODEC_CONTROLS "Build pinned native Frame codec controls" OFF)
 if(SIXDB_FRAME_CODEC_CONTROLS)
   add_subdirectory(codecs)

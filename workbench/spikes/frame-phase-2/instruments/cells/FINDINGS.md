@@ -71,10 +71,11 @@ remain workload choices: whole-image indexing is not universally better as
 pool pressure increases. The useful research question is which complete
 consumer/footprint selects each program, not a universal compressed hot-loop win.
 
-Calico remains an explicit missing executable comparison. Ikea HELPER is
-qualifying unchanged pinned Calico Type-bound and raw-array entry points, with
-unsigned and signed exact aggregate laws kept separate. Historical Calico
-numbers and source surveys do not establish current parity. Native Polars,
+This frozen panel contains no Calico arm. Subsequently,
+[pinned native Calico controls](../calico/README.md) gained functional
+qualification, with unsigned and signed exact aggregate laws kept separate;
+their same-work timings are still owed. Historical Calico numbers and source
+surveys do not establish current parity. Native Polars,
 DuckDB and codec controls likewise need complete comparable timed cells beyond
 their existing functional qualification.
 

@@ -24,7 +24,10 @@ targets numerically and keeps the losing cells.
 
 Every result records the instance type, the core count and the number of
 concurrent streams. A flushed input on one core is the DRAM-one-core tier, not
-the saturated tier; phase 1 never measured the saturated tiers.
+the saturated tier; phase 1 never measured the saturated tiers. "Flushed" in every result below is a conditioning step (the
+inputs were evicted before the call), not proof that loads were served from
+DRAM; no guest here has qualified LLC or DRAM counters (front A's
+[findings](instruments/FINDINGS.md)).
 
 ### Hardware priors (to be calibrated)
 
@@ -79,26 +82,24 @@ wins come from narrower lanes and from removing rows altogether.
 
 | Baseline | Representation | Mechanisms it shares | Use it for | In SixDB today |
 | --- | --- | --- | --- | --- |
-| Native narrow and FOR arrays | Global FOR, narrowest byte lane | M2 at global width | The honest floor for hot scans and points | Yes (phase 1 controls) |
-| Polars 1.42 | In-memory Arrow, logical width; categoricals | Full-width SIMD | Scans, filters, group-by, sort, take, cumulative ops | Python only; a native Rust driver would remove interpreter edges |
-| DuckDB 1.5 | Compressed storage (constant, RLE, bitpacking, dictionary, ALP), zone maps, perfect-hash aggregation; 2048-value vectors | M3 at rest, M8 coarse | Bytes, filtered scans, low-cardinality group-by, updates | Python only; the C API would give clean timings |
-| TurboPFor | Bit packing, PFor, delta in 128/256-value blocks | M3 | Encode and decode throughput; block random access | No |
-| FastLanes | Transposed 1024-value vectors; fused FFOR, delta, RLE, dictionary decode | M2, M3 | Decode throughput ceiling | No |
-| ALP (reference implementation) | Per-vector decimal exponent and factor; ALP_RD | M3 for floats | Float encode, decode, bytes | No |
+| Native narrow and FOR arrays | Global FOR, narrowest byte lane | M2 at global width | The honest floor for hot scans and points | Yes: `frame_cells_controls` (front A, qualified) |
+| Polars 1.42 | In-memory Arrow, logical width; categoricals | Full-width SIMD | Scans, filters, group-by, sort, take, cumulative ops | Yes: Python and a qualified native Rust driver (`instruments/systems/polars`) |
+| DuckDB 1.5 | Compressed storage (constant, RLE, bitpacking, dictionary, ALP), zone maps, perfect-hash aggregation; 2048-value vectors | M3 at rest, M8 coarse | Bytes, filtered scans, low-cardinality group-by, updates | Yes: C API over owned typed tables (`instruments/systems`) |
+| TurboPFor | Bit packing, PFor, delta in 128/256-value blocks | M3 | Encode and decode throughput; block random access | Yes: pinned, block points qualified (`instruments/codecs`) |
+| FastLanes | Transposed 1024-value vectors; fused FFOR, delta, RLE, dictionary decode | M2, M3 | Decode throughput ceiling | Yes: pinned FFOR (`instruments/codecs`); its random-access entry is unqualified |
+| ALP (reference implementation) | Per-vector decimal exponent and factor; ALP_RD | M3 for floats | Float encode, decode, bytes | Yes: ALP_RD audited for general IEEE; automatic decimal ALP fails at the pin (`instruments/alp-audit`) |
 | BtrBlocks | Sampled cascade selection | M3 | Analysis and sampling cost (stage 0), decompression | No |
-| CRoaring | Compressed bitmaps | M8 for sets | Selection masks, rank and select, presence | No |
-| Highway vqsort, x86-simd-sort, a radix sort | Native keys | — | Reorder family | No |
+| CRoaring | Compressed bitmaps | M8 for sets | Selection masks, rank and select, presence | Yes: pinned CRoaring32 (`instruments/selection-controls`) |
+| Highway vqsort, x86-simd-sort, a radix sort | Native keys | — | Reorder family | Yes: pinned vqsort (`instruments/selection-controls`) |
 | Ikea Hashtable and Abseil | Native keys | — | Hash probe and grouping consumers | Yes |
 | `std::lower_bound`, Eytzinger layout, Ikea Intervals | Native or encoded ordered data | — | Search family | Partly |
-| Calico Frame kernels | Packed residuals with symbols | M1, M2, M7 | Parity per the brief | Sources only |
+| Calico Frame kernels | Packed residuals with symbols | M1, M2, M7 | Parity per the brief | Yes: pinned native exact controls, functionally qualified, not timed (`bed6a1ea`) |
 | Parquet + ZSTD, DuckDB storage | At rest | — | Bytes | Yes |
 
-Downloads are approved (2026-10-23). Ikea LEAD's acquisition order: native
-controls and Polars first, TurboPFor and FastLanes for the integer-body cells,
-native DuckDB and Polars for complete queries, then ALP and a float corpus,
-then bitmap and reorder peers as those operations open. The "lacks" column is
-a hypothesis about each baseline until its actual entry points and plans are
-inspected.
+Front A owns this roster and its qualification ([instruments](instruments/README.md));
+the table records status as of 2026-10-24. BtrBlocks is not yet acquired.
+The "lacks" column is a hypothesis about each baseline until its actual entry
+points and plans are inspected.
 
 ## Targets
 

@@ -37,6 +37,13 @@ the qualified operations and build limits. FastLanes FFOR and ALP export some
 identical symbols: use separate executables for their comparisons. These targets
 are primitive controls, not the full FastLanes file format or a query engine.
 
+[Pinned Calico Frame](frame-calico.cmake) recovers a small unchanged source
+closure and verifies every file. Its [callable controls](../spikes/frame-phase-2/instruments/calico/README.md)
+use actual bound RawCodec/Engine operations with exact signed/unsigned SUM laws.
+The qualified source paths, functional checks and retained upstream predicate
+limitation establish neither timing nor general Calico parity. The provider
+does not import Calico's old harness or alter its source.
+
 [DuckDB's C API provider](duckdb.cmake) imports a hash-verified official Linux
 release. Its [native typed-table check](../spikes/frame-phase-2/instruments/systems/README.md)
 keeps ingestion and retained table ownership separate from complete prepared
