@@ -91,7 +91,7 @@ void count_case(const std::string &name, const std::vector<u64> &v, int rounds) 
              return n;
          }},
         {"frame_descriptor_pass", [&] { return c.count(comparison::greater_equal, t); }},
-        {"native_narrow_pair_count", [&] { return frame_cells::native_pair_once(native, native, t, mask).count; }},
+        {"native_narrow_count", [&] { return frame_cells::native_count_once(native, t, mask); }},
     };
     std::vector<std::vector<double>> ts(arms.size());
     for (int r = 0; r < rounds; ++r)
@@ -241,6 +241,12 @@ void points_case(const std::string &name, const std::vector<u64> &base, int roun
     for (u32 r : rows)
         want += v[r];
     std::vector<u64> out(rows.size());
+    frame_cells::native narrow(v);
+    std::vector<u64> all_words((v.size() / block_rows + 63) / 64, ~u64{0});
+    const auto all_mask = frame_cells::block_mask::bind(all_words, v.size());
+    std::vector<std::size_t> request_rows(rows.begin(), rows.end());
+    const auto requests = frame_cells::point_requests::bind(request_rows, v.size());
+    frame_cells::validate_native_points(narrow, all_mask, requests);
 
     loom::HardwareOptions options;
     options.limits = {2 * 1024 * 1024, 3 * 1024 * 1024, std::chrono::milliseconds(100)};
@@ -279,6 +285,15 @@ void points_case(const std::string &name, const std::vector<u64> &base, int roun
                  for (std::size_t i = i0; i < i1; ++i)
                      out[i] = plan.get(rows[i]);
              }
+         }},
+        {"plan_pipelined16", [&] { plan.get_many<16>(rows.data(), rows.size(), out.data()); }},
+        {"plan_pipelined32", [&] { plan.get_many<32>(rows.data(), rows.size(), out.data()); }},
+        {"native_narrow_points", [&] {
+             // Front A's narrow native gather; its answer is the sum, so out
+             // carries it in slot 0.
+             const auto ans = frame_cells::native_points_once(narrow, all_mask, requests);
+             std::fill(out.begin(), out.end(), 0);
+             out[0] = static_cast<u64>(ans.sum);
          }},
         {"plan_loom_ring32", [&] {
              for (std::size_t i = 0; i < rows.size(); ++i)

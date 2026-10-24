@@ -62,6 +62,21 @@ class point_plan {
         if (e.count)
             __builtin_prefetch(e.pos);
     }
+    // A software pipeline over independent points: the entry D ahead of the
+    // body, the body D ahead of the compute, so 2D points are in flight.
+    template <std::size_t D> void get_many(const u32 *rows, std::size_t n, u64 *out) const {
+        for (std::size_t i = 0; i < std::min(n, 2 * D); ++i)
+            prefetch_entry(rows[i]);
+        for (std::size_t i = 0; i < std::min(n, D); ++i)
+            prefetch_body(rows[i]);
+        for (std::size_t i = 0; i < n; ++i) {
+            if (i + 2 * D < n)
+                prefetch_entry(rows[i + 2 * D]);
+            if (i + D < n)
+                prefetch_body(rows[i + D]);
+            out[i] = get(rows[i]);
+        }
+    }
     u64 get(std::size_t row) const {
         const auto &e = entries_[row / block_rows];
         const unsigned r = row % block_rows;

@@ -7,6 +7,7 @@
 
 #include <cstdio>
 #include <random>
+#include <map>
 #include <set>
 
 using namespace frame3;
@@ -102,6 +103,34 @@ int main() {
     for (const auto &[name, v] : columns())
         for (const auto &t : placeholder_trees())
             check(name, v, t);
+    // Image streams: emit every stream of a built tree, attach a fresh tree
+    // from them alone, and check it (root and checkpoint streams, G16 and G64,
+    // a nonzero root group and a partial final block).
+    for (const auto &[name, v] : columns())
+        for (unsigned G : {16u, 64u}) {
+            auto make = [G] {
+                return std::make_unique<intervals>(std::make_unique<bound>(std::make_unique<pack<sp::preset::compact>>(group_blocks)),
+                                                   std::make_unique<bound>(std::make_unique<pack<sp::preset::compact>>(group_blocks)), G);
+            };
+            const column built(make(), v);
+            std::map<std::string, column::stream_images> placed;
+            std::vector<std::vector<std::byte>> keep;
+            keep.reserve(4096);
+            for (const auto &[id, st] : built.streams()) {
+                auto &out = placed[id];
+                out.images.resize(built.parts());
+                for (unsigned p = 0; p < built.parts(); ++p) {
+                    out.rows.push_back(st->rows(p));
+                    for (unsigned g = 0; g < st->groups_in(p); ++g) {
+                        keep.push_back(built.image(*st, p, g));
+                        out.images[p].push_back(keep.back());
+                    }
+                }
+            }
+            expect(placed.size() == 2 && placed.contains("checkpoints"), name + " intervals streams");
+            const column attached(make(), placed);
+            check_column(name + " / attached intervals G" + std::to_string(G), attached, v);
+        }
     // Two columns sharing one TuplePack record leaf.
     {
         const auto cols = columns();

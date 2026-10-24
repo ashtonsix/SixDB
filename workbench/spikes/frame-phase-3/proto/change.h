@@ -65,6 +65,7 @@ class overrides final : public stage {
   public:
     overrides(std::unique_ptr<stage> child, unsigned capacity) : child_(std::move(child)), capacity_(capacity) {}
     const char *name() const override { return "overrides"; }
+    const char *role(unsigned) const override { return "base"; }
     std::span<const std::unique_ptr<stage>> children() const override { return {&child_, 1}; }
     void build(unsigned p, const build_input &in) override {
         if (parts_.size() <= p)

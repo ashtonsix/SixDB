@@ -22,7 +22,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <map>
 #include <memory>
+#include <string>
 #include <span>
 #include <vector>
 
@@ -178,15 +180,41 @@ class stage {
     // an owner placed (an Orbital Part), borrowing payload where it can.
     // writable, when not empty, is the same image as a private draft the tree
     // may store into; otherwise the image is read-only.
+    //
+    // Image streams. A child whose row domain differs from its parent's (an
+    // intervals stage's checkpoints) is its own stream: emitted and attached
+    // per its own groups, not inline in the parent's. A stream's identity is
+    // the path of child roles from the root ("checkpoints",
+    // "residuals/checkpoints"), stable when other children gain streams. The
+    // retained material, not the stage, maps streams to Parts.
+    virtual const char *role(unsigned child) const { return child ? "child1" : "child0"; }
+    virtual bool inline_child(unsigned) const { return true; }
+    // Every stream below this stage, with the subtree that emits it.
+    void streams(const std::string &prefix, std::vector<std::pair<std::string, const stage *>> &out) const {
+        const auto ch = children();
+        for (unsigned i = 0; i < ch.size(); ++i) {
+            const std::string path = prefix + role(i);
+            if (inline_child(i))
+                ch[i]->streams(path + "/", out);
+            else {
+                out.emplace_back(path, ch[i].get());
+                ch[i]->streams(path + "/", out);
+            }
+        }
+    }
     virtual void emit(unsigned part, unsigned group, std::vector<std::byte> &out) const {
-        for (const auto &c : children())
-            c->emit(part, group, out);
+        const auto ch = children();
+        for (unsigned i = 0; i < ch.size(); ++i)
+            if (inline_child(i))
+                ch[i]->emit(part, group, out);
     }
     virtual std::size_t attach(unsigned part, std::size_t rows, unsigned group, std::span<const std::byte> image, std::span<std::byte> writable) {
         sized(part, rows);
         std::size_t used = 0;
-        for (const auto &c : children())
-            used += c->attach(part, rows, group, image.subspan(used), writable.empty() ? writable : writable.subspan(used));
+        const auto ch = children();
+        for (unsigned i = 0; i < ch.size(); ++i)
+            if (inline_child(i))
+                used += ch[i]->attach(part, rows, group, image.subspan(used), writable.empty() ? writable : writable.subspan(used));
         return used;
     }
     unsigned groups_in(unsigned part) const { return (blocks_in(part) + group_blocks - 1) / group_blocks; }
@@ -315,6 +343,41 @@ class column {
             for (unsigned g = 0; g < images[p].size(); ++g)
                 root_->attach(p, part_rows_[p], g, images[p][g], writable ? (*writable)[p][g] : std::span<std::byte>{});
         }
+    }
+    /// One stream's placed images: its rows per part and images[p][g].
+    struct stream_images {
+        std::vector<std::size_t> rows;
+        std::vector<std::vector<std::span<const std::byte>>> images;
+    };
+    /// Attach every stream ("" is the root stream). Each section must be
+    /// consumed exactly; a stream the tree does not have is refused.
+    column(std::unique_ptr<stage> root, const std::map<std::string, stream_images> &streams) : root_(std::move(root)) {
+        const auto &main = streams.at("");
+        parts_ = static_cast<unsigned>(main.rows.size());
+        for (std::size_t r : main.rows)
+            rows_ += r;
+        for (const auto &[id, s] : this->streams())
+            if (!streams.contains(id))
+                std::abort();  // a required stream is absent
+        for (const auto &[id, s] : this->streams()) {
+            const auto &in = streams.at(id);
+            for (unsigned p = 0; p < in.rows.size(); ++p)
+                for (unsigned g = 0; g < in.images[p].size(); ++g)
+                    if (const_cast<stage *>(s)->attach(p, in.rows[p], g, in.images[p][g], {}) != in.images[p][g].size())
+                        std::abort();  // a section's extent does not match its law
+        }
+    }
+    /// Every stream with the subtree that emits it; "" is the root stream.
+    std::vector<std::pair<std::string, const stage *>> streams() const {
+        std::vector<std::pair<std::string, const stage *>> out{{"", root_.get()}};
+        root_->streams("", out);
+        return out;
+    }
+    /// One stream's image for one of its own groups.
+    std::vector<std::byte> image(const stage &s, unsigned part, unsigned group) const {
+        std::vector<std::byte> out;
+        s.emit(part, group, out);
+        return out;
     }
     std::vector<std::byte> image(unsigned part, unsigned group) const {
         std::vector<std::byte> out;

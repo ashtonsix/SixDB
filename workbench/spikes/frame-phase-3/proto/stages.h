@@ -423,6 +423,7 @@ class bound final : public stage {
     explicit bound(std::unique_ptr<stage> child, unsigned penalty = 0, unsigned cap = 64, unsigned slack = 0)
         : child_(std::move(child)), penalty_(penalty), cap_(cap), slack_(slack) {}
     const char *name() const override { return "bound"; }
+    const char *role(unsigned) const override { return "residuals"; }
     std::span<const std::unique_ptr<stage>> children() const override { return {&child_, 1}; }
 
     void build(unsigned p, const build_input &in) override {
@@ -845,6 +846,34 @@ class intervals final : public stage {
         assert(G >= 2 && block_rows % G == 0);
     }
     const char *name() const override { return "intervals"; }
+    const char *role(unsigned child) const override { return child ? "checkpoints" : "deltas"; }
+    // Checkpoints have their own row domain (one per G rows): their own stream.
+    bool inline_child(unsigned child) const override { return child == 0; }
+    // Image section: per block last value (u64), monotone and exact flags
+    // (u8, 0 or 1); then the deltas inline. G is the law's, not the image's.
+    // The flags are evidence: validation must establish them (owner A4).
+    void emit(unsigned p, unsigned g, std::vector<std::byte> &out) const override {
+        const part &s = parts_[p];
+        const unsigned first = g * group_blocks, n = std::min(group_blocks, blocks_in(p) - first);
+        for (unsigned b = first; b < first + n; ++b)
+            put<u64>(out, s.last[b]), put<u8>(out, s.monotone[b]), put<u8>(out, s.exact[b]);
+        children_[0]->emit(p, g, out);
+    }
+    std::size_t attach(unsigned p, std::size_t rows, unsigned g, std::span<const std::byte> in, std::span<std::byte> writable) override {
+        sized(p, rows);
+        if (parts_.size() <= p)
+            parts_.resize(p + 1);
+        part &s = parts_[p];
+        s.last.resize(blocks_in(p)), s.monotone.resize(blocks_in(p)), s.exact.resize(blocks_in(p));
+        std::size_t at = 0;
+        const unsigned first = g * group_blocks, n = std::min(group_blocks, blocks_in(p) - first);
+        for (unsigned b = first; b < first + n; ++b) {
+            s.last[b] = take<u64>(in, at), s.monotone[b] = take<u8>(in, at), s.exact[b] = take<u8>(in, at);
+            if (s.monotone[b] > 1 || s.exact[b] > 1)
+                std::abort();  // flags are 0 or 1
+        }
+        return at + children_[0]->attach(p, rows, g, in.subspan(at), writable.empty() ? writable : writable.subspan(at));
+    }
     std::span<const std::unique_ptr<stage>> children() const override { return children_; }
     void build(unsigned p, const build_input &in) override {
         if (parts_.size() <= p)

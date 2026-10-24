@@ -37,6 +37,10 @@ class runs final : public stage {
   public:
     runs(std::unique_ptr<stage> sizes, std::unique_ptr<stage> values) : children_{std::move(sizes), std::move(values)} {}
     const char *name() const override { return "runs"; }
+    const char *role(unsigned child) const override { return child ? "values" : "sizes"; }
+    // Sizes and values have their own row domains (one per run): both are
+    // their own streams. Their image sections are not written yet.
+    bool inline_child(unsigned) const override { return false; }
     std::span<const std::unique_ptr<stage>> children() const override { return children_; }
     void build(unsigned p, const build_input &in) override {
         sized(p, in.values.size());
@@ -98,6 +102,7 @@ class split final : public stage {
   public:
     split(std::unique_ptr<stage> head, std::unique_ptr<stage> suffix, unsigned s) : children_{std::move(head), std::move(suffix)}, s_(s) {}
     const char *name() const override { return "split"; }
+    const char *role(unsigned child) const override { return child ? "suffix" : "head"; }
     std::span<const std::unique_ptr<stage>> children() const override { return children_; }
     void build(unsigned p, const build_input &in) override {
         sized(p, in.values.size());

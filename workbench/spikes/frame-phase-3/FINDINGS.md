@@ -306,9 +306,24 @@ is a per-ISA choice, not a free win.
   MECHANISMS' "parity at DRAM" target by a wide margin.
 - Staging helps: batch prefetching recovers 1.4–1.7× flushed (and 3× warm on
   Graviton 4). A 32-slot Ring adds callback overhead warm and recovers less
-  than plain batching. Neither is enough; a deeper pipeline (more points in
-  flight, entry prefetch one batch ahead, no indirect call per point) is the
-  next lever, and the point plan is where it belongs.
+  than plain batching.
+- A software pipeline in the plan (entries 2D points ahead, bodies D ahead;
+  `point_plan::get_many`, [seams-v2-zen5.jsonl](proto/evidence/seams-v2-zen5.jsonl),
+  [seams-v2-graviton4.jsonl](proto/evidence/seams-v2-graviton4.jsonl)) is the
+  best staged form: flushed 25–41 ns on Zen 5 and 19–28 on Graviton 4, 1.3–2.6×
+  the ready plan. Front A's narrow native points (one random line per point,
+  smaller than u64) take 3.7–6.3 and 6.5–8.8, so Frame is still 3–6× behind.
+  A Frame point touches two or three random lines (entry, body tile,
+  exception positions) against one; a flushed Zen 5 line costs about 4.4 ns,
+  so even perfect overlap leaves about 2×. Closing it needs descriptors that
+  stay resident (smaller entries, or entries co-located with bodies), which
+  is a representation question for points, not a seam question.
+
+The COUNT case now uses front A's count-only control (`native_count_once`):
+on Zen 5 the descriptor pass matches or beats it on UserID, CounterID and
+EventTime (1.1 vs 26.9, 0.55 vs 6.0, 10.5 vs 10.4 ns per block) and loses on
+OS (7.9 vs 5.9); on Graviton 4 Frame beats it on every column (UserID 3.6–4.1
+vs 57.9, OS 29 vs 58).
 
 ## What changes in the proposal
 
