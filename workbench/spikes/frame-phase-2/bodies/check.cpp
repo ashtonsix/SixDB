@@ -232,6 +232,9 @@ void check_runs(unsigned w, std::mt19937_64 &rng) {
                     if (runs<u8>::point_starts(img.data(), n, starts, i) != v[i])
                         fail("runs-point_starts", tag, w, runs<u8>::point_starts(img.data(), n, starts, i), v[i]);
             }
+            // The exact boundary route gives the same answers from a copy.
+            if (with_exact_body(img.data(), runs_bytes(n, w), [&](const u8 *b) { return f.sum(b, n); }) != s)
+                fail("runs-exact-route", tag, w, 0, s);
             u32 out[block_rows + 32];
             f.unpack(img.data(), n, out);
             for (unsigned i = 0; i < block_rows; ++i)

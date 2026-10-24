@@ -110,113 +110,217 @@ exact-tail law.
 ## Measurements
 
 [measure.cpp](measure.cpp) runs synthetic sweeps: uniform residuals per width,
-runs cut at random boundaries, exceptions per block. [columns.cpp](columns.cpp)
+runs cut at random boundaries, and exceptions per block. [columns.cpp](columns.cpp)
 runs phase 1's ClickBench columns (3M rows) encoded block by block under a
-policy and grouped by (kind, width). Each sweep loop is hoisted with the leaf
-inlined. Medians of 9 rotated rounds, each at least 2 ms. Tiers are set by
-rows: 64K (one part, L2), 4M (LLC) and 128M (DRAM, one core streaming). Times
-are ns per 256-row block (per point for points). `native` is the global-FOR
-narrow byte-lane array through the same lane leaves; `u64` is the logical
-array. Workers: [worker.sh](worker.sh) on Zen 5 (c8a.2xlarge, AVX-512 and AVX2
-builds) and Graviton 4 (c8g.2xlarge).
+policy and grouped by (kind, width). [peers.cpp](peers.cpp) runs front A's
+pinned TurboPFor and FastLanes at the same widths. Each sweep loop is hoisted
+with the leaf inlined. Times are medians of 9 rotated rounds, each at least
+2 ms. Tiers are set by rows: 64K (one part, L2), 4M (LLC) and 128M (DRAM, one
+core streaming); the saturated tier is front A's. Times are ns per 256-row
+block (per point for points). `native` is the global-FOR narrow byte-lane array
+through the same lane leaves, a control of my own (front A's corrected bridge
+replaces it). `u64` is the logical array. Workers: [worker.sh](worker.sh) on
+Zen 5 (c8a.2xlarge, AVX-512 and AVX2 builds) and Graviton 4 (c8g.2xlarge).
 
-Evidence (medians): [zen5-v2-packed](evidence/zen5-v2-packed.txt),
-[zen5-v2-runs](evidence/zen5-v2-runs.txt),
-[zen5-v2-columns](evidence/zen5-v2-columns.txt). Job
-`20261023T223949Z-9d9ee67e`.
+Evidence (medians): Zen 5 job `20261023T233103Z-ab8ecf15`,
+[packed](evidence/zen5-v4-packed.txt), [runs](evidence/zen5-v4-runs.txt),
+[patched](evidence/zen5-v4-patched.txt), [peers](evidence/zen5-v4-peers.txt),
+[columns](evidence/zen5-v4-columns.txt). Graviton 4 job
+`20261023T231450Z-d34498df`, [packed](evidence/g4-v3-packed.txt),
+[runs](evidence/g4-v3-runs.txt), [patched](evidence/g4-v3-patched.txt),
+[peers](evidence/g4-v3-peers.txt), [columns](evidence/g4-v3-columns.txt).
+The earlier Zen 5 v2 files show the before state of each fix below.
 
 ### Packed bodies, Zen 5 AVX-512
 
 | K | SUM L2 native / plane256 / phase 1 | COUNT ≥ L2 native / plane256 | SUM DRAM native / plane256 | Point L2 native / local8 / plane256 | Point DRAM native / local8 / plane256 |
 | ---: | --- | --- | --- | --- | --- |
-| 2 | 1.39 / 0.24 / 7.7 | 1.61 / 0.39 | 5.81 / 1.41 | 0.31 / 0.35 / 0.47 | 3.53 / 3.55 / 4.70 |
-| 4 | 1.41 / 0.73 / 7.7 | 1.42 / 0.75 | 5.78 / 3.53 | 0.31 / 0.35 / 0.78 | 3.55 / 4.20 / 9.90 |
-| 7 | 1.42 / 1.29 / 8.7 | 1.47 / 1.36 | — | 0.31 / 0.39 / 1.37 | — |
-| 8 | 1.42 / 1.38 / 7.3 | 1.49 / 2.31 | 5.72 / 5.77 | 0.31 / 0.41 / 0.32 | 3.52 / 4.96 / 3.52 |
-| 12 | 3.70 / 2.05 / 18.4 | 2.79 / 2.97 | 12.37 / 11.16 | 0.38 / 0.66 / 1.18 | 3.94 / 6.92 / 15.79 |
-| 16 | 3.70 / 2.41 / 15.0 | 2.79 / 4.61 | 12.71 / 11.49 | 0.38 / 0.45 / 0.49 | 4.04 / 5.53 / 6.40 |
-| 20 | 12.42 / 2.91 / 31.3 | 7.26 / 4.81 | 27.96 / 14.42 | 0.38 / 0.70 / 1.35 | 4.38 / 7.20 / 16.56 |
-| 32 | 12.52 / 6.18 / 25.1 | 7.27 / 8.76 | 27.35 / 30.51 | 0.39 / 0.41 / 1.05 | 4.49 / 4.22 / 13.07 |
+| 2 | 1.39 / 0.25 / 9.0 | 1.44 / 0.39 | 5.84 / 1.47 | 0.31 / 0.35 / 0.47 | 3.73 / 3.99 / 5.29 |
+| 4 | 1.39 / 0.73 / 7.6 | 1.41 / 0.73 | 5.81 / 3.47 | 0.31 / 0.35 / 0.78 | 3.68 / 4.33 / 10.05 |
+| 7 | 1.41 / 1.32 / 8.5 | 1.40 / 1.33 | — | 0.31 / 0.39 / 1.34 | — |
+| 8 | 1.40 / 1.39 / 7.1 | 1.43 / 2.23 | 5.80 / 5.78 | 0.31 / 0.40 / 0.31 | 3.71 / 5.77 / 3.68 |
+| 12 | 2.75 / 2.02 / 18.4 | 2.74 / 2.95 | 11.42 / 10.33 | 0.37 / 0.66 / 1.17 | 3.99 / 6.83 / 14.97 |
+| 16 | 2.75 / 2.39 / 14.9 | 2.74 / 4.59 | 11.58 / 11.54 | 0.37 / 0.44 / 0.48 | 4.07 / 5.52 / 6.40 |
+| 20 | 5.63 / 3.09 / 31.2 | 7.26 / 4.81 | 24.81 / 14.52 | 0.38 / 0.70 / 1.35 | 4.38 / 7.14 / 16.36 |
+| 32 | 5.63 / 6.11 / 24.8 | 7.26 / 8.70 | 24.92 / 29.23 | 0.38 / 0.41 / 1.05 | 4.36 / 4.08 / 12.87 |
 
 1. **Bit planes make SUM cost scale with K, not with the byte lane.** At L2,
-   plane256 SUM beats native narrow at every width except K = 8 (parity):
-   1.1–5.8× at K ≤ 7 and 1.5–4.3× from K = 9 to 32. That is 4–30× faster than
-   phase 1's leaf on the same bits. The native control pays its rounded lane
-   (u16 at K = 9, u32 at K = 17); planes pay K/8 vectors.
-2. **Compares follow K at small widths, the lane above 8.** plane256 COUNT
-   beats native at K ≤ 7 (0.4–1.4 vs 1.5 ns). From 9 to 32 it is within
-   1.7× and wins at K = 20. Each residual plane adds one branch-free op per block vector.
-   Byte slices compare at native speed, so the cost above K = 8 is R plane ops
-   plus combining four group masks.
+   plane256 SUM beats native narrow at every width except K = 8 and 32
+   (parity): 1.1–5.6× at K ≤ 7 and 1.15–1.8× from K = 9 to 20. That is 4–36×
+   faster than phase 1's leaf on the same bits. The native control pays its
+   rounded lane (u16 at K = 9, u32 at K = 17); the planes pay K/8 vectors.
+2. **Compares follow K at small widths and the lane above 8.** plane256 COUNT
+   beats native at K ≤ 7 (0.4–1.3 vs 1.4 ns). From 9 to 32 it is within 1.7×,
+   and it wins at K = 20. Each residual plane adds one branch-free op per block
+   vector. Byte slices compare at native speed, so the cost above K = 8 is R
+   plane ops plus combining four group masks.
 3. **plane256 is the scan layout; local8 is the point layout.** A local8 point
-   is 0.35–0.7 ns at L2 and 4–7 ns at DRAM (native 0.3 and 3.5–4.5), because a
-   tile keeps a row's bits in one line. A plane256 point needs R plane bytes
-   from up to R lines: 10–16 ns at DRAM with five or more planes. This
-   is a representation limit, so the scan/point mix should choose the layout
-   (local8 or plane64 for point-heavy blocks).
-4. **DRAM converts bytes into time only past the lane boundary.** One core
-   streaming, plane256 SUM is 2× native at K = 20 (14.4 vs 28.0) and 4× at K = 2,
-   but at parity at K = 8, 12, 16 and 32, where bytes are equal or the decode
-   work saturates first. The saturated tier, where bytes matter most, is not
-   measured yet (front A's harness).
-5. **Open anomaly**: plane256 masked SUM falls off beyond L2 at K ≥ 8 (DRAM
-   K = 16: 29 ns vs native 13.6 and local8 13.1), while plain SUM does not.
-   Unattributed.
+   costs 0.35–0.7 ns at L2 and 4–7 ns at DRAM (native 0.3 and 3.7–4.4), because
+   a tile keeps a row's bits in one line. A plane256 point needs R plane bytes
+   from up to R lines: 10–16 ns at DRAM with four or more planes. This is a
+   representation limit, so the scan/point mix should choose the layout.
+4. **One core streaming from DRAM, bytes pay only past the lane boundary.**
+   plane256 SUM is 1.7× native at K = 20 and 4× at K = 2. It is at parity at
+   K = 8, 12 and 16 and 0.85× at 32, where the bytes are equal or the decode
+   work saturates first. The saturated tier, where bytes should pay most, is front
+   A's next measurement.
+5. **A masked-load trap, fixed.** Clang folded "load, then mask in a register"
+   into AVX-512 fault-suppressing masked loads. DRAM-streamed masked SUM ran
+   2.2× slower (v2: K = 16 29 ns vs local8 13.1; native u8 14 vs 5.8 unmasked).
+   An empty asm keeps the load whole: K = 16 is now 12.7 ns against native
+   14.7, and it wins at DRAM from K = 2 to 20.
 
-### Runs, Zen 5 AVX-512, L2 (ns per block)
+### Runs, Zen 5 AVX-512, L2, 8-bit values (ns per block)
 
-| Runs per block | SUM native u8 / runs | COUNT native / runs | Mask native / best run variant | Masked SUM native / runs (scalar) | Point native / runs |
+| Runs per block | SUM native u8 / runs | COUNT native / runs | Mask native / ends / start bitmap | Masked SUM native / prefix / per run | Point native / ends / start bitmap |
 | ---: | --- | --- | --- | --- | --- |
-| 4 | 1.38 / 1.29 | 1.47 / 1.27 | 1.45 / 7.3 | 1.92 / 3.9 | 0.31 / 1.81 |
-| 24 | 1.41 / 2.05 | 1.61 / 1.98 | 1.39 / 14.6 | 2.57 / 18.4 | 0.31 / 2.27 |
-| 64 | 1.36 / 3.14 | 1.45 / 3.02 | 1.48 / 23.1 | 1.93 / 41.4 | 0.32 / 3.41 |
+| 4 | 1.39 / 1.30 | 1.41 / 1.26 | 1.41 / 7.3 / 6.67 | 1.67 / 4.39 / 3.90 | 0.31 / 2.01 / 1.18 |
+| 24 | 1.34 / 2.02 | 1.35 / 1.98 | 1.46 / 14.4 / 6.67 | 1.51 / 5.59 / 18.3 | 0.31 / 2.25 / 1.19 |
+| 64 | 1.39 / 3.08 | 1.45 / 2.93 | 1.40 / 25.7 / 6.74 | 1.64 / 8.19 / 41.3 | 0.31 / 3.23 / 1.22 |
 
-6. **SUM and COUNT over runs reach about 0.03 ns per run.** At OS's median of 24
-   runs, run SUM costs 2.05 ns against native u8 1.41 (phase 1: about 15). That
-   is the ceiling the probe predicted: per-run work cannot beat 256 bytes of
-   PSADBW much. COUNT is at parity, and both win below about 8 runs.
-7. **Run points meet the 2–5 ns bar.** Counting ends below the row in vector
-   lanes costs 1.8–3.4 ns from 4 to 64 runs at L2, and no binary search is
-   involved.
-8. **Mask emission and selected SUM were the run leaves far from the floor.**
-   Every ends-only mask variant (per-run toggles, transition walk, fill, byte
-   scatter) costs about 0.6 ns per run. The prefix-count masked SUM and the
-   run-start bitmap mask (PDEP) are in the v3 run.
+The "ends" mask column is the best of the four ends-only variants.
+
+6. **SUM and COUNT over runs cost about 0.03 ns per run.** At OS's median of
+   24 runs, run SUM costs 2.0 ns against native u8 1.34 (phase 1: about 15).
+   That is the ceiling the probe predicted: per-run work cannot beat 256 bytes
+   of PSADBW much. Both win below about 8 runs.
+7. **Run points meet the 2–5 ns bar without a search.** Counting the ends below
+   the row in vector lanes costs 2.0–3.2 ns from 4 to 64 runs. With the
+   run-start bitmap a point is a popcount rank: 1.2 ns at any run count. The
+   intervals-search thread measured the same fixed-control count at 0.7–1.3 ns
+   against 10–18 ns for a search that mispredicts its exit.
+8. **Masked SUM by Abel summation removes the per-run loop.** SUM over selected
+   rows equals Σ (v_r − v_{r−1}) × (selected rows at or after the start of run
+   r). The counts come from 32-entry byte lookups of a prefix-popcount table
+   (16 runs per step). 5.6 ns at 24 runs instead of 18.3, and at DRAM 5.7 ns
+   against native's 14 (the run body is far smaller).
+9. **Mask emission needs the run-start bitmap.** Every ends-only emitter
+   (per-run toggles, a transition walk, splat fills, byte scatter) costs about
+   0.6 ns per run, because turning sorted positions into a bitmap is a
+   scatter. With the bitmap, the run-level transitions are deposited at the run
+   starts by PDEP and prefix-XORed (PCLMUL): 6.7 ns at any run count. It is
+   still 4.6× native u8 at L2. At DRAM it is within 2× of native for 8-bit
+   values and faster for 16-bit (7.4–9.8 vs 12.8).
+   On Graviton 4, SVE2 BDEP gives the same shape: 20–26 ns per block on real
+   columns against 70–85 without it.
 
 ### Real columns, Zen 5 AVX-512, full 3M-row slice (LLC)
 
-Policy `bytes` picks the smaller of runs and packed per block; `packed` never
-uses runs. ns per block, native / Frame:
+Policies: `bytes` picks the smaller of runs and packed per block, `+starts`
+adds the run-start bitmap to run blocks (32 B each, charged), and `packed`
+never uses runs. ns per block, native / Frame:
 
-| Column | Bytes Frame / native | SUM | COUNT ≥ median | Mask ≥ median | Point |
-| --- | --- | --- | --- | --- | --- |
-| OS (bytes: 36 runs mean) | 1.0 / 3.0 MB | 2.14 / 2.51 | 2.27 / 2.78 | 3.34 / 58.4 | 3.88 / 13.3 |
-| OS (packed) | 3.0 / 3.0 MB | 2.23 / 2.26 | 2.41 / 3.33 | 2.78 / 3.60 | 3.90 / 8.7 |
-| RegionID (bytes) | 2.4 / 12.0 MB | 13.94 / 3.62 | 11.76 / 4.03 | 15.9 / 53.8 | 3.92 / 16.7 |
-| RegionID (packed) | 5.6 / 12.0 MB | 13.50 / 4.26 | 11.19 / 6.23 | 9.28 / 5.77 | 3.85 / 11.7 |
-| EventTime (packed) | 6.5 / 12.0 MB | 13.57 / 4.95 | 10.55 / 4.78 | 9.80 / 5.26 | 3.87 / 5.29 |
-| UserID (bytes, 64-bit runs) | 6.1 / 24.0 MB | 33.97 / 7.57 | 27.55 / 0.46 | 28.1 / 0.86 | 2.49 / 14.9 |
-| ClientIP (bytes) | 3.6 / 12.0 MB | 13.66 / 5.10 | 11.52 / 5.45 | 16.2 / 67.6 | 3.88 / 14.7 |
-| CounterID (bytes) | 0.19 / 6.0 MB | 5.60 / 0.16 | 5.08 / 0.27 | 4.60 / 0.71 | 3.86 / 0.99 |
+| Column, policy | Bytes Frame / native | SUM | COUNT ≥ median | Mask ≥ median | Masked SUM (A ≥ median) | Point |
+| --- | --- | --- | --- | --- | --- | --- |
+| OS, bytes+starts | 1.39 / 3.0 MB | 2.27 / 2.45 | 2.36 / 2.74 | 2.73 / 8.95 | 2.95 / 7.08 | 3.81 / 6.08 |
+| OS, packed | 2.96 / 3.0 MB | 2.26 / 2.24 | 2.33 / 3.29 | 2.70 / 3.65 | 3.08 / 3.95 | 3.83 / 8.69 |
+| RegionID, bytes+starts | 2.73 / 12.0 MB | 9.85 / 3.61 | 10.98 / 3.98 | 10.14 / 9.23 | 13.58 / 8.96 | 3.88 / 10.0 |
+| RegionID, packed | 5.55 / 12.0 MB | 10.73 / 4.02 | 12.28 / 5.98 | 11.02 / 6.40 | 12.63 / 6.06 | 3.85 / 11.9 |
+| EventTime, packed | 6.54 / 12.0 MB | 9.94 / 4.62 | 10.26 / 4.70 | 9.29 / 4.98 | 9.13 / 5.15 | 3.88 / 5.62 |
+| ClientIP, bytes+starts | 3.96 / 12.0 MB | 8.61 / 5.06 | 8.51 / 5.45 | 9.67 / 10.03 | 11.80 / 11.94 | 3.86 / 6.91 |
+| UserID, bytes+starts | 6.46 / 24.0 MB | 28.53 / 7.55 | 20.02 / 0.55 | 26.84 / 0.88 | 83.59 / 67.87 | 2.56 / 7.07 |
+| ResolutionWidth, packed | 3.93 / 6.0 MB | 4.74 / 2.92 | 4.38 / 3.79 | 4.84 / 4.10 | 6.80 / 4.38 | 3.82 / 7.34 |
+| CounterID, bytes | 0.19 / 6.0 MB | 4.62 / 0.16 | 4.19 / 0.27 | 4.37 / 0.74 | — | 3.82 / 1.41 |
 
-9. **Leaves near their floor turn phase 1's losses into wins.** SUM and COUNT
-   now beat the native narrow array on RegionID, EventTime, UserID and ClientIP
-   (SUM 2.6–4.5×, COUNT 2–60×) and match it on OS. They do it in 1.8–5× fewer
-   bytes (32× on CounterID). Phase 1's OS SUM cost 15–27 ns per block. The u64
-   (Polars-width) array is 4.6–13× slower than Frame on these columns.
-10. **Runs versus packed is a per-operation choice.** The same OS rows cost 2.5
-    ns per SUM block as runs and 2.3 as packed, but 58 vs 3.6 for mask
-    emission. Run points cost 13–17 ns in this harness against 5–12 packed
-    (part of it is the per-point kind dispatch). This is STAGES.md's weighted
-    class: Engine's objective weights decide, or a block keeps both forms when
-    masks or points dominate.
+10. **With leaves near their floor, phase 1's losses become wins on most
+    cells.** SUM beats the native narrow array 1.6–3.8× on RegionID,
+    EventTime, ClientIP, UserID and ResolutionWidth and matches it on OS.
+    COUNT is 1.2–36× native except on OS (0.86×). Masks are 1.1–30×, except OS
+    (0.3×) and ClientIP (0.96×). Masked SUM is 1.2–2.1× except OS and ClientIP.
+    The columns take 1.5–4.4× fewer bytes (32× on CounterID). Phase 1's OS SUM cost 15–27 ns per block. The u64
+    (Polars-width) array is 4–13× slower than Frame on every one of these
+    columns.
+11. **Runs versus packed is a per-operation choice.** On OS, runs cost 2.45 ns
+    per SUM block against 2.24 packed, but 8.95 against 3.65 for mask emission
+    and 7.1 against 4.0 for masked SUM. RegionID's masks favour packed (6.4 vs
+    9.2) while its COUNT favours runs (4.0 vs 6.0). This is STAGES.md's weighted
+    class: Engine's objective weights decide, or a block carries both forms
+    when masks dominate.
+12. **Points stay 1.6–4× native in this harness.** Resident packed points cost
+    5–12 ns and run points 6–10 ns with the bitmap, against native's 3.8. The
+    synthetic leaves cost 0.3–3 ns, so the rest is this harness's per-point
+    kind dispatch and group lookup, which the substrate thread owns.
+
+### Encode-time exceptions (patched FOR), Zen 5 AVX-512
+
+K = 8 with 4 exceptions per block in [2^8, 2^32); without them the block
+needs 32 bits (`native` is then a u32 lane).
+
+| ns per block | L2 native / plane256 at 32 / patched | DRAM native / plane256 at 32 / patched |
+| --- | --- | --- |
+| SUM | 5.33 / 6.16 / 3.00 | 24.72 / 27.85 / 7.06 |
+| COUNT ≥ | 7.21 / 8.72 / 3.82 | 24.94 / 41.63 / 8.25 |
+| Mask ≥ | 5.10 / 9.73 / 5.69 | 23.87 / 29.94 / 8.91 |
+| Point | 0.39 / 1.06 / 1.50 | 4.32 / 12.64 / 19.30 |
+
+13. **Fused patching costs a correction per exception, never a decode.**
+    SUM, COUNT and masks are the packed leaf at K plus one vector pass over the
+    exception values. They run 2.7–3.5× native at DRAM with 27% of the bytes.
+    Masks pay a scalar per-exception fix-up: at 16 exceptions they lose 3× at
+    L2. Points lose at DRAM (19 vs 4.3 ns): the position list and the planes
+    are separate lines, a representation cost unless a point-heavy block uses
+    local8 and keeps its exceptions in the same tile.
+
+### Compaction, histograms, MIN/MAX, first match (Zen 5 AVX-512)
+
+14. **Compaction to an encoded result is 2–2.5× behind native narrow
+    compaction.** At L2 and K = 8 it costs 11.9 ns per block against native u8
+    VPCOMPRESSB 5.3 and u64 (Polars-like) 30.8, so it is 2.6× ahead of u64. At
+    K = 16 it is 23.2 against 9.3 native and level with u64 (22.6). At K = 20
+    it is behind u64. Per group it compresses B slices and
+    PEXTs R planes into a bit-appended stream, so it pays bit-granular appends
+    that a byte lane doesn't. The masked-store rewrite of the slice copy is in
+    the working tree, not yet measured.
+15. **Narrow-key histograms are bit-sliced 2.3–3.9× faster than the best native.**
+    A 2^K-bin histogram of a block (the radix partition and counting-sort
+    core) is a prefix tree of plane ANDs: 1.4 / 2.8 / 5.7 / 10.9 ns at
+    K = 1 / 3 / 4 / 5, against 3.1–44 ns for native per-key vector counts
+    and 53–81 for a scalar histogram. Run bodies histogram per run (10–16 ns
+    at 24 runs). From K = 6 the plane path must decode and loses. A sorted
+    block of narrow keys is a runs body built from the histogram, with no row
+    movement.
+16. **MIN/MAX from a body is a fallback.** Bit-sliced narrowing is 0.2–2 ns at
+    K ≤ 5, but from K = 8 the top-slice-then-points path costs 4–8 ns at L2 and
+    17–50 beyond (native 1.5–7). Exact block statistics answer MIN/MAX without
+    the body (MECHANISMS.md), so this leaf only serves selected rows.
+17. **First match** (`first_ge`) costs the same as the compare it is built on,
+    with an early exit per group: 0.3–2.5 ns at K ≤ 5, 2.3–8.4 above (native
+    0.8–4.9).
+
+### Peers (front A's pinned TurboPFor and FastLanes)
+
+| | Zen 5 AVX-512 L2 | Graviton 4 L2 |
+| --- | --- | --- |
+| SUM K = 4: plane256 / FastLanes narrow decode+sum / TurboPFor vertical decode+sum | 0.73 / 2.16 / 17.7 | 4.53 / 8.24 / 35.4 |
+| SUM K = 12 | 2.09 / 4.81 / 18.1 | 8.62 / 22.3 / 38.9 |
+| Unpack to u32, K = 12: plane256 / TurboPFor vertical / FastLanes | 8.29 / 5.10 / 4.03 | 64.8 / 17.4 / 28.4 |
+| Point K = 12 at DRAM: local8 / TurboPFor bitgetx32 / native | 6.97 / 11.41 / 3.95 | 13.91 / 9.92 / 7.19 |
+
+18. **Operating on planes beats decode-then-consume with the best decoders.**
+    plane256 SUM is 1.6–8× FastLanes decode-then-sum on Zen 5 and 1.7–3.8× on
+    Graviton 4 at K ≤ 16. That compares an operation law to the decode
+    ceiling: FastLanes and TurboPFor decode, then the lane leaf consumes from
+    L1.
+19. **Decoding is where planes lose, most on NEON.** Unpack to u32 is
+    at parity to 2.3× slower than TurboPFor and FastLanes on Zen 5, where
+    VPMOVM2B expands a plane in one op, and 2.8–4× slower on Graviton 4, where each plane costs a
+    table lookup and a test per 16 rows. A body that is mostly decoded (a
+    point-heavy or materialising consumer) wants a vertical or striped layout
+    on ARM. That is a representation limit, not code.
+20. **local8 direct access beats TurboPFor's on Zen 5 at DRAM** (4–7 ns vs
+    11.4–11.8 at K ≥ 12; native 4–4.4) and loses to it on Graviton 4 at K = 12–20
+    (14–17 vs 10 ns), where the multiply-gather of plane bits and the separate
+    body-byte loads cost more. Unattributed.
 
 ## Still open
 
-- v3 (Zen 5) and Graviton 4 runs with the prefix masked SUM, run-start bitmap
-  masks and points, exceptions, compaction, histograms, MIN/MAX and first match.
-- Striped layouts for unpack on NEON; SVE2 BDEP/BEXT (Graviton 4 has
-  `svebitperm`) for run masks and compaction on ARM.
-- K > 32 packing (only 64-bit hashes need it here).
-- Peers from front A: TurboPFor direct access and FastLanes decode.
-- The saturated DRAM tier.
+- Graviton 4 with the latest code (NEON byte-count plane SUM, the PDEP stall
+  fix, the masked-store compaction) is running.
+- Compaction's remaining gap to native narrow; MIN/MAX and first match past L2
+  from K = 8.
+- K > 32 packing (only 64-bit hashes need it here); Striped layouts for decode
+  on NEON.
+- The saturated DRAM tier and front A's corrected native controls.
+- The exact boundary route, `with_exact_body` in [body.h](body.h): leaves with
+  a halo read a zero-tailed copy of their body when the image cannot admit the
+  halo.

@@ -125,3 +125,21 @@ inline unsigned count_runs(const u64 *v) {
     return n;
 }
 }  // namespace bodies
+
+namespace bodies {
+// The exact boundary route: a leaf whose loads may run past its body (local8,
+// runs, patched; see README "Read and write envelopes") reads a copy of the
+// body in a zero-tailed stack buffer instead. Plane and lane leaves read
+// exactly and need no copy. Use it only where the image cannot admit the halo
+// (a sliced or protected image, a mutable neighbour); the copy costs one pass
+// over the body.
+inline constexpr std::size_t max_halo = 128;  // 15 u64 run values, rounded up
+template <class F> decltype(auto) with_exact_body(const u8 *body, std::size_t bytes, F &&leaf) {
+    constexpr std::size_t largest = block_rows + 8 * block_rows;  // runs of u64 values, n = 256
+    alignas(64) u8 copy[largest + max_halo];
+    assert(bytes <= largest);
+    std::memcpy(copy, body, bytes);
+    std::memset(copy + bytes, 0, max_halo);
+    return leaf(static_cast<const u8 *>(copy));
+}
+}  // namespace bodies
