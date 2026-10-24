@@ -83,8 +83,10 @@ tried two of the fixes:
   as one masked sum of the deltas per bit of the in-region position, so it
   never decodes. It is exact, but 1.3–2.6× slower than decoding (166–559 ns
   per block), because SeriesPack's prefiltered SUM costs several times its
-  range SUM (38–116 ns per block at 10% selection, against 4–165). The law is
-  kept, switched off. A real delta SUM law needs a position-weighted consumer
+  range SUM (38–116 ns per block at 10% selection, against 4–165). Graviton 4
+  agrees: 291–1,205 ns per block against 276–358 decoding
+  ([measure-v4-graviton4.txt](proto/evidence/measure-v4-graviton4.txt)). The
+  law is kept, switched off. A real delta SUM law needs a position-weighted consumer
   inside SeriesPack's one-decode scan (`author::scan_regions`), which is a
   SeriesPack kernel, not Frame glue.
 

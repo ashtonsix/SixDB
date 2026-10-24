@@ -1,0 +1,158 @@
+== build/workers/20261024T190557Z-904b94ed/results/avx512/measure.jsonl
+-- avx512: ns per 256 rows (points: per point); ratio = frame / glue_compact
+column           arm                                  bits      sum count_ge count_eq   filter   select     read ns_per_p
+OS               glue_compact                         9.10    35.29    23.08      nan      nan      nan      nan    28.59
+OS               glue_bulk_x86                        9.10    30.09    22.02      nan      nan      nan      nan    29.82
+OS               frame_bound_pack_compact             9.26    32.89    20.73    18.32    30.76    93.20    78.52    23.12
+OS               frame_bound_pack_bulk_x86            9.26    33.42    21.44    18.87    30.42    92.46    85.54    24.47
+OS               frame_bound_pack_compact_fused_points   9.26    32.03    26.23    19.56      nan      nan      nan    19.89
+OS               frame_bound_pack_compact_groups      9.26    53.77    36.59    24.71    34.93    95.11    77.95    25.85
+OS               frame_intervals16_bound_pack_compact  10.06   532.01   278.31   270.49   349.85   193.58   223.66    83.86
+OS               native_u64                          64.00    63.94    34.24    30.31    32.39    41.26    67.45     1.63
+                 ratio frame/glue (compact)                    0.93     0.90                                         0.81
+RegionID         glue_compact                        14.24    35.75    25.88      nan      nan      nan      nan    34.30
+RegionID         glue_bulk_x86                       14.24    33.60    25.03      nan      nan      nan      nan    34.21
+RegionID         frame_bound_pack_compact            14.40    46.86    25.95    24.16    46.09   106.76    79.07    19.75
+RegionID         frame_bound_pack_bulk_x86           14.40    46.26    28.96    27.95    46.46   105.57    75.37    20.40
+RegionID         frame_bound_pack_compact_fused_points  14.40    45.71    29.68    28.32      nan      nan      nan    17.29
+RegionID         frame_bound_pack_compact_groups     14.40    68.40    43.67    35.53    50.11   107.77    78.31    21.55
+RegionID         frame_intervals16_bound_pack_compact  12.30   380.30   287.12   282.15   355.99   199.27   231.49    76.79
+RegionID         native_u64                          64.00    63.19    33.88    30.41    33.67    41.67    67.29     1.63
+                 ratio frame/glue (compact)                    1.31     1.00                                         0.58
+ResolutionWidth  glue_compact                        10.49    38.95    25.78      nan      nan      nan      nan    16.59
+ResolutionWidth  glue_bulk_x86                       10.49    38.25    23.80      nan      nan      nan      nan    16.62
+ResolutionWidth  frame_bound_pack_compact            10.64    27.00    26.53    20.63    25.60    81.20    71.92    16.87
+ResolutionWidth  frame_bound_pack_bulk_x86           10.64    25.82    31.20    25.07    26.74    81.13    67.75    17.28
+ResolutionWidth  frame_bound_pack_compact_fused_points  10.64    25.35    32.32    25.93      nan      nan      nan    14.69
+ResolutionWidth  frame_bound_pack_compact_groups     10.64    49.13    42.69    31.65    29.38    82.69    71.37    19.06
+ResolutionWidth  frame_intervals16_bound_pack_compact   9.46   335.05   248.62   257.67   336.41   175.61   203.83    69.43
+ResolutionWidth  native_u64                          64.00    63.76    33.62    30.05    34.42    42.62    67.03     1.61
+                 ratio frame/glue (compact)                    0.69     1.03                                         1.02
+ClientIP         glue_compact                        31.54    32.83    19.73      nan      nan      nan      nan     5.03
+ClientIP         glue_bulk_x86                       31.54    33.44    23.30      nan      nan      nan      nan     5.26
+ClientIP         frame_bound_pack_compact            31.70    35.38    27.57    17.80    18.64    71.30    78.88     8.13
+ClientIP         frame_bound_pack_bulk_x86           31.70    32.74    31.47    26.51    20.06    70.56    77.59     8.57
+ClientIP         frame_bound_pack_compact_fused_points  31.70    33.40    31.09    25.44      nan      nan      nan     9.03
+ClientIP         frame_bound_pack_compact_groups     31.70    45.87    35.59    21.28    21.20    72.21    81.37    10.01
+ClientIP         frame_intervals16_bound_pack_compact  21.17   347.56   254.93   249.73   322.96   166.34   206.32    63.78
+ClientIP         native_u64                          64.00    62.82    32.62    29.56    29.92    41.56    67.85     1.47
+                 ratio frame/glue (compact)                    1.08     1.40                                         1.62
+UserID           glue_compact                        51.74    85.62     2.82      nan      nan      nan      nan    28.27
+UserID           glue_bulk_x86                       51.74    84.93     2.69      nan      nan      nan      nan    26.28
+UserID           frame_bound_pack_compact            51.90    71.17     4.85     2.83     6.44   124.27   106.29    34.82
+UserID           frame_bound_pack_bulk_x86           51.90    67.79     4.80     2.96     6.64   123.59   105.42    37.71
+UserID           frame_bound_pack_compact_fused_points  51.90    65.57     4.85     2.77      nan      nan      nan    26.90
+UserID           frame_bound_pack_compact_groups     51.90   111.75     5.50     2.90     6.86   146.54   120.63    38.16
+UserID           frame_intervals16_bound_pack_compact  28.65   408.76    22.99   273.39   342.41   184.30   227.59    82.76
+UserID           native_u64                          64.00    63.63    32.43    29.37    32.03    41.65    67.58     1.58
+                 ratio frame/glue (compact)                    0.83     1.72                                         1.23
+EventTime        glue_compact                        17.25    21.88    13.06      nan      nan      nan      nan     8.39
+EventTime        glue_bulk_x86                       17.25    22.54    13.31      nan      nan      nan      nan     7.01
+EventTime        frame_bound_pack_compact            17.41    27.62    15.88    13.19    15.80    74.16    66.83    10.29
+EventTime        frame_bound_pack_bulk_x86           17.41    24.06    15.71    13.88    16.42    73.15    59.55    12.69
+EventTime        frame_bound_pack_compact_fused_points  17.41    23.53    15.28    13.49      nan      nan      nan    12.72
+EventTime        frame_bound_pack_compact_groups     17.41    41.13    26.26    20.13    19.35    75.80    62.06    13.22
+EventTime        frame_intervals16_bound_pack_compact  19.62   395.69   275.46   266.81   333.62   179.29   211.50    69.29
+EventTime        native_u64                          64.00    63.05    33.11    29.72    31.59    41.43    67.03     1.63
+                 ratio frame/glue (compact)                    1.26     1.22                                         1.23
+URLHash          glue_compact                        64.25   151.73    40.53      nan      nan      nan      nan    13.28
+URLHash          glue_bulk_x86                       64.25   144.98    37.99      nan      nan      nan      nan    12.58
+URLHash          frame_bound_pack_compact            64.41   164.16    42.81    33.88    35.21    80.05   100.35     8.28
+URLHash          frame_bound_pack_bulk_x86           64.41   167.59    42.73    37.49    36.07    83.03   100.27     8.49
+URLHash          frame_bound_pack_compact_fused_points  64.41   166.52    42.18    38.11      nan      nan      nan     9.00
+URLHash          frame_bound_pack_compact_groups     64.41   172.73    49.41    34.16    39.22    84.83   106.78     9.97
+URLHash          frame_intervals16_bound_pack_compact  68.70   237.86   266.27   249.03   317.40   173.92   226.54    47.49
+URLHash          native_u64                          64.00    61.88    29.16    26.83    26.26    40.08    66.54     1.53
+                 ratio frame/glue (compact)                    1.08     1.06                                         0.62
+WatchID          glue_compact                        62.31    70.30    41.81      nan      nan      nan      nan    14.71
+WatchID          glue_bulk_x86                       62.31    69.56    41.76      nan      nan      nan      nan    14.80
+WatchID          frame_bound_pack_compact            62.47    77.43    44.69    41.69    40.96    88.58    90.45    11.52
+WatchID          frame_bound_pack_bulk_x86           62.47    74.41    45.86    41.92    40.58    88.09    89.71    12.16
+WatchID          frame_bound_pack_compact_fused_points  62.47    75.42    46.00    42.19      nan      nan      nan    15.64
+WatchID          frame_bound_pack_compact_groups     62.47    94.25    54.74    44.36    44.83    91.70    95.31    13.11
+WatchID          frame_intervals16_bound_pack_compact  67.65   559.18   271.60   264.11   328.95   181.46   224.23    57.76
+WatchID          native_u64                          64.00    62.71    29.35    25.89    26.20    40.46    66.41     1.45
+                 ratio frame/glue (compact)                    1.10     1.07                                         0.78
+CounterID        glue_compact                         0.32     1.15     0.58      nan      nan      nan      nan     0.68
+CounterID        glue_bulk_x86                        0.32     1.11     0.58      nan      nan      nan      nan     0.55
+CounterID        frame_bound_pack_compact             0.48     3.55     1.15     1.13     3.64    60.03    59.39     3.26
+CounterID        frame_bound_pack_bulk_x86            0.48     3.61     1.13     1.12     3.70    59.18    48.87     3.11
+CounterID        frame_bound_pack_compact_fused_points   0.48     3.40     1.10     1.05      nan      nan      nan     3.18
+CounterID        frame_bound_pack_compact_groups      0.48     4.21     0.91     1.04     3.60    59.23    48.75     3.66
+CounterID        frame_intervals16_bound_pack_compact   0.79    34.96    11.51   223.82   290.09   143.00   159.70    28.44
+CounterID        native_u64                          64.00    60.84    35.20    33.84    32.62    40.58    67.16     1.62
+                 ratio frame/glue (compact)                    3.09     1.98                                         4.79
+gen_ts           glue_compact                        17.53    23.66     3.31      nan      nan      nan      nan    14.47
+gen_ts           glue_bulk_x86                       17.53    21.91     3.01      nan      nan      nan      nan    12.04
+gen_ts           frame_bound_pack_compact            17.69    31.52     3.68     3.12     6.36    77.79    71.71    16.94
+gen_ts           frame_bound_pack_bulk_x86           17.69    26.38     3.54     3.08     6.37    77.37    65.04    19.35
+gen_ts           frame_bound_pack_compact_fused_points  17.69    26.52     3.61     3.05      nan      nan      nan    16.46
+gen_ts           frame_bound_pack_compact_groups     17.69    46.96     3.85     2.82     6.47    85.39    71.26    22.63
+gen_ts           frame_intervals16_bound_pack_compact  12.09   168.44    14.73   261.46   328.65   163.17   178.68    39.29
+gen_ts           native_u64                          64.00    64.57    30.01    27.57    31.90    41.03    66.14     1.61
+                 ratio frame/glue (compact)                    1.33     1.11                                         1.17
+gen_walk         glue_compact                        14.63    35.27     5.58      nan      nan      nan      nan    16.46
+gen_walk         glue_bulk_x86                       14.63    36.52     5.42      nan      nan      nan      nan    14.44
+gen_walk         frame_bound_pack_compact            14.79    27.62     7.37     4.62     8.58    85.65    72.95    18.86
+gen_walk         frame_bound_pack_bulk_x86           14.79    23.72     7.22     4.63     8.72    85.53    66.09    20.45
+gen_walk         frame_bound_pack_compact_fused_points  14.79    23.14     6.99     4.47      nan      nan      nan    18.04
+gen_walk         frame_bound_pack_compact_groups     14.79    56.45     9.11     5.34     9.50    91.65    73.67    23.18
+gen_walk         frame_intervals16_bound_pack_compact  12.79   165.80   261.96   251.04   324.30   164.69   179.69    43.45
+gen_walk         native_u64                          64.00    64.33    30.42    27.26    31.73    40.78    66.40     1.64
+                 ratio frame/glue (compact)                    0.78     1.32                                         1.15
+-- avx512: SUM over a selection, ns per 256 rows: random 10% mask / FILTER(x >= median) then SUM
+OS               frame_bound_pack_compact              51.86    70.32
+OS               frame_bound_pack_bulk_x86             48.51    71.69
+OS               frame_bound_pack_compact_groups       70.36    86.39
+OS               frame_intervals16_bound_pack_compact   197.78   572.39
+OS               native_u64                           259.70    60.93
+RegionID         frame_bound_pack_compact              75.94   100.98
+RegionID         frame_bound_pack_bulk_x86             75.80   101.54
+RegionID         frame_bound_pack_compact_groups       95.75   112.00
+RegionID         frame_intervals16_bound_pack_compact   211.92   579.82
+RegionID         native_u64                           284.10    61.11
+ResolutionWidth  frame_bound_pack_compact              64.99    88.42
+ResolutionWidth  frame_bound_pack_bulk_x86             64.46    83.48
+ResolutionWidth  frame_bound_pack_compact_groups       82.02    93.79
+ResolutionWidth  frame_intervals16_bound_pack_compact   187.43   535.78
+ResolutionWidth  native_u64                           258.65    61.86
+ClientIP         frame_bound_pack_compact              78.81    65.13
+ClientIP         frame_bound_pack_bulk_x86             77.97    65.10
+ClientIP         frame_bound_pack_compact_groups       90.32    75.78
+ClientIP         frame_intervals16_bound_pack_compact   181.59   513.57
+ClientIP         native_u64                           303.71    62.05
+UserID           frame_bound_pack_compact              90.45    38.46
+UserID           frame_bound_pack_bulk_x86             87.41    36.98
+UserID           frame_bound_pack_compact_groups      138.63    53.98
+UserID           frame_intervals16_bound_pack_compact   221.37   458.44
+UserID           native_u64                           302.44    62.17
+EventTime        frame_bound_pack_compact              37.76    52.00
+EventTime        frame_bound_pack_bulk_x86             36.84    50.14
+EventTime        frame_bound_pack_compact_groups       57.11    59.44
+EventTime        frame_intervals16_bound_pack_compact   201.44   504.30
+EventTime        native_u64                           285.18    60.39
+URLHash          frame_bound_pack_compact             116.02   145.95
+URLHash          frame_bound_pack_bulk_x86            111.38   141.23
+URLHash          frame_bound_pack_compact_groups      131.98   156.31
+URLHash          frame_intervals16_bound_pack_compact   176.31   514.64
+URLHash          native_u64                           309.75    62.34
+WatchID          frame_bound_pack_compact             111.21   151.66
+WatchID          frame_bound_pack_bulk_x86            110.25   149.55
+WatchID          frame_bound_pack_compact_groups      124.49   166.12
+WatchID          frame_intervals16_bound_pack_compact   184.57   538.70
+WatchID          native_u64                           309.50    62.79
+CounterID        frame_bound_pack_compact               5.49     7.01
+CounterID        frame_bound_pack_bulk_x86              5.34     6.93
+CounterID        frame_bound_pack_compact_groups        5.99     6.99
+CounterID        frame_intervals16_bound_pack_compact   137.69   385.15
+CounterID        native_u64                           141.27    61.02
+gen_ts           frame_bound_pack_compact              41.10    20.74
+gen_ts           frame_bound_pack_bulk_x86             37.92    19.42
+gen_ts           frame_bound_pack_compact_groups       61.28    23.93
+gen_ts           frame_intervals16_bound_pack_compact   181.99   433.70
+gen_ts           native_u64                           276.09    62.43
+gen_walk         frame_bound_pack_compact              73.88    35.38
+gen_walk         frame_bound_pack_bulk_x86             73.19    33.21
+gen_walk         frame_bound_pack_compact_groups       97.67    44.08
+gen_walk         frame_intervals16_bound_pack_compact   185.67   438.78
+gen_walk         native_u64                           266.20    62.66
