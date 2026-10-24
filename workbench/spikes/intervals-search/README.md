@@ -70,9 +70,11 @@ witness), sparse, seams and cuts checks, StreamPack check and boundaries, and
    it was dropped. Clamped fixed-trip counts with per-lane masks stayed exact but
    cost 5–7 ns on NEON in instructions alone.
 4. **Branching bisection does not win dependent chains.** An early cohort showed
-   it 2× faster; its index walk repeated and the predictors learned it. With a
-   salted walk that never repeats within a pass, branching is 0.73–0.97× of the
-   old branchless search except at four or fewer elements. No branching binding
+   it 2× faster; its index walk fell into short cycles and the predictors learned
+   them. Each step now adds a per-step random salt to the answer; indices can
+   still recur within a pass, but the trace is no longer a short repeating cycle.
+   Branching is then 0.73–0.97× of the old branchless search except at four or
+   fewer elements. No branching binding
    was added.
 5. **Interpolation pays only beyond the caches.** One lerp stage from the end
    values with two checked bracket probes loses 1.2–2× while resident (to 16,384
@@ -88,9 +90,19 @@ witness), sparse, seams and cuts checks, StreamPack check and boundaries, and
    32-byte popcount rank on the same blocks, the windowed search is faster at
    ~6 runs per block (1.0 vs 1.5 ns AVX-512, 1.0 vs 4.9 AVX2, 2.1 vs 5.2 NEON) and
    the bitmap is faster at 50 and 145 runs (1.5 vs 3.5, 1.6 vs 4.8 ns AVX-512).
-   Frame's maintained `run_end_source` is still 11–13 ns at ~6 runs because it
-   keeps the projection below 16 runs; the plain direct source is now 1.1–7.4 ns
-   there. That consumer choice belongs to Frame.
+   Frame's maintained `run_end_source` kept a projection below 16 runs at 11–13 ns;
+   it now searches natively at every count (8c14ab7a): 10.7 → 1.4 ns AVX-512,
+   13.4 → 6.2 AVX2, 12.8 → 7.2 NEON at ~6 runs.
+
+8. **Bisection holds up outside the caches.** With u8 run planes laid out
+   `[ends][values]` back to back over 256 KiB–256 MiB
+   ([`footprint.cpp`](footprint.cpp)), the new search beats front C's in-leaf
+   count and a whole-plane count at 34–256 runs on both hosts and every
+   footprint (Graviton 4, 64 MiB, 256 runs: 36.4 vs 93.4 ns leaf, 71.9 whole),
+   and is within about 10% at 8–16 runs. Prefetching every line first never
+   helps. Serial bisection misses are therefore not why Frame's Graviton point
+   arm lost; that arm's packed-only control lost by the same factor
+   ([Zen 5](evidence/footprint-zen5-20261024/), [Graviton 4](evidence/footprint-graviton4-20261024/)).
 
 ## Method
 
@@ -98,7 +110,8 @@ witness), sparse, seams and cuts checks, StreamPack check and boundaries, and
 placed at random sub-line offsets with random bytes after each array. Cells:
 u8/u16/u32/u64; n from 1 to 16,384 (2^18–2^24 for a few arms with
 `SEARCH_LARGE=1`); fixed counts, or each block's count uniform in [1, n]; streams
-`dependent` (the next request's index is a per-step salt plus this answer),
+`dependent` (the next request's index is a per-step random salt plus this
+answer, so the trace does not fall into a short cycle),
 `random`, `sorted` and `runs` (256 ascending queries per block). Every arm's
 checksum matches an oracle before timing. `check` compares every arm with
 branching bisection for n = 0…300 and larger, both edges, arrays flush against
@@ -132,6 +145,6 @@ python3 workbench/spikes/intervals-search/report.py build/workers/JOB/results \
 
 - NEON dependent chains over 4–8 elements (finding above).
 - Sparse Sizes local prefix: its 16-width owner kernel was not revisited.
-- Frame's `run_end_source` below 16 runs, and whether its images grant the
-  readable window (the [read envelope seam](../frame-phase-2/SEAMS.md)).
+- Whether Frame's phase 1 images grant the readable window to `run_end_source`
+  (the phase 2 substrate already binds it; [read envelope seam](../frame-phase-2/SEAMS.md)).
 - The bitmap versus search crossover under DRAM residence.

@@ -25,11 +25,12 @@ for profile in $profiles; do
  llvm-objdump-21 -d --demangle --no-show-raw-insn "$exe" > "$out/bench.s"
  "$exe" check > "$out/check.txt"
  if [ -n "${SEARCH_VALIDATE:-}" ]; then
-  cmake -S . -B "$dir" -DSIXDB_SPIKES="intervals-search;intervals" > /dev/null
+  cmake -S . -B "$dir" -DSIXDB_SPIKES="intervals-search;intervals;frame-phase-1" > /dev/null
   cmake --build "$dir" --target ikea_intervals_search_check ikea_intervals_sparse_check ikea_intervals_seams_check \
    ikea_intervals_cuts_check ikea_streampack_check ikea_streampack_boundaries_check engine_directory_check \
+   frame_checkpoint_point_check \
    -j "${SIXDB_BUILD_JOBS:-1}" >> "$out/build.log" 2>&1
-  for t in $(find "$dir" -type f \( -name 'ikea_intervals_*_check' -o -name 'ikea_streampack*_check' -o -name engine_directory_check \)); do
+  for t in $(find "$dir" -type f \( -name 'ikea_intervals_*_check' -o -name 'ikea_streampack*_check' -o -name engine_directory_check -o -name frame_checkpoint_point_check \)); do
    echo "== $(basename "$t")" >> "$out/validate.txt"; "$t" >> "$out/validate.txt" 2>&1
   done
  fi
