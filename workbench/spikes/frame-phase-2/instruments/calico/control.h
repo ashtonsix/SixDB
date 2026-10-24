@@ -47,6 +47,7 @@ public:
     bool sum(uint32_t field, u128& out) const;
     bool range_mask(uint32_t field, uint64_t lo, uint64_t hi, std::vector<uint8_t>& out) const;
     std::vector<range> sum_ranges(uint32_t field) const;
+    std::vector<range> retained_ranges() const;
     const engine::typebound_leaf_view& view() const { return view_; }
     const engine::typebound_leaf_binding& binding() const { return binding_; }
     std::span<const uint8_t> metadata() const { return meta_; }

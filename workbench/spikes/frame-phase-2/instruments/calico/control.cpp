@@ -99,4 +99,28 @@ std::vector<range> unsigned_image::sum_ranges(uint32_t field)const {
     append(out,plan_.sum_plan[field].sym,"sum.symbol-plan");
     return out;
 }
+std::vector<range> unsigned_image::retained_ranges()const {
+    std::vector<range> out{{this,sizeof(*this),sizeof(*this),"owner.headers"}};
+    append(out,type_.z,"type.grains");append(out,type_.w,"type.field-counts");
+    append(out,type_.uni_lo,"type.universe-lo");append(out,type_.uni_hi,"type.universe-hi");
+    append(out,type_.perm_id,"type.permutations");append(out,type_.boxes,"type.boxes");
+    append(out,ids_,"binding.field-ids");append(out,widths_,"binding.widths");
+    append(out,meta_,"container.metadata");append(out,body_,"container.body-evidence-main-tail");
+    append(out,plan_.sum_plan,"sum.plan-headers");
+    for(const auto& p:plan_.sum_plan)append(out,p.sym,"sum.symbol-plan");
+    append(out,view_.main.symbols,"main.owned-symbols");append(out,view_.main.body,"main.owned-body");
+    append(out,view_.main.checkpoint,"main.checkpoints");append(out,view_.main.offset,"main.offsets");
+    append(out,view_.main.patches,"patch.headers");
+    for(const auto& p:view_.main.patches)append(out,p,"field.patches");
+    append(out,view_.exact_min,"evidence.owned-min");append(out,view_.exact_max,"evidence.owned-max");
+    append(out,view_.tail,"tail.headers");for(const auto& t:view_.tail)append(out,t,"tail.owned-values");
+    append(out,view_.field_byte_at,"field.byte-offsets");
+    append(out,view_.frame_sum_cache,"cache.frame-sum-headers");
+    for(const auto& c:view_.frame_sum_cache)append(out,c,"cache.frame-sums");
+    append(out,view_.window_min_cache,"cache.window-min");append(out,view_.window_max_cache,"cache.window-max");
+    append(out,view_.window_extreme_ready,"cache.window-extreme-ready");
+    // RawCodec's private vector headers are in owner.headers. Their element
+    // bytes are a separate source-derived charge; their capacities are opaque.
+    return out;
+}
 } // namespace calico_control

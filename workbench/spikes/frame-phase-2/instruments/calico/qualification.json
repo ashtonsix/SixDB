@@ -6,13 +6,16 @@
   "source_files": 24,
   "inputs_sha256": {
     "workbench/peers/frame-calico.cmake": "4afccb88da754847be5c3b7deeb66b7c16034ce1f74b1666b725964f218c442f",
-    "workbench/spikes/frame-phase-2/instruments/calico/CMakeLists.txt": "e8b6719101e271348009b62e2460d45aeaddd16372e413fb09b2596989440342",
-    "workbench/spikes/frame-phase-2/instruments/calico/control.h": "e4a011f1665b5b7290d8a07228b4a1322d079ea05e4bd5063333688553585093",
-    "workbench/spikes/frame-phase-2/instruments/calico/control.cpp": "e0b666ff58355e0759b4eadfc994b15cdb7d3aec2a84faccf5a370b52e4f16a4",
+    "workbench/spikes/frame-phase-2/instruments/calico/CMakeLists.txt": "99ffd5084781294821c4a8dc7814fc090991704f5df115b3bb39afa639165730",
+    "workbench/spikes/frame-phase-2/instruments/calico/control.h": "be8317cee3bcd743ca5371c74cfc274c89e19154c3449a20defe89f80af46df3",
+    "workbench/spikes/frame-phase-2/instruments/calico/control.cpp": "8b70f22bda963f1b735c33d769b52db28884b363ea95a4393458d6d34538ded7",
     "workbench/spikes/frame-phase-2/instruments/calico/check.cpp": "281d0edef720d8443e6134d19004cac314fb905359e9b2a972834725217c0bfc",
-    "workbench/spikes/frame-phase-2/instruments/calico/run.py": "83a4628e91c0edaf0c0f96028f1ad271b7a902d8a7d9a1657b9a221efec7b6aa",
+    "workbench/spikes/frame-phase-2/instruments/calico/run.py": "c76e0dcb4946bbcfc31648203e41513d7e3e120255b1b5c211f7a14b811bb560",
     "workbench/spikes/frame-phase-2/instruments/calico/source.json": "5e596bf5d90b329e1368ccb0f491bb55639c88d8cd03814a0e417118ec63366d",
-    "workbench/spikes/frame-phase-2/instruments/calico/source-artifact.json": "c5187ce7fd67c47b8b2718471337dd53ce5d9f46a9664107af1301cd56c18269"
+    "workbench/spikes/frame-phase-2/instruments/calico/source-artifact.json": "c5187ce7fd67c47b8b2718471337dd53ce5d9f46a9664107af1301cd56c18269",
+    "workbench/spikes/frame-phase-2/instruments/calico/corpus_sum.h": "e99bb8cf205091e826a1519638793ef09f25e75d380f011635c5a028df9f1991",
+    "workbench/spikes/frame-phase-2/instruments/calico/corpus_sum.cpp": "aaea55dca81c145c6071bf7aa2d68da34609c9da475f2599ed6fa42ecefd5128",
+    "workbench/spikes/frame-phase-2/instruments/calico/corpus_check.cpp": "0f5235676e894a568f826ba0c78e568fe852f77a0a1062648bd3e296d789fdb6"
   },
   "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
   "host": {
@@ -25,6 +28,64 @@
   },
   "cpu": 8,
   "jobs": 1,
+  "corpus_inputs": {
+    "OS": {
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T235121Z-970b6dfa/results/in/inputs/cols/OS.u64",
+      "sha256": "62e798b644d78ddb19e557a9f4de91947553da4b3c5462fa9ecb2153b74404b7",
+      "bytes": 23998464,
+      "physical_width": 8,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "rows": 2048,
+      "expected_sum": "18889465931478580917097"
+    },
+    "UserID": {
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T235121Z-970b6dfa/results/in/inputs/cols/UserID.u64",
+      "sha256": "e2cdf04c3cc37533e904b019876eb29d2f5cb303748a2f668357dc587430bf1f",
+      "bytes": 23998464,
+      "physical_width": 8,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "rows": 2048,
+      "expected_sum": "21640410089420544126120"
+    },
+    "URLHash": {
+      "path": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T235121Z-970b6dfa/results/in/inputs/cols/URLHash.u64",
+      "sha256": "5b57151bca1792f0bf0c65d21ab2a9d760faf1e77b039c65e668d922bc1dfc43",
+      "bytes": 23998464,
+      "physical_width": 8,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "rows": 2048,
+      "expected_sum": "18758402101969607545722"
+    }
+  },
+  "corpus_scope": "Same eight stratified stored-domain cells/panel blocks, physical u64; explicit candidate applicability; no timings or input acquisition",
+  "accounting_scope": "Published Type/meta/body and actual public retained ranges/capacities; shareable schema/plan split is conceptual, actual owners are private. Private codec logical element charge separate; capacity/allocator overhead and upstream transient peak unknown.",
   "nonpassing": [
     {
       "argv": [
@@ -39,7 +100,7 @@
       "case": 404,
       "fixture": "raw_lane256_k63_frames1_patch0",
       "diagnostic": "prepass.h:168 res_window: signed INT64_MAX - INT64_MIN overflow",
-      "stderr_sha256": "626a899a06852ae5692ba6b29ce2629cf8ab229029fac98767f58b05d7b96fd7",
+      "stderr_sha256": "3d5359a7129ce6c23a555cc2ba06ef20e3f9bbc4918be12014b8d77058ae023f",
       "upstream_unchanged": true
     }
   ],
@@ -50,7 +111,8 @@
   "profiles": [
     {
       "profile": "normal",
-      "binary_sha256": "a82e4de9debb92bcd1d68de6e2b61226cf10ace728c3d459d91ba517acbd2e6e",
+      "binary_sha256": "ec05d32e0a787dd6053709e78bd8c5abbf2127a6a0d776cbfbe85657f4322390",
+      "corpus_binary_sha256": "a105749f94c039a9f9e577b56ddaa6bc26ae2534db0cce31810343dc56dbfbe7",
       "source_files_verified": 24,
       "compiled_upstream_files": [
         "engine/include/engine/raw_farray_ops.h",
@@ -80,9 +142,21 @@
         },
         {
           "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/frame_calico_controls.dir/corpus_sum.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_sum.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_sum.cpp",
+          "output": "CMakeFiles/frame_calico_controls.dir/corpus_sum.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal",
           "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/frame_calico_check.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
           "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
           "output": "CMakeFiles/frame_calico_check.dir/check.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/frame_calico_corpus_check.dir/corpus_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_check.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_check.cpp",
+          "output": "CMakeFiles/frame_calico_corpus_check.dir/corpus_check.cpp.o"
         }
       ],
       "functional": {
@@ -112,11 +186,37 @@
         },
         "stdout_sha256": "0c7640377592f04f2255263838006c6d3a4f0129e056518a5f0ed09a8d9babef",
         "stderr_sha256": "28ce31d82f92303caa872e8c44fd732ad96d3cf5e641ec69d06e3c014fa79aa7"
+      },
+      "corpus_sum": {
+        "argv": [
+          "taskset",
+          "-c",
+          "8",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/frame_calico_corpus_check",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T235121Z-970b6dfa/results/in/inputs/cols",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/evidence/images-normal"
+        ],
+        "exit": 0,
+        "summary": {
+          "event": "summary",
+          "synthetic_cases": 283,
+          "accepted": 279,
+          "refusals": 19,
+          "sum_calls": 1639,
+          "checks": 52447,
+          "corpus_accepted": 7,
+          "corpus_refused": 2,
+          "pass": true,
+          "timing_claim": false
+        },
+        "stdout_sha256": "c613a36c66910fa57a2de0ccfd39838da598923b7986c6730227ef5200a86fdd",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     },
     {
       "profile": "sanitize",
-      "binary_sha256": "7e105d3e1edb9057ac3913e2ca0fe15a0b2a56cafafefb648bbe760fcdff013c",
+      "binary_sha256": "4080de222e2589740299ff63fd1d13493cdab96ccb9b6d4692a54df231a3aef1",
+      "corpus_binary_sha256": "53fe4d2ca7690047e3ed9e478d2e8704be65b3f4764295c392b50bca650d0038",
       "source_files_verified": 24,
       "compiled_upstream_files": [
         "engine/include/engine/raw_farray_ops.h",
@@ -146,9 +246,21 @@
         },
         {
           "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/frame_calico_controls.dir/corpus_sum.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_sum.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_sum.cpp",
+          "output": "CMakeFiles/frame_calico_controls.dir/corpus_sum.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize",
           "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/frame_calico_check.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
           "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
           "output": "CMakeFiles/frame_calico_check.dir/check.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/frame_calico_corpus_check.dir/corpus_check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_check.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/corpus_check.cpp",
+          "output": "CMakeFiles/frame_calico_corpus_check.dir/corpus_check.cpp.o"
         }
       ],
       "functional": {
@@ -178,6 +290,31 @@
         },
         "stdout_sha256": "0c7640377592f04f2255263838006c6d3a4f0129e056518a5f0ed09a8d9babef",
         "stderr_sha256": "28ce31d82f92303caa872e8c44fd732ad96d3cf5e641ec69d06e3c014fa79aa7"
+      },
+      "corpus_sum": {
+        "argv": [
+          "taskset",
+          "-c",
+          "8",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/frame_calico_corpus_check",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/workers/20261022T235121Z-970b6dfa/results/in/inputs/cols",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/evidence/images-sanitize"
+        ],
+        "exit": 0,
+        "summary": {
+          "event": "summary",
+          "synthetic_cases": 283,
+          "accepted": 279,
+          "refusals": 19,
+          "sum_calls": 1639,
+          "checks": 52447,
+          "corpus_accepted": 7,
+          "corpus_refused": 2,
+          "pass": true,
+          "timing_claim": false
+        },
+        "stdout_sha256": "c613a36c66910fa57a2de0ccfd39838da598923b7986c6730227ef5200a86fdd",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     }
   ],
@@ -187,7 +324,7 @@
       "uadalp",
       "uaddlp"
     ],
-    "linked_libraries_sha256": "658ecaf0410de8469cfa5ba0a93583122ec59e0c6e5ca0f1f12a3bd3416bbb5c",
+    "linked_libraries_sha256": "bdf23b3047e468211e48d63035470735a11ac4e72e440a4eba531408afe7c477",
     "scope": "Actual called wrappers link the bound SUM and native NEON residual branches; no dynamic instruction trace or timing claim.",
     "symbols": {
       "signed_wrapper": {
@@ -195,38 +332,728 @@
         "address": 404592,
         "bytes": 64,
         "assembly": "signed_wrapper.asm",
-        "sha256": "0a1af70950f7662800c8e2b5c00d3631af7b07d215431ebfdc81e84d2efcb044"
+        "sha256": "d6378e533375ed1ba0ca4eaa3611a4f013f6a05a047ae5127c4292d57072ae4b"
       },
       "unsigned_wrapper": {
         "symbol": "_ZNK14calico_control14unsigned_image3sumEjRo",
-        "address": 416128,
+        "address": 415936,
         "bytes": 8,
         "assembly": "unsigned_wrapper.asm",
-        "sha256": "3508257b22fe0d20d6cf8bc77f7c8620161270a6447b9da4d0cfe7d7ce1b5b65"
+        "sha256": "c4ed76b597d89168ca33ff34808eb24e78afe31137ca6f132fd42f2ff80bf4aa"
       },
       "container_sum": {
         "symbol": "_ZNK6engine19typebound_leaf_view3sumEjRo",
-        "address": 418304,
+        "address": 422208,
         "bytes": 2316,
         "assembly": "container_sum.asm",
-        "sha256": "93bd9966cc0baeb2edbf3bb66ad73f642ea742784db8f610328f317338bca5f6"
+        "sha256": "ba22fa432ea683b0ca71b4f7f263f4e7e4ec9fc1e8de73cf51c9948dabfbdc59"
       },
       "bound_raw_sum": {
         "symbol": "_ZN6engine22raw_farray_sum_trustedERKNS_19raw_farray_sum_planERKN5frame9RawStreamERn",
-        "address": 417696,
+        "address": 421600,
         "bytes": 468,
         "assembly": "bound_raw_sum.asm",
-        "sha256": "55d03529f2bb583687ac1ddbf03835593e3880119df9a53f844fc0acb71c167b"
+        "sha256": "48a9002edcfbb16eed476d4b4958160a78c32ccbe8c787356cb5b23e7fbd9c9d"
       },
       "residual_sum": {
         "symbol": "_ZN6engine23raw_farray_residual_sumEN5frame8LayoutIdEPKhjjPmRo",
         "address": 104096,
         "bytes": 7860,
         "assembly": "residual_sum.asm",
-        "sha256": "377ca8f7f5a56e104fc63615dc3f17dbfa0ac4be44db13de5c91ae638c107a52"
+        "sha256": "0ac138d7d219b684a281c5d3ce9abf5beb95da84c5d543b517181fc326aa7fe0"
       }
     }
   },
-  "full_receipt_sha256": "d7240c1538c6994abc2e1edbff3629a3f286e15d415e89001064699c3199cb39",
-  "selection": "Retains both native functional outcomes, actual compile commands, source/input/binary identities, called SUM/NEON symbols and upstream range negative. Full qualification/case logs/linked assembly are recoverable through evidence-artifact.json; routine compiler outputs remain ignored."
+  "corpus_linked_proof": {
+    "reduction_mnemonics": [
+      "addv",
+      "uadalp",
+      "uaddlp"
+    ],
+    "linked_libraries_sha256": "23d6cc9682e65dae2cd0e7759eb9ca0bb803493d481d662eceece7a21bcf4d7b",
+    "scope": "Actual called wrappers link the bound SUM and native NEON residual branches; no dynamic instruction trace or timing claim.",
+    "symbols": {
+      "prepared_wrapper": {
+        "symbol": "_ZNK14calico_control12prepared_sum3sumERo",
+        "address": 56208,
+        "bytes": 16,
+        "assembly": "prepared_wrapper.asm",
+        "sha256": "a5cb26e54be16701d96356315b6bd44fc9f3bcafb3490b73420939464f78ace2"
+      },
+      "unsigned_wrapper": {
+        "symbol": "_ZNK14calico_control14unsigned_image3sumEjRo",
+        "address": 77312,
+        "bytes": 8,
+        "assembly": "unsigned_wrapper.asm",
+        "sha256": "b75a49784694149c3aefcd8bfcf53a2d8e16a7e86f788611426f0592e642d322"
+      },
+      "container_sum": {
+        "symbol": "_ZNK6engine19typebound_leaf_view3sumEjRo",
+        "address": 96032,
+        "bytes": 2316,
+        "assembly": "container_sum.asm",
+        "sha256": "87969c713031d5d200eb046c0309c10ae26be4253570366deb94a3508640cb4a"
+      },
+      "bound_raw_sum": {
+        "symbol": "_ZN6engine22raw_farray_sum_trustedERKNS_19raw_farray_sum_planERKN5frame9RawStreamERn",
+        "address": 88544,
+        "bytes": 468,
+        "assembly": "bound_raw_sum.asm",
+        "sha256": "a564291ae505b55218ccbf2c5f3c7ac710d36e65109df54685966c55d037c8af"
+      },
+      "residual_sum": {
+        "symbol": "_ZN6engine23raw_farray_residual_sumEN5frame8LayoutIdEPKhjjPmRo",
+        "address": 267296,
+        "bytes": 7860,
+        "assembly": "residual_sum.asm",
+        "sha256": "5f2c7988646ed578f4f6cc771b5bf34eceb7520e94faae2d6e9f6ec99d100393"
+      }
+    },
+    "directory": "corpus-proof"
+  },
+  "corpus_cases": [
+    {
+      "event": "corpus",
+      "column": "OS",
+      "program": "lane256",
+      "physical_width": 8,
+      "frame_rows": 256,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 8,
+      "tail_rows": 0,
+      "expected_sum": "18889465931478580917097",
+      "symbols": 16,
+      "distinct_boxes": 6,
+      "max_residual_bits": 8,
+      "selected_symbols": [
+        0,
+        1,
+        1,
+        1,
+        3,
+        0,
+        5,
+        1
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 1928,
+      "body_capacity_bytes": 1928,
+      "known_retained_logical_bytes": 3773,
+      "known_retained_capacity_bytes": 3773,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 2584,
+      "instance_known_capacity_bytes": 2584,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 128,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "OS-lane256",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "0",
+          "bits": 6
+        },
+        {
+          "base": "1",
+          "bits": 7
+        },
+        {
+          "base": "2",
+          "bits": 7
+        },
+        {
+          "base": "1",
+          "bits": 8
+        },
+        {
+          "base": "2",
+          "bits": 6
+        },
+        {
+          "base": "0",
+          "bits": 8
+        }
+      ]
+    },
+    {
+      "event": "corpus",
+      "column": "OS",
+      "program": "byteplane",
+      "physical_width": 8,
+      "frame_rows": 256,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 8,
+      "tail_rows": 0,
+      "expected_sum": "18889465931478580917097",
+      "symbols": 16,
+      "distinct_boxes": 6,
+      "max_residual_bits": 8,
+      "selected_symbols": [
+        0,
+        1,
+        1,
+        1,
+        3,
+        0,
+        5,
+        1
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 1928,
+      "body_capacity_bytes": 1928,
+      "known_retained_logical_bytes": 3773,
+      "known_retained_capacity_bytes": 3773,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 2584,
+      "instance_known_capacity_bytes": 2584,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 128,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "OS-byteplane",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "0",
+          "bits": 6
+        },
+        {
+          "base": "1",
+          "bits": 7
+        },
+        {
+          "base": "2",
+          "bits": 7
+        },
+        {
+          "base": "1",
+          "bits": 8
+        },
+        {
+          "base": "2",
+          "bits": 6
+        },
+        {
+          "base": "0",
+          "bits": 8
+        }
+      ]
+    },
+    {
+      "event": "corpus",
+      "column": "OS",
+      "program": "fastlanes",
+      "physical_width": 8,
+      "frame_rows": 1024,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 2,
+      "tail_rows": 0,
+      "expected_sum": "18889465931478580917097",
+      "symbols": 16,
+      "distinct_boxes": 2,
+      "max_residual_bits": 8,
+      "selected_symbols": [
+        0,
+        1
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 1954,
+      "body_capacity_bytes": 1954,
+      "known_retained_logical_bytes": 3751,
+      "known_retained_capacity_bytes": 3751,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 2562,
+      "instance_known_capacity_bytes": 2562,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 32,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "OS-fastlanes",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "0",
+          "bits": 7
+        },
+        {
+          "base": "0",
+          "bits": 8
+        }
+      ]
+    },
+    {
+      "event": "corpus",
+      "column": "UserID",
+      "program": "lane256",
+      "physical_width": 8,
+      "frame_rows": 256,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 8,
+      "tail_rows": 0,
+      "expected_sum": "21640410089420544126120",
+      "symbols": 16,
+      "distinct_boxes": 8,
+      "max_residual_bits": 64,
+      "selected_symbols": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 13896,
+      "body_capacity_bytes": 13896,
+      "known_retained_logical_bytes": 15741,
+      "known_retained_capacity_bytes": 15741,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 14552,
+      "instance_known_capacity_bytes": 14552,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 128,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "UserID-lane256",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "-9214751021948998350",
+          "bits": 64
+        },
+        {
+          "base": "4191353731922261024",
+          "bits": 52
+        },
+        {
+          "base": "813436297478558099",
+          "bits": 51
+        },
+        {
+          "base": "6704399395030242713",
+          "bits": 52
+        },
+        {
+          "base": "1000666418546138703",
+          "bits": 53
+        },
+        {
+          "base": "4473515031780134650",
+          "bits": 55
+        },
+        {
+          "base": "1333660841908565018",
+          "bits": 52
+        },
+        {
+          "base": "797673805424030298",
+          "bits": 51
+        }
+      ]
+    },
+    {
+      "event": "corpus",
+      "column": "UserID",
+      "program": "byteplane",
+      "physical_width": 8,
+      "frame_rows": 256,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": false,
+      "refusal": "layout-residual-width"
+    },
+    {
+      "event": "corpus",
+      "column": "UserID",
+      "program": "fastlanes",
+      "physical_width": 8,
+      "frame_rows": 1024,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 2,
+      "tail_rows": 0,
+      "expected_sum": "21640410089420544126120",
+      "symbols": 16,
+      "distinct_boxes": 2,
+      "max_residual_bits": 64,
+      "selected_symbols": [
+        0,
+        1
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 16162,
+      "body_capacity_bytes": 16162,
+      "known_retained_logical_bytes": 17959,
+      "known_retained_capacity_bytes": 17959,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 16770,
+      "instance_known_capacity_bytes": 16770,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 32,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "UserID-fastlanes",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "-9214751021948998350",
+          "bits": 64
+        },
+        {
+          "base": "797673805424030298",
+          "bits": 62
+        }
+      ]
+    },
+    {
+      "event": "corpus",
+      "column": "URLHash",
+      "program": "lane256",
+      "physical_width": 8,
+      "frame_rows": 256,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 8,
+      "tail_rows": 0,
+      "expected_sum": "18758402101969607545722",
+      "symbols": 16,
+      "distinct_boxes": 8,
+      "max_residual_bits": 64,
+      "selected_symbols": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 16520,
+      "body_capacity_bytes": 16520,
+      "known_retained_logical_bytes": 18365,
+      "known_retained_capacity_bytes": 18365,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 17176,
+      "instance_known_capacity_bytes": 17176,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 128,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "URLHash-lane256",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "-8911602844831844450",
+          "bits": 64
+        },
+        {
+          "base": "-9207504865294905199",
+          "bits": 64
+        },
+        {
+          "base": "-9190481194390145901",
+          "bits": 64
+        },
+        {
+          "base": "-8965416418768224905",
+          "bits": 64
+        },
+        {
+          "base": "-9170009488328108486",
+          "bits": 64
+        },
+        {
+          "base": "-9191396822417512391",
+          "bits": 64
+        },
+        {
+          "base": "-9088457051401922022",
+          "bits": 64
+        },
+        {
+          "base": "-9139345644774226974",
+          "bits": 64
+        }
+      ]
+    },
+    {
+      "event": "corpus",
+      "column": "URLHash",
+      "program": "byteplane",
+      "physical_width": 8,
+      "frame_rows": 256,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": false,
+      "refusal": "layout-residual-width"
+    },
+    {
+      "event": "corpus",
+      "column": "URLHash",
+      "program": "fastlanes",
+      "physical_width": 8,
+      "frame_rows": 1024,
+      "source_block_ids": [
+        0,
+        1464,
+        2929,
+        4394,
+        5859,
+        7323,
+        8788,
+        10253
+      ],
+      "applicable": true,
+      "refusal": "none",
+      "rows": 2048,
+      "complete_frames": 2,
+      "tail_rows": 0,
+      "expected_sum": "18758402101969607545722",
+      "symbols": 16,
+      "distinct_boxes": 2,
+      "max_residual_bits": 64,
+      "selected_symbols": [
+        0,
+        0
+      ],
+      "binding_field_id": 1,
+      "binding_width": 8,
+      "binding_generation": 0,
+      "type_wire_bytes": 200,
+      "metadata_bytes": 24,
+      "body_bytes": 16418,
+      "body_capacity_bytes": 16418,
+      "known_retained_logical_bytes": 18215,
+      "known_retained_capacity_bytes": 18215,
+      "shareable_known_logical_bytes": 1189,
+      "shareable_known_capacity_bytes": 1189,
+      "instance_known_logical_bytes": 17026,
+      "instance_known_capacity_bytes": 17026,
+      "shareable_private_codec_element_bytes": 528,
+      "fit_box_capacity_bytes": 32,
+      "wire_staging_bytes": 16384,
+      "artifact_stem": "URLHash-fastlanes",
+      "actual_sharing": false,
+      "aggregate_cache": false,
+      "fitted_box_candidates": [
+        {
+          "base": "-9207504865294905199",
+          "bits": 64
+        },
+        {
+          "base": "-9191396822417512391",
+          "bits": 64
+        }
+      ]
+    }
+  ],
+  "corpus_image_artifacts": {
+    "OS-lane256.type": {
+      "bytes": 200,
+      "sha256": "ad37b3c25a77a1b7110cbc79c6d4f5f15ece3eed8e673157658adba173cf9d67"
+    },
+    "OS-lane256.meta": {
+      "bytes": 24,
+      "sha256": "e7f270ce3a2c1b64d422ca033eb2f9eed1b92b5c25d9fa31c600f35165ea50e7"
+    },
+    "OS-lane256.body": {
+      "bytes": 1928,
+      "sha256": "d897b47350b223c19578caa1d5b52a2bf41220af93d5264b1be2af2bb71bf2a3"
+    },
+    "OS-byteplane.type": {
+      "bytes": 200,
+      "sha256": "a89548280a59f2916089cbfb371301d1705e9eb7c204cd913e2a34975d323b05"
+    },
+    "OS-byteplane.meta": {
+      "bytes": 24,
+      "sha256": "e7f270ce3a2c1b64d422ca033eb2f9eed1b92b5c25d9fa31c600f35165ea50e7"
+    },
+    "OS-byteplane.body": {
+      "bytes": 1928,
+      "sha256": "96d324a2d2e26b1fd124d94fe09b140262695a226df1b966a5ce77f677693682"
+    },
+    "OS-fastlanes.type": {
+      "bytes": 200,
+      "sha256": "2641d9fb50b516682c32b43a49c20035be88c4608635a70515c998f006dace38"
+    },
+    "OS-fastlanes.meta": {
+      "bytes": 24,
+      "sha256": "6b097f7f205aec219e4fd7c0c6fa83e1d708ad49f18d269950f7d1fa48da7c97"
+    },
+    "OS-fastlanes.body": {
+      "bytes": 1954,
+      "sha256": "bc3d291a917d213b9bde51936687cabce0ed18b1a6f9becc93625b62b7185bfa"
+    },
+    "UserID-lane256.type": {
+      "bytes": 200,
+      "sha256": "b78df478c61d8a65c24f5b6ab94fa143e55059a856a64ae65f320a0530f04ff2"
+    },
+    "UserID-lane256.meta": {
+      "bytes": 24,
+      "sha256": "c4b49916d31079f91261c9367a047feb6dcd0d5a8a9e4795879c43669595a6c4"
+    },
+    "UserID-lane256.body": {
+      "bytes": 13896,
+      "sha256": "f62853438106e3a14b4d34de5b6fcf7aa1b2a2ee0232f167cab849bbe091701a"
+    },
+    "UserID-fastlanes.type": {
+      "bytes": 200,
+      "sha256": "cd9cc5c837207c479cf574779122c4d7c01f31c6214d3205383113c17231eb7a"
+    },
+    "UserID-fastlanes.meta": {
+      "bytes": 24,
+      "sha256": "c6757f2a928530679ed0f6c04d86264ed729eda2465997330808e574bca3339e"
+    },
+    "UserID-fastlanes.body": {
+      "bytes": 16162,
+      "sha256": "2d85cac670abaa653051bb361040dd7fff4883abdda82637d0c9e373399407b5"
+    },
+    "URLHash-lane256.type": {
+      "bytes": 200,
+      "sha256": "cb23760b08873dfb06b969b5e661d52ef2504fb39aaef9d2cd028fb700589cdf"
+    },
+    "URLHash-lane256.meta": {
+      "bytes": 24,
+      "sha256": "172ce2c03d5f8875664740f0f0ceaf4e5a4792bcee4f1a031e3f83f1fbd8ccb9"
+    },
+    "URLHash-lane256.body": {
+      "bytes": 16520,
+      "sha256": "1ca7b14da73d87aec7f58ae088c8135b1f7cfd5bfb3eefe3b1d5152d6feff0e8"
+    },
+    "URLHash-fastlanes.type": {
+      "bytes": 200,
+      "sha256": "66591ea697a89aa4332fcf08b8140b6fe983cde32e95fa6825a7612ffcf4ad19"
+    },
+    "URLHash-fastlanes.meta": {
+      "bytes": 24,
+      "sha256": "11253af525cf012215622e34b549723b7c990db90452ab8482a5ce5107949ce3"
+    },
+    "URLHash-fastlanes.body": {
+      "bytes": 16418,
+      "sha256": "6080ef602600ccc293bb3272dae2dae69072f98fb161e0b960e0ec5621858541"
+    }
+  },
+  "full_receipt_sha256": "9b9816674d32f995b6b6d69802db68ed13357462fab0c021ce1dad6ab91206a3",
+  "selection": "Both native control+corpus outcomes; all nine real candidate dispositions and accounting; unique fitted boxes/selected symbols; exact Type/meta/body hashes; original source/binary/compile/linked identities and unchanged range negative. Full palette/receipts/logs/linked assembly and one byte-identical set of21actual encoded images are recoverable via corpus-evidence-artifact.json. No timings; routine compiler output stays ignored."
 }

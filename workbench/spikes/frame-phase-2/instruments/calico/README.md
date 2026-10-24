@@ -66,6 +66,17 @@ For narrow unsigned fields the tested query bounds remain inside the physical
 field domain. Extreme wide predicates have the upstream limitation below.
 No wrapper clamps, rewrites or falls back for an unsupported predicate.
 
+## Actual stored-domain corpus preparation
+
+[corpus_sum.h](corpus_sum.h) adds `prepare_sum(values, declared_width, program)`
+for the original OS/UserID/URLHash forcing cells. Its [bounded corpus account](CORPUS-SUM.md)
+explains actual working-domain fitting, source palettes, natural layout grains,
+literal tails and explicit inapplicability. It publishes Type/binding/body and
+preparation charges, including potentially shareable interpretation bytes,
+while each actual owner remains private. It adds no timing selector or answer
+cache. The existing runner builds `frame_calico_corpus_check` and checks the
+existing byte-identical corpus; no input is acquired.
+
 ## Preparation, query buffers and readable windows
 
 Construction, encoding, validation and Type/plan preparation precede query
@@ -105,7 +116,7 @@ boundary, permitted grain, future ISA or hidden allocator capacity.
 
 ## Qualification and known negative
 
-[qualification.json](qualification.json) and [recoverable selected evidence](evidence-artifact.json)
+[qualification.json](qualification.json) and [recoverable selected evidence](corpus-evidence-artifact.json)
 record the finished native result. Optimized and ASan/UBSan builds each pass
 1,638 cases / 48,901,949 checks, 6,649 SUM calls, 5,538 range calls, 7,858
 guarded calls and 1,042 refusals. The wrapper and executed upstream headers are instrumented at O1 in the
