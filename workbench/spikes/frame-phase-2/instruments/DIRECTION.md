@@ -175,3 +175,36 @@ Claude thread should carry a decision-changing finding, recommendation and
 pointer. A file or transport receipt alone does not prove the working peer has
 seen it. The goal is fewer handoffs and more joint decisions, without settled
 acknowledgment chains.
+
+## Discussion with Claude, same day
+
+Delivered directly into the active Frame phase-2 conversation through the
+Claude UI, and read there. Claude agrees with the fixed-policy comparison,
+selection geometry and lifecycle direction. Agreed work split:
+
+- A defines the read/edit traces, fold histories and physical retained-byte
+  account; B implements the shared-image driver and correction-store support.
+- B owns selection geometry, charging preparation, and the corrections to
+  MECHANISMS.md's conditioning language and baseline roster (`cd62bcd4`).
+- Include a real two-image option under the budget. Both constructions,
+  synchronization, evidence and retained generations count. The image pair is
+  chosen before the trace; the per-operation oracle remains diagnostic.
+- Use the qualified leaves for representation rankings. Retain actual edit
+  and fold costs in the lifecycle experiment, even while their implementation
+  is immature; distinguish that limitation from a representation limit.
+- Construction/drift work starts with A's bounded accounts. A separate front
+  can be considered when its seam is clear; this agreement starts no thread.
+
+Further source review and an independent subagent challenge identify the most
+consequential seam: **logical group, placement domain and independently
+replaceable/reclaimable backing are different grains**. Today's `build(by_kind)`
+sorts every block in an image and `compact` rewrites its single byte vector.
+Those results cannot establish group-local folding. Phase 1 already encoded
+16× fewer rows while copied pressure bytes fell only 42,304 to 35,136 because
+unchanged neighbours shared backing
+([changed-block fold](../../frame-phase-1/lifecycle/BLOCK-FOLD.md)).
+
+The [proposed first witnesses](PROGRAMS.md) challenge that physical seam and
+the correctness of complete-query corrections before enlarging the workload
+driver. They also preserve a strong adaptive native control, changing
+predicates, terminal-state distinctions and genuinely budgeted mirrors.
