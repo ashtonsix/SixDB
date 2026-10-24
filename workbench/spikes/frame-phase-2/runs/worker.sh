@@ -26,9 +26,12 @@ for isa in $isas; do
   mkdir -p "$out"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release '-DSIXDB_SPIKES=frame-phase-1;frame-phase-2' $flags \
     > "$out/configure.txt" 2>&1
-  cmake --build "$build" --target frame_runs_census frame_runs_read -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
+  cmake --build "$build" --target frame_runs_census frame_runs_read frame_runs_pipelines -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   "$build/workbench/spikes/frame-phase-2/runs/frame_runs_census" "$cols" 2999808 $columns > "$out/census.jsonl"
   for repeat in 1 2 3; do
+    taskset -c "$SIXDB_CPU" "$build/workbench/spikes/frame-phase-2/runs/frame_runs_pipelines" "$cols" 2999808 "${ROUNDS:-11}" $columns EventTime URLHash WatchID \
+      | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/pipelines.jsonl"
+    [ -n "${PIPELINES_ONLY:-}" ] && continue
     taskset -c "$SIXDB_CPU" "$build/workbench/spikes/frame-phase-2/runs/frame_runs_read" "$cols" 2999808 "${ROUNDS:-11}" $columns \
       | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/read.jsonl"
   done
