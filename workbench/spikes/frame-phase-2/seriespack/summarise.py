@@ -1,6 +1,8 @@
 # SeriesPack remeasure (measure.cpp): per ISA, condition and operation, the
 # median ns per 256 rows (points: ns per point) for each arm and width, and
-# each SeriesPack preset's ratio to the native array.
+# each SeriesPack preset's ratio to the native array. The native masked-sum
+# control does not vectorise (23-30 ns per 256 rows on NEON for every lane),
+# so masked sums are shown as a ratio to the same arm's unmasked sum instead.
 import json, sys, statistics as st, collections
 d = collections.defaultdict(list)
 for f in sys.argv[1:]:
@@ -12,7 +14,8 @@ arms = ['native', 'seriespack_compact', 'seriespack_bulk_x86', 'seriespack_bulk_
 short = {'native': 'native', 'seriespack_compact': 'compact', 'seriespack_bulk_x86': 'bulk_x86', 'seriespack_bulk_arm': 'bulk_arm', 'plane256_reference': 'plane256'}
 for group in sorted({k[:3] for k in d}):
     isa, cond, op = group
-    print(f"\n{isa} {cond} {op} ({'ns per point' if op == 'points' else 'ns per 256 rows'}; ratio to native in brackets)")
+    basis = "ratio to the arm's own unmasked sum" if op.startswith('masked') else 'ratio to native'
+    print(f"\n{isa} {cond} {op} ({'ns per point' if op == 'points' else 'ns per 256 rows'}; {basis} in brackets)")
     print('  K | ' + ' | '.join(f"{short[a]:>15}" for a in arms))
     for k in sorted({kk[3] for kk in d if kk[:3] == group}):
         nat = st.median(d[group + (k, 'native')]) if d.get(group + (k, 'native')) else None
@@ -23,5 +26,9 @@ for group in sorted({k[:3] for k in d}):
                 cells.append(f"{'-':>15}")
                 continue
             m = st.median(x)
-            cells.append(f"{m:7.2f} ({m / nat:4.2f})" if nat and a != 'native' else f"{m:15.2f}")
+            if op.startswith('masked'):
+                own = d.get((isa, cond, 'sum', k, a))
+                cells.append(f"{m:7.2f} ({m / st.median(own):4.2f})" if own else f"{m:15.2f}")
+            else:
+                cells.append(f"{m:7.2f} ({m / nat:4.2f})" if nat and a != 'native' else f"{m:15.2f}")
         print(f"{k:3} | " + ' | '.join(cells))

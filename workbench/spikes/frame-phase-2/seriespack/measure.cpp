@@ -20,6 +20,7 @@
 #include <ikea/seriespack.h>
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
@@ -28,6 +29,7 @@
 #include <memory>
 #include <random>
 #include <span>
+#include <type_traits>
 #include <string>
 #include <vector>
 
@@ -103,17 +105,20 @@ inputs make(unsigned K, std::size_t n, std::mt19937_64 &rng) {
         if (in.mask16[i / 16] >> (i % 16) & 1)
             in.msum += in.v[i];
         in.count += in.v[i] >= in.t;
-        in.decoded += in.v[i] * (i % 7 + 1);
     }
     for (u32 r : in.rows)
         in.points += in.v[r];
+    for (std::size_t i = 0; i < n; i += 61)
+        in.decoded += in.v[i] * (i % 7 + 1);
     return in;
 }
 
-// Checksum of a decoded u32 buffer, weighted so a misplaced row is caught.
+// Sampled, position-weighted checksum of a decoded u32 buffer (every 61st
+// row), cheap enough to leave the timed read dominant. Each read is also
+// checked in full against the values before timing.
 u64 weigh(const u32 *x, std::size_t n) {
     u64 s = 0;
-    for (std::size_t i = 0; i < n; ++i)
+    for (std::size_t i = 0; i < n; i += 61)
         s += u64{x[i]} * (i % 7 + 1);
     return s;
 }
@@ -198,12 +203,24 @@ void native_arms(const inputs &in, std::vector<arm> &arms, std::vector<std::shar
     const auto all = frame_cells::block_mask::bind(*all_words, n);
     arms.push_back({"sum", "native", double(n), [c = control.get(), all] { return static_cast<u64>(frame_cells::native_sum_once(*c, all).sum); },
                     in.sum, [c = control.get()] { std::visit([](const auto &v) { flush(v.data(), v.size() * sizeof(v[0])); }, c->values); }});
-    arms.push_back({"masked_sum_50pct", "native", double(n), [x, n, m16] {
+    // Byte of mask bits -> eight lane masks, so the select is a plain AND.
+    auto table = std::make_shared<std::array<std::array<T, 8>, 256>>();
+    for (unsigned b = 0; b < 256; ++b)
+        for (unsigned j = 0; j < 8; ++j)
+            (*table)[b][j] = (b >> j & 1) ? static_cast<T>(~T{0}) : T{0};
+    keep.push_back(table);
+    arms.push_back({"masked_sum_50pct", "native", double(n), [x, n, m16, tab = table.get()] {
+                        // Lane-mask AND from a 256-entry table, chunked u32 (u64 for u32 lanes) sums.
+                        using A = std::conditional_t<sizeof(T) <= 2, u32, u64>;
                         u64 s = 0;
-                        for (std::size_t g = 0; g < n / 16; ++g) {
-                            const unsigned m = m16[g];
-                            for (unsigned j = 0; j < 16; ++j)
-                                s += (m >> j & 1) ? u64{x[16 * g + j]} : 0;
+                        for (std::size_t k = 0; k < n; k += 32768) {
+                            A acc = 0;
+                            for (std::size_t h = k / 8; h < std::min(n, k + 32768) / 8; ++h) {
+                                const T *keep = (*tab)[(m16[h / 2] >> (8 * (h % 2))) & 0xff].data();
+                                for (unsigned j = 0; j < 8; ++j)
+                                    acc += A(x[8 * h + j] & keep[j]);
+                            }
+                            s += acc;
                         }
                         return s;
                     },
@@ -275,12 +292,21 @@ template <unsigned K> void width(std::size_t n_flushed, int rounds, std::mt19937
         else
             native_arms<std::uint32_t>(in, arms, keep, out);
         plane256_arms(in, arms, keep);
-        for (const auto &a : arms)
+        for (const auto &a : arms) {
+            if (std::string(a.op) == "read_u32") {
+                a.run();
+                for (std::size_t i = 0; i < n; ++i)
+                    if (out[i] != in.v[i]) {
+                        std::fprintf(stderr, "K=%u %s %s read_u32: row %zu wrong\n", K, cond, a.name, i);
+                        std::exit(1);
+                    }
+            }
             if (a.run() != a.expect) {
                 std::fprintf(stderr, "K=%u %s %s %s: wrong answer %llu want %llu\n", K, cond, a.name, a.op,
                              (unsigned long long)a.run(), (unsigned long long)a.expect);
                 std::exit(1);
             }
+        }
         std::vector<std::vector<double>> samples(arms.size());
         for (int round = 0; round < rounds; ++round)
             for (std::size_t j = 0; j < arms.size(); ++j) {
