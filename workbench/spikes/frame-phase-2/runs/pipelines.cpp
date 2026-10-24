@@ -412,8 +412,17 @@ template <sp::preset P> struct pipeline {
         if (group_rle)
             each_group([&](const run_group &g, const u64 *sz, const u64 *val) {
                 u128 t = 0;
-                for (unsigned i = 0; i < g.runs; ++i)
-                    t += static_cast<u128>(sz[i] + 1) * val[i];
+                // Sizes total at most 256 rows per block, so the group's SUM of
+                // residuals fits u64 below 2^64 / (256 * 16 blocks); take the
+                // vectorisable u64 path there.
+                if (g.value_width <= 52) {
+                    u64 w = 0;
+                    for (unsigned i = 0; i < g.runs; ++i)
+                        w += (sz[i] + 1) * val[i];
+                    t = w;
+                } else
+                    for (unsigned i = 0; i < g.runs; ++i)
+                        t += static_cast<u128>(sz[i] + 1) * val[i];
                 total += t + static_cast<u128>(g.base) * g.blocks * block_rows;
             });
         return total;

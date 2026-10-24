@@ -172,12 +172,15 @@ checkpoints. Source `088c8da7`; jobs `20261024T042821Z-bf601ac7` (Zen 5) and
     faster, since a run's comparison covers all its rows. ResolutionWidth's
     SUM is 1.9× slower, because its 9% constant blocks make no RLE cheap.
     Bytes also drop a further 4–15% against per-block RLE.
-15. **Graviton 4 still pays for RLE scans:** SUM 1.2–1.9× and COUNT 1.1–3×
-    slower than no RLE under Bulk, except UserID (SUM 2.5× faster). The RLE
-    COUNT loop (a conditional add of run sizes) is the suspect: on Zen 5 it
-    takes 9–15 ns per block, on Graviton 4 86–193. That matches the
-    Clang/NEON select pattern seen before, and is worth a typed rewrite before
-    the frontier is read off.
+15. **On Graviton 4 the RLE COUNT loop was the problem.** Its conditional add
+    selected badly on NEON (86–193 ns per block). A branch-free mask-and-add
+    (`2a0ac64c`; jobs `20261024T044249Z-6993d609` and
+    `20261024T044321Z-d85df715`;
+    [evidence/pipelines-v3-summary.txt](evidence/pipelines-v3-summary.txt))
+    makes group-RLE COUNT 1.5–3.4× faster than no RLE there too (OS 22
+    against 76 ns per block under Bulk). SUM stays 1.3–1.9× slower on
+    Graviton 4 except UserID (2.5× faster); its loop accumulates in u128.
+
 16. **Points are RLE's cost in every form** (50–65 ns on Zen 5 against 6–35
     without RLE). A point-heavy part should skip RLE, or keep u8 run ends
     (3–5 ns per point).
