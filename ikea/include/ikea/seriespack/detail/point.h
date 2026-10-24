@@ -23,34 +23,46 @@ template <class F>
         auto stripe = [&](unsigned s) -> unsigned { return tile[stripe_offset<F>(s) + lane % 32]; };
         if constexpr (R == 1 || R == 2 || R == 4)
             return (stripe(0) >> (group * R)) & ((1u << R) - 1);
-        else if constexpr (R == 3) {
-            static constexpr std::uint64_t descriptors = [] {
-                std::uint64_t x = 0;
-                for (unsigned g = 0; g < 8; ++g) {
-                    const unsigned low = tail_bit<3>(g, 0), high = tail_bit<3>(g, 2);
-                    x |= std::uint64_t((low / 8) * 32 | low % 8 | (low / 8 != high / 8 ? 8 : 0))
-                         << (g * 8);
+        else {
+            // Each row group's residual is at most two byte fields; a table
+            // places them, so a point takes two loads and shifts without a
+            // branch on its random group (that branch mispredicted: Zen 5
+            // K = 5 points 3.7 ns against 0.26 native).
+            static constexpr auto fields = [] {
+                struct field {
+                    std::uint8_t stripe, shift, mask, place;
+                };
+                struct {
+                    std::array<std::array<field, 2>, 8> t{};
+                    bool fits = true;
+                } out;
+                auto& t = out.t;
+                for (unsigned g = 0; g < F::tile_rows / 32; ++g) {
+                    unsigned n = 0, last = 0;
+                    for (unsigned b = 0; b < R; ++b) {
+                        const unsigned at = tail_bit<R>(g, b);
+                        auto& f = t[g][n ? n - 1 : 0];
+                        if (n && at == last + 1 && at / 8 == f.stripe)
+                            f.mask = static_cast<std::uint8_t>(f.mask << 1 | 1);
+                        else {
+                            if (n == 2) {
+                                out.fits = false;
+                                break;
+                            }
+                            t[g][n++] = {static_cast<std::uint8_t>(at / 8), static_cast<std::uint8_t>(at % 8), 1,
+                                         static_cast<std::uint8_t>(b)};
+                        }
+                        last = at;
+                    }
+                    if (n == 1)
+                        t[g][1] = {t[g][0].stripe, 0, 0, 0};
                 }
-                return x;
+                return out;
             }();
-            const auto d = static_cast<unsigned>(descriptors >> (group * 8));
-            const auto a = stripe((d >> 5) & 3);
-            if (d & 8)
-                return (a >> 6) | ((stripe(1) >> (4 + (group >> 2))) & 4);
-            return (a >> (d & 7)) & 7;
-        } else if constexpr (R == 6) {
-            const auto edge = group & 2;
-            const auto a = stripe(edge);
-            if (((group + 1) & 2) == 0)
-                return a & 63;
-            return ((a >> 2) & 48) | ((stripe(1) >> (edge * 2)) & 15);
-        } else {
-            const unsigned start = group * R, s = start / 8, shift = start % 8;
-            const auto a = stripe(s);
-            if (shift <= 8 - R)
-                return (a >> shift) & ((1u << R) - 1);
-            const auto mask = (1u << (shift + R - 8)) - 1;
-            return ((a >> (8 - R)) & ~mask) | (stripe(s + 1) & mask);
+            static_assert(fields.fits, "a row group spans at most two byte fields");
+            const auto& f = fields.t[group];
+            return ((stripe(f[0].stripe) >> f[0].shift) & f[0].mask) << f[0].place |
+                   ((stripe(f[1].stripe) >> f[1].shift) & f[1].mask) << f[1].place;
         }
     }
 }

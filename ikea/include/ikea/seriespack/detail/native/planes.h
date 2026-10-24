@@ -27,16 +27,16 @@ inline constexpr auto tail_index = [] {
         i[t] = static_cast<std::uint8_t>(8 * t + Lane);
     return i;
 }();
-/// Comparison of dense Local tiles (no body or a one-byte body) against a
+/// Comparison of dense Local tiles (no body, or a one- or two-byte body) against a
 /// constant without reconstructing values. A Local tile stores plane b of its
 /// eight rows as one byte, so sixteen tiles' plane b, gathered into one
 /// vector, is a bit-sliced operand: equality and order follow from the
 /// planes, most significant first, and each result byte is already the tile's
-/// 8-row mask. A body byte is compared as a byte and its 8-row result packed
-/// to the same mask first.
+/// 8-row mask. A body is compared as a byte or u16 lane and its 8-row result
+/// packed to the same mask first.
 template <class F> struct local_planes {
 #if defined(__aarch64__)
-    static constexpr bool supported = F::storage == geometry::local && F::heads == 0 && F::body <= 1 && F::tail > 0;
+    static constexpr bool supported = F::storage == geometry::local && F::heads == 0 && F::body <= 2 && F::tail > 0;
 #else
     static constexpr bool supported = false;
 #endif
@@ -93,22 +93,34 @@ template <class F> struct local_planes {
         }
         return out;
     }
-    /// Op against rhs (< 2^R) for 128 rows from tile start p: two words.
+    /// Op against rhs (< 2^payload) for 128 rows from tile start p: two words.
     template <comparison Op> [[gnu::always_inline]] static uint8x16_t compare(const std::uint8_t* p, std::uint64_t rhs) {
         const auto x = planes(p);
         auto eq = vdupq_n_u8(0xff), gt = vdupq_n_u8(0);
         if constexpr (F::body) {
             // Each tile's eight body bytes against the body of rhs, packed to
             // bit r of byte t by bit weights and three pairwise additions.
-            const auto high = vdupq_n_u8(static_cast<std::uint8_t>(rhs >> R));
             static constexpr std::uint8_t weights[16] = {1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128};
             const auto w = vld1q_u8(weights);
             std::array<uint8x16_t, 8> g, e;
-            detail::each<8>([&](auto v) __attribute__((always_inline)) {
-                const auto body = vcombine_u8(vld1_u8(p + 2 * v * F::tile_bytes), vld1_u8(p + (2 * v + 1) * F::tile_bytes));
-                g[v] = vandq_u8(vcgtq_u8(body, high), w);
-                e[v] = vandq_u8(vceqq_u8(body, high), w);
-            });
+            if constexpr (F::body == 1) {
+                const auto high = vdupq_n_u8(static_cast<std::uint8_t>(rhs >> R));
+                detail::each<8>([&](auto v) __attribute__((always_inline)) {
+                    const auto body =
+                        vcombine_u8(vld1_u8(p + 2 * v * F::tile_bytes), vld1_u8(p + (2 * v + 1) * F::tile_bytes));
+                    g[v] = vandq_u8(vcgtq_u8(body, high), w);
+                    e[v] = vandq_u8(vceqq_u8(body, high), w);
+                });
+            } else {
+                // Eight little-endian u16 bodies per tile, narrowed to byte masks.
+                const auto high = vdupq_n_u16(static_cast<std::uint16_t>(rhs >> R));
+                detail::each<8>([&](auto v) __attribute__((always_inline)) {
+                    const auto a = vreinterpretq_u16_u8(vld1q_u8(p + 2 * v * F::tile_bytes));
+                    const auto b = vreinterpretq_u16_u8(vld1q_u8(p + (2 * v + 1) * F::tile_bytes));
+                    g[v] = vandq_u8(vcombine_u8(vmovn_u16(vcgtq_u16(a, high)), vmovn_u16(vcgtq_u16(b, high))), w);
+                    e[v] = vandq_u8(vcombine_u8(vmovn_u16(vceqq_u16(a, high)), vmovn_u16(vceqq_u16(b, high))), w);
+                });
+            }
             const auto pack = [](const std::array<uint8x16_t, 8>& a) __attribute__((always_inline)) {
                 const auto b0 = vpaddq_u8(a[0], a[1]), b1 = vpaddq_u8(a[2], a[3]), b2 = vpaddq_u8(a[4], a[5]),
                            b3 = vpaddq_u8(a[6], a[7]);
