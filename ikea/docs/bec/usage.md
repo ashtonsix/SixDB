@@ -26,8 +26,8 @@ Measured on resident data with retained readers, Bec4096 decoded whole
 natural and dense groups in 0.56–0.66× the time of sixteen Bec256 decodes on
 Zen 5 and 0.83–0.84× on Neoverse V2, read single blocks at parity, and stored
 the 14 RealRoaring window families in 44% fewer bytes **including the parent's
-metadata** (packed in both cases). Blocks whose Bec256 stream would exceed 256
-bits are stored raw: incompressible groups cost 514 bytes instead of 625–752
+metadata** (packed in both cases). Blocks whose rank widths reach 144 bits (or
+whose stream would exceed 256) are stored raw: incompressible groups cost 514 bytes instead of 625–752
 for sixteen Bec256 bodies, and decode as copies. A block read without a
 retained reader pays the head (2–9× a retained read), and cold-cache and
 length-changing mutation costs are not measured. See
