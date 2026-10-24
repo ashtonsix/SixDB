@@ -105,6 +105,30 @@ inline image build(std::span<const u64> v, placement where = placement::address)
     return f;
 }
 
+// Model rewrites that cannot stay in place: each listed block's body is
+// copied to the end of the image and its descriptor repointed; the old body
+// becomes dead bytes. Logical contents are unchanged, so placement decays
+// while answers stay exact. The readable suffix is kept after the new end.
+inline void relocate(image &f, std::span<const u32> ids) {
+    const std::size_t suffix = f.bytes.size() - f.body_bytes;
+    f.bytes.resize(f.body_bytes);
+    for (u32 b : ids) {
+        std::size_t len = 0;
+        switch (f.kind_of[b]) {
+        case constant: continue;
+        case runs: len = bodies::runs_bytes(f.n[b], f.width[b]); break;
+        case plane: len = 32 * std::size_t{f.width[b]}; break;
+        default: len = 8 * block_rows;
+        }
+        const std::size_t at = f.bytes.size();
+        f.bytes.resize(at + len);
+        std::memcpy(f.bytes.data() + at, f.bytes.data() + f.offset[b], len);
+        f.offset[b] = static_cast<u32>(at);
+    }
+    f.body_bytes = f.bytes.size();
+    f.bytes.resize(f.bytes.size() + suffix);
+}
+
 // Exact sum of a u64 lane body by 32-bit halves, optionally over selected rows.
 inline u128 wide_sum(const u8 *p, const u64 *sel = nullptr) {
     u64 lo = 0, hi = 0;
