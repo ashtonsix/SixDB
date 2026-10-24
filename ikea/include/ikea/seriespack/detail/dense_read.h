@@ -62,10 +62,19 @@ void dense_range(const void* source, std::size_t first, std::size_t count, U* __
 #endif
     const auto partial = [&](std::size_t from, std::size_t n) __attribute__((always_inline)) {
         const auto p = first - from;
-        U packet[16];
-        dense_region<F>(data, p, packet);
-        for (std::size_t j = 0; j < n; ++j)
-            out[j] = packet[from + j];
+#if defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
+        // The packet's wanted lanes by one compressed prefix store.
+        if constexpr (native_group::lane_store<U>)
+            native_group::store_lanes(out, native_group::read<F, true, 16>(data, F::tile_bytes, p), unsigned(from),
+                                      unsigned(n));
+        else
+#endif
+        {
+            U packet[16];
+            dense_region<F>(data, p, packet);
+            for (std::size_t j = 0; j < n; ++j)
+                out[j] = packet[from + j];
+        }
         first += n, out += n, count -= n;
     };
     if (count && first % 16 && first - first % 16 >= lowest && first - first % 16 + 16 <= backed)
