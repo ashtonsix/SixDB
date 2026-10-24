@@ -1,0 +1,42 @@
+add_library(frame3_owner_description STATIC EXCLUDE_FROM_ALL description.cpp)
+sixdb_target(frame3_owner_description)
+target_link_libraries(frame3_owner_description PUBLIC ikea_core)
+
+add_library(frame3_owner_material STATIC EXCLUDE_FROM_ALL material.cpp)
+sixdb_target(frame3_owner_material)
+target_link_libraries(frame3_owner_material PUBLIC orbital::orbital)
+
+add_library(frame3_owner_images STATIC EXCLUDE_FROM_ALL group_image.cpp)
+sixdb_target(frame3_owner_images)
+target_link_libraries(frame3_owner_images PUBLIC ikea::seriespack)
+
+add_library(frame3_owner_binding STATIC EXCLUDE_FROM_ALL binding.cpp)
+sixdb_target(frame3_owner_binding)
+target_link_libraries(frame3_owner_binding PUBLIC frame3_owner_description frame3_owner_images frame3_widths ikea::tuplepack)
+
+add_executable(frame3_owner_description_check EXCLUDE_FROM_ALL description_check.cpp)
+sixdb_target(frame3_owner_description_check)
+target_link_libraries(frame3_owner_description_check PRIVATE frame3_owner_description)
+
+add_executable(frame3_owner_material_check EXCLUDE_FROM_ALL material_check.cpp)
+sixdb_target(frame3_owner_material_check)
+target_link_libraries(frame3_owner_material_check PRIVATE frame3_owner_material)
+
+add_executable(frame3_owner_image_check EXCLUDE_FROM_ALL group_image_check.cpp)
+sixdb_target(frame3_owner_image_check)
+target_link_libraries(frame3_owner_image_check PRIVATE frame3_owner_images)
+add_executable(frame3_owner_history_check EXCLUDE_FROM_ALL history_check.cpp)
+sixdb_target(frame3_owner_history_check)
+target_link_libraries(frame3_owner_history_check PRIVATE frame3_owner_binding frame3_owner_material)
+
+add_custom_target(frame3_owner_validate
+  COMMAND $<TARGET_FILE:frame3_owner_description_check>
+  COMMAND $<TARGET_FILE:frame3_owner_material_check>
+  COMMAND $<TARGET_FILE:frame3_owner_image_check>
+  COMMAND $<TARGET_FILE:frame3_owner_history_check>
+  DEPENDS frame3_owner_description_check frame3_owner_material_check
+    frame3_owner_image_check frame3_owner_history_check
+  USES_TERMINAL)
+foreach(check description material image history)
+  add_test(NAME frame3_owner_${check} COMMAND frame3_owner_${check}_check)
+endforeach()

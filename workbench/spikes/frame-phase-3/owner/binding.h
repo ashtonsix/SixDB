@@ -40,6 +40,8 @@ struct preparation_budget {
     std::size_t source_copy_bytes{}, commands{}, effect_records{}, output_bytes{};
     bool allow_rebuild = true;
 };
+// issued_bytes/records count private apply stores only, cumulatively; rebuild
+// and emission construction stores are not included. new_bytes is final image.
 struct prepared_group {
     std::vector<std::byte> image;
     __int128 contribution{};
@@ -52,7 +54,8 @@ struct prepared_group {
 /// private binding, with one final emission; failure drops that private work
 /// and leaves the source and published state unchanged. Resource allocation
 /// can still fail privately. The budget bounds source copying, command count,
-/// journal capacity and final image; it is not a bound on allocator overhead.
+/// peak reusable per-command journal capacity and final image; it is not a
+/// bound on allocator overhead.
 std::expected<prepared_group, binding_error> prepare_group(const description &, std::size_t rows,
     unsigned group, std::span<const std::byte>, std::span<const command>, preparation_budget,
     fitting_policy = {});

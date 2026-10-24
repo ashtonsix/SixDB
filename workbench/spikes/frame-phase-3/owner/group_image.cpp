@@ -40,6 +40,8 @@ sp::preset preset(image_preset p) {
 
 std::expected<group_manifest, image_error> validate_group(std::span<const std::byte> bytes,
     image_preset p, bool bounded, std::size_t part_rows, unsigned group) {
+    if (p != image_preset::compact && p != image_preset::bulk_x86 && p != image_preset::bulk_arm)
+        return std::unexpected(image_error::descriptor);
     if (part_rows == 0 || part_rows > 65536 || group >= (part_rows + 4095) / 4096)
         return std::unexpected(image_error::geometry);
     cursor c{bytes};

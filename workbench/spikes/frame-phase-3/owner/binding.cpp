@@ -19,11 +19,14 @@ frame3::bitset256 group_blocks(unsigned group, std::size_t rows) {
     return blocks;
 }
 } // namespace
-std::expected<std::unique_ptr<frame3::stage>, binding_error> make_tree(const description &d, fitting_policy policy) {
+std::expected<std::unique_ptr<frame3::stage>, binding_error> make_tree(const description &d, fitting_policy policy) try {
     const auto r = binding_recipe(d);
     if (!r) return std::unexpected(binding_error::description);
     if (policy.exception_cap > 256 || policy.slack > 4096) return std::unexpected(binding_error::resources);
     using namespace frame3;
+    const auto preset = r->preset == pack_preset::compact ? sp::preset::compact :
+        r->preset == pack_preset::bulk_x86 ? sp::preset::bulk_x86 : sp::preset::bulk_arm;
+    if (!width_preset_available(preset)) return std::unexpected(binding_error::unsupported);
     std::unique_ptr<stage> leaf;
     switch (r->preset) {
     case pack_preset::compact: leaf = std::make_unique<pack<sp::preset::compact>>(16); break;
@@ -32,14 +35,14 @@ std::expected<std::unique_ptr<frame3::stage>, binding_error> make_tree(const des
     }
     if (r->bounded) leaf = std::make_unique<bound>(std::move(leaf), policy.penalty, policy.exception_cap, policy.slack);
     return leaf;
-}
+} catch (const std::bad_alloc &) { return std::unexpected(binding_error::resources); }
 binding::binding(std::unique_ptr<frame3::stage> root, std::size_t rows, frame3::bitset256 blocks)
     : root_(std::move(root)), rows_(rows), available_(blocks) {}
 bool binding::admitted(const frame3::bitset256 &blocks) const {
-    return (blocks & available_) == blocks;
+    return frame3::operator&(blocks, available_) == blocks;
 }
 std::expected<std::unique_ptr<binding>, binding_error> binding::attach(const description &d,
-    std::size_t rows, std::span<const borrowed_group> groups) {
+    std::size_t rows, std::span<const borrowed_group> groups) try {
     if (rows == 0 || rows > 65536) return std::unexpected(binding_error::range);
     const auto recipe = binding_recipe(d);
     if (!recipe) return std::unexpected(binding_error::description);
@@ -61,7 +64,7 @@ std::expected<std::unique_ptr<binding>, binding_error> binding::attach(const des
         for (unsigned w = 0; w < 4; ++w) available.words[w] |= blockset.words[w];
     }
     return std::unique_ptr<binding>(new binding(std::move(*root), rows, available));
-}
+} catch (const std::bad_alloc &) { return std::unexpected(binding_error::resources); }
 std::expected<frame3::u64, binding_error> binding::get(unsigned row) const {
     if (row >= rows_) return std::unexpected(binding_error::range);
     if (!available_.contains(row / 256)) return std::unexpected(binding_error::unavailable);
@@ -89,7 +92,7 @@ std::expected<frame3::u128, binding_error> binding::sum_selected(const frame3::b
     bool valid = true;
     frame3::each(blocks, [&](unsigned b) {
         const auto n = static_cast<unsigned>(std::min(std::size_t{256}, rows_ - std::size_t{b} * 256));
-        if (!(selected[b] == (selected[b] & frame3::first_n(n)))) valid = false;
+        if (!(selected[b] == frame3::operator&(selected[b], frame3::first_n(n)))) valid = false;
     });
     if (!valid) return std::unexpected(binding_error::range);
     return blocks.empty() ? 0 : root_->sum_selected(0, blocks, selected);
@@ -112,6 +115,8 @@ std::expected<prepared_group, binding_error> prepare_group(const description &d,
     std::vector<std::byte> draft(source.begin(), source.end());
     (*tree)->attach(0, rows, group, draft, draft);
     auto &root = **tree;
+    if (budget.effect_records > std::vector<ikea::journal::entry>{}.max_size())
+        return std::unexpected(binding_error::resources);
     std::vector<ikea::journal::entry> records(budget.effect_records);
     prepared_group result;
     result.copied_bytes = source.size();
