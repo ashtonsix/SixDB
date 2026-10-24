@@ -773,6 +773,7 @@ class intervals final : public stage {
     }
 
   public:
+    bool masked_sum_law = false;
     intervals(std::unique_ptr<stage> deltas, std::unique_ptr<stage> checkpoints, unsigned G = 16)
         : children_{std::move(deltas), std::move(checkpoints)}, G_(G) {
         assert(G >= 2 && block_rows % G == 0);
@@ -844,6 +845,10 @@ class intervals final : public stage {
     // offset binary: delta = d - 2^63 exactly. Partial blocks, and blocks
     // whose deltas wrap (their prefixes are exact only modulo 2^64), decode.
     u128 sum(unsigned p, const bitset256 &blocks) const override {
+        // Measured 1.3-2.6x slower than decoding on Zen 5 (SeriesPack's
+        // prefiltered sum costs several times its range sum), so off.
+        if (!masked_sum_law)
+            return stage::sum(p, blocks);
         bitset256 full, partial;
         each(blocks, [&](unsigned b) { (rows_in(p, b) == block_rows && parts_[p].exact[b] ? full : partial).set(b); });
         __int128 t = partial.empty() ? 0 : static_cast<__int128>(stage::sum(p, partial));

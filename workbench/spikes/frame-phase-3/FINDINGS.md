@@ -70,10 +70,38 @@ law; everything else uses the decode fallback.
   UserID 29 against 52, gen_ts 15 against 18 bits). Checkpoints need to be a
   framed series themselves, or sparser.
 
-So delta needs a SUM law (Σx = n·c + Σ δⱼ(n − j) over decoded residuals), a
-fused checkpoint-plus-prefix point read, and framed checkpoints. The runs
+A second round ([measure-v4-zen5.txt](proto/evidence/measure-v4-zen5.txt))
+tried two of the fixes:
+
+- **Framed checkpoints pay.** Storing the checkpoints as their own
+  `bound → pack` series takes OS from 13.5 to 10.1 bits per value, CounterID
+  from 4.8 to 0.8, gen_ts from 14.8 to 12.1, and puts delta below
+  `bound → pack` on six of eleven columns. Reading them through the child
+  slows the monotone COUNT law (UserID 7.5 → 23 ns per block), so its
+  checkpoint search wants a fused read.
+- **A SUM law from masked sums loses.** Σx = n·c + Σ δⱼ(n − j) can be written
+  as one masked sum of the deltas per bit of the in-region position, so it
+  never decodes. It is exact, but 1.3–2.6× slower than decoding (166–559 ns
+  per block), because SeriesPack's prefiltered SUM costs several times its
+  range SUM (38–116 ns per block at 10% selection, against 4–165). The law is
+  kept, switched off. A real delta SUM law needs a position-weighted consumer
+  inside SeriesPack's one-decode scan (`author::scan_regions`), which is a
+  SeriesPack kernel, not Frame glue.
+
+So delta still needs a fused weighted SUM and a fused checkpoint-plus-prefix
+read before it lands; its bytes are now competitive. The runs
 thread found the same short-read cost from the other side
 ([runs §3](../frame-phase-2/runs/README.md#findings)).
+
+### SUM over a selection
+
+SUM over selected rows is now an operation: bound charges lo only for
+selected non-exception rows, and pack uses SeriesPack's prefiltered SUM. On
+Zen 5 a random 10% selection costs 38–116 ns per block and FILTER(x ≥
+median) then SUM 20–152, against 61 for this thread's scalar fused loop over
+u64. That control is weak (it does not vectorise the masked case), so these
+numbers only place the operation; front A's fused pair control is the right
+bar, and the prefiltered SUM is the cost to attack.
 
 ## 2. Every placeholder shape fits one contract, with seven changes
 
