@@ -1,8 +1,17 @@
 # Local storage
 
-Ordinary collection keeps measurements, logs, sources and metadata locally.
-Recognized compiler output of at least 1 MiB stays in S3, as do referenced
-prepared inputs. The complete compressed archive still downloads temporarily
+The current tooling has repeatedly allowed disk exhaustion. Its nominal budgets
+do not enforce admission. The [replacement spike](../spikes/storage-lifecycle/README.md)
+records the failure mechanisms and independent adversarial tests. The provisional
+collection/input changes below reduce specific duplication; they do not establish
+a bounded replacement lifecycle.
+
+Ordinary collection keeps measurements, logs, individual sources and metadata locally.
+Root and nested `source.tar.gz` packages, recognized compiler output of at least 1 MiB,
+and referenced prepared inputs stay in S3. After a fresh verified collection,
+its byte-identical launch source package can leave too; pins and differing
+local bytes remain. Source identities and recovery references stay local.
+The complete compressed archive still downloads temporarily
 for verification; omitted files are hashed without being expanded.
 
 ```sh
@@ -29,7 +38,7 @@ keeps its recovery identity. Edited/unarchived files, active jobs, recent access
 and `.keep-local` pins stay; these can exceed the budget. `cache --prune` applies
 this now; `--older-hours N` changes the age threshold. Pin an ongoing local audit
 before relying on an older collection. Ordinary fetching renews its access age.
-The job's duplicate launch `source.tar.gz` is included in the budget and can leave
+Any remaining launch `source.tar.gz` is included in the budget and can leave
 only when it matches the freshly verified archive member. `fetch JOB --file
 source.tar.gz` recovers the source under `results/`; checkpoint resume already
 downloads the original source from S3.
@@ -54,7 +63,7 @@ archived sources, logs and measurements. It streams and verifies the entire S3
 bundle without staging a download, then removes only byte-identical members.
 The recovery reference, collection receipt, local edits and unarchived files stay.
 `fetch JOB --file PATH` recovers selected files; ordinary `fetch JOB` restores the
-measurement/source set, and `--full` restores compiler output too. Eviction is
+measurement/source-file set, and `--full` restores source packages and compiler output too. Eviction is
 explicit, independent of age and free-space reserves, and respects `.keep-local`.
 
 `touch build/workers/JOB/.keep-local` protects fetched output; remove the file

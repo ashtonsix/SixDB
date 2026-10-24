@@ -35,6 +35,12 @@ def matches(root, name, expected):
         return False  # Another collector may have moved a previously observed file.
 
 
+def normally_required(name, entry):
+    # The transport source archive is unique evidence in S3, not rebuildable
+    # compiler output. Keep its identity locally and fetch its bytes on request.
+    return Path(name).name != 'source.tar.gz' and not entry.get('rebuildable', False)
+
+
 def verified(directory, reference, *, full=False, selected=None):
     receipt = read(directory / 'collection.json')
     members = receipt.get('members', {})
@@ -51,7 +57,7 @@ def verified(directory, reference, *, full=False, selected=None):
     evicted = set(receipt.get('evicted', [])) if not full else set()
     for name, expected in members.items():
         path = directory / 'results' / name
-        required = full or (name in selected if selected is not None else not expected.get('rebuildable', False))
+        required = full or (name in selected if selected is not None else normally_required(name, expected))
         if name in evicted and not required and not path.exists() and not path.is_symlink():
             continue
         if not matches(directory / 'results', name, expected):
@@ -67,6 +73,31 @@ def list_files(directory, reference):
     for name, entry in sorted(members.items()):
         location = 'present' if (directory / 'results' / name).is_file() else 'S3'
         print(f"{entry['bytes']:>12,} bytes  {location:7} {name}")
+
+
+def record_collection(directory, reference, members):
+    previous = read(directory / 'collection.json')
+    receipt = {'format': 1, 'artifact': reference, 'members': members,
+               'evicted': sorted(name for name in members if not (directory / 'results' / name).exists()),
+               'accessed_at': time.time()}
+    if previous.get('artifact') == reference and isinstance(previous.get('root_evicted'), dict):
+        receipt['root_evicted'] = previous['root_evicted']
+    storage.write_json(directory / 'collection.json', receipt)
+
+
+def release_launch_source(directory, reference, members):
+    """After a fresh archive verification, release only its identical launch copy."""
+    expected = members.get('source.tar.gz')
+    if (not expected or (directory / '.keep-local').exists() or
+            not matches(directory, 'source.tar.gz', expected)):
+        return
+    receipt = read(directory / 'collection.json')
+    root_evicted = receipt.get('root_evicted', {})
+    storage.write_json(directory / 'collection.json', receipt | {'root_evicted': root_evicted | {
+        'source.tar.gz': {'archive_member': 'source.tar.gz', **expected}}})
+    if not (directory / '.keep-local').exists() and matches(directory, 'source.tar.gz', expected):
+        (directory / 'source.tar.gz').unlink()
+        storage.sync_directory(directory)
 
 
 def collect(directory, reference, *, full=False, selected=None):
@@ -87,14 +118,14 @@ def collect(directory, reference, *, full=False, selected=None):
         if available:
             current = read(directory / 'collection.json')['members']
             wanted = {name for name, entry in current.items()
-                      if full or (name in selected if selected is not None else not entry['rebuildable'])}
+                      if full or (name in selected if selected is not None else normally_required(name, entry))}
             if selected is not None and selected - current.keys():
                 raise ValueError('selected files missing from bundle: ' + ', '.join(sorted(selected - current.keys())))
             wanted = {name for name in wanted if not (destination / name).exists()}
         with tempfile.TemporaryDirectory(dir=directory, prefix='.collection-') as temp:
             staging = Path(temp) / 'results'
             members = artifacts.restore_bundle(reference, staging, selected=wanted,
-                omit_compiler=not full and wanted is None)
+                omit_compiler=not full and wanted is None, omit_source_archive=not full and wanted is None)
             if available:
                 # Adding selected files leaves existing measurements, prepared
                 # inputs and local notes at their original paths.
@@ -107,10 +138,8 @@ def collect(directory, reference, *, full=False, selected=None):
                     target.parent.mkdir(parents=True, exist_ok=True)
                     path.rename(target)
                     storage.sync_directory(target.parent)
-                storage.write_json(directory / 'collection.json', {
-                    'format': 1, 'artifact': reference, 'members': members,
-                    'evicted': sorted(name for name in members if not (destination / name).exists()),
-                    'accessed_at': time.time()})
+                record_collection(directory, reference, members)
+                release_launch_source(directory, reference, members)
                 return
             linked = False
             for name, expected in members.items():
@@ -128,10 +157,8 @@ def collect(directory, reference, *, full=False, selected=None):
                 destination.rename(previous)
             staging.rename(destination)
             storage.sync_directory(directory)
-            storage.write_json(directory / 'collection.json', {
-                'format': 1, 'artifact': reference, 'members': members,
-                'evicted': sorted(name for name in members if not (destination / name).exists()),
-                'accessed_at': time.time()})
+            record_collection(directory, reference, members)
+            release_launch_source(directory, reference, members)
         # Remove only byte-identical duplicates. Changed and user-added files stay
         # in the old tree, including interrupted-write witnesses such as empty files.
         if previous.is_dir() and not previous.is_symlink():

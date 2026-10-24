@@ -810,7 +810,7 @@ def main():
             cmd.add_argument('--console', action='store_true', help='show instance boot diagnostics instead of script output')
         if name == 'fetch':
             selection = cmd.add_mutually_exclusive_group()
-            selection.add_argument('--full', action='store_true', help='restore all compiler output and prepared inputs too')
+            selection.add_argument('--full', action='store_true', help='restore source packages, compiler output and prepared inputs too')
             selection.add_argument('--file', action='append', dest='selected', help='retrieve an exact archive member; repeat as needed')
             selection.add_argument('--list', action='store_true', dest='list_files', help='list member paths, sizes and local presence without extracting')
     commands.add_parser('list', help='list SixDB worker instances')

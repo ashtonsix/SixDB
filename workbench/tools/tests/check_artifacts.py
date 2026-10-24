@@ -3,6 +3,7 @@
 
 import io
 import csv
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import redirect_stdout
 import json
 from pathlib import Path
@@ -11,10 +12,12 @@ import shutil
 import sys
 import tarfile
 import tempfile
+import threading
 import unittest
 from unittest.mock import patch
 
 import artifacts
+import storage
 import worker_cache
 import datasets
 from evidence import digest, read_measurements, summarize, verify_compact, verify_exports
@@ -136,6 +139,58 @@ class ArtifactsCheck(unittest.TestCase):
             restored = self.root / 'generic'
             artifacts.restore_bundle(reference, restored)
             self.assertEqual((restored / 'run.json').read_text(), 'an arbitrary script output')
+
+    def input_reference(self):
+        with tempfile.TemporaryDirectory() as temp:
+            reference = artifacts.publish(self.source, Path(temp))
+        path = self.root / 'input-artifact.json'
+        path.write_text(json.dumps(reference))
+        return path
+
+    def test_cached_input_concurrent_reuse_has_one_verified_fill_and_no_result_copy(self):
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            reference = self.input_reference()
+            original = artifacts.download
+            barrier = threading.Barrier(2)
+            def fetch():
+                barrier.wait(timeout=10)
+                return artifacts.cached_input(reference, cache_root=self.root / 'shared')
+            with patch.object(artifacts, 'download', wraps=original) as download, \
+                    ThreadPoolExecutor(max_workers=2) as pool:
+                results = list(pool.map(lambda _: fetch(), range(2)))
+            self.assertEqual(download.call_count, 1)
+            self.assertEqual(results[0], results[1])
+            self.assertEqual((results[0] / 'summary.csv').read_bytes(), (self.source / 'summary.csv').read_bytes())
+            with patch.object(artifacts, 'download', side_effect=AssertionError('cached input contacted S3')):
+                self.assertEqual(artifacts.cached_input(reference, cache_root=self.root / 'shared'), results[0])
+        self.assertFalse((self.root / 'results').exists())
+
+    def test_cached_input_selection_is_part_of_identity_and_edits_are_preserved(self):
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            reference = self.input_reference()
+            first = artifacts.cached_input(reference, selected=['summary.csv'], cache_root=self.root / 'shared')
+            other = artifacts.cached_input(reference, selected=['summary.md'], cache_root=self.root / 'shared')
+            self.assertNotEqual(first, other)
+            self.assertFalse((first / 'summary.md').exists())
+            (first / 'summary.csv').write_text('edited input')
+            with patch.object(artifacts, 'download', side_effect=AssertionError('do not overwrite edited input')), \
+                    self.assertRaisesRegex(ValueError, 'preserved'):
+                artifacts.cached_input(reference, selected=['summary.csv'], cache_root=self.root / 'shared')
+            self.assertEqual((first / 'summary.csv').read_text(), 'edited input')
+
+    def test_cached_input_rejects_result_directory_and_never_publishes_failed_fill(self):
+        with patch.object(artifacts, 'aws', self.fake_aws):
+            reference = self.input_reference()
+            with patch.dict(artifacts.os.environ, {'SIXDB_RESULTS': str(self.root / 'results')}), \
+                    self.assertRaisesRegex(ValueError, 'outside SIXDB_RESULTS'):
+                artifacts.cached_input(reference, cache_root=self.root / 'results/cache')
+            cache = self.root / 'shared'
+            with patch.object(storage, 'sync_tree', side_effect=OSError(28, 'injected disk full')), \
+                    self.assertRaises(OSError):
+                artifacts.cached_input(reference, cache_root=cache)
+            self.assertFalse(list(cache.glob('artifact-inputs/*/.artifact-input.json')))
+            restored = artifacts.cached_input(reference, cache_root=cache)
+            self.assertTrue((restored / 'summary.csv').is_file())
 
     def test_plain_files_selection_without_run_receipt(self):
         (self.source / 'run.json').unlink()
@@ -551,6 +606,7 @@ class ArtifactsCheck(unittest.TestCase):
             reference = artifacts.publish(output, Path(temp), validate_run=False)
             worker_cache.collect(job, reference)
             self.assertFalse((job / 'results/study/probe').exists())
+            self.assertFalse((job / 'results/study/source.tar.gz').exists())
             manifest = json.loads((job / 'collection.json').read_text())['members']
             evidence = self.root / 'evidence'
             with patch.object(artifacts, 'remote_manifest', return_value=manifest) as remote, \
@@ -558,6 +614,8 @@ class ArtifactsCheck(unittest.TestCase):
                 artifacts.retain(job / 'results/study', evidence)
             remote.assert_called_once_with(reference)
             publish.assert_not_called()
+            self.assertEqual(json.loads((evidence / 'provenance.json').read_text())['source_archive_sha256'],
+                             artifacts.sha256(self.source / 'source.tar.gz'))
             scoped = json.loads((evidence / 'artifact.json').read_text())
             self.assertEqual(scoped['sha256'], reference['sha256'])
             self.assertEqual(scoped['subdirectory'], 'study')
@@ -653,6 +711,9 @@ class ArtifactsCheck(unittest.TestCase):
         (self.source / "source.tar.gz").unlink()
         with self.assertRaises(FileNotFoundError):
             artifacts.pack(self.source, self.root / "bundle.tar.gz")
+        with patch.object(artifacts, 'aws', self.fake_aws), self.assertRaises(FileNotFoundError):
+            artifacts.retain(self.source, self.root / 'missing-source-export')
+        self.assertFalse((self.root / 'missing-source-export').exists())
         self.receipt["status"] = "running"
         (self.source / "run.json").write_text(json.dumps(self.receipt))
         with self.assertRaisesRegex(ValueError, "unfinished"):

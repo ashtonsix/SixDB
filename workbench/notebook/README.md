@@ -44,6 +44,9 @@ his open working outline; agents add to it only at his explicit request.
 what was retained and how to recover their sources. The
 [first research retrospective](research-experience.md) records why useful inputs,
 small runs and selected evidence replaced heavier capture habits.
+[Storage lifecycle](../spikes/storage-lifecycle/README.md) investigates why those
+intentions still allowed repeated disk exhaustion and tests replacement tooling
+against independent adversarial workloads.
 [Build lessons](build-iteration.md) records the earlier Calico compile/CPS
 experiments; current commands belong in [BUILDING](../../BUILDING.md).
 

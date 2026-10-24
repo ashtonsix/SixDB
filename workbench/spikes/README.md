@@ -111,6 +111,11 @@ studies to current runtime and formal-model owners.
 
 ## Work on an investigation
 
+[Research storage lifecycle](storage-lifecycle/README.md) investigates replacement
+of the repeatedly failing storage tooling, with independent growth, disk-full,
+concurrency and crash tests. The existing nominal budgets are not an enforced
+storage bound.
+
 Before creating a study or substantially changing its approach, follow the
 [prior-work instructions](../../AGENTS.md#read-prior-work-before-starting-an-experiment).
 Apply the relevant findings to the starting point and make the new question explicit.

@@ -10,12 +10,13 @@
 #        histogram skip the LLC tier), PEERS=0 skips the TurboPFor/FastLanes arms
 set -euo pipefail
 inputs=workbench/spikes/frame-phase-1/encoding/worker-inputs.json
+cols=""
 if [ "${COLUMNS:-1}" = 1 ]; then
   cp "$inputs" "$SIXDB_RESULTS/input-artifact.json"
-  python3 workbench/tools/artifacts.py fetch "$SIXDB_RESULTS/input-artifact.json" "$SIXDB_RESULTS/in" \
-    > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
+  input_root=$(python3 workbench/tools/artifacts.py input "$SIXDB_RESULTS/input-artifact.json" \
+    2> "$SIXDB_RESULTS/input-fetch.txt")
+  cols="$input_root/inputs/cols"
 fi
-cols="$SIXDB_RESULTS/in/inputs/cols"
 columns="OS:RegionID RegionID:OS ResolutionWidth:OS EventTime:EventTime UserID:OS URLHash:UserID WatchID:EventTime ClientIP:RegionID ConnectTiming:OS IsRefresh CounterID"
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
 grep -m1 -E '^(flags|Features)' /proc/cpuinfo > "$SIXDB_RESULTS/cpu-flags.txt" || true

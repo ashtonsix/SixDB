@@ -2,9 +2,9 @@
 set -euo pipefail
 study=workbench/spikes/frame-phase-2/instruments/cells
 cp workbench/spikes/frame-phase-1/encoding/worker-inputs.json "$SIXDB_RESULTS/input-artifact.json"
-python3 workbench/tools/artifacts.py fetch "$SIXDB_RESULTS/input-artifact.json" "$SIXDB_RESULTS/in" \
-  > "$SIXDB_RESULTS/input-fetch.log" 2>&1
-cols="$SIXDB_RESULTS/in/inputs/cols"
+input_root=$(python3 workbench/tools/artifacts.py input "$SIXDB_RESULTS/input-artifact.json" \
+  2> "$SIXDB_RESULTS/input-fetch.log")
+cols="$input_root/inputs/cols"
 case "$(uname -m)" in
   x86_64) profiles="${ISAS:-avx2 avx512}" ;;
   *) profiles="${ISAS:-neon}" ;;

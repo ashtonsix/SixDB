@@ -75,6 +75,14 @@ checks retained hashes against Git blobs. It does not contact S3.
 
 ## Recover or reduce retained evidence
 
+For an artifact used as reusable input, `artifacts.py input REFERENCE.json`
+prints a verified shared directory under `SIXDB_DATA_CACHE` (by default
+`build/datasets`). Repeated `--file PATH` requests exact members. The cache key
+includes the reference and selection; concurrent callers share one atomic fill,
+and reuse checks the retained member hashes. Differing local input is preserved
+and reported. Keep the input reference with results, rather than copying the
+input directory into every run. [Workers](workers.md) provides a shell example.
+
 ```sh
 python3 workbench/tools/artifacts.py fetch path/to/evidence-or-artifact.json \
   build/recovered/NAME

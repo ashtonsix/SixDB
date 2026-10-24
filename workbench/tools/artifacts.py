@@ -259,6 +259,12 @@ def install(staging, destination):
 
 def prepare_compact(source, staging, selected, regenerate, regenerate_from=None):
     receipt_path = source / 'run.json'
+    source_archive_sha256 = None
+    if receipt_path.exists() and not (source / 'source.tar.gz').exists():
+        # This is staging, not a proof: retain() still verifies the complete
+        # worker archive/receipt before installing any export. Unarchived runs
+        # still fail pack()/verify_run() for their missing source package.
+        source_archive_sha256 = json.loads(receipt_path.read_text())['artifact_sha256']['source.tar.gz']
     if not receipt_path.exists():
         if selected is None:
             raise ValueError('No run.json selection recipe; choose output files with --file PATH (repeat as needed)')
@@ -267,11 +273,11 @@ def prepare_compact(source, staging, selected, regenerate, regenerate_from=None)
                       'regenerate': regenerate or [], 'full_bundle': 'artifact.json'}
         (staging / 'provenance.json').write_text(json.dumps(provenance, indent=2, sort_keys=True) + '\n')
     elif selected is None:
-        compact_run(source, staging)
+        compact_run(source, staging, source_archive_sha256=source_archive_sha256)
     else:
         receipt = json.loads(receipt_path.read_text())
         receipt['compact'] = {'files': selected, 'regenerate': regenerate or []}
-        compact_files(source, staging, receipt)
+        compact_files(source, staging, receipt, source_archive_sha256=source_archive_sha256)
     if regenerate is not None or regenerate_from is not None:
         path = staging / 'provenance.json'
         meta = json.loads(path.read_text())
@@ -411,13 +417,14 @@ def selection(selected):
     return selected
 
 
-def unpack(bundle, destination, *, selected=None, manifest=None, omit_compiler=False, subdirectory=''):
+def unpack(bundle, destination, *, selected=None, manifest=None, omit_compiler=False,
+           omit_source_archive=False, subdirectory=''):
     selected = selection(selected)
     scope = PurePosixPath(subdirectory)
     if scope.is_absolute() or '..' in scope.parts:
         raise ValueError('bundle subdirectory must be a relative path')
-    if selected is not None and omit_compiler:
-        raise ValueError('choose exact files or omit compiler output, not both')
+    if selected is not None and (omit_compiler or omit_source_archive):
+        raise ValueError('choose exact files or default omissions, not both')
     with tarfile.open(bundle) as archive:
         seen, scoped = set(), set()
         for member in archive:
@@ -437,7 +444,8 @@ def unpack(bundle, destination, *, selected=None, manifest=None, omit_compiler=F
             with source:
                 prefix = source.read(512)
                 compiler = rebuildable(name, member.size, prefix)
-                keep = name.as_posix() in selected if selected is not None else not (omit_compiler and compiler)
+                keep = name.as_posix() in selected if selected is not None else not (
+                    (omit_compiler and compiler) or (omit_source_archive and name.name == 'source.tar.gz'))
                 path = destination.joinpath(*name.parts)
                 if keep:
                     storage.require_space(destination, member.size)
@@ -466,17 +474,18 @@ def unpack(bundle, destination, *, selected=None, manifest=None, omit_compiler=F
     return len(seen)
 
 
-def restore_bundle(reference, destination, *, selected=None, omit_compiler=False):
+def restore_bundle(reference, destination, *, selected=None, omit_compiler=False, omit_source_archive=False):
     """Restore chosen files durably; return hashes for every in-scope member.
 
     Exact selections skip whole-run validation. Compiler omissions instead
     validate missing run members against the verified archive's hashes.
     """
     with storage.transfer_lock():
-        return _restore_bundle(reference, destination, selected=selected, omit_compiler=omit_compiler)
+        return _restore_bundle(reference, destination, selected=selected, omit_compiler=omit_compiler,
+                               omit_source_archive=omit_source_archive)
 
 
-def _restore_bundle(reference, destination, *, selected=None, omit_compiler=False):
+def _restore_bundle(reference, destination, *, selected=None, omit_compiler=False, omit_source_archive=False):
     destination = destination.resolve()
     if destination.exists():
         raise ValueError("fetch destination already exists")
@@ -490,11 +499,12 @@ def _restore_bundle(reference, destination, *, selected=None, omit_compiler=Fals
         staging.mkdir()
         manifest = {}
         count = unpack(bundle, staging, selected=selected, manifest=manifest, omit_compiler=omit_compiler,
+                       omit_source_archive=omit_source_archive,
                        subdirectory=reference.get('subdirectory', ''))
         if count != reference["files"]:
             raise ValueError("bundle file count mismatch")
         if selected is None and reference.get('kind') != 'files':
-            verify_run(staging, archived=manifest if omit_compiler else None)
+            verify_run(staging, archived=manifest if omit_compiler or omit_source_archive else None)
         storage.sync_tree(staging)
         staging.rename(destination)
         storage.sync_directory(destination.parent)
@@ -520,6 +530,48 @@ def fetch(reference_path, destination, *, selected=None):
     else:
         print(f"Partial recovery: {len(selected)} selected files from verified bundle: {destination}")
         print('Whole-run validation and input dataset restoration were not requested.')
+
+
+def cached_input(reference_path, *, selected=None, cache_root=None):
+    """Share verified immutable artifact inputs, outside each job's result bundle."""
+    import datasets
+    reference = json.loads(reference_path.read_text())
+    selected = selection(selected)
+    identity = {'artifact': reference, 'selected': sorted(selected) if selected is not None else None}
+    key = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+    base = (Path(cache_root).resolve() if cache_root is not None else datasets.cache_root()) / 'artifact-inputs'
+    results = os.environ.get('SIXDB_RESULTS')
+    if results and base.is_relative_to(Path(results).resolve()):
+        raise ValueError('input cache must be outside SIXDB_RESULTS')
+    base.mkdir(parents=True, exist_ok=True)
+    destination = base / key
+    marker = '.artifact-input.json'
+    with storage.lock(base / '.locks' / (key + '.lock')):
+        if destination.exists() or destination.is_symlink():
+            receipt = destination / marker
+            if destination.is_symlink() or receipt.is_symlink() or not receipt.is_file():
+                raise ValueError(f'input cache has no regular verification receipt: {destination}')
+            saved = json.loads(receipt.read_text())
+            members = saved['members']
+            wanted = selected if selected is not None else set(members)
+            if saved.get('identity') != identity or {p.relative_to(destination).as_posix()
+                    for p in files(destination)} != wanted | {marker}:
+                raise ValueError(f'input cache differs; existing files preserved: {destination}')
+            for name in wanted:
+                path = export_file(destination, name)
+                expected = members[name]
+                if path.stat().st_size != expected['bytes'] or sha256(path) != expected['sha256']:
+                    raise ValueError(f'input cache differs; existing file preserved: {path}')
+        else:
+            with tempfile.TemporaryDirectory(dir=base, prefix='.input-') as name:
+                staging = Path(name) / 'input'
+                members = restore_bundle(reference, staging, selected=selected)
+                if marker in members:
+                    raise ValueError('input archive uses the cache receipt filename')
+                storage.write_json(staging / marker, {'identity': identity, 'members': members})
+                staging.rename(destination)
+                storage.sync_directory(base)
+    return destination
 
 
 def evict(directory, reference_path, *, selected=None, match_content=False, minimum_bytes=0, apply=False):
@@ -820,6 +872,10 @@ def main():
                               help="new recovery directory, e.g. build/recovered/NAME or a path on another volume")
     fetch_parser.add_argument('--file', action='append', dest='selected',
                               help='Restore only this exact bundle file; repeat as needed (no input dataset restoration)')
+    input_parser = commands.add_parser('input', help='print a verified shared input path; keep data outside collected results')
+    input_parser.add_argument('reference', type=Path)
+    input_parser.add_argument('--cache', type=Path, help='shared data cache (default: SIXDB_DATA_CACHE or build/datasets)')
+    input_parser.add_argument('--file', action='append', dest='selected', help='cache this exact member; repeat as needed')
     evict_parser = commands.add_parser('evict', help='preview/release byte-identical archived local output')
     evict_parser.add_argument('directory', type=Path)
     evict_parser.add_argument('reference', type=Path)
@@ -840,6 +896,8 @@ def main():
         print(f'Verified {count} compact exports ({args.tree or "worktree"})')
     elif args.command == "fetch":
         fetch(args.reference, args.output, selected=args.selected)
+    elif args.command == 'input':
+        print(cached_input(args.reference, selected=args.selected, cache_root=args.cache))
     elif args.command == 'evict':
         evict(args.directory, args.reference, selected=args.selected, match_content=args.match_content,
               minimum_bytes=args.min_bytes, apply=args.apply)

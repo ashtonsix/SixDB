@@ -9,9 +9,9 @@ import json, sys
 from pathlib import Path
 Path(sys.argv[2]).write_text(json.dumps(json.loads(Path(sys.argv[1]).read_text())))
 PY
-python3 workbench/tools/artifacts.py fetch "$SIXDB_RESULTS/input-artifact.json" "$SIXDB_RESULTS/in" \
-  > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
-in="$SIXDB_RESULTS/in/inputs"
+input_root=$(python3 workbench/tools/artifacts.py input "$SIXDB_RESULTS/input-artifact.json" \
+  2> "$SIXDB_RESULTS/input-fetch.txt")
+in="$input_root/inputs"
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 case "$(uname -m)" in

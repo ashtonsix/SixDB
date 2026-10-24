@@ -2,15 +2,14 @@
 set -euo pipefail
 
 phase=workbench/spikes/frame-phase-1/lifecycle
-mkdir -p "$SIXDB_RESULTS/inputs"
 python3 - "$phase/native-inputs.json" "$SIXDB_RESULTS/input-artifact.json" <<'PY'
 from pathlib import Path
 import json,sys
 Path(sys.argv[2]).write_text(json.dumps(json.loads(Path(sys.argv[1]).read_text())['artifact']))
 PY
-python3 workbench/tools/artifacts.py fetch "$SIXDB_RESULTS/input-artifact.json" "$SIXDB_RESULTS/recovered-inputs" \
+input_root=$(python3 workbench/tools/artifacts.py input "$SIXDB_RESULTS/input-artifact.json" \
   --file inputs/p__mbar.u64 --file inputs/EventTime-mid.u64 --file inputs/UserID.u64 --file inputs/URLHash.u64 \
-  > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
+  2> "$SIXDB_RESULTS/input-fetch.txt")
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 
@@ -34,6 +33,6 @@ PY
     frame_phase_repair_check frame_phase_batch_check frame_measure_order_check \
     -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   clang++-21 -march="$march" -mtune=znver5 -dM -E -x c++ /dev/null > "$out/compiler-features.txt"
-  python3 "$phase/native.py" --build "$build" --inputs "$SIXDB_RESULTS/recovered-inputs/inputs" \
+  python3 "$phase/native.py" --build "$build" --inputs "$input_root/inputs" \
     --output "$out" --cpu "$SIXDB_CPU" --isa "$isa"
 done

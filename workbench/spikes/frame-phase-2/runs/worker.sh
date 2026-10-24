@@ -5,9 +5,9 @@
 set -euo pipefail
 inputs=workbench/spikes/frame-phase-1/encoding/worker-inputs.json
 cp "$inputs" "$SIXDB_RESULTS/input-artifact.json"
-python3 workbench/tools/artifacts.py fetch "$SIXDB_RESULTS/input-artifact.json" "$SIXDB_RESULTS/in" \
-  > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
-cols="$SIXDB_RESULTS/in/inputs/cols"
+input_root=$(python3 workbench/tools/artifacts.py input "$SIXDB_RESULTS/input-artifact.json" \
+  2> "$SIXDB_RESULTS/input-fetch.txt")
+cols="$input_root/inputs/cols"
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 case "$(uname -m)" in

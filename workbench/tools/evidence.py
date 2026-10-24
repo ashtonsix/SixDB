@@ -39,12 +39,12 @@ def read_measurements(directory):
     return receipt, {"context": receipt["context"], "benchmarks": rows}
 
 
-def compact_run(source, destination):
+def compact_run(source, destination, *, source_archive_sha256=None):
     """Called after bundle verification; destination is a new staging directory."""
     source, destination = Path(source), Path(destination)
     raw_receipt = json.loads((source / 'run.json').read_text())
     if 'compact' in raw_receipt:
-        return compact_files(source, destination, raw_receipt)
+        return compact_files(source, destination, raw_receipt, source_archive_sha256=source_archive_sha256)
     receipt, benchmark = read_measurements(source)
     if receipt["status"] != "complete" or not receipt["source_unchanged"]:
         raise ValueError("only successful, source-stable runs can become compact evidence")
@@ -70,7 +70,7 @@ def compact_run(source, destination):
         "source_unchanged": receipt["source_unchanged"],
         "started_utc": receipt["started_utc"],
         "source_digest": receipt["source_digest"],
-        "source_archive_sha256": digest(source / "source.tar.gz"),
+        "source_archive_sha256": source_archive_sha256 or digest(source / "source.tar.gz"),
         "git_head": (source / "git-head.stdout").read_text().strip(),
         "config": {k: v for k, v in receipt["config"].items() if k not in {"build_dir", "output"}},
         "platform": receipt["platform"],
@@ -108,14 +108,14 @@ def copy_compact_files(source, destination, selected, expected=None):
     return hashes
 
 
-def compact_files(source, destination, receipt):
+def compact_files(source, destination, receipt, *, source_archive_sha256=None):
     if receipt['status'] != 'complete' or not receipt['source_unchanged']:
         raise ValueError('Only a successful run can install compact evidence')
     hashes = copy_compact_files(source, destination, receipt['compact']['files'], receipt['artifact_sha256'])
     provenance = {k: receipt[k] for k in ('status', 'source_unchanged', 'started_utc', 'source_digest', 'config', 'platform')}
     provenance.update(format=2, files_sha256=hashes,
                       regenerate=receipt['compact']['regenerate'], full_bundle='artifact.json',
-                      source_archive_sha256=digest(source / 'source.tar.gz'),
+                      source_archive_sha256=source_archive_sha256 or digest(source / 'source.tar.gz'),
                       inputs={k: {f: v[f] for f in ('id', 'key')} for k, v in receipt.get('inputs', {}).items()})
     for file, key in (('compiler.stdout', 'compiler'), ('git-head.stdout', 'git_head')):
         if (source / file).exists():

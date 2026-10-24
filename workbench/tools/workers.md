@@ -67,6 +67,25 @@ For longer edit/review loops use `--idle-seconds 600`; a narrowly missed reuse
 window can prompt this suggestion in the console. The next job's entire deadline
 must also fit the remaining `--max-age` lifetime.
 
+Fetch reusable input artifacts under `$SIXDB_DATA_CACHE`, keyed by their artifact
+digest, and retain their reference in `$SIXDB_RESULTS`. Do not fetch them under
+`$SIXDB_RESULTS/in`: that rebundles the same columns for every job and restores
+another local copy during ordinary collection. Input preparation is outside the
+measured operation; record its identity and any transformation with the caller.
+
+For an existing artifact, `input` prints a shared path, atomically fills it once,
+and verifies it on reuse. Artifact scope and exact file selection are part of the
+cache key; changed input is preserved and reported rather than overwritten.
+
+```sh
+cp "$input_reference" "$SIXDB_RESULTS/input-artifact.json"
+input_root=$(python3 workbench/tools/artifacts.py input "$input_reference" \
+  2> "$SIXDB_RESULTS/input-fetch.txt")
+```
+
+Repeated `--file PATH` selects particular members. For recipe-based preparation,
+use the existing [dataset helpers](../datasets/README.md).
+
 For an explicit [source capture](README.md#captured-experiment-runs), use
 `run SCRIPT --source PATH`. The script is relative to that checkout; job records
 stay with the current controller. Study/setup bytes and controller runtime hashes
@@ -111,7 +130,7 @@ has no background observer. Keep this context with timing comparisons. Fresh ins
 do not establish cold hardware caches; the benchmark controls cache residence.
 
 Ordinary fetch keeps measurements and metadata locally. Use `fetch JOB --list`,
-`--file PATH` or `--full` to recover compiler output and prepared inputs on demand;
+`--file PATH` or `--full` to recover source packages, compiler output and prepared inputs on demand;
 [local storage](storage.md) owns those details and repair behavior.
 [Retention](artifacts.md) selects evidence for Git from the collected study.
 

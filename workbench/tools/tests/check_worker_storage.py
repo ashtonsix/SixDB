@@ -429,7 +429,7 @@ class StorageChecks(unittest.TestCase):
     def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
         (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')
         self.repack()
-        cache.collect(self.job, self.reference)
+        cache.collect(self.job, self.reference, full=True)
         destination = self.job / 'results'
         (destination / 'case-1.csv').write_text('value\nchanged\n')
         (destination / 'notes.txt').write_text('unarchived analysis')
@@ -448,7 +448,8 @@ class StorageChecks(unittest.TestCase):
         self.assertEqual((destination / 'case-0.csv').read_text(), 'value\n0\n')
         self.assertFalse((destination / 'source.tar.gz').exists())
         cache.collect(self.job, self.reference)
-        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+        self.assertTrue(cache.verified(self.job, self.reference))
+        self.assertFalse((destination / 'source.tar.gz').exists())
         preserved = next(self.job.glob('replaced-results-*'))
         self.assertEqual((preserved / 'case-1.csv').read_text(), 'value\nchanged\n')
         self.assertEqual((preserved / 'notes.txt').read_text(), 'unarchived analysis')
@@ -579,6 +580,85 @@ worker_cache.collect(pathlib.Path(sys.argv[3]),json.loads(sys.argv[4]))
         with patch.object(artifacts, 'download') as download:
             cache.collect(self.job, self.reference)
         download.assert_not_called()
+
+    def test_default_collection_keeps_source_remote_and_releases_verified_launch_duplicate(self):
+        source = self.source / 'source.tar.gz'
+        source.write_bytes(b'captured source package')
+        self.repack()
+        launch = self.job / 'source.tar.gz'
+        shutil.copyfile(source, launch)
+        created = []
+        original = Path.open
+        def record(path, mode='r', *args, **kwargs):
+            if mode == 'xb':
+                created.append(path.name)
+            return original(path, mode, *args, **kwargs)
+        with patch.object(Path, 'open', record):
+            cache.collect(self.job, self.reference)
+        self.assertNotIn('source.tar.gz', created)
+        self.assertFalse(launch.exists())
+        self.assertFalse((self.job / 'results/source.tar.gz').exists())
+        self.assertTrue(cache.verified(self.job, self.reference))
+        self.assertEqual(cache.read(self.job / 'collection.json')['root_evicted']['source.tar.gz']['sha256'],
+                         artifacts.sha256(source))
+        cache.collect(self.job, self.reference, selected=['source.tar.gz'])
+        self.assertEqual((self.job / 'results/source.tar.gz').read_bytes(), source.read_bytes())
+        self.assertIn('source.tar.gz', cache.read(self.job / 'collection.json')['root_evicted'])
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+
+    def test_fresh_source_cleanup_preserves_pins_and_differing_launch_bytes(self):
+        (self.source / 'source.tar.gz').write_bytes(b'original')
+        self.repack()
+        launch = self.job / 'source.tar.gz'
+        for pinned, contents in [(True, b'original'), (False, b'changed!')]:
+            with self.subTest(pinned=pinned):
+                shutil.rmtree(self.job / 'results', ignore_errors=True)
+                (self.job / 'collection.json').unlink(missing_ok=True)
+                launch.write_bytes(contents)
+                pin = self.job / '.keep-local'
+                if pinned:
+                    pin.touch()
+                else:
+                    pin.unlink(missing_ok=True)
+                cache.collect(self.job, self.reference)
+                self.assertEqual(launch.read_bytes(), contents)
+
+    def test_default_collection_omits_nested_run_source_packages_too(self):
+        nested = self.source / 'comparison'
+        nested.mkdir()
+        (nested / 'source.tar.gz').write_bytes(b'nested captured source package')
+        (nested / 'probe.cpp').write_text('int useful_source;\n')
+        (nested / 'samples.csv').write_text('expected\n42\n')
+        self.repack()
+        cache.collect(self.job, self.reference)
+        self.assertFalse((self.job / 'results/comparison/source.tar.gz').exists())
+        self.assertEqual((self.job / 'results/comparison/samples.csv').read_text(), 'expected\n42\n')
+        self.assertTrue((self.job / 'results/comparison/probe.cpp').is_file())
+        self.assertTrue(cache.verified(self.job, self.reference))
+        cache.collect(self.job, self.reference, selected=['comparison/source.tar.gz'])
+        self.assertEqual((self.job / 'results/comparison/source.tar.gz').read_bytes(),
+                         (nested / 'source.tar.gz').read_bytes())
+
+    def test_source_cleanup_requires_remote_verification_and_durable_receipt(self):
+        (self.source / 'source.tar.gz').write_bytes(b'original source')
+        self.repack()
+        launch = self.job / 'source.tar.gz'
+        shutil.copyfile(self.source / 'source.tar.gz', launch)
+        with self.assertRaisesRegex(ValueError, 'SHA-256'):
+            cache.collect(self.job, self.reference | {'sha256': '0' * 64})
+        self.assertTrue(launch.exists())
+        original = storage.write_json
+        def fail_release_receipt(path, value):
+            if 'root_evicted' in value:
+                raise OSError(28, 'injected source recovery receipt failure')
+            original(path, value)
+        with patch.object(storage, 'write_json', side_effect=fail_release_receipt), self.assertRaises(OSError):
+            cache.collect(self.job, self.reference)
+        self.assertTrue(launch.exists())
+        # A cache hit is not a fresh S3 verification, so cannot retry unlinking.
+        with patch.object(artifacts, 'download', side_effect=AssertionError('unexpected transfer')):
+            cache.collect(self.job, self.reference)
+        self.assertTrue(launch.exists())
 
     def test_selected_and_full_fetch_preserve_existing_notes_and_inputs(self):
         for name in ['probe', 'second']:
