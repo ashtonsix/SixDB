@@ -32,6 +32,9 @@ struct cost_model {
     // A block's exception capacity: positions fit one 64-byte register of u8
     // lanes, so a point finds its patch with one compare. More is infeasible.
     unsigned max_exceptions = 256;
+    // An admitted-set restriction: lo fixed (run sizes minus one keep 0).
+    bool pin_lo = false;
+    u64 pinned_lo = 0;
     // Exception values are stored relative to lo at whole bytes, with a sign
     // bit once any value lies below lo. value_bits covers max - min.
     std::size_t operator()(unsigned K, std::size_t low, std::size_t high, unsigned value_bits) const {

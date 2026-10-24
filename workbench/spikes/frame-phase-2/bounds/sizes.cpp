@@ -7,6 +7,7 @@
 //
 // usage: frame_bounds_sizes COLS_DIR ROWS COLUMN...
 #include "fast.h"
+#include "stage.h"
 
 #include <ikea/seriespack.h>
 
@@ -78,7 +79,12 @@ template <sp::preset P> void run(const char *column, const char *form, const std
         const auto [mn, mx] = minmax(f.data(), f.size());
         const unsigned vbits = bits(mx - mn);
         const choice z = zero_exhaustive(f, c), e = exact(f.data(), f.size(), c, scratch);
-        const choice q = fast::guess<7, 32>(f.data(), f.size(), c, sc, have ? &prior : nullptr);
+        const choice q = fast::choose<32>(f.data(), f.size(), c, sc, have ? &prior : nullptr);
+        cost_model pinned = c;
+        pinned.pin_lo = true;
+        const choice zp = fast::choose<32>(f.data(), f.size(), pinned, sc, nullptr);
+        if (zp.bytes != z.bytes)
+            std::abort();  // the pinned stage is today's lo = 0 search
         const choice g = realise(f.data(), f.size(), q.lo, q.width, vbits, c);
         // lo = 0 prices exceptions by the series' maximum, not its span.
         const choice zr = realise(f.data(), f.size(), 0, z.width, bits(mx), c);
