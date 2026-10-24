@@ -48,10 +48,11 @@ alignas(64) inline constexpr std::array<std::uint16_t, 257> max_bits{
     105, 97, 92, 86, 81, 74, 69, 63, 58, 50, 44, 37, 31, 23, 16, 8,
     0};
 static_assert(max_bits[128] == 374 && min_bits[1] == 8 && max_bits[1] == 8);
-// A block whose stream would exceed 256 bits is stored raw instead, so coded
-// streams are at most 256 bits and their lengths range over min..min(max, 256).
+// Blocks with rank widths of at least raw_gate_bits, or a stream over 256 bits,
+// are stored raw, so coded streams are at most 256 bits and their lengths range
+// over min..min(max, 256).
 inline constexpr unsigned raw_bits = 256;
-// Rank-width sum from which encoding sizes a block before packing it.
+// A block whose rank widths sum to at least this many bits is stored raw.
 inline constexpr unsigned raw_gate_bits = 144;
 // Length field width for a block of population c; zero for 0, 1, 255 and 256.
 alignas(64) inline constexpr auto length_width = [] {

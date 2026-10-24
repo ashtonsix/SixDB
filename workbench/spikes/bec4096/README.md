@@ -198,18 +198,18 @@ all-raw group binds in 103 / 61 ns, counting its raw blocks. Evidence:
 
 ### Early exit for raw blocks
 
-Calico's prototype declined coding when a chunk's rank-width sum reached 144
-bits, a calibrated guess. On the RealRoaring windows no block below 144 went
-raw, but 13% of blocks at or above it still coded within 256 bits, so using
-it as the decision would change bodies and lose bytes. Bec4096 uses it only to
-order work: below 144 it encodes and checks the length; at or above, an exact
-size pass (the shared encoder with only widths consumed, so rank lookups and
-packing are dead code) decides before packing. A provable gate (106 rank bits
-plus at most 150 tree bits) measured the same on these inputs but would send
-85% of density-0.2 blocks through the extra pass. Encode of random groups
-fell from 486 to 250 ns on V2 and 241 to 127 ns on Zen (0.45 / 0.51× of
-sixteen Bec256 encodes); mixed groups 324 to 281 ns on V2; natural groups
-unchanged within 3%.
+Calico's prototype declined coding when a chunk's byte-rank widths summed to
+144 bits or more. Using that alone as the raw rule costs no storage: on the
+RealRoaring windows bodies are identical to the exact rule (28.51 bytes), and
+at densities 0.20–0.30 they are 0.0–0.6% smaller, because a raw block also
+drops its length field and head share. Deciding by exact stream length was
+chasing bits that are not there. Bec4096 therefore stores a block raw when its
+rank widths reach 144 bits, without encoding it, and keeps the exact check
+only for the rare stream over 256 bits below that. Thresholds of 160 and 176
+lose 1.5–9% at densities 0.25–0.40. An intermediate version that sized gated
+blocks exactly before packing measured 250 / 127 ns. Random-group encode now
+takes 99 ns on V2 and 56 ns on Zen (0.18 / 0.23× of sixteen Bec256 encodes,
+from 486 / 241); mixed groups 324 to 251 ns on V2; natural groups unchanged.
 
 ## Negative results and open points
 

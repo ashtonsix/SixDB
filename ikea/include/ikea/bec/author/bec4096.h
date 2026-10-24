@@ -324,17 +324,6 @@ struct pack_sink {
         return 8;
     }
 };
-// Exact stream bits without rank values or packing: with only the widths
-// read, the shared encoder's value work is dead code.
-struct size_sink {
-    [[gnu::always_inline]] unsigned operator()(const std::uint64_t *, const std::uint64_t *w) const {
-        unsigned bits = 0;
-        for (unsigned i = 0; i < 8; ++i)
-            bits += unsigned(w[i]);
-        return bits;
-    }
-    [[gnu::always_inline]] unsigned singleton(std::uint8_t) const { return 8; }
-};
 // Head and length-table fields, computed in vectors and combined four at a
 // time into eight groups of at most 48 bits. Head field f is bisection node
 // f+1 (breadth-first); its region and left half are sums of block counts,
@@ -845,16 +834,14 @@ struct plan {
         const native::counted block(input + 32 * k);
         const unsigned c = block.population();
         total += c;
-        // A stream longer than the block itself is stored raw instead. The
-        // rank-width sum predicts which: below 144 bits (Calico's calibrated
-        // shortcut) no measured block went raw, so encode and check; at or
-        // above it, an exact size pass without rank values or packing decides
-        // first. Either way the choice is exact; the gate only orders the work.
+        // Raw when the rank widths alone reach 144 bits (Calico's shortcut):
+        // the stream would be near or over 256 bits, and raw drops its length
+        // field and head share, so this costs nothing measurable against the
+        // exact rule. Any other stream over 256 bits also goes raw.
         bool raw = false;
         unsigned length = 0;
         if (!terminal(c)) {
-            if (block.enum_bits() >= raw_gate_bits)
-                raw = block.encode(c, native::size_sink{}) > raw_bits;
+            raw = block.enum_bits() >= raw_gate_bits;
             if (!raw) {
                 length = block.encode(c, native::pack_sink{out.words[k]});
                 raw = length > raw_bits;

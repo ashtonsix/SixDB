@@ -82,8 +82,9 @@ inline std::pair<unsigned, unsigned> extremes(unsigned size, unsigned c) {
     memo[{size, c}] = result;
     return result;
 }
-// Blocks whose stream would exceed 256 bits are raw: listed in a 16-bit mask
-// and stored as plain bits before the head, which then counts them as empty.
+// Blocks whose byte-rank widths sum to 144 bits or more, or whose stream would
+// exceed 256 bits, are raw: listed in a 16-bit mask and stored as plain bits
+// before the head, which then counts them as empty.
 inline std::vector<byte> encode(const bitset4096 &x) {
     const unsigned total = count(x, 0, 4096);
     if (total == 0 || total == 4096)
@@ -95,7 +96,10 @@ inline std::vector<byte> encode(const bitset4096 &x) {
         const unsigned c = count(x, 256 * k, 256);
         if (c && c != 256)
             block(x, 256 * k, blocks[k]);
-        if (blocks[k].bits.size() > 256) {
+        unsigned rank_bits = 0;
+        for (unsigned j = 0; j < 32; ++j)
+            rank_bits += width_of(choose8(unsigned(count(x, 256 * k + 8 * j, 8))) - 1);
+        if (c && c != 256 && (rank_bits >= 144 || blocks[k].bits.size() > 256)) {
             mask |= 1u << k;
             blocks[k].bits.clear();
         } else
