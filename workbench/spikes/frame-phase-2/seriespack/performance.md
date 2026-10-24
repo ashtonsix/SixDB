@@ -1,33 +1,64 @@
 # SeriesPack performance iteration
 
-This iterates on SeriesPack's own scan kernels, starting from the gaps in the
-[remeasure](README.md). Everything lands in `ikea::seriespack` (reader,
-author drivers and native groups); the format is unchanged. The harness is
-[`measure.cpp`](measure.cpp). The checks are [`checks/`](checks/):
-- `kernels.cpp` covers SUM, every comparison's COUNT, filter words and partial ranges;
-- `bounds.cpp` covers range reads ending at a guard page, range SUMs, and masked SUMs mixing full and partial groups.
+This work iterated on SeriesPack's own kernels inside `ikea::seriespack`,
+starting from the gaps in the [remeasure](README.md). The stored format did
+not change. Every batch was reviewed by Codex (Ikea LEAD) before landing, and
+every timing comes from Zen 5 or Graviton 4 workers on the landed sources. All
+times are ns per 256 rows, warm unless stated.
 
-The maintained Ikea checks cover the new operations too. `ikea/test/seriespack/read/range.cpp` puts partial final tiles before a protected page, adds maximum values, every comparison, empty calls on inaccessible bytes, placed, headed, gapped and guarded sources. `operations.h` covers the checked forms, from dense, placed and substituted readers. [`checks/worker.sh`](checks/worker.sh) runs those with the spike checks and fails the job on any failure. They pass on the final sources on Zen 5 (AVX2, AVX-512) and Graviton 4: jobs `20261024T063330Z-64514ca2` and `20261024T063356Z-27f15d47`.
+## What landed
 
-Codex (Ikea LEAD) reviewed the batch
-(`build/frame-collab/seriespack-performance-review.md`). It found three bounded
-defects, fixed before landing:
-- the unconditioned SUM dropped 64-bit maximum values;
-- the guarded-expression SUM failed to compile;
-- the dense reader lacked the new operations.
+| Commit | Change | Where it is described |
+| --- | --- | --- |
+| 7d34f479 | One-pass count and filter words, field-apart SUM, range SUM kernels (Local popcounts, striped tables), NEON bit-sliced COUNT, AVX-512 group paths, short-read edges | [below](#what-changed-and-what-it-bought) |
+| 42510c23 | Branchless striped points, NEON COUNT for two-byte bodies | [below](#what-changed-and-what-it-bought) |
+| 3a1452df | `author::scan_regions` (one decode, many consumers); exact tile bounds for short reads | [One decode, many consumers](#one-decode-many-consumers) |
+| 0d44d527 | Compiled-once range operations for runtime widths (`bind_range_reader`), runtime point set and footprint, position-weighted SUM | [erased/README.md](erased/README.md) |
+| 02994a65 | Short reads store partial packets by compressed lane masks (AVX-512) | [Remaining gaps](#remaining-gaps) |
 
-Timing jobs on the first batch's final kernel sources (landed as 7d34f479): `20261024T061814Z-d13d707d` (Zen 5,
-AVX-512) and `20261024T061851Z-4ecc6c7c` (Graviton 4). The second batch,
-striped points and two-byte-body NEON COUNT (reviewed by Codex; checks `20261024T072430Z-0f3315c7` and `20261024T072454Z-86b46a18` pass), was timed in jobs
-`20261024T070126Z-edea03ef` (Zen 5) and `20261024T070716Z-62f6198d` (Graviton 4); medians in [evidence/performance-batch2-zen5-avx512.txt](evidence/performance-batch2-zen5-avx512.txt) and [evidence/performance-batch2-graviton4.txt](evidence/performance-batch2-graviton4.txt). Medians are in
-[evidence/performance-zen5-avx512.txt](evidence/performance-zen5-avx512.txt)
-and [evidence/performance-graviton4.txt](evidence/performance-graviton4.txt).
-The "before" figures come from the remeasure jobs in [README.md](README.md) and
+Probes that did not change the library are kept for their findings:
+- **Masked loads** ([maskload.cpp](maskload.cpp)): masked loads are not the
+  cold-scan cost on Zen 5.
+- **Graviton 4 compact decode** ([decode/](decode/bench.cpp)): bound by
+  rebuilding the bits.
+- **Patched points for the bounds stage** ([patch/README.md](patch/README.md)):
+  compact exception columns and field-first reads.
+
+## Qualification
+
+The harness is [`measure.cpp`](measure.cpp). [`checks/worker.sh`](checks/worker.sh)
+runs Ikea's SeriesPack, admission, descriptor, ownership and filter checks,
+with the spike's [`kernels.cpp`](checks/kernels.cpp) and
+[`bounds.cpp`](checks/bounds.cpp), and fails the job on any failure.
+`TEST_SCOPE=full` instantiates every width. The maintained tests added along
+the way:
+- `ikea/test/seriespack/read/range.cpp` and `range_striped.cpp`: partial final
+  tiles and the tiles before a range in protected pages, maximum values, every
+  comparison, empty calls on inaccessible bytes, and placed, headed, gapped and
+  guarded sources;
+- `operations.h`: checked forms, `scan_regions` order and values, and erased
+  and runtime readers at every width;
+- `mutation/dense.cpp`: the runtime point set against a bound writer.
+
+Each batch's review and closure receipts are under `build/frame-collab/`
+(`seriespack-*review*`).
+
+Timing jobs:
+- the first batch's final sources: `20261024T061814Z-d13d707d` (Zen 5,
+  AVX-512) and `20261024T061851Z-4ecc6c7c` (Graviton 4), medians in
+  [evidence/performance-zen5-avx512.txt](evidence/performance-zen5-avx512.txt)
+  and [evidence/performance-graviton4.txt](evidence/performance-graviton4.txt);
+- the second batch: `20261024T070126Z-edea03ef` and
+  `20261024T070716Z-62f6198d`, medians in
+  [evidence/performance-batch2-zen5-avx512.txt](evidence/performance-batch2-zen5-avx512.txt)
+  and [evidence/performance-batch2-graviton4.txt](evidence/performance-batch2-graviton4.txt).
+
+"Before" figures come from the remeasure jobs in [README.md](README.md) and
 from intermediate jobs on earlier kernel sources:
 - `20261024T034721Z-de7ed4b3` and `20261024T035623Z-c822ce1f` (Zen 5);
 - `20261024T034820Z-27ed3b2b` and `20261024T041001Z-de03c58f` (Graviton 4).
 
-Summaries of those intermediate jobs are not retained. All times are ns per 256 rows, warm unless stated.
+Summaries of those intermediate jobs are not retained.
 
 ## Comparison limits
 
@@ -84,6 +115,8 @@ Evidence: [evidence/yield-zen5.jsonl](evidence/yield-zen5.jsonl) (job `20261024T
 - Compose at the expression level: fields, joins, compares and SUM's linearity. These are cheap to keep general when everything inlines.
 - Fuse at the range level, per layout. Traversal, the leaf read and the reduction become one kernel when the operation and its admission are known for a whole range: an unconditioned SUM, or a comparison against a constant. The decision Engine owns is to say so, passing "all rows" and the operation explicitly rather than per-group callbacks.
 - Layout choice is per operation mix: Local for scan-heavy residual-only columns, Bulk for decode, points at standard widths and mixed widths.
+- A runtime-width caller needs no kernels of its own. `bind_range_reader` serves the whole range operations at 0–4 ns per 256-row call over the typed reader ([erased/README.md](erased/README.md)).
+- A bounds stage's low bound composes as block arithmetic around these kernels (Frame phase 3 [findings](../../frame-phase-3/FINDINGS.md) §1). Its exceptions are the read-side cost ([patch/README.md](patch/README.md)).
 
 ## Remaining gaps
 
