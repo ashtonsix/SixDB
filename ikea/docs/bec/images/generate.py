@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate Bec256's representation figures and check their worked examples.
+"""Generate the Bec representation figures and check their worked examples.
 
 From the repository root: orb -m ubuntu python3 ikea/docs/bec/images/generate.py
-Temporary readers and previews belong in ignored build/diagrams/bec256/.
+Temporary readers and previews belong in ignored build/diagrams/bec/.
 """
 
 from pathlib import Path
@@ -10,11 +10,12 @@ import runpy
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[4]
-BUILD = ROOT / "build/diagrams/bec256"
+BUILD = ROOT / "build/diagrams/bec"
 OUT = Path(__file__).parent
 STYLE = runpy.run_path(str(ROOT / "ikea/docs/images/generate.py"))
 Figure = STYLE["Figure"]
-BLUE, GREEN, MUTED, RULE = (STYLE[k] for k in ("BLUE", "GREEN", "MUTED", "RULE"))
+BLUE, GREEN, AMBER, PURPLE, INK, MUTED, RULE = (
+    STYLE[k] for k in ("BLUE", "GREEN", "AMBER", "PURPLE", "INK", "MUTED", "RULE"))
 
 
 def wire_examples():
@@ -209,8 +210,148 @@ def singleton(body, patterns):
     f.save(OUT / "singleton.svg")
 
 
+def framing_example():
+    """Read the Bec4096 example's framing from the implementation."""
+    source = BUILD / "framing.cpp"
+    source.write_text(r'''
+#include <ikea/bec/author/bec4096.h>
+#include <iostream>
+int main() {
+    ikea::bitset4096 bits;
+    for (unsigned p : {29u, 300u, 301u, 4095u})
+        bits.set(p);
+    namespace d = ikea::bec4096::detail;
+    d::plan plan;
+    const unsigned population = d::prepare(reinterpret_cast<const std::uint8_t *>(bits.words.data()), plan);
+    std::uint64_t group[8], width[8];
+    d::head_groups(plan, group, width);
+    const auto body = ikea::bec4096::encoding::make(bits, population);
+    const auto reader = ikea::bec4096::bind_reader(body->body(), body->bytes(), population);
+    if (!reader) return 1;
+    std::cout << population << ' ' << plan.bits << ' '
+              << width[0] + width[1] + width[2] + width[3] << ' '
+              << width[4] + width[5] + width[6] + width[7] << '\n';
+    for (unsigned k = 0; k < 16; ++k) std::cout << plan.population[k] << ' ';
+    std::cout << '\n';
+    for (unsigned k = 0; k < 16; ++k) std::cout << plan.length[k] << ' ';
+    std::cout << '\n';
+    for (unsigned k = 0; k < 16; ++k) std::cout << reader->frame().start[k] << ' ';
+    std::cout << '\n';
+    for (auto b : body->body()) std::cout << std::to_integer<unsigned>(b) << ' ';
+    std::cout << '\n';
+}
+''')
+    binary = BUILD / "framing"
+    sources = [str(ROOT / f"ikea/src/bec/{name}.cpp")
+               for name in ("bec256", "bec4096", "common", "validation", "analysis")]
+    subprocess.run(["clang++-21", "-std=c++23", "-O1", "-I", str(ROOT / "ikea/include"),
+                    str(source), *sources, "-o", str(binary)], check=True)
+    rows = [list(map(int, line.split())) for line in
+            subprocess.check_output([str(binary)], text=True).splitlines()]
+    (population, bits, head, table), pops, lengths, starts, body = rows
+    expected = ([4, 44, 12, 1], [1, 2] + [0] * 13 + [1], [8, 15] + [0] * 13 + [8],
+                [13, 21] + [36] * 14, [0xdb, 0xe2, 0x54, 0x11, 0x07, 0x0e])
+    if (rows[0], pops, lengths, starts, body) != expected:
+        raise RuntimeError("The Bec4096 example changed; revisit the figure, guide and example")
+    return pops, lengths, starts, body, head, table, bits
+
+
+def framing(pops, lengths, starts, body, head, table, bits):
+    stream_colors = {0: BLUE, 1: AMBER, 15: GREEN}
+    pale = "#f3f5f8"
+    f = Figure(904, "Bec4096 framing of one body",
+               "Positions 29, 300, 301 and 4095 with external population 4. Block populations are "
+               "1, 2, thirteen zeros, then 1. Four split levels of the 4096-position tree recover them; "
+               "only regions that are neither empty nor full store a field. The body is twelve head "
+               "bits, one length-table bit (block 1), then the Bec256 streams of blocks 0, 1 and 15, "
+               "8, 15 and 8 bits, packed bit by bit, and four padding bits: six bytes db e2 54 11 07 0e. "
+               "Binding decodes a directory of each block's population and stream start bit.")
+    f.heading(32, 42, "Bec4096: one headless body for sixteen blocks")
+    f.text(32, 80, "Positions 29 · 300, 301 · 4095 · external population 4 · body 6 bytes",
+           22, color=MUTED)
+    origin, extent = 224, 1024
+    cell = extent / 16
+    # 1. The head: the top four levels of the 4096-position tree.
+    f.text(32, 132, "1. Head", 24, "bold")
+    f.text(32, 160, "top four levels", 20, color=MUTED)
+    levels = []
+    counts = pops[:]
+    for size in (8, 4, 2, 1):
+        counts = [counts[2 * i] + counts[2 * i + 1] for i in range(size)]
+        levels.append(counts)
+    levels.reverse()
+    labels = ["4096", "2048", "1024", "512"]
+    for depth, nodes in enumerate(levels):
+        y = 116 + depth * 52
+        f.text(origin - 16, y + 30, labels[depth], 19, color=MUTED, anchor="end")
+        width = extent / len(nodes)
+        for i, count in enumerate(nodes):
+            stores = 0 < count < 4096 >> depth
+            f.rect(origin + i * width + 2, y, width - 4, 42, PURPLE if stores else pale, "white", radius=3)
+            f.text(origin + (i + .5) * width, y + 29, count, 21, "bold" if stores else "normal",
+                   anchor="middle", color=INK if stores else MUTED)
+    f.text(1248, 104, "purple: stores a split field", 18, color=MUTED, anchor="end")
+    y = 332
+    f.text(origin - 16, y + 30, "blocks", 19, color=MUTED, anchor="end")
+    notes = {0: "29", 1: "300, 301", 15: "4095"}
+    for k, count in enumerate(pops):
+        f.rect(origin + k * cell + 2, y, cell - 4, 42, stream_colors.get(k, pale), "white", radius=3)
+        f.text(origin + (k + .5) * cell, y + 29, count, 21, anchor="middle",
+               color=INK if k in stream_colors else MUTED)
+        if k in notes:
+            f.text(origin + (k + .5) * cell, y + 66, notes[k], 17, anchor="middle", color=MUTED)
+    f.text(origin + 8.5 * cell, y + 66, "blocks 2–14 empty: no stream, no length", 18,
+           anchor="middle", color=MUTED)
+    # 2. The body, bit by bit.
+    f.text(32, 470, "2. Body", 24, "bold")
+    f.text(32, 498, "bit by bit, low → high", 20, color=MUTED)
+    total = len(body) * 8
+    scale = extent / total
+    bar_y = 520
+    for byte, value in enumerate(body):
+        x = origin + byte * 8 * scale
+        f.text(x + 4 * scale, bar_y - 14, f"{value:02x}", 20, anchor="middle", mono=True)
+        f.path(f"M{x},{bar_y - 8} V{bar_y + 64}", color=RULE)
+    segments = [(0, head, PURPLE, "head", f"{head} bits"),
+                (head, table, "#d4dae3", "", ""),
+                (starts[0], lengths[0], BLUE, "block 0", f"{lengths[0]} bits"),
+                (starts[1], lengths[1], AMBER, "block 1", f"{lengths[1]} bits"),
+                (starts[15], lengths[15], GREEN, "block 15", f"{lengths[15]} bits"),
+                (bits, total - bits, "white", "pad", "")]
+    for start, length, fill, name, size in segments:
+        x = origin + start * scale
+        f.rect(x + 1, bar_y, length * scale - 2, 56, fill, MUTED if fill == "white" else "white",
+               radius=2, dash=fill == "white")
+        if name:
+            f.text(x + length * scale / 2, bar_y + 25, name, 19, "bold", anchor="middle")
+            f.text(x + length * scale / 2, bar_y + 47, size, 17, anchor="middle")
+    table_x = origin + (head + .5) * scale
+    f.path(f"M{table_x},{bar_y + 58} V{bar_y + 92}")
+    f.text(table_x - 6, bar_y + 112, "length table: 1 bit, for block 1 "
+           "(population 1 needs none; block 15's is never stored)", 18, color=MUTED)
+    for k in stream_colors:
+        x0 = origin + (k + .5) * cell
+        x1 = origin + (starts[k] + lengths[k] / 2) * scale
+        f.path(f"M{x0},{332 + 76} C{x0},{460} {x1},{440} {x1},{bar_y - 34}", arrow=True)
+    # 3. The reader's directory.
+    f.text(32, 690, "3. Directory", 24, "bold")
+    f.text(196, 690, "decoded once by bind_reader; every block access starts here", 20, color=MUTED)
+    for row, (name, values) in enumerate((("population", pops), ("start bit", starts))):
+        y = 712 + row * 48
+        f.text(origin - 16, y + 29, name, 19, color=MUTED, anchor="end")
+        for k, value in enumerate(values):
+            f.rect(origin + k * cell + 2, y, cell - 4, 42, stream_colors.get(k, pale), "white", radius=3)
+            f.text(origin + (k + .5) * cell, y + 29, value, 20, anchor="middle", mono=True)
+    f.path("M32,828 H1248", color=RULE)
+    f.text(32, 868, "A dense random group: head 131 bits, length table 135 bits, sixteen streams of "
+           "297–323 bits; 652 bytes.", 21, color=MUTED)
+    f.save(OUT / "framing.svg")
+
+
 if __name__ == "__main__":
     data = wire_examples()
     structure()
     singleton(*data)
-    print("Generated structure.svg and singleton.svg; checked both worked bodies, ranks and size bound.")
+    framing(*framing_example())
+    print("Generated structure.svg, singleton.svg and framing.svg; checked the worked bodies, "
+          "ranks, size bound and Bec4096 framing.")
