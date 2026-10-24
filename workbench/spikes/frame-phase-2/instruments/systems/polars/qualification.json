@@ -1,0 +1,363 @@
+{
+  "study": "Native Rust Polars query control",
+  "source_epoch": {
+    "python": "1.42.1",
+    "rust_workspace_crate": "0.54.4"
+  },
+  "upstream": {
+    "polars": {
+      "revision": "0df0c25d4db895ec8cad773bedc4e98400e3135e",
+      "url": "https://codeload.github.com/pola-rs/polars/tar.gz/0df0c25d4db895ec8cad773bedc4e98400e3135e",
+      "archive_sha256": "2bab6c94274373e810645df3160077a1fe3bd9b64cce2b4f0eff88c06b0b566d",
+      "source_files": 3369,
+      "snapshot_sha256": "82f07b4b2b1051770ac6f7fd4c84ce76c45a2b31f6f620cb00aee8730df743b3"
+    },
+    "object-store": {
+      "revision": "f50a6e5c564b2b5933eca15cd20ff9b5614374a1",
+      "url": "https://codeload.github.com/kdn36/arrow-rs-object-store/tar.gz/f50a6e5c564b2b5933eca15cd20ff9b5614374a1",
+      "archive_sha256": "70c09d5e6e24c5d25086b27bb9e212b89151e385a3054266d436c54cc75458d9",
+      "source_files": 92,
+      "snapshot_sha256": "6c9394f6c55a0579871389d06e2589d0cf1719803d2074cfd4d64020d3c63d98"
+    }
+  },
+  "owned_inputs_sha256": {
+    "Cargo.toml": "ba8b0a53364d0b74cc2a82adb36cb481fe08063ba8355cefe5e8597617f73508",
+    "Cargo.lock": "e2c1316d98f25cad9d92edf27182168c64c83df66b94bef9b300a57ddd17fcf6",
+    "rust-toolchain.toml": "a165e31ee57fdd85fc168ebdcb1899e465d4f3df58c562781b64ff1c2a9559d6",
+    "src/main.rs": "13f5dd1db462e8aebd8017dab312171cdf4e583588df6410d5560a36292878d0",
+    "run.py": "a159f52bcccb1253d716f34ac507753e05550b6768d9034f090f619c8fe22532"
+  },
+  "inputs_unchanged": true,
+  "host": "Linux ubuntu 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "rustc_Vv": "rustc 1.96.0-nightly (48cc71ee8 2026-03-31)\nbinary: rustc\ncommit-hash: 48cc71ee88cd0f11217eced958b9930970da998b\ncommit-date: 2026-03-31\nhost: aarch64-unknown-linux-gnu\nrelease: 1.96.0-nightly\nLLVM version: 22.1.2",
+  "cargo_Vv": "cargo 1.96.0-nightly (888f67534 2026-03-30)\nrelease: 1.96.0-nightly\ncommit-hash: 888f675344eb1cf2308fd53183e667bdd2c58e51\ncommit-date: 2026-03-30\nhost: aarch64-unknown-linux-gnu\nlibgit2: 1.9.2 (sys:0.20.4 vendored)\nlibcurl: 8.19.0-DEV (sys:0.4.87+curl-8.19.0 vendored ssl:OpenSSL/3.5.4)\nssl: OpenSSL 3.5.4 30 Sep 2025\nos: Ubuntu 25.10.0 (questing) [64-bit]",
+  "rustup_bootstrap": {
+    "version": "1.29.2",
+    "url": "https://static.rust-lang.org/rustup/archive/1.29.2/aarch64-unknown-linux-gnu/rustup-init",
+    "sha256": "a9c168dbea81a84671c6b7a5c1795cb0eb699020110d107ddfca427bd797e697",
+    "scope": "Task-local RUSTUP_HOME and CARGO_HOME only; no global default or shell profile change"
+  },
+  "build": {
+    "optimization": 3,
+    "lto": "thin",
+    "codegen_units": 16,
+    "debug": "line-tables-only",
+    "allocator": "Rust native system allocator",
+    "jobs": 1,
+    "cpu": 8,
+    "query_threads_environment": {
+      "POLARS_MAX_THREADS": "1"
+    },
+    "actual_core_rustflags": [
+      "-C",
+      "target-cpu=generic",
+      "-C",
+      "target-feature=+neon"
+    ],
+    "effective_native_features": {
+      "polars_arrow": [
+        "chrono-tz",
+        "compute_aggregate",
+        "compute_arithmetics",
+        "compute_arithmetics_decimal",
+        "compute_bitwise",
+        "compute_comparison",
+        "nightly",
+        "simd"
+      ],
+      "polars_compute": [
+        "cast",
+        "dtype-i128",
+        "dtype-u128",
+        "gather",
+        "simd"
+      ],
+      "polars_core": [
+        "algorithm_group_by",
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "lazy",
+        "nightly",
+        "rand",
+        "rand_distr",
+        "random",
+        "rows",
+        "simd",
+        "zip_with"
+      ],
+      "polars_io": [
+        "async",
+        "async-trait",
+        "atoi_simd",
+        "csv",
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "fast-float2",
+        "futures",
+        "itoa",
+        "lazy",
+        "simd",
+        "simdutf8",
+        "zmij"
+      ],
+      "polars_ops": [
+        "chunked_ids",
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "nightly",
+        "simd"
+      ],
+      "polars_plan": [
+        "cse",
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "nightly"
+      ],
+      "polars_expr": [
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "nightly"
+      ],
+      "polars_mem_engine": [
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u16",
+        "dtype-u8"
+      ],
+      "polars_lazy": [
+        "cse",
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "nightly"
+      ],
+      "polars": [
+        "cse",
+        "dtype-i128",
+        "dtype-i16",
+        "dtype-i8",
+        "dtype-u128",
+        "dtype-u16",
+        "dtype-u8",
+        "lazy",
+        "nightly",
+        "polars-expr",
+        "polars-io",
+        "polars-lazy",
+        "polars-ops",
+        "simd"
+      ]
+    },
+    "native_profiles": {
+      "polars_arrow": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_compute": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_core": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_io": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_ops": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_plan": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_expr": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_mem_engine": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars_lazy": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      },
+      "polars": {
+        "opt_level": "3",
+        "debuginfo": "line-tables-only",
+        "debug_assertions": false,
+        "overflow_checks": false,
+        "test": false
+      }
+    }
+  },
+  "dependencies": {
+    "leaf_lock_packages": 360,
+    "resolved_registry_packages": 335,
+    "resolved_registry_entries_match_upstream_lock": true,
+    "compiled_registry_packages": 124,
+    "compiled_registry_archives_sha256_digest": "91d8d960afc5bab1d91d587d80adb7c8a4be6f63be58cf933bd73df1de9c473e",
+    "compiled_registry_archives_verified_against_leaf_lock": true,
+    "compiled_graph_sha256": "e2bd621682a8c7f35f9b5ad4feb604896151d5a91f249fd7fc39e433b14b63a3",
+    "compiler_artifact_records": 185,
+    "optional_object_store_patch_compiled": false,
+    "backtrace_and_jemalloc_patches_compiled": false,
+    "distinction": "Cargo metadata reports a broader resolution feature union; effective release features are taken from compiler artifacts, with actual core fingerprint target flags. Complete executed registry identity list and compiled graph are archived."
+  },
+  "binary_sha256": "98e495813d242a3505ac7b4e683bab3bce50b8bc3b0e9b98d1cf702cc8350fb1",
+  "result": {
+    "peer": "native Rust Polars",
+    "queries": 12960,
+    "scalar_checks": 38880,
+    "zero_selected_rows": 6840,
+    "selected_all_null_b": 1476,
+    "count_b_differs_from_rows": 2844,
+    "multiple_input_chunks": 4320,
+    "natural_accumulator_queries": 11340,
+    "explicit_widening_queries": 1620,
+    "checksum_mod_u128": "36566667182951253214020036",
+    "polars_sum_empty_and_all_null": 0,
+    "pass": true,
+    "timing_claim": false
+  },
+  "accumulators": {
+    "Int128": 405,
+    "Int32": 1215,
+    "Int64": 8100,
+    "UInt128": 405,
+    "UInt32": 1215,
+    "UInt64": 1620
+  },
+  "fixtures": {
+    "logical_dtypes": [
+      "Int8",
+      "Int16",
+      "Int32",
+      "Int64",
+      "UInt8",
+      "UInt16",
+      "UInt32",
+      "UInt64"
+    ],
+    "row_counts": [
+      0,
+      1,
+      256,
+      257,
+      1025
+    ],
+    "validity": [
+      "all_valid",
+      "some_A_null",
+      "some_B_null",
+      "independent_A_B_null",
+      "all_A_null",
+      "all_B_null"
+    ],
+    "values": [
+      "bounded",
+      "full_width_edges"
+    ],
+    "input_chunks": {
+      "single": "whole image",
+      "aligned": [
+        256,
+        256
+      ],
+      "mismatched": [
+        127,
+        193
+      ]
+    },
+    "literal_bindings_per_fixture": 9,
+    "oracle": "Independent signed i128 / unsigned u128 logical loops; NULL predicates drop rows, COUNT(B) excludes NULL payloads, row-count includes them. SUM empty/all-null is actual Polars zero law. All three returned scalars and SUM dtype checked.",
+    "accumulator_proof": "Separate whole-image negative and positive sums bound every subset/intermediate. Natural small-lane promotion and safe native32/64 accumulators preserved; explicit query-time casts only when bounds require them.",
+    "combinations_not_unique_tables": true
+  },
+  "optimized_plans": {
+    "cases": 8,
+    "sha256": "a9e58eb97c64ba9fba38b0e09f2117773cb73b635fc512b6eb8b83f973b893f0",
+    "observation": "Actual LazyFrame filter followed by SUM/COUNT(B)/len; wide cast remains inside relevant aggregate expression."
+  },
+  "linked_symbols": {
+    "selected_count": 296,
+    "retained_examples": [
+      "00000000015e9adc t <polars_core::runtime::RAYON>::with::<<polars_core::runtime::RAYON>::install<<polars_mem_engine::executors::filter::FilterExec>::execute_chunks::{closure#1}, core::result::Result<alloc::vec::Vec<polars_core::frame::dataframe::DataFrame>, polars_error::PolarsError>>::{closure#0}, core::result::Result<alloc::vec::Vec<polars_core::frame::dataframe::DataFrame>, polars_error::PolarsError>>",
+      "00000000015e9710 t <polars_core::runtime::RAYON>::with::<<polars_core::runtime::RAYON>::install<<polars_mem_engine::executors::projection::ProjectionExec>::execute_impl::{closure#1}, core::result::Result<alloc::vec::Vec<polars_core::frame::dataframe::DataFrame>, polars_error::PolarsError>>::{closure#0}, core::result::Result<alloc::vec::Vec<polars_core::frame::dataframe::DataFrame>, polars_error::PolarsError>>",
+      "0000000001002e58 t polars_core::chunked_array::ops::aggregate::quantile::quantile_slice::<i8>"
+    ],
+    "scope": "Actual linked engine/filter/aggregate presence; no dynamic instruction-cost or serving-level claim."
+  },
+  "checks_sha256": "f3caf9861304389241974ffd7e6d027e1c0ad909d36514bf7a89e116a3791f5a",
+  "scope": "Optimized native Linux AArch64 functional control. Actual LazyFrame filtering/reductions and returned scalars. System allocator, no Python engine, sanitizer, native x86, speed, imported-buffer or wheel-equivalence claim.",
+  "python_wheel_comparison_limit": "Historical source epoch is shared. Native control has narrower features, system allocator, thin LTO/16 CGU and Rust LLVM22. Upstream wheel release recipe uses broader Python/runtime features, different allocator configuration and dist-release fat LTO/1 CGU; the historical wheel exact effective build is not reconstructed.",
+  "reproduction": "orb -m ubuntu python3 workbench/spikes/frame-phase-2/instruments/systems/polars/run.py --bootstrap",
+  "raw_receipt": {
+    "path": "build/frame-helper/polars/evidence/runs.json",
+    "sha256": "e951ca45ad535541d82541eba4ae808921b75fafdc09ff2514dbad9704c5a913",
+    "recovery_reference": "evidence/artifact.json"
+  },
+  "retention": {
+    "selection": "Final scalar checks, optimized plans, actual compiled graph, full command/source receipt; routine build logs and rebuildable executables remain ignored.",
+    "files_sha256": {
+      "README.txt": "b0e528c96017bd46a17e333ce43315bea77563b144d9805e55d263e3a745ca36",
+      "checks.jsonl": "f3caf9861304389241974ffd7e6d027e1c0ad909d36514bf7a89e116a3791f5a",
+      "compiled-graph.json": "e2bd621682a8c7f35f9b5ad4feb604896151d5a91f249fd7fc39e433b14b63a3",
+      "plans.txt": "a9e58eb97c64ba9fba38b0e09f2117773cb73b635fc512b6eb8b83f973b893f0",
+      "runs.json": "e951ca45ad535541d82541eba4ae808921b75fafdc09ff2514dbad9704c5a913"
+    }
+  }
+}
