@@ -168,7 +168,7 @@ checkpoints. Source `088c8da7`; jobs `20261024T042821Z-bf601ac7` (Zen 5) and
 
 14. **In group form, RLE keeps its 2.2–3.6× byte saving and stops costing
     scans on Zen 5.** SUM is at parity with no RLE on OS, RegionID and
-    ClientIP (within 0.9–1.1×) and 3.1× faster on UserID; COUNT ≥ is 2.2–3.1×
+    ClientIP (0.98–1.13×) and 3.1× faster on UserID; COUNT ≥ is 2.2–3.1×
     faster, since a run's comparison covers all its rows. ResolutionWidth's
     SUM is 1.9× slower, because its 9% constant blocks make no RLE cheap.
     Bytes also drop a further 4–15% against per-block RLE.

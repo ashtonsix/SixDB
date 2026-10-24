@@ -460,8 +460,11 @@ template <sp::preset P> struct pipeline {
                     return;
                 }
                 const u64 rhs = t - g.base;
+                // Branch-free mask-and-add; the ternary form selected badly on NEON.
+                u64 k = 0;
                 for (unsigned i = 0; i < g.runs; ++i)
-                    c += val[i] >= rhs ? sz[i] + 1 : 0;
+                    k += (sz[i] + 1) & (u64{0} - u64{val[i] >= rhs});
+                c += k;
             });
         return c;
     }
