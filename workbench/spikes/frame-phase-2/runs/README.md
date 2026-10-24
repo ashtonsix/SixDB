@@ -150,12 +150,45 @@ Constant blocks exit early in both. Source `376672e8`; jobs
     UserID (about 6 on EventTime and ClientIP): an outlier lookup and a virtual
     width call per point. That is this probe's glue, not SeriesPack's `get`.
 
+### Group-continuous RLE
+
+The RLE blocks of each 16-block group share one sizes series and one values
+series (values relative to the group's smallest minimum), with u16 group
+checkpoints. Source `088c8da7`; jobs `20261024T042821Z-bf601ac7` (Zen 5) and
+`20261024T042855Z-84c42bbc` (Graviton 4);
+[evidence/pipelines-v2-summary.txt](evidence/pipelines-v2-summary.txt).
+
+| Zen 5, compact | bits per value: no RLE / group RLE | SUM ns per block | COUNT ≥ ns per block | point ns |
+| --- | --- | --- | --- | --- |
+| OS | 7.04 / 2.12 | 19.9 / 19.6 | 29.7 / 9.5 | 28 / 51 |
+| RegionID | 10.39 / 4.71 | 25.1 / 28.4 | 32.5 / 14.2 | 35 / 58 |
+| ResolutionWidth | 10.18 / 3.24 | 12.3 / 23.7 | 31.5 / 11.8 | 8.8 / 50 |
+| ClientIP | 31.66 / 8.92 | 29.0 / 30.7 | 40.6 / 14.2 | 6.3 / 59 |
+| UserID | 51.07 / 14.30 | 124.7 / 39.7 | 4.1 / 15.0 | 19 / 64 |
+
+14. **In group form, RLE keeps its 2.2–3.6× byte saving and stops costing
+    scans on Zen 5.** SUM is at parity with no RLE on OS, RegionID and
+    ClientIP (within 0.9–1.1×) and 3.1× faster on UserID; COUNT ≥ is 2.2–3.1×
+    faster, since a run's comparison covers all its rows. ResolutionWidth's
+    SUM is 1.9× slower, because its 9% constant blocks make no RLE cheap.
+    Bytes also drop a further 4–15% against per-block RLE.
+15. **Graviton 4 still pays for RLE scans:** SUM 1.2–1.9× and COUNT 1.1–3×
+    slower than no RLE under Bulk, except UserID (SUM 2.5× faster). The RLE
+    COUNT loop (a conditional add of run sizes) is the suspect: on Zen 5 it
+    takes 9–15 ns per block, on Graviton 4 86–193. That matches the
+    Clang/NEON select pattern seen before, and is worth a typed rewrite before
+    the frontier is read off.
+16. **Points are RLE's cost in every form** (50–65 ns on Zen 5 against 6–35
+    without RLE). A point-heavy part should skip RLE, or keep u8 run ends
+    (3–5 ns per point).
+
 ## What this says about the split
 
 RLE is a weighted stage, not a default. It pays in bytes only on columns
 with runs, and today it costs scan time there, so Engine's bytes/scan
 weights decide it per part. Both pipelines need optimising: the no-RLE path
-under Bulk and Local, and the RLE path in group-continuous form.
+under Bulk and Local, and the RLE path in group-continuous form, where on
+Zen 5 it now matches or beats no RLE on scans with 2.2–3.6× fewer bytes.
 
 
 The choices form a frontier rather than a winner. Bytes go down with sizes,
