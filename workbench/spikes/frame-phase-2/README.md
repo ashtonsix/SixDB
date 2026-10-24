@@ -32,6 +32,8 @@ Engine's analyser will later solve (data distribution, access patterns) →
   operation family, stage and tier, including accepted losses.
 - [Execution substrate](substrate/README.md) (front B): dispatch, selections,
   residence, unpredictable access and staging, point-read attribution.
+- [SeriesPack remeasured](seriespack/README.md): SeriesPack's own reader under
+  every preset against native, the starting gaps for SeriesPack's performance work.
 - [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
   and packed bodies across operation families.
 - [Cross-thread seams](SEAMS.md): the contracts every thread shares, with owners.
