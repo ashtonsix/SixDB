@@ -28,7 +28,7 @@ first core is useful; and choices that stay reversible after landing.
 | A12 | **Three published outputs** of a change: logical contributions, issued bytes, evidence invalidations | An unchanged field can still change a summary; metadata-only changes can change every answer | Data published with matching COUNT/SUM/extrema validity, including abort and removed-extremum cases | Partial: SUM exact, extrema precision |
 | A13 | **What replay promises [LEAD]** | Equal digests on one layout do not prove representation-independent replay | Same ordered commands on two legal representations give the same results and contributions | Partial: digest-equal replay |
 | A14 | **Laws that decline; costs that are unknown [LEAD]** | A map that does not preserve order must not inherit an ordered compare; an unpriceable child must not look free (split did) | One law declines on a false premise; an unpriced child is "unknown" or refused, never zero | Open |
-| A15 | **Leaf kernels compiled once in Ikea** | Each 16-width TU costs 4–7 GB to build inside Frame | SeriesPack erased range operations; curated compiled operations kept distinct from the author route | Decided; owner work in progress |
+| A15 | **Leaf kernels compiled once in Ikea** | Each 16-width TU costs 4–7 GB to build inside Frame | SeriesPack erased range operations; curated compiled operations kept distinct from the author route | Done: ikea 0d44d527 adopted as the runtime leaf, timing parity, build halved ([findings §3](FINDINGS.md#seriespacks-compiled-once-operations-adopted)) |
 | A16 | **Reserved capacity for point writes outside bounds** | Writes must not force re-encode | Per-group exception slack | Decided |
 
 ## B. Establish through the first complete consumer
