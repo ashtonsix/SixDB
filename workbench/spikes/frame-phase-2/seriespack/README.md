@@ -73,3 +73,6 @@ one 64-row call each); compact SUM and filter at non-byte widths; the K = 24
 anomalies; striped points; NEON compact decode. `plane256`'s leaves
 (`../bodies/`) are prior art for the first two; they belong inside
 SeriesPack's kernels, not beside them.
+
+The iteration on these gaps, its findings and what remains are in
+[performance.md](performance.md).

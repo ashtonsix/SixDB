@@ -82,8 +82,9 @@ struct inputs {
     std::vector<u64> v;
     std::vector<std::uint16_t> mask16;  // per 16-row region, the 50% row mask
     std::vector<u32> rows;    // random point requests
+    std::vector<std::pair<u32, u32>> spans;  // random short reads: first, 16..64 rows
     u64 t = 0;                // filter threshold: the median
-    u64 sum = 0, msum = 0, count = 0, points = 0, decoded = 0;
+    u64 sum = 0, msum = 0, count = 0, points = 0, decoded = 0, spanned = 0;
 };
 
 inputs make(unsigned K, std::size_t n, std::mt19937_64 &rng) {
@@ -110,6 +111,11 @@ inputs make(unsigned K, std::size_t n, std::mt19937_64 &rng) {
         in.points += in.v[r];
     for (std::size_t i = 0; i < n; i += 61)
         in.decoded += in.v[i] * (i % 7 + 1);
+    in.spans.resize(16384);
+    for (auto &[first, len] : in.spans) {
+        first = static_cast<u32>(rng() % (n - 64)), len = static_cast<u32>(16 + rng() % 49);
+        in.spanned += in.v[first] + in.v[first + len - 1] * 3;
+    }
     return in;
 }
 
@@ -161,6 +167,8 @@ void seriespack_arms(const inputs &in, const char *name, std::vector<arm> &arms,
     const auto *m16 = in.mask16.data();
     auto evict = [storage, bytes] { flush(storage.get(), bytes); };
     arms.push_back({"sum", name, double(n), [r, n] { return r->sum_unchecked(0, n, ~u64{0}, [](std::size_t) { return std::uint16_t{0xffff}; }); }, in.sum, evict});
+    // The same sum through the unconditioned range sum (no prefilter or cutoff).
+    arms.push_back({"total", name, double(n), [r, n] { return r->sum_unchecked(0, n); }, in.sum, evict});
     arms.push_back({"masked_sum_50pct", name, double(n),
                     [r, n, m16] { return r->sum_unchecked(0, n, ~u64{0}, [m16](std::size_t row) { return m16[row / 16]; }); }, in.msum, evict});
     const u64 t = in.t;
@@ -169,6 +177,11 @@ void seriespack_arms(const inputs &in, const char *name, std::vector<arm> &arms,
                         for (std::size_t i = 0; i < n; i += 64)
                             c += std::popcount(r->template filter_unchecked<ikea::comparison::greater_equal>(i, 64, t));
                         return c;
+                    },
+                    in.count, evict});
+    // The same count through the reader's one-pass range count (no per-window call).
+    arms.push_back({"count_ge_scan", name, double(n), [r, n, t] {
+                        return r->template count_unchecked<ikea::comparison::greater_equal>(0, n, t);
                     },
                     in.count, evict});
     u32 *o = out.data();
@@ -186,6 +199,18 @@ void seriespack_arms(const inputs &in, const char *name, std::vector<arm> &arms,
                         return s;
                     },
                     in.points, evict});
+    // Short reads of 16..64 rows at arbitrary offsets (run and Intervals consumers).
+    const auto *spans = in.spans.data();
+    const std::size_t ns = in.spans.size();
+    arms.push_back({"short_reads", name, double(ns), [r, spans, ns, o] {
+                        u64 s = 0;
+                        for (std::size_t i = 0; i < ns; ++i) {
+                            r->read_unchecked(spans[i].first, spans[i].second, o);
+                            s += o[0] + o[spans[i].second - 1] * 3;
+                        }
+                        return s;
+                    },
+                    in.spanned, evict});
 }
 
 template <class T>
@@ -255,6 +280,18 @@ void native_arms(const inputs &in, std::vector<arm> &arms, std::vector<std::shar
                         return s;
                     },
                     in.points, evict});
+    const auto *spans = in.spans.data();
+    const std::size_t ns = in.spans.size();
+    arms.push_back({"short_reads", "native", double(ns), [x, spans, ns, o] {
+                        u64 s = 0;
+                        for (std::size_t i = 0; i < ns; ++i) {
+                            for (u32 j = 0; j < spans[i].second; ++j)
+                                o[j] = static_cast<u32>(x[spans[i].first + j]);
+                            s += o[0] + o[spans[i].second - 1] * 3;
+                        }
+                        return s;
+                    },
+                    in.spanned, evict});
 }
 
 void plane256_arms(const inputs &in, std::vector<arm> &arms, std::vector<std::shared_ptr<void>> &keep) {

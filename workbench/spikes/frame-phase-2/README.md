@@ -34,6 +34,9 @@ Engine's analyser will later solve (data distribution, access patterns) →
   residence, unpredictable access and staging, point-read attribution.
 - [SeriesPack remeasured](seriespack/README.md): SeriesPack's own reader under
   every preset against native, the starting gaps for SeriesPack's performance work.
+- [SeriesPack performance](seriespack/performance.md): range SUM, COUNT and
+  filter kernels over SeriesPack's own bytes (Local popcounts, striped tables,
+  bit-sliced compares), compose-versus-fuse findings and the remaining gaps.
 - [Run boundaries as composed stages](runs/README.md): Intervals forms, the
   bounds stage and SeriesPack packing, with the bytes/speed frontier Engine chooses on.
 - [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
