@@ -1,0 +1,112 @@
+
+avx512 ClientIP: bounds alone ns/block inline 518 / stage 371
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    31.659 |    1667 |   28.27 |   18.18 |   6.57
+  no_rle_compact_stage              30.337 |    1662 |   37.10 |   21.29 |  14.65
+  no_rle_compact_stage_penalty4     31.061 |    1507 |   27.02 |   18.61 |   6.27
+  no_rle_compact_stage_penalty16    31.655 |    1438 |   24.48 |   16.86 |   4.82
+
+avx512 EventTime: bounds alone ns/block inline 363 / stage 338
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    17.226 |    1293 |   19.43 |   13.05 |   6.15
+  no_rle_compact_stage              17.234 |    1270 |   18.67 |   12.35 |   5.54
+  no_rle_compact_stage_penalty4     17.243 |    1228 |   18.17 |   11.88 |   5.18
+  no_rle_compact_stage_penalty16    17.249 |    1239 |   18.41 |   11.90 |   5.33
+
+avx512 OS: bounds alone ns/block inline 220 / stage 388
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                     7.038 |    1965 |   27.90 |   24.68 |  30.46
+  no_rle_compact_stage               6.694 |    2082 |   30.71 |   24.22 |  33.84
+  no_rle_compact_stage_penalty4      7.265 |    2036 |   15.00 |   16.07 |  16.07
+  no_rle_compact_stage_penalty16     7.600 |    1891 |   10.93 |   12.02 |  10.17
+
+avx512 RegionID: bounds alone ns/block inline 322 / stage 426
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    10.388 |    2133 |   28.55 |   25.64 |  36.89
+  no_rle_compact_stage              10.128 |    2018 |   32.09 |   25.67 |  39.20
+  no_rle_compact_stage_penalty4     11.089 |    1681 |   26.94 |   25.72 |  30.27
+  no_rle_compact_stage_penalty16    12.938 |    1502 |   25.83 |   23.78 |  19.01
+
+avx512 ResolutionWidth: bounds alone ns/block inline 256 / stage 355
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    10.178 |    1540 |   23.97 |   19.06 |   9.49
+  no_rle_compact_stage               9.774 |    1327 |   25.49 |   21.86 |  20.39
+  no_rle_compact_stage_penalty4     10.051 |    1249 |   21.66 |   18.46 |  10.28
+  no_rle_compact_stage_penalty16    10.213 |    1206 |   20.05 |   17.63 |   8.11
+
+avx512 URLHash: bounds alone ns/block inline 1066 / stage 540
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    64.275 |    2105 |   80.88 |   31.09 |   7.74
+  no_rle_compact_stage              64.123 |    1665 |   83.87 |   31.68 |   8.85
+  no_rle_compact_stage_penalty4     64.236 |    1820 |   79.08 |   29.52 |   7.18
+  no_rle_compact_stage_penalty16    64.253 |    1800 |   77.71 |   28.77 |   7.05
+
+avx512 UserID: bounds alone ns/block inline 599 / stage 307
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    51.073 |    1779 |   80.20 |    7.20 |  19.32
+  no_rle_compact_stage              47.458 |    1511 |   83.88 |   23.12 |  38.46
+  no_rle_compact_stage_penalty4     49.775 |    1367 |   74.01 |    5.32 |  18.71
+  no_rle_compact_stage_penalty16    51.697 |    1628 |   71.53 |    2.44 |  15.49
+
+avx512 WatchID: bounds alone ns/block inline 1038 / stage 535
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    62.312 |    1995 |  104.35 |   37.63 |   9.81
+  no_rle_compact_stage              62.312 |    1442 |  105.21 |   38.64 |   8.68
+  no_rle_compact_stage_penalty4     62.312 |    1790 |  102.80 |   36.42 |   7.60
+  no_rle_compact_stage_penalty16    62.312 |    1758 |  102.84 |   38.03 |   9.14
+
+native ClientIP: bounds alone ns/block inline 1870 / stage 815
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    31.659 |    3655 |   49.82 |   51.90 |  23.32
+  no_rle_compact_stage              30.337 |    2674 |   52.80 |   51.58 |  39.39
+  no_rle_compact_stage_penalty4     31.061 |    2491 |   46.17 |   50.08 |  22.55
+  no_rle_compact_stage_penalty16    31.655 |    2384 |   44.22 |   48.01 |  20.31
+
+native EventTime: bounds alone ns/block inline 1072 / stage 650
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    17.226 |    2864 |   39.44 |   31.42 |  20.04
+  no_rle_compact_stage              17.234 |    2464 |   41.04 |   30.32 |  18.52
+  no_rle_compact_stage_penalty4     17.243 |    2438 |   40.79 |   30.06 |  18.96
+  no_rle_compact_stage_penalty16    17.249 |    2451 |   39.68 |   30.13 |  18.80
+
+native OS: bounds alone ns/block inline 522 / stage 951
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                     7.038 |    3249 |   33.47 |   43.81 |  42.93
+  no_rle_compact_stage               6.694 |    3582 |   38.18 |   42.43 |  61.67
+  no_rle_compact_stage_penalty4      7.265 |    3336 |   21.65 |   34.41 |  20.78
+  no_rle_compact_stage_penalty16     7.600 |    3115 |   17.11 |   30.83 |  13.20
+
+native RegionID: bounds alone ns/block inline 921 / stage 985
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    10.388 |    3453 |   39.80 |   50.02 |  63.33
+  no_rle_compact_stage              10.128 |    3257 |   43.87 |   48.41 |  74.73
+  no_rle_compact_stage_penalty4     11.089 |    2918 |   37.86 |   51.26 |  46.26
+  no_rle_compact_stage_penalty16    12.938 |    2721 |   39.99 |   51.41 |  31.49
+
+native ResolutionWidth: bounds alone ns/block inline 679 / stage 819
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    10.178 |    2788 |   33.38 |   35.40 |  17.42
+  no_rle_compact_stage               9.774 |    2526 |   37.47 |   38.65 |  33.70
+  no_rle_compact_stage_penalty4     10.051 |    2319 |   33.15 |   35.62 |  20.41
+  no_rle_compact_stage_penalty16    10.213 |    2247 |   31.89 |   34.83 |  15.41
+
+native URLHash: bounds alone ns/block inline 3836 / stage 763
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    64.275 |    5540 |  137.10 |  103.48 |  23.15
+  no_rle_compact_stage              64.123 |    2623 |  140.76 |  106.76 |  26.66
+  no_rle_compact_stage_penalty4     64.236 |    2860 |  134.33 |  102.58 |  22.96
+  no_rle_compact_stage_penalty16    64.253 |    2900 |  134.00 |  104.17 |  23.22
+
+native UserID: bounds alone ns/block inline 2904 / stage 902
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    51.073 |    4744 |  129.57 |   15.10 |  50.65
+  no_rle_compact_stage              47.458 |    2806 |  137.27 |   46.20 | 117.50
+  no_rle_compact_stage_penalty4     49.775 |    2663 |  119.97 |    9.86 |  43.71
+  no_rle_compact_stage_penalty16    51.697 |    2913 |  119.13 |    4.61 |  36.22
+
+native WatchID: bounds alone ns/block inline 3735 / stage 736
+  arm | bits/value | build ns/block | SUM ns/block | COUNT ns/block | ns/point
+  no_rle_compact                    62.312 |    5555 |  212.20 |  201.04 |  36.78
+  no_rle_compact_stage              62.312 |    2646 |  214.21 |  201.63 |  36.34
+  no_rle_compact_stage_penalty4     62.312 |    3001 |  212.90 |  201.75 |  36.24
+  no_rle_compact_stage_penalty16    62.312 |    2996 |  221.50 |  202.53 |  36.61

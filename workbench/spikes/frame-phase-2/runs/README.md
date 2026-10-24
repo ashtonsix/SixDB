@@ -172,6 +172,51 @@ The earlier pinned run on the previous SeriesPack is
     include this probe's outlier lookup and virtual width call, not just
     SeriesPack's `get`.
 
+## The bounds stage in the no-RLE pipeline
+
+Ashton approved routing the no-RLE packed path through the bounds thread's
+stage ([bounds/stage.h](../bounds/stage.h), `frame_bounds::fast::choose<32>`).
+The stage is priced with this preset's tile bytes and the exception law in
+SEAMS.md. The inline search (lo = block minimum, every width) stays as the
+control. Exceptions now store their own values, since some lie below lo. SUM
+swaps lo for each exception's value, and COUNT no longer treats t ≤ lo as the
+whole block. Recount and emission share one containment rule,
+`x >= lo && x - lo <= mask(K)`. Ikea LEAD's review caught the recount
+wrapping near UINT64_MAX, and the run exposed a shift by the width that is
+undefined at K = 64. That shift was also in the original inline code, so
+earlier URLHash and WatchID timings in this README stored most of their
+blocks as exceptions. Their bytes were right; their times were not. Source
+`0f98b6d4`, pinned to HEAD Ikea and bounds headers; jobs
+`20261024T180547Z-a4867ea8` (Zen 5) and `20261024T180634Z-a92f01e3`
+(Graviton 4); [evidence/bounds-stage-v2-summary.txt](evidence/bounds-stage-v2-summary.txt).
+Compact preset; every answer checked.
+
+| Zen 5 | bits per value | bounds ns per block | SUM ns per block | point ns |
+| --- | --- | --- | --- | --- |
+| OS: inline / stage / stage, penalty 4 / 16 | 7.04 / 6.69 / 7.27 / 7.60 | 220 / 388 | 27.9 / 30.7 / 15.0 / 10.9 | 30 / 34 / 16 / 10 |
+| ClientIP | 31.66 / 30.34 / 31.06 / 31.66 | 518 / 371 | 28.3 / 37.1 / 27.0 / 24.5 | 6.6 / 14.7 / 6.3 / 4.8 |
+| UserID | 51.07 / 47.46 / 49.78 / 51.70 | 599 / 307 | 80.2 / 83.9 / 74.0 / 71.5 | 19 / 38 / 19 / 15 |
+| URLHash | 64.28 / 64.12 / 64.24 / 64.25 | 1066 / 540 | 80.9 / 83.9 / 79.1 / 77.7 | 7.7 / 8.9 / 7.2 / 7.1 |
+
+17. **The stage saves bytes where outliers sit low or the minimum misleads.**
+    With bytes as the only objective it saves 2.5–7% on OS, RegionID,
+    ResolutionWidth, ClientIP and UserID, and nothing measurable on
+    EventTime, URLHash or WatchID.
+18. **It chooses faster on wide columns and slower on narrow ones.** On Zen 5
+    it takes 0.5× the inline search's time on URLHash, WatchID and UserID
+    and 0.7× on ClientIP, but 1.3–1.8× on OS, RegionID and ResolutionWidth,
+    where the inline search tries few widths. On Graviton 4 it is 2.3–5×
+    faster on wide columns and up to 1.8× slower on OS. Build time per block
+    follows.
+19. **Bytes alone is the wrong objective; the exception penalty is Engine's
+    lever.** Penalty 0 buys its bytes with exceptions that make points up to
+    2.2× and SUM up to 1.3× slower. A penalty of 4 bytes per exception lands
+    within −3% to +7% of the inline bytes and is as fast or faster
+    everywhere: OS SUM 15.0 against 27.9 ns per block, points 16 against 30.
+    The inline search, minimising bytes, had kept many exceptions. A penalty
+    of 16 goes further (OS SUM 10.9, points 10) for 8% more bytes than
+    inline. Graviton 4 shows the same order.
+
 ## What this says about the split
 
 RLE is a column-specific stage, not a default. On columns with runs it is
