@@ -51,6 +51,17 @@ class point_plan {
                     return std::nullopt;
         return plan;
     }
+    // Staging hooks: the entry, then (with the entry cached) the row's leaf
+    // tile and the block's exception positions.
+    const void *entry_address(std::size_t row) const { return &entries_[row / block_rows]; }
+    void prefetch_entry(std::size_t row) const { __builtin_prefetch(entry_address(row)); }
+    void prefetch_body(std::size_t row) const {
+        const auto &e = entries_[row / block_rows];
+        if (e.kernel.data)
+            __builtin_prefetch(e.kernel.data + (e.base + row % block_rows) / e.kernel.tile_rows * e.kernel.tile_bytes);
+        if (e.count)
+            __builtin_prefetch(e.pos);
+    }
     u64 get(std::size_t row) const {
         const auto &e = entries_[row / block_rows];
         const unsigned r = row % block_rows;

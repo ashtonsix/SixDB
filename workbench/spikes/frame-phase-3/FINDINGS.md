@@ -255,6 +255,61 @@ single-owner embedded run: no durable admission, concurrency, Loom
 leases or Engine summaries. It shows the Block and Change ideas meet
 Orbital's Object → Representation → Part model without an adapter layer.
 
+## 7. Three seam cases on the same images
+
+Ikea LEAD's narrowing of the seam question (CHECKLIST B1), run by
+[seams.cpp](proto/seams.cpp) with front A's narrow native controls
+(`frame_cells_controls`); every timed answer checked. One process, 7 rounds;
+[seams-v1-zen5.jsonl](proto/evidence/seams-v1-zen5.jsonl),
+[seams-v1-graviton4.jsonl](proto/evidence/seams-v1-graviton4.jsonl).
+
+**COUNT settled from descriptors.** A uniform-threshold law that settles
+blocks in one branch-free pass over bound's lo, width and count columns, and
+scans exception areas once per group, halves the per-block law on Zen 5
+(UserID 2.50 → 1.02 ns per block, CounterID 0.94 → 0.48, OS 16.1 → 8.0),
+now below phase 2's hand glue (2.6 and 0.56). On Graviton 4 it does not help
+(UserID 3.8 → 4.3, CounterID 1.9 → 2.6; OS 37.5 → 29.5). The descriptor pass
+is a per-ISA choice, not a free win.
+
+**Predicate on A, then work on B** (top 10% of A; CounterID's ties select
+31%):
+
+| ns per block | clustered (CounterID) | partly clustered (EventTime, 74% of blocks touched) | dispersed (WatchID, all blocks) |
+| --- | --- | --- | --- |
+| Zen 5, fused per part (SUM) | 6.8–13.6 | 47–91 | 114–125 |
+| Zen 5, retained mask (SUM) | 12–20 | 63–102 | 135–146 |
+| Zen 5, front A's fused native pair | 75–139 | 77–144 | 93–161 |
+| Graviton 4, fused per part | 17–40 | 80–143 | 273–398 |
+| Graviton 4, front A's fused native pair | 47–105 | 52–100 | 89–112 |
+
+- Fusing per part beats retaining a column-wide mask by 7–44% on Zen 5 and
+  3–34% on Graviton 4; no case needed the mask kept.
+- Coarse skipping is the win: 2–20× faster than the native pair on the
+  clustered predicate. Where every block is touched, the native pair wins on
+  Graviton 4 by 2.4–3.5× and on Zen 5 by up to 1.3×. The cost is SeriesPack's
+  prefiltered SUM (§1), the same kernel the SeriesPack request now covers.
+- SUM with MAX goes through `select` (no MAX law yet) and costs 70–430 ns per
+  block: the multi-consumer item (B6) is needed before MAX is usable.
+
+**Independent points past the LLC** (each column replicated 8×, 24 M rows):
+
+| ns per point | Zen 5 warm | Zen 5 flushed | Graviton 4 warm | Graviton 4 flushed |
+| --- | --- | --- | --- | --- |
+| u64 array | 2.2–2.7 | 4.4–4.5 | 4.5–8.1 | 8.4 |
+| ready plan | 7.5–21.7 | 39–57 | 33–82 | 37–64 |
+| plan, batches of 32 prefetched | 7.3–60 | 23–36 | 11–73 | 26–41 |
+| plan through a Loom Ring of 32 | 12–71 | 36–51 | 19–84 | 30–46 |
+
+- The plain array wins by 5–13× even though Frame is 2–7× smaller: its
+  independent loads overlap for free, while the plan's chain (entry, then an
+  indirect leaf call, then the body, then exceptions) does not. This misses
+  MECHANISMS' "parity at DRAM" target by a wide margin.
+- Staging helps: batch prefetching recovers 1.4–1.7× flushed (and 3× warm on
+  Graviton 4). A 32-slot Ring adds callback overhead warm and recovers less
+  than plain batching. Neither is enough; a deeper pipeline (more points in
+  flight, entry prefetch one batch ahead, no indirect call per point) is the
+  next lever, and the point plan is where it belongs.
+
 ## What changes in the proposal
 
 - **Execution is two levels**: block-grain laws composed at runtime (no

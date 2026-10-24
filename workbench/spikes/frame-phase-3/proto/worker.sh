@@ -25,14 +25,16 @@ for isa in $isas; do
   build="build/clang/frame3-$isa"
   out="$SIXDB_RESULTS/$isa"
   mkdir -p "$out"
-  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_SPIKES=frame-phase-3 $flags > "$out/configure.txt" 2>&1
-  /usr/bin/time -v cmake --build "$build" --target frame3_check frame3_measure frame3_writes frame3_calibrate frame3_e2e -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
+  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release "-DSIXDB_SPIKES=frame-phase-1;frame-phase-2;frame-phase-3" $flags > "$out/configure.txt" 2>&1
+  /usr/bin/time -v cmake --build "$build" --target frame3_check frame3_measure frame3_writes frame3_calibrate frame3_e2e frame3_seams -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-3/proto"
   [ "$isa" = "${isas%% *}" ] && { "$bin/frame3_check" > "$out/check.txt" 2>&1 || true; }
   [ "$isa" = "${isas%% *}" ] && for col in ${E2E_COLUMNS:-OS UserID ClientIP EventTime}; do
     taskset -c "$SIXDB_CPU" "$bin/frame3_e2e" "$cols" "$col" >> "$out/e2e.jsonl" 2>> "$out/e2e.err" || true
   done
   [ -n "${E2E_ONLY:-}" ] && continue
+  [ "$isa" = "${isas%% *}" ] && { taskset -c "$SIXDB_CPU" "$bin/frame3_seams" "$cols" 2999808 "${ROUNDS:-7}" > "$out/seams.jsonl" 2> "$out/seams.err" || true; }
+  [ -n "${SEAMS_ONLY:-}" ] && continue
   for repeat in 1 2 3; do
     taskset -c "$SIXDB_CPU" "$bin/frame3_measure" "$cols" 2999808 "${ROUNDS:-7}" $columns \
       | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/measure.jsonl"

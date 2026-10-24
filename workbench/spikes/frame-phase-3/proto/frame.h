@@ -212,6 +212,13 @@ class stage {
         return sum_selected(part, blocks, rows);
     }
     virtual u64 count(comparison, unsigned part, const bitset256 &blocks, const block_args &rhs) const;
+    // The same with one threshold for every block (a query's constant), so a
+    // stage can settle blocks in one pass over its descriptor columns.
+    virtual u64 count_uniform(comparison op, unsigned part, const bitset256 &blocks, u64 t) const {
+        block_args rhs;
+        rhs.fill(t);
+        return count(op, part, blocks, rhs);
+    }
     virtual void filter(comparison, unsigned part, const bitset256 &blocks, const block_args &rhs, block_rows_set &out) const;
     virtual u64 get(unsigned part, unsigned row) const;
     virtual void read(unsigned part, unsigned first, unsigned n, u64 *out) const;
@@ -368,11 +375,9 @@ class column {
         return s;
     }
     u64 count(comparison op, u64 t) const {
-        block_args rhs;
-        rhs.fill(t);
         u64 c = 0;
         for (unsigned p = 0; p < parts_; ++p)
-            c += root_->count(op, p, blocks(p), rhs);
+            c += root_->count_uniform(op, p, blocks(p), t);
         return c;
     }
     // Selection words: bit r of words[r / 64] is row r.

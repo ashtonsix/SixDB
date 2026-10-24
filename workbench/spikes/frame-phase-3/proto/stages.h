@@ -35,6 +35,7 @@ using frame_bounds::mask;
 struct point_kernel {
     u64 (*get)(const ikea::byte *, std::size_t);
     const ikea::byte *data;
+    unsigned tile_rows = 8, tile_bytes = 0;  // for prefetching a row's tile
 };
 // One SeriesPack array of a part's width-K blocks, slot order = block order.
 struct width_array {
@@ -590,6 +591,60 @@ class bound final : public stage {
         if (!partial.empty())
             c += child_->count(Op, p, partial, d);
         return c;
+    }
+    // Seam case 1: one threshold, every block of the part. One branch-free
+    // pass over the lo, width and count columns settles whole blocks; the
+    // exception areas are scanned once per group, not per block; only
+    // partial blocks reach the child.
+    template <comparison Op> u64 count_uniform_as(unsigned p, const bitset256 &blocks, u64 t) const {
+        const part &s = parts_[p];
+        const unsigned nb = blocks_in(p);
+        if (!(blocks == first_n(nb)) || rows_in(p, nb - 1) != block_rows)
+            return count_as<Op>(p, blocks, [&] { block_args r; r.fill(t); return r; }());
+        u64 settled = 0;
+        u8 part_flag[part_blocks];
+        block_args d;
+        for (unsigned b = 0; b < nb; ++b) {
+            const u64 lo = s.lo[b], m = mask(s.width[b]), E = s.count[b];
+            const bool below = t < lo;
+            const u64 dd = t - lo;
+            bool all, none;
+            if constexpr (Op == comparison::greater_equal)
+                all = below || dd == 0, none = !below && dd > m;
+            else if constexpr (Op == comparison::greater)
+                all = below, none = !below && dd >= m;
+            else if constexpr (Op == comparison::less_equal)
+                all = !below && dd >= m, none = below;
+            else if constexpr (Op == comparison::less)
+                all = !below && dd > m, none = below || dd == 0;
+            else
+                all = false, none = below || dd > m;
+            const bool partial = !all && !none;
+            settled += all ? block_rows - E : 0;
+            // Exception slots hold field 0; a partial block's child count includes them.
+            settled -= partial && ikea::compare<Op>(0, dd) ? E : 0;
+            part_flag[b] = partial;
+            d[b] = dd;
+        }
+        for (const area &a : s.areas)
+            for (unsigned e = 0; e < a.used; ++e)
+                settled += ikea::compare<Op>(a.val[e], t);
+        bitset256 partial;
+        for (unsigned b = 0; b < nb; ++b)
+            partial.words[b / 64] |= u64{part_flag[b]} << (b % 64);
+        if (!partial.empty())
+            settled += child_->count(Op, p, partial, d);
+        return settled;
+    }
+    u64 count_uniform(comparison op, unsigned p, const bitset256 &blocks, u64 t) const override {
+        switch (op) {
+        case comparison::equal: return count_uniform_as<comparison::equal>(p, blocks, t);
+        case comparison::less: return count_uniform_as<comparison::less>(p, blocks, t);
+        case comparison::less_equal: return count_uniform_as<comparison::less_equal>(p, blocks, t);
+        case comparison::greater: return count_uniform_as<comparison::greater>(p, blocks, t);
+        case comparison::greater_equal: return count_uniform_as<comparison::greater_equal>(p, blocks, t);
+        }
+        return 0;
     }
     template <comparison Op> void filter_as(unsigned p, const bitset256 &blocks, const block_args &rhs, block_rows_set &out) const {
         const part &s = parts_[p];
