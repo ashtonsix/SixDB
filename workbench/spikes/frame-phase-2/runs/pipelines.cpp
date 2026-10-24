@@ -22,6 +22,8 @@
 // against the raw column. Warm.
 //
 // usage: frame_runs_pipelines COLS_DIR ROWS ROUNDS COLUMN...
+#include "../bounds/stage.h"
+
 #include <ikea/intervals.h>
 #include <ikea/seriespack.h>
 
@@ -175,6 +177,8 @@ enum class kind : u8 { constant, packed, runs };
 
 template <sp::preset P> struct pipeline {
     bool rle, group_rle;
+    bool stage = false;  // no-RLE bounds through frame_bounds::fast::choose (bounds/stage.h)
+    unsigned penalty = 0;  // the cost model's per-exception read-time charge, in bytes
     // Group-continuous RLE: the RLE blocks of each 16-block group share one
     // sizes series and one values series (values relative to the group's
     // smallest block minimum), with u16 group checkpoints every 16 runs in
@@ -198,7 +202,7 @@ template <sp::preset P> struct pipeline {
     std::vector<u8> width;
     std::vector<u32> slot;  // packed: block index within its width array; runs: index into run tables
     std::array<std::unique_ptr<packed_width>, 65> packed;
-    std::vector<std::pair<u8, u64>> exceptions;  // packed blocks: (position, residual)
+    std::vector<std::pair<u8, u64>> exceptions;  // packed blocks: (position, value); a value may lie below lo
     std::vector<u32> ex_first;
     // Run blocks.
     small_series sizes, values;
@@ -211,30 +215,66 @@ template <sp::preset P> struct pipeline {
     std::vector<std::pair<u8, u8>> size_exceptions;
     std::size_t bytes = 0, constant_blocks = 0, run_blocks = 0, packed_blocks = 0;
 
-    pipeline(const std::vector<u64> &v, bool with_rle, bool grouped = false) : rle(with_rle), group_rle(grouped) {
+    // The cost model the bounds stage prices a packed block with: this
+    // preset's whole-tile bytes per width, and the composition's exception
+    // law (one count byte, a u8 position and the value at whole bytes).
+    static frame_bounds::cost_model packed_costs(unsigned penalty = 0) {
+        frame_bounds::cost_model c;
+        c.exception_penalty = penalty;
+        for (unsigned K = 1; K <= 64; ++K)
+            c.body[K] = static_cast<u32>(tile_bytes_for<P>(K));
+        c.body[0] = c.body[1];
+        return c;
+    }
+    pipeline(const std::vector<u64> &v, bool with_rle, bool grouped = false, bool use_stage = false, unsigned exception_penalty = 0)
+        : rle(with_rle), group_rle(grouped), stage(use_stage), penalty(exception_penalty) {
+        // Bytes are always counted without the penalty; it only steers choices.
+        const frame_bounds::cost_model costs = packed_costs(), priced = packed_costs(penalty), sample = frame_bounds::sample_cost(priced, block_rows / 32);
+        frame_bounds::choice prior;
+        bool have_prior = false;
         const std::size_t blocks = v.size() / block_rows;
         std::array<std::vector<u64>, 65> staged;
         for (std::size_t b = 0; b < blocks; ++b) {
             const u64 *x = v.data() + b * block_rows;
-            const auto [lo, hi] = std::minmax_element(x, x + block_rows);
-            const u64 mn = *lo, span = *hi - *lo;
+            const auto [lo_at, hi_at] = std::minmax_element(x, x + block_rows);
+            const u64 mn = *lo_at, span = *hi_at - *lo_at;
             if (span == 0) {
                 kinds.push_back(kind::constant), base.push_back(mn), width.push_back(0), slot.push_back(0);
                 ex_first.push_back(static_cast<u32>(exceptions.size()));
                 bytes += 10, ++constant_blocks;  // base, width, kind
                 continue;
             }
-            // No-RLE candidate: cheapest width with outliers.
-            const unsigned full = bits(span), vb = value_bytes(span);
-            unsigned pk = full;
-            std::size_t pbytes = tile_bytes_for<P>(full);
-            for (unsigned K = 1; K < full; ++K) {
-                std::size_t ex = 0;
+            // No-RLE candidate: cheapest window with outliers. The inline control
+            // fixes lo at the block minimum and tries every width; the stage
+            // also chooses lo, so outliers may lie below it.
+            unsigned pk;
+            u64 lo = mn;
+            std::size_t pbytes;
+            if (stage) {
+                const auto c = frame_bounds::fast::choose<32>(x, block_rows, priced, sample, have_prior ? &prior : nullptr);
+                lo = c.lo, pk = std::max(1u, c.width);
+            } else {
+                const unsigned full = bits(span), vb = value_bytes(span);
+                pk = full;
+                pbytes = tile_bytes_for<P>(full);
+                for (unsigned K = 1; K < full; ++K) {
+                    std::size_t ex = 0;
+                    for (unsigned i = 0; i < block_rows; ++i)
+                        ex += (x[i] - mn) >> K != 0;
+                    const std::size_t c = tile_bytes_for<P>(K) + (ex ? 1 + ex * (1 + vb) : 0);
+                    if (c < pbytes)
+                        pbytes = c, pk = K;
+                }
+            }
+            {
+                // Emission-exact bytes for the chosen window (the stage's counts
+                // can be upper bounds after tightening).
+                const u64 hi = pk >= 64 ? ~u64{0} : lo + ((u64{1} << pk) - 1);
+                std::size_t low = 0, high = 0;
                 for (unsigned i = 0; i < block_rows; ++i)
-                    ex += (x[i] - mn) >> K != 0;
-                const std::size_t c = tile_bytes_for<P>(K) + (ex ? 1 + ex * (1 + vb) : 0);
-                if (c < pbytes)
-                    pbytes = c, pk = K;
+                    low += x[i] < lo, high += x[i] > hi;
+                pbytes = costs(pk, low, high, bits(span));
+                prior = {lo, pk, static_cast<u32>(low), static_cast<u32>(high), pbytes}, have_prior = true;
             }
             // RLE candidate.
             std::vector<unsigned> ends;
@@ -287,15 +327,14 @@ template <sp::preset P> struct pipeline {
                 runs.push_back(d);
                 bytes += rbytes + 11, ++run_blocks;  // base, run count, two widths, kind
             } else {
-                kinds.push_back(kind::packed), base.push_back(mn), width.push_back(static_cast<u8>(pk));
+                kinds.push_back(kind::packed), base.push_back(lo), width.push_back(static_cast<u8>(pk));
                 slot.push_back(static_cast<u32>(staged[pk].size() / block_rows));
                 ex_first.push_back(static_cast<u32>(exceptions.size()));
                 for (unsigned i = 0; i < block_rows; ++i) {
-                    const u64 r = x[i] - mn;
-                    if (r >> pk)
-                        exceptions.push_back({static_cast<u8>(i), r}), staged[pk].push_back(0);
+                    if (x[i] < lo || (x[i] - lo) >> pk)
+                        exceptions.push_back({static_cast<u8>(i), x[i]}), staged[pk].push_back(0);
                     else
-                        staged[pk].push_back(r);
+                        staged[pk].push_back(x[i] - lo);
                 }
                 bytes += pbytes + 10, ++packed_blocks;
             }
@@ -385,9 +424,11 @@ template <sp::preset P> struct pipeline {
             switch (kinds[b]) {
             case kind::constant: total += static_cast<u128>(base[b]) * block_rows; break;
             case kind::packed:
+                // Range SUM + lo x rows; an exception slot holds 0 (that is, lo), so
+                // swap lo for the exception's own value.
                 total += packed[width[b]]->sum(slot[b]) + static_cast<u128>(base[b]) * block_rows;
                 for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
-                    total += exceptions[e].second;
+                    total += exceptions[e].second, total -= base[b];
                 break;
             case kind::runs: {
                 if (group_rle)
@@ -430,6 +471,17 @@ template <sp::preset P> struct pipeline {
         for (std::size_t b = 0; b < kinds.size(); ++b) {
             if (group_rle && kinds[b] == kind::runs)
                 continue;  // counted per group below
+            if (kinds[b] == kind::packed) {
+                // Slots count against t - lo; an exception's slot (0, so lo) is
+                // replaced by its own value. Outliers below lo mean t <= lo no
+                // longer settles the whole block.
+                const bool all = t <= base[b];
+                unsigned k = all ? block_rows : bits(t - base[b]) > width[b] ? 0 : packed[width[b]]->count_ge(slot[b], t - base[b]);
+                for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
+                    k += unsigned(exceptions[e].second >= t) - unsigned(all);
+                c += k;
+                continue;
+            }
             if (t <= base[b]) {
                 c += block_rows;
                 continue;
@@ -437,15 +489,7 @@ template <sp::preset P> struct pipeline {
             const u64 rhs = t - base[b];
             switch (kinds[b]) {
             case kind::constant: break;
-            case kind::packed: {
-                if (bits(rhs) > width[b] && ex_first[b] == ex_first[b + 1])
-                    break;  // above every packed residual and no outliers
-                unsigned k = bits(rhs) > width[b] ? 0 : packed[width[b]]->count_ge(slot[b], rhs);
-                for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
-                    k += exceptions[e].second >= rhs;  // the slot held 0 < rhs
-                c += k;
-                break;
-            }
+            case kind::packed: break;
             case kind::runs: {
                 const auto &d = runs[slot[b]];
                 const unsigned padded = (d.n + 15u) / 16 * 16;
@@ -504,7 +548,7 @@ template <sp::preset P> struct pipeline {
             if (e0 != e1) {
                 const auto *e = std::lower_bound(e0, e1, std::pair<u8, u64>{static_cast<u8>(r), 0});
                 if (e < e1 && e->first == r)
-                    return base[b] + e->second;
+                    return e->second;
             }
             return base[b] + packed[width[b]]->get(std::size_t{slot[b]} * block_rows + r);
         }
@@ -536,6 +580,7 @@ template <sp::preset P> struct pipeline {
 struct arm {
     std::string name;
     std::size_t bytes, constant_blocks, run_blocks, packed_blocks;
+    double build_ns;
     std::function<u128()> sum;
     std::function<u64()> count;
     std::function<u64()> points;
@@ -543,17 +588,52 @@ struct arm {
 
 template <sp::preset P>
 void add(std::vector<arm> &arms, std::vector<std::shared_ptr<void>> &keep, const std::vector<u64> &v, bool rle, const char *name, u64 t,
-         const std::vector<u32> &rows, bool grouped = false) {
-    auto p = std::make_shared<pipeline<P>>(v, rle, grouped);
+         const std::vector<u32> &rows, bool grouped = false, bool use_stage = false, unsigned penalty = 0) {
+    const auto a = std::chrono::steady_clock::now();
+    auto p = std::make_shared<pipeline<P>>(v, rle, grouped, use_stage, penalty);
+    const double build = std::chrono::duration<double, std::nano>(std::chrono::steady_clock::now() - a).count();
     keep.push_back(p);
     const auto *q = p.get();
-    arms.push_back({name, q->bytes, q->constant_blocks, q->run_blocks, q->packed_blocks, [q] { return q->sum(); }, [q, t] { return q->count_ge(t); },
+    arms.push_back({name, q->bytes, q->constant_blocks, q->run_blocks, q->packed_blocks, build, [q] { return q->sum(); }, [q, t] { return q->count_ge(t); },
                     [q, &rows] {
                         u64 s = 0;
                         for (u32 r : rows)
                             s += q->point(r);
                         return s;
                     }});
+}
+// The bounds choice alone over every non-constant block, as the no-RLE path
+// makes it: the inline control (lo = minimum, every width) or the stage.
+template <sp::preset P> u64 bounds_pass(const std::vector<u64> &v, bool use_stage) {
+    const auto costs = pipeline<P>::packed_costs(), sample = frame_bounds::sample_cost(costs, block_rows / 32);
+    frame_bounds::choice prior;
+    bool have_prior = false;
+    u64 check = 0;
+    for (std::size_t b = 0; b < v.size() / block_rows; ++b) {
+        const u64 *x = v.data() + b * block_rows;
+        const auto [lo, hi] = std::minmax_element(x, x + block_rows);
+        const u64 mn = *lo, span = *hi - *lo;
+        if (!span)
+            continue;
+        if (use_stage) {
+            prior = frame_bounds::fast::choose<32>(x, block_rows, costs, sample, have_prior ? &prior : nullptr), have_prior = true;
+            check += prior.lo + prior.width;
+        } else {
+            const unsigned full = bits(span), vb = value_bytes(span);
+            unsigned pk = full;
+            std::size_t pbytes = tile_bytes_for<P>(full);
+            for (unsigned K = 1; K < full; ++K) {
+                std::size_t ex = 0;
+                for (unsigned i = 0; i < block_rows; ++i)
+                    ex += (x[i] - mn) >> K != 0;
+                const std::size_t c = tile_bytes_for<P>(K) + (ex ? 1 + ex * (1 + vb) : 0);
+                if (c < pbytes)
+                    pbytes = c, pk = K;
+            }
+            check += mn + pk;
+        }
+    }
+    return check;
 }
 }  // namespace
 
@@ -587,6 +667,11 @@ int main(int argc, char **argv) {
         add<sp::preset::compact>(arms, keep, v, false, "no_rle_compact", t, rows);
         add<sp::preset::bulk_x86>(arms, keep, v, false, "no_rle_bulk_x86", t, rows);
         add<sp::preset::bulk_arm>(arms, keep, v, false, "no_rle_bulk_arm", t, rows);
+        add<sp::preset::compact>(arms, keep, v, false, "no_rle_compact_stage", t, rows, false, true);
+        add<sp::preset::bulk_x86>(arms, keep, v, false, "no_rle_bulk_x86_stage", t, rows, false, true);
+        add<sp::preset::bulk_arm>(arms, keep, v, false, "no_rle_bulk_arm_stage", t, rows, false, true);
+        add<sp::preset::compact>(arms, keep, v, false, "no_rle_compact_stage_penalty4", t, rows, false, true, 4);
+        add<sp::preset::compact>(arms, keep, v, false, "no_rle_compact_stage_penalty16", t, rows, false, true, 16);
         add<sp::preset::compact>(arms, keep, v, true, "rle_then_compact", t, rows);
         add<sp::preset::bulk_x86>(arms, keep, v, true, "rle_then_bulk_x86", t, rows);
         add<sp::preset::bulk_arm>(arms, keep, v, true, "rle_then_bulk_arm", t, rows);
@@ -613,8 +698,18 @@ int main(int argc, char **argv) {
             }
         for (std::size_t i = 0; i < arms.size(); ++i)
             std::printf("{\"column\":\"%s\",\"arm\":\"%s\",\"blocks\":%zu,\"constant_blocks\":%zu,\"run_blocks\":%zu,\"packed_blocks\":%zu,"
-                        "\"bits_per_value\":%.3f,\"sum_ns_per_block\":%.2f,\"count_ns_per_block\":%.2f,\"ns_per_point\":%.2f}\n",
+                        "\"bits_per_value\":%.3f,\"build_ns_per_block\":%.1f,\"sum_ns_per_block\":%.2f,\"count_ns_per_block\":%.2f,\"ns_per_point\":%.2f}\n",
                         name.c_str(), arms[i].name.c_str(), blocks, arms[i].constant_blocks, arms[i].run_blocks, arms[i].packed_blocks,
-                        8.0 * arms[i].bytes / n, median(ts[i]) / blocks, median(tc[i]) / blocks, median(tp[i]) / rows.size());
+                        8.0 * arms[i].bytes / n, arms[i].build_ns / blocks, median(ts[i]) / blocks, median(tc[i]) / blocks, median(tp[i]) / rows.size());
+        // The bounds choice alone, inline control against the stage (compact costs).
+        for (bool use_stage : {false, true}) {
+            std::vector<double> tb;
+            for (int r = 0; r < rounds; ++r) {
+                volatile u64 sink = 0;
+                tb.push_back(time_ns([&] { sink = bounds_pass<sp::preset::compact>(v, use_stage); }));
+            }
+            std::printf("{\"column\":\"%s\",\"bounds\":\"%s\",\"ns_per_block\":%.1f}\n", name.c_str(), use_stage ? "stage" : "inline_min_exhaustive",
+                        median(tb) / blocks);
+        }
     }
 }
