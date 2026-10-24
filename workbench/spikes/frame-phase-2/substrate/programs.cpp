@@ -91,6 +91,12 @@ struct program {
     virtual u128 masked_sum(const u64 *masks) const = 0;
     virtual u64 point(std::size_t row) const = 0;
     virtual void evict() const = 0;
+    // SUM(this) WHERE a >= t, the complete pair. Default: a's masks, then this
+    // column's masked SUM; a program with a fused control overrides it.
+    virtual u128 pair_sum(const program &a, u64 t, u64 *masks) const {
+        a.mask_ge(t, masks);
+        return masked_sum(masks);
+    }
 };
 
 struct native_program final : program {
@@ -152,13 +158,20 @@ struct native_program final : program {
     void evict() const override {
         with([](const auto *x, std::size_t n) { flush(x, n * sizeof(*x)); });
     }
+    // Front A's qualified fused pair control (Ikea LEAD's review of eac1784f).
+    u128 pair_sum(const program &a, u64 t, u64 *masks) const override {
+        if (const auto *na = dynamic_cast<const native_program *>(&a))
+            return frame_cells::native_pair_once(na->control, control, t, all).sum;
+        return program::pair_sum(a, t, masks);
+    }
 };
 
 struct image_program final : program {
     fi::image f;
     fi::kind_index index;
     image_program(const std::vector<u64> &v, fi::policy p) : f(fi::build(v, fi::placement::by_kind, p)), index(fi::index_by_kind(f)) {}
-    std::size_t bytes() const override { return f.image_bytes(); }
+    // Image bytes plus the retained kind index and readable suffix.
+    std::size_t bytes() const override { return f.image_bytes() + 4 * index.ids.size() + (f.bytes.size() - f.body_bytes); }
     u128 sum() const override { return fi::sum_indexed(f, index); }
     u64 count_ge(u64 t) const override { return fi::count_ge(f, t, 0, f.blocks); }
     u64 mask_ge(u64 t, u64 *masks) const override { return fi::mask_ge(f, t, 0, f.blocks, masks); }
@@ -351,10 +364,7 @@ int main(int argc, char **argv) {
             const cell cells[] = {
                 {"sum", [&] { return b->sum(); }, sum_oracle, double(blocks), [&] { b->evict(); }},
                 {"count_ge", [&] { return u128{b->count_ge(t_count)}; }, u128{count_oracle}, double(blocks), [&] { b->evict(); }},
-                {"pair_sum_10pct", [&] {
-                     a->mask_ge(t_pair, masks.data());
-                     return b->masked_sum(masks.data());
-                 },
+                {"pair_sum_10pct", [&] { return b->pair_sum(*a, t_pair, masks.data()); },
                  pair_oracle, double(blocks), [&] { a->evict(), b->evict(); }},
                 {"points", [&] {
                      u128 s = 0;
@@ -382,9 +392,12 @@ int main(int argc, char **argv) {
                         if (!ok)
                             return 1;
                     }
+                    const bool pair = std::string(c.op).rfind("pair", 0) == 0;
+                    // Pair cells retain A (and its mask scratch) as well as B.
+                    const std::size_t retained = b->bytes() + (pair ? a->bytes() + 8 * masks.size() : 0);
                     std::printf("{\"column\":\"%s\",\"program\":\"%s\",\"condition\":\"%s\",\"op\":\"%s\",\"ns\":%.0f,"
-                                "\"ns_per_unit\":%.3f,\"bytes\":%zu,\"build_ns_per_block\":%.1f,\"blocks\":%zu}\n",
-                                spec.c_str(), pname, cond, c.op, median(t), median(t) / c.units, b->bytes(), build_ns / blocks, blocks);
+                                "\"ns_per_unit\":%.3f,\"bytes\":%zu,\"retained_bytes\":%zu,\"build_ns_per_block\":%.1f,\"blocks\":%zu}\n",
+                                spec.c_str(), pname, cond, c.op, median(t), median(t) / c.units, b->bytes(), retained, build_ns / blocks, blocks);
                 }
         }
     }

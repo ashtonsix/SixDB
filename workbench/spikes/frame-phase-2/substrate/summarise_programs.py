@@ -1,4 +1,6 @@
-# Fixed stored programs against the per-operation oracle. For each column,
+# Fixed stored programs against the per-operation oracle. COMPONENT ESTIMATES:
+# the mix totals add isolated per-operation timings; they are not executed
+# interleaved traces (front A's history driver supplies those). For each column,
 # ISA and condition: per-op medians, then named mixes (operation counts per
 # workload unit), the best single program per mix and the per-op oracle.
 import json, sys, statistics as st, collections
@@ -15,6 +17,7 @@ for f in sys.argv[1:]:
         d[(r['isa'], r['column'], r['condition'], r['program'], r['op'])].append(r['ns'])
         meta[(r['isa'], r['column'], r['program'])] = (r['bytes'], r['build_ns_per_block'])
 keys = sorted({k[:3] for k in d})
+print('COMPONENT ESTIMATES (sums of isolated timings, not executed traces)')
 print('isa column condition mix | best program (us per unit) | oracle (us) | gap | natural MB per program')
 for k in keys:
     progs = sorted({p for (*kk, p, op) in d if tuple(kk) == k})
