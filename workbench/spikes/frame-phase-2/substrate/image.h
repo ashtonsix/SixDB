@@ -9,9 +9,11 @@
 // smaller than packed (values in a 1/2/4/8-byte lane); plane256 at K <= 32;
 // otherwise a u64 lane. Results are exact stored-domain values.
 //
-// Read envelope: the leaves may read past a body (front C documents each
-// leaf's halo). The image admits that with one 256-byte readable suffix,
-// pending front C's per-leaf halo table (instruments/LEAF-CONTRACTS.md).
+// Read envelope (SEAMS.md): the leaves read past a body by their tabulated
+// halo (bodies/README.md, at most 63 bytes for plane loads or 15 lanes past
+// the last run value). The image is immutable once built and admits one
+// whole-image read window: interior bodies are followed by the next body,
+// and the suffix covers the largest halo of any body present.
 #pragma once
 
 #include "packed.h"
@@ -95,7 +97,11 @@ inline image build(std::span<const u64> v, placement where = placement::address)
         f.bytes.insert(f.bytes.end(), encoded[b].begin(), encoded[b].end());
     }
     f.body_bytes = f.bytes.size();
-    f.bytes.resize(f.bytes.size() + 256);
+    unsigned widest_run_lane = 0;
+    for (std::size_t b = 0; b < f.blocks; ++b)
+        if (f.kind_of[b] == runs)
+            widest_run_lane = std::max(widest_run_lane, bodies::run_lane(f.width[b]));
+    f.bytes.resize(f.bytes.size() + std::max<std::size_t>(64, 15 * widest_run_lane));
     return f;
 }
 

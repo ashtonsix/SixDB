@@ -275,11 +275,17 @@ substrate's cells on it (`2281816d`, `1efa2ef8`; jobs
    array** on Zen 5 and beat it 2–4× on Graviton 4 for run-heavy columns
    (UserID 54 vs 218 ns per block).
 
+6. **Grouped placement costs points and fused pairs nothing here.** With
+   bodies grouped by kind (descriptors still in block order), random points
+   and fused predicate → SUM stay within ±7% of address placement, warm and
+   flushed, on both hosts (`c6b8d687`; jobs `20261023T235354Z-bc29c0b1` and
+   `20261023T235445Z-ac4d1c86`;
+   [evidence/image-v3-summary.txt](evidence/image-v3-summary.txt)).
+
 The leaf boundary held: the substrate calls front C's header leaves with
-(body, width, count, base, args) and nothing else. The open seam is
-placement: kind-grouped bodies help scans, while address placement keeps
-selected blocks and points local. Choosing it is a layout decision for the
-part, possibly per group.
+(body, width, count, base, args) and nothing else. Grouped placement with a
+kind index is the working default; writes and appends, which move bodies,
+are the cost not yet priced. The shared contracts are in [SEAMS.md](../SEAMS.md).
 
 ## Independent point reads
 

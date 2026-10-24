@@ -34,6 +34,7 @@ Engine's analyser will later solve (data distribution, access patterns) →
   residence, unpredictable access and staging, point-read attribution.
 - [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
   and packed bodies across operation families.
+- [Cross-thread seams](SEAMS.md): the contracts every thread shares, with owners.
 - [Partition](PARTITION.md): seams, proposed internal packages, the research
   fronts, Ashton's decisions and the first Claude/Codex division.
 
