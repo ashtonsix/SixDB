@@ -62,10 +62,12 @@ inline __attribute__((always_inline)) void pack16(uint8x16_t v, uint8x16_t n, st
     vst1q_u64(group, v8);
     vst1q_u64(width, n8);
 }
+// Byte counts b0/b1 are vcnt of the two halves; a caller that already holds
+// them (a larger bitset counting many blocks at once) passes them in.
 template <class Sink>
-inline __attribute__((always_inline)) auto encode_to(Bits256 bits, unsigned population, Sink &&sink)
+inline __attribute__((always_inline)) auto encode_counts(Bits256 bits, uint8x16_t b0, uint8x16_t b1,
+                                                         unsigned population, Sink &&sink)
     -> decltype(sink(nullptr, nullptr)) {
-    auto b0 = vcntq_u8(bits.val[0]), b1 = vcntq_u8(bits.val[1]);
     if constexpr (requires { sink.population_error(); }) {
         const unsigned actual = vaddlvq_u8(vaddq_u8(b0, b1));
         if (actual != population)
@@ -123,6 +125,11 @@ inline __attribute__((always_inline)) auto encode_to(Bits256 bits, unsigned popu
            widths + 6);
     return sink(groups, widths);
 }
+template <class Sink>
+inline __attribute__((always_inline)) auto encode_to(Bits256 bits, unsigned population, Sink &&sink)
+    -> decltype(sink(nullptr, nullptr)) {
+    return encode_counts(bits, vcntq_u8(bits.val[0]), vcntq_u8(bits.val[1]), population, sink);
+}
 inline __attribute__((always_inline)) unsigned encode(Bits256 bits, unsigned population,
                                                       std::uint8_t *out64) {
     return encode_to(bits, population, ::ikea::bec256::detail::wide_sink{out64});
@@ -133,30 +140,76 @@ inline __attribute__((always_inline)) uint16x8_t prefix8(uint16x8_t widths) {
     p = vaddq_u16(p, vextq_u16(z, p, 6));
     return vaddq_u16(p, vextq_u16(z, p, 4));
 }
-inline __attribute__((always_inline)) uint16x8_t extract(uint8x16x4_t body, uint16x8_t offsets,
-                                                         uint16x8_t widths) {
-    auto index = vmovn_u16(vshrq_n_u16(offsets, 3));
-    auto next = vadd_u8(index, vdup_n_u8(1));
-    auto indices = vzip_u8(index, next);
-    // The entire population tree is at most 150 bits. Its gathers fit in the
-    // first 32 readable bytes; the byte-enumeration phase uses the full window.
-    uint8x16x2_t tree{{body.val[0], body.val[1]}};
-    auto word = vreinterpretq_u16_u8(vqtbl2q_u8(tree, vcombine_u8(indices.val[0], indices.val[1])));
-    auto shifted =
-        vshlq_u16(word, vnegq_s16(vreinterpretq_s16_u16(vandq_u16(offsets, vdupq_n_u16(7)))));
-    auto mask = vsubq_u16(vshlq_u16(vdupq_n_u16(1), vreinterpretq_s16_u16(widths)), vdupq_n_u16(1));
-    return vandq_u16(shifted, mask);
+// The bisection level step shared by every stream geometry. Lanes are
+// stream-major: each stream owns Domain consecutive lanes of which the first
+// Active hold this level's nodes (dead lanes have zero parents and width).
+// slot is each lane's byte base in table and pos its bit cursor from there.
+// One 256-position block uses one domain of eight lanes; Bec4096 packs
+// sixteen streams densely (Domain == Active) to fill its upper levels.
+template <unsigned Domain> inline __attribute__((always_inline)) uint16x8_t segmented(uint16x8_t w) {
+    const auto z = vdupq_n_u16(0);
+    if constexpr (Domain == 1)
+        return w;
+    else if constexpr (Domain == 2)
+        return vaddq_u16(w, vandq_u16(vextq_u16(z, w, 7),
+                                      uint16x8_t{0, 0xffff, 0, 0xffff, 0, 0xffff, 0, 0xffff}));
+    else if constexpr (Domain == 4) {
+        auto s = vaddq_u16(w, vandq_u16(vextq_u16(z, w, 7), uint16x8_t{0, 0xffff, 0xffff, 0xffff, 0,
+                                                                     0xffff, 0xffff, 0xffff}));
+        return vaddq_u16(
+            s, vandq_u16(vextq_u16(z, s, 6), uint16x8_t{0, 0, 0xffff, 0xffff, 0, 0, 0xffff, 0xffff}));
+    } else
+        return prefix8(w);
 }
+// Each lane receives its domain's last lane.
+template <unsigned Domain>
+inline __attribute__((always_inline)) uint16x8_t domain_total(uint16x8_t s) {
+    if constexpr (Domain == 1)
+        return s;
+    else if constexpr (Domain == 8)
+        return vdupq_laneq_u16(s, 7);
+    else {
+        const uint8x16_t index =
+            Domain == 2 ? uint8x16_t{2, 3, 2, 3, 6, 7, 6, 7, 10, 11, 10, 11, 14, 15, 14, 15}
+                        : uint8x16_t{6, 7, 6, 7, 6, 7, 6, 7, 14, 15, 14, 15, 14, 15, 14, 15};
+        return vreinterpretq_u16_u8(vqtbl1q_u8(vreinterpretq_u8_u16(s), index));
+    }
+}
+inline __attribute__((always_inline)) uint8x16_t lookup(const uint8x16x2_t &t, uint8x16_t i) {
+    return vqtbl2q_u8(t, i);
+}
+inline __attribute__((always_inline)) uint8x16_t lookup(const uint8x16x4_t &t, uint8x16_t i) {
+    return vqtbl4q_u8(t, i);
+}
+template <unsigned Half, unsigned Domain, class Table>
+inline __attribute__((always_inline)) uint16x8x2_t level(const Table &table, uint16x8_t parent,
+                                                         uint16x8_t slot, uint16x8_t &pos) {
+    const auto k = vminq_u16(parent, vsubq_u16(vdupq_n_u16(2 * Half), parent));
+    const auto width = vsubq_u16(vdupq_n_u16(16), vclzq_u16(k));
+    const auto inclusive = segmented<Domain>(width);
+    const auto offset = vaddq_u16(pos, vsubq_u16(inclusive, width));
+    const auto index = vmovn_u16(vaddq_u16(slot, vshrq_n_u16(offset, 3)));
+    const auto pairs = vzip_u8(index, vadd_u8(index, vdup_n_u8(1)));
+    const auto word = vreinterpretq_u16_u8(lookup(table, vcombine_u8(pairs.val[0], pairs.val[1])));
+    const auto value =
+        vshlq_u16(word, vnegq_s16(vreinterpretq_s16_u16(vandq_u16(offset, vdupq_n_u16(7)))));
+    const auto mask =
+        vsubq_u16(vshlq_u16(vdupq_n_u16(1), vreinterpretq_s16_u16(width)), vdupq_n_u16(1));
+    const auto left = vaddq_u16(vandq_u16(value, mask), vqsubq_u16(parent, vdupq_n_u16(Half)));
+    pos = vaddq_u16(pos, domain_total<Domain>(inclusive));
+    return vzipq_u16(left, vsubq_u16(parent, left));
+}
+// One block: a single eight-lane domain. The entire population tree is at
+// most 150 bits, so its gathers use the first 32 readable bytes; the
+// byte-enumeration phase uses the full window.
 template <unsigned Half>
 inline __attribute__((always_inline)) uint16x8x2_t split(uint8x16x4_t body, uint16x8_t parent,
                                                          unsigned &pos) {
-    auto k = vminq_u16(parent, vsubq_u16(vdupq_n_u16(2 * Half), parent));
-    auto n = vsubq_u16(vdupq_n_u16(16), vclzq_u16(k));
-    auto prefix = prefix8(n);
-    auto offsets = vaddq_u16(vsubq_u16(prefix, n), vdupq_n_u16(pos));
-    pos += vgetq_lane_u16(prefix, 7);
-    auto left = vaddq_u16(extract(body, offsets, n), vqsubq_u16(parent, vdupq_n_u16(Half)));
-    return vzipq_u16(left, vsubq_u16(parent, left));
+    auto cursor = vdupq_n_u16(pos);
+    const auto result = level<Half, 8>(uint8x16x2_t{{body.val[0], body.val[1]}}, parent,
+                                       vdupq_n_u16(0), cursor);
+    pos = vgetq_lane_u16(cursor, 0);
+    return result;
 }
 inline __attribute__((always_inline)) uint8x16_t prefix16bytes(uint8x16_t n) {
     auto z = vdupq_n_u8(0);

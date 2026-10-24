@@ -4,6 +4,7 @@
 #include <ikea/bec256/detail/native/assemble.h>
 #include <immintrin.h>
 #include <algorithm>
+#include <array>
 #include <bit>
 
 namespace ikea::bec256::detail::avx512 {
@@ -25,10 +26,12 @@ inline __attribute__((always_inline)) __m256i log128(__m256i indices) {
                                  _mm512_zextsi256_si512(indices),
                                  _mm512_load_si512(::ikea::bec256::detail::log_width.data() + 64)));
 }
+// bytepop is _mm256_popcnt_epi8(bits); a caller that already holds it (a
+// larger bitset counting many blocks at once) passes it in.
 template <class Sink>
-inline __attribute__((always_inline)) auto encode_to(__m256i bits, unsigned population, Sink &&sink)
+inline __attribute__((always_inline)) auto encode_counts(__m256i bits, __m256i bytepop,
+                                                         unsigned population, Sink &&sink)
     -> decltype(sink(nullptr, nullptr)) {
-    auto bytepop = _mm256_popcnt_epi8(bits);
     if constexpr (requires { sink.population_error(); }) {
         // Admission reuses the counts needed by encoding. A separate wrapper
         // popcount would scan the same input and reconstruct this information.
@@ -124,6 +127,11 @@ inline __attribute__((always_inline)) auto encode_to(__m256i bits, unsigned popu
     _mm512_store_si512(groups, v8);
     _mm512_store_si512(group_width, n8);
     return sink(groups, group_width);
+}
+template <class Sink>
+inline __attribute__((always_inline)) auto encode_to(__m256i bits, unsigned population, Sink &&sink)
+    -> decltype(sink(nullptr, nullptr)) {
+    return encode_counts(bits, _mm256_popcnt_epi8(bits), population, sink);
 }
 inline __attribute__((always_inline)) unsigned encode(__m256i bits, unsigned population,
                                                       std::uint8_t *out64) {
@@ -225,63 +233,98 @@ inline __attribute__((always_inline)) __m512i prefix16x2(__m512i n) {
     auto index = _mm512_mask_set1_epi16(_mm512_set1_epi16(7), 0xffff0000, 23);
     return _mm512_add_epi16(s, _mm512_maskz_permutexvar_epi16(0xff00ff00, index, s));
 }
-template <unsigned Active> inline __attribute__((always_inline)) __m512i tree_prefix2(__m512i n) {
-    // Only Active nodes in each 16-word domain belong to this tree level.
-    // Prefixes of dead lanes are unnecessary; the next level reads only children.
-    auto s = _mm512_add_epi16(n, _mm512_bslli_epi128(n, 2));
+// Constant u16 lane vector from a lane-index function.
+template <class F> inline __attribute__((always_inline)) __m512i lanes(F) {
+    alignas(64) static constexpr auto table = [] {
+        std::array<std::uint16_t, 32> r{};
+        for (unsigned j = 0; j < 32; ++j)
+            r[j] = std::uint16_t(F{}(j));
+        return r;
+    }();
+    return _mm512_load_si512(table.data());
+}
+template <unsigned Domain, unsigned D> consteval __mmask32 from() {
+    std::uint32_t m = 0;
+    for (unsigned j = 0; j < 32; ++j)
+        if (j % Domain >= D)
+            m |= 1u << j;
+    return m;
+}
+// Inclusive prefix of the first Active lanes of each Domain-lane stream.
+// Domains of eight or more lanes need no masks: byte shifts stay within
+// 128-bit lanes and dead lanes are never read by the next level.
+template <unsigned Active, unsigned Domain>
+inline __attribute__((always_inline)) __m512i segmented(__m512i s) {
+    constexpr bool masked = Domain < 8;
+    const auto add = [&](__m512i shifted, __mmask32 m) {
+        return masked ? _mm512_mask_add_epi16(s, m, s, shifted) : _mm512_add_epi16(s, shifted);
+    };
+    if constexpr (Active >= 2)
+        s = add(_mm512_bslli_epi128(s, 2), from<Domain, 1>());
     if constexpr (Active >= 4)
-        s = _mm512_add_epi16(s, _mm512_bslli_epi128(s, 4));
+        s = add(_mm512_bslli_epi128(s, 4), from<Domain, 2>());
     if constexpr (Active >= 8)
-        s = _mm512_add_epi16(s, _mm512_bslli_epi128(s, 8));
-    if constexpr (Active == 16) {
-        auto index = _mm512_mask_set1_epi16(_mm512_set1_epi16(7), 0xffff0000, 23);
-        s = _mm512_add_epi16(s, _mm512_maskz_permutexvar_epi16(0xff00ff00, index, s));
-    }
+        s = add(_mm512_bslli_epi128(s, 8), from<Domain, 4>());
+    if constexpr (Active == 16)
+        s = _mm512_add_epi16(
+            s, _mm512_maskz_permutexvar_epi16(from<Domain, 8>(),
+                                              lanes([](unsigned j) { return j / 16 * 16 + 7; }), s));
     return s;
 }
-inline __attribute__((always_inline)) __m512i extract2(__m512i tree, __m512i offsets,
-                                                       __m512i widths) {
-    // Each population tree occupies <=150 bits: two 32-byte windows fit in
-    // one ZMM. Gather both bytes of every u16 window with ONE byte permutation.
-    auto index = _mm512_srli_epi16(offsets, 3);
-    index = _mm512_mask_add_epi16(index, 0xffff0000, index, _mm512_set1_epi16(32));
-    index = _mm512_or_si512(index, _mm512_slli_epi16(index, 8));
-    index = _mm512_add_epi16(index, _mm512_set1_epi16(256));
-    auto word = _mm512_permutexvar_epi8(index, tree);
-    auto shifted = _mm512_srlv_epi16(word, _mm512_and_si512(offsets, _mm512_set1_epi16(7)));
-    auto mask =
-        _mm512_sub_epi16(_mm512_sllv_epi16(_mm512_set1_epi16(1), widths), _mm512_set1_epi16(1));
-    return _mm512_and_si512(shifted, mask);
-}
-template <unsigned Half>
-inline __attribute__((always_inline)) __m512i split2(__m512i tree, __m512i parent,
-                                                     __m512i &positions, __m512i &right) {
-    auto k = _mm512_min_epu16(parent, _mm512_sub_epi16(_mm512_set1_epi16(2 * Half), parent));
-    __m512i widths;
-    if constexpr (Half == 8) {
-        widths = _mm512_shuffle_epi8(
+template <unsigned Half> inline __attribute__((always_inline)) __m512i widths(__m512i k) {
+    const auto *log16 = ::ikea::bec256::detail::log_width16.data();
+    if constexpr (Half == 8)
+        return _mm512_shuffle_epi8(
             _mm512_broadcast_i32x4(_mm_setr_epi8(0, 1, 2, 2, 3, 3, 3, 3, 4, 0, 0, 0, 0, 0, 0, 0)),
             k);
-    } else if constexpr (Half == 16) {
-        widths = _mm512_permutexvar_epi16(
-            k, _mm512_load_si512(::ikea::bec256::detail::log_width16.data()));
-    } else {
-        widths = _mm512_permutex2var_epi16(
-            _mm512_load_si512(::ikea::bec256::detail::log_width16.data()), k,
-            _mm512_load_si512(::ikea::bec256::detail::log_width16.data() + 32));
+    else if constexpr (Half == 16)
+        return _mm512_permutexvar_epi16(k, _mm512_load_si512(log16));
+    else {
+        auto w = _mm512_permutex2var_epi16(_mm512_load_si512(log16), k,
+                                           _mm512_load_si512(log16 + 32));
         if constexpr (Half == 64)
-            widths = _mm512_mask_set1_epi16(widths,
-                                            _mm512_cmpeq_epi16_mask(k, _mm512_set1_epi16(64)), 7);
+            w = _mm512_mask_set1_epi16(w, _mm512_cmpeq_epi16_mask(k, _mm512_set1_epi16(64)), 7);
+        if constexpr (Half == 128) {
+            w = _mm512_mask_set1_epi16(w, _mm512_cmpge_epu16_mask(k, _mm512_set1_epi16(64)), 7);
+            w = _mm512_mask_set1_epi16(w, _mm512_cmpeq_epi16_mask(k, _mm512_set1_epi16(128)), 8);
+        }
+        return w;
     }
-    constexpr unsigned active = 128 / Half;
-    auto p = tree_prefix2<active>(widths);
-    auto offset = _mm512_add_epi16(_mm512_sub_epi16(p, widths), positions);
-    auto last = _mm512_mask_set1_epi16(_mm512_set1_epi16(active - 1), 0xffff0000, active + 15);
-    positions = _mm512_add_epi16(positions, _mm512_permutexvar_epi16(last, p));
-    auto left = _mm512_add_epi16(extract2(tree, offset, widths),
+}
+// The bisection level step shared by every stream geometry. Lanes are
+// stream-major: each stream owns Domain consecutive lanes, the first Active
+// holding this level's nodes. slot is each lane's byte base in table (64
+// bytes) and positions its bit cursor from there. A pair of 256-position
+// blocks uses two 16-lane domains over two 32-byte trees; Bec4096 packs
+// sixteen streams densely (Domain == Active) to fill its upper levels.
+template <unsigned Half, unsigned Active, unsigned Domain>
+inline __attribute__((always_inline)) __m512i level(__m512i table, __m512i parent, __m512i slot,
+                                                    __m512i &positions, __m512i &right) {
+    auto k = _mm512_min_epu16(parent, _mm512_sub_epi16(_mm512_set1_epi16(2 * Half), parent));
+    const auto w = widths<Half>(k);
+    auto p = segmented<Active, Domain>(w);
+    auto offset = _mm512_add_epi16(_mm512_sub_epi16(p, w), positions);
+    positions = _mm512_add_epi16(
+        positions, _mm512_permutexvar_epi16(
+                       lanes([](unsigned j) { return j / Domain * Domain + Active - 1; }), p));
+    auto index = _mm512_add_epi16(_mm512_srli_epi16(offset, 3), slot);
+    index = _mm512_or_si512(index, _mm512_slli_epi16(index, 8));
+    index = _mm512_add_epi16(index, _mm512_set1_epi16(256));
+    auto word = _mm512_permutexvar_epi8(index, table);
+    auto shifted = _mm512_srlv_epi16(word, _mm512_and_si512(offset, _mm512_set1_epi16(7)));
+    auto mask = _mm512_sub_epi16(_mm512_sllv_epi16(_mm512_set1_epi16(1), w), _mm512_set1_epi16(1));
+    auto left = _mm512_add_epi16(_mm512_and_si512(shifted, mask),
                                  _mm512_subs_epu16(parent, _mm512_set1_epi16(Half)));
     right = _mm512_sub_epi16(parent, left);
     return left;
+}
+// Two blocks: each population tree occupies <=150 bits, so two 32-byte
+// windows fit in one ZMM and every u16 window is ONE byte permutation.
+template <unsigned Half>
+inline __attribute__((always_inline)) __m512i split2(__m512i tree, __m512i parent,
+                                                     __m512i &positions, __m512i &right) {
+    return level<Half, 128 / Half, 16>(tree, parent, lanes([](unsigned j) { return j < 16 ? 0 : 32; }),
+                                       positions, right);
 }
 inline __attribute__((always_inline)) __m512i interleave8x2(__m512i left, __m512i right) {
     alignas(64) static constexpr std::uint16_t indices[32]{
