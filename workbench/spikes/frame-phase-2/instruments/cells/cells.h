@@ -67,6 +67,10 @@ struct point_requests {
 void validate_native_domains(const native& payload, const block_mask& selection, const native* predicate = nullptr);
 void validate_native_selection(const native& payload, const block_mask& selection, const row_mask& fine);
 void validate_native_points(const native& payload, const block_mask& selection, const point_requests& requests);
+// Output has exactly one u64 per request and is disjoint from the payload,
+// selection and request owners/views and their borrowed readable storage.
+void validate_native_gather(const native& payload, const block_mask& selection, const point_requests& requests,
+                            std::span<u64> output);
 
 // Unchecked repeated-work entry points after the corresponding domain,
 // selection or point validation. Owners and bindings are immutable for the
@@ -83,6 +87,11 @@ u64 native_count_once(const native& predicate, u64 threshold, const block_mask& 
 answer native_selected_sum_once(const native& payload, const block_mask& selection, const row_mask& fine);
 answer native_selected_sum_dense_once(const native& payload, const block_mask& selection, const row_mask& fine);
 answer native_points_once(const native& payload, const block_mask& selection, const point_requests& requests);
+// Materializes request order (including duplicates), restoring the FOR base.
+// A request in an excluded coarse block writes zero without reading payload.
+// Checked gather admission precedes this unchecked repeated-work operation.
+void native_gather_once(const native& payload, const block_mask& selection, const point_requests& requests,
+                        std::span<u64> output);
 
 enum class operation { sum, pair };
 enum class method { frame, native, alternative };

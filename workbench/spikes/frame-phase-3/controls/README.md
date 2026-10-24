@@ -2,7 +2,7 @@
 
 This extends phase 2's existing `frame_cells_controls` for the phase-3 B12
 scorecard. It supplies standalone predicate COUNT, supplied-row-mask SUM and
-independent consumed points. It adds no Frame representation, query driver,
+independent consumed points and materialized gathers. It adds no Frame representation, query driver,
 worker run, system-library comparison or performance claim.
 
 The [qualified cells controls](../../frame-phase-2/instruments/cells/README.md)
@@ -30,6 +30,8 @@ auto count = frame_cells::native_count_once(values, threshold, coarse);
 auto selected = frame_cells::native_selected_sum_once(values, coarse, fine);
 auto dense = frame_cells::native_selected_sum_dense_once(values, coarse, fine);
 auto consumed = frame_cells::native_points_once(values, coarse, points);
+frame_cells::validate_native_gather(values, coarse, points, output_u64);
+frame_cells::native_gather_once(values, coarse, points, output_u64);
 ```
 
 `COUNT` means `value >= threshold` and returns u64. It invokes no SUM kernel
@@ -42,6 +44,16 @@ exact unsigned sums, including all base contributions, with zero for an empty
 domain. They are not wrapping-u64 or SQL nullable SUM. Points count every
 admitted request, including repeated requests, rather than distinct rows.
 Request order is retained; exact integer aggregation is order independent.
+
+`native_gather_once` instead writes every requested logical u64 in request
+order, preserving duplicates. A request in a coarse-excluded block writes zero;
+it does not load that payload. The output has exactly one element per request.
+This is the matched boundary for arms that materialize point values; use the
+separate exact `native_points_once` control when the demanded work is SUM/count.
+Gather admission checks equal domains, exact output length and disjoint output
+from the input owner/view objects, typed payload, coarse mask and request list.
+It writes nothing on success or refusal. Request binding supplies the existing
+per-row bounds proof; it is not repeated inside gather admission or execution.
 
 Both selected-SUM routes **consume a supplied mask**; neither generates its
 predicate. The sparse route walks partial words' set bits; the dense route
@@ -74,6 +86,9 @@ predicate-to-SUM operation when that is the useful work. Existing
   fine words are skipped before payload access. The dense selected-SUM route
   may read inactive values within a nonempty 64-row word; its complete admitted
   coarse body remains readable. A fine query selection is not a read grant.
+  Coarse-none gather still writes its complete output with zeros, without
+  loading payload, coarse-mask words or point rows. Its writable output remains
+  disjoint from all immutable inputs for the borrow.
 
 `cells.h` still includes phase 2's private image types. These native entries and
 the new checks **never construct or query that image**. They do not select or
@@ -88,7 +103,9 @@ native lane types, nonzero/high bases, zero and u64 extrema, exact large sums,
 all/none/alternating/edge coarse domains, empty/full/partial/clustered/scattered
 fine words, threshold endpoints, duplicated/reversed request lists and point
 lists crossing the bounded accumulator chunk. Domain mismatches and invalid
-requests refuse before repeated work. Protected pages in the actual native
+requests and short/overlapping gather outputs refuse before repeated work,
+preserving source and output bytes. Every gather result is checked independently
+against original values in request order, with output guards. Protected pages in the actual native
 allocation distinguish no-access-on-empty/coarse-exclusion from a deliberately
 faulting selected read. The dense route's partial-word access is explicitly
 broader than the sparse route's.

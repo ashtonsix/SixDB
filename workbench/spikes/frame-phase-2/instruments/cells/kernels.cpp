@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <cstdint>
 #include <limits>
 #include <stdexcept>
 #include <type_traits>
@@ -189,6 +190,28 @@ template<class T, bool All> answer native_points(const native& payload, const bl
     return out;
 }
 
+template<class T, bool All> void native_gather(const native& payload, const block_mask& selection,
+                                              const point_requests& requests, const std::vector<T>& values,
+                                              std::span<u64> output) {
+    // Disjoint output is proved once by validate_native_gather, outside clocks.
+    const T* __restrict source = values.data();
+    const std::size_t* __restrict rows = requests.rows.data();
+    u64* __restrict target = output.data();
+    for (std::size_t i = 0; i < requests.rows.size(); ++i) {
+        const auto row = rows[i];
+        if constexpr (!All) {
+            if (!selection.active(row / fi::block_rows)) { target[i] = 0; continue; }
+        }
+        target[i] = payload.base + static_cast<u64>(source[row]);
+    }
+}
+
+bool overlaps(std::span<u64> output, const void* data, std::size_t bytes) {
+    if (output.empty() || !bytes) return false;
+    const auto a = reinterpret_cast<std::uintptr_t>(output.data()), b = reinterpret_cast<std::uintptr_t>(data);
+    return a <= b ? b - a < output.size_bytes() : a - b < bytes;
+}
+
 void append_image(std::vector<range>& out, const fi::image& f, const std::string& prefix) {
     const auto add = [&](const auto& v, const char* role) {
         using T = typename std::decay_t<decltype(v)>::value_type;
@@ -268,6 +291,21 @@ void validate_native_points(const native& payload, const block_mask& selection, 
     validate_native_domains(payload, selection);
     if (requests.domain_rows != payload.rows) throw std::invalid_argument("native points need the payload row domain");
 }
+void validate_native_gather(const native& payload, const block_mask& selection, const point_requests& requests,
+                            std::span<u64> output) {
+    validate_native_points(payload, selection, requests);
+    if (output.size() != requests.rows.size()) throw std::invalid_argument("native gather output needs one value per request");
+    if (overlaps(output, &payload, sizeof(payload)) || overlaps(output, &selection, sizeof(selection)) ||
+        overlaps(output, &requests, sizeof(requests)) ||
+        overlaps(output, selection.words.data(), selection.words.size_bytes()) ||
+        overlaps(output, requests.rows.data(), requests.rows.size_bytes()))
+        throw std::invalid_argument("native gather output overlaps input owner or borrowed storage");
+    std::visit([&](const auto& values) {
+        using T = typename std::decay_t<decltype(values)>::value_type;
+        if (overlaps(output, values.data(), values.size() * sizeof(T)))
+            throw std::invalid_argument("native gather output overlaps payload storage");
+    }, payload.values);
+}
 answer native_pair_once(const native& predicate, const native& payload, u64 threshold, const block_mask& selection) {
     if (selection.none) return {};
     return std::visit([&](const auto& a, const auto& b) {
@@ -294,6 +332,16 @@ answer native_points_once(const native& payload, const block_mask& selection, co
         using T = typename std::decay_t<decltype(values)>::value_type;
         if (selection.all) return native_points<T, true>(payload, selection, requests, values);
         return native_points<T, false>(payload, selection, requests, values);
+    }, payload.values);
+}
+void native_gather_once(const native& payload, const block_mask& selection, const point_requests& requests,
+                        std::span<u64> output) {
+    if (selection.none) { std::fill(output.begin(), output.end(), u64{0}); return; }
+    if (requests.rows.empty()) return;
+    std::visit([&](const auto& values) {
+        using T = typename std::decay_t<decltype(values)>::value_type;
+        if (selection.all) native_gather<T, true>(payload, selection, requests, values, output);
+        else native_gather<T, false>(payload, selection, requests, values, output);
     }, payload.values);
 }
 

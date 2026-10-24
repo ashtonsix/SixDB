@@ -49,6 +49,20 @@ fc::answer points_oracle(std::span<const u64> values, std::span<const u64> coars
         if (selected(coarse, row / 256)) { out.sum += u128{values[row]}; ++out.count; }
     return out;
 }
+void gather_check(const fc::native& payload, const fc::block_mask& domain, const fc::point_requests& points,
+                  std::span<const u64> original, std::span<const u64> coarse) {
+    constexpr u64 sentinel = 0x9e3779b97f4a7c15ull;
+    std::vector<u64> guarded(points.rows.size() + 2, sentinel);
+    auto output = std::span(guarded).subspan(1, points.rows.size());
+    fc::validate_native_gather(payload, domain, points, output);
+    fc::native_gather_once(payload, domain, points, output);
+    for (std::size_t i = 0; i < points.rows.size(); ++i) {
+        const auto row = points.rows[i];
+        const auto expected = selected(coarse, row / 256) ? original[row] : u64{0};
+        require(output[i] == expected, "gather per-request logical value/order");
+    }
+    require(guarded.front() == sentinel && guarded.back() == sentinel, "gather output bounds");
+}
 
 void fixture(std::vector<u64> values, unsigned bits, std::mt19937_64& rng) {
     fc::native payload(values);
@@ -80,10 +94,12 @@ void fixture(std::vector<u64> values, unsigned bits, std::mt19937_64& rng) {
         }
         fc::validate_native_points(payload, domain, admitted);
         require(fc::native_points_once(payload, domain, admitted) == points_oracle(values, coarse, requests), "independent points");
+        gather_check(payload, domain, admitted, values, coarse);
         auto reversed = requests;
         std::reverse(reversed.begin(), reversed.end());
         const auto reverse_view = fc::point_requests::bind(reversed, rows);
         require(fc::native_points_once(payload, domain, reverse_view) == points_oracle(values, coarse, reversed), "reversed duplicate points");
+        gather_check(payload, domain, reverse_view, values, coarse);
         for (unsigned pattern = 0; pattern < 7; ++pattern) {
             std::vector<u64> fine(rows / 64);
             for (std::size_t w = 0; w < fine.size(); ++w) {
@@ -151,6 +167,8 @@ void access_checks() {
     const auto points = fc::point_requests::bind(requests, rows);
     fc::validate_native_selection(payload, none, empty);
     fc::validate_native_points(payload, none, points);
+    std::vector<u64> gathered(requests.size(), ~u64{0});
+    fc::validate_native_gather(payload, none, points, gathered);
     const auto before = stored;
     protected_child([&] {
         page.deny();
@@ -159,6 +177,8 @@ void access_checks() {
         require(fc::native_selected_sum_once(payload, none, empty) == fc::answer{}, "coarse-none selected SUM");
         require(fc::native_selected_sum_dense_once(payload, none, empty) == fc::answer{}, "coarse-none dense SUM");
         require(fc::native_points_once(payload, none, points) == fc::answer{}, "coarse-none points");
+        fc::native_gather_once(payload, none, points, gathered);
+        require(std::all_of(gathered.begin(), gathered.end(), [](u64 v) { return v == 0; }), "coarse-none gather writes zeros");
         page.allow();
     });
 #if __has_feature(address_sanitizer)
@@ -172,6 +192,8 @@ void access_checks() {
     require(fc::native_selected_sum_once(payload, none, empty) == fc::answer{}, "poisoned coarse-none sparse SUM");
     require(fc::native_selected_sum_dense_once(payload, none, empty) == fc::answer{}, "poisoned coarse-none dense SUM");
     require(fc::native_points_once(payload, none, points) == fc::answer{}, "poisoned coarse-none points");
+    fc::native_gather_once(payload, none, points, gathered);
+    require(std::all_of(gathered.begin(), gathered.end(), [](u64 v) { return v == 0; }), "poisoned coarse-none gather writes zeros");
     __asan_unpoison_memory_region(stored.data(), stored.size());
     __asan_unpoison_memory_region(fine.data(), fine.size() * sizeof(u64));
     __asan_unpoison_memory_region(requests.data(), requests.size() * sizeof(std::size_t));
@@ -198,6 +220,7 @@ void access_checks() {
     const auto mixed = fc::point_requests::bind(requests, rows);
     const auto expected = sum_oracle(original, coarse, fine);
     const auto expected_points = points_oracle(original, coarse, requests);
+    fc::validate_native_gather(payload, excluded, mixed, gathered);
     u64 expected_count = 0;
     for (std::size_t i = 0; i < rows; ++i) expected_count += selected(coarse, i / 256) && original[i] >= 128;
     protected_child([&] {
@@ -206,6 +229,9 @@ void access_checks() {
         require(fc::native_selected_sum_once(payload, excluded, full) == expected, "excluded selected SUM");
         require(fc::native_selected_sum_dense_once(payload, excluded, full) == expected, "excluded dense SUM");
         require(fc::native_points_once(payload, excluded, mixed) == expected_points, "excluded requested points");
+        fc::native_gather_once(payload, excluded, mixed, gathered);
+        for (std::size_t i = 0; i < requests.size(); ++i)
+            require(gathered[i] == (selected(coarse, requests[i] / 256) ? original[requests[i]] : u64{0}), "excluded gather per-request value");
         page.allow();
     });
     for (std::size_t w = 0; w < fine.size(); ++w)
@@ -233,6 +259,15 @@ void domain_checks() {
     fc::validate_native_points(payload, domain, points);
     const auto empty_points = fc::point_requests::bind({}, payload.rows);
     require(fc::native_points_once(payload, domain, empty_points) == fc::answer{}, "empty request list");
+    fc::validate_native_gather(payload, domain, empty_points, {});
+    fc::native_gather_once(payload, domain, empty_points, {});
+    std::array<u64, 3> gathered{0x1234, 0x5678, 0x9abc};
+    const auto output_before = gathered;
+    fc::validate_native_gather(payload, domain, points, gathered);
+    require(gathered == output_before, "gather admission does not write output");
+    refuses([&] { fc::validate_native_gather(payload, domain, points, std::span(gathered).first(2)); });
+    refuses([&] { fc::validate_native_gather(payload, domain, empty_points, gathered); });
+    require(gathered == output_before, "gather length refusal preserves output");
     refuses([&] { (void)fc::row_mask::bind(fine, 513); });
     const std::array<u64, 1> outside{u64{1} << 3};
     refuses([&] { (void)fc::row_mask::bind(outside, 3); });
@@ -244,8 +279,31 @@ void domain_checks() {
     refuses([&] { fc::validate_native_selection(payload, domain, short_mask); });
     const auto short_points = fc::point_requests::bind({}, 256);
     refuses([&] { fc::validate_native_points(payload, domain, short_points); });
+    refuses([&] { fc::validate_native_gather(payload, domain, short_points, {}); });
     const auto short_domain = fc::block_mask::bind(coarse, 256);
     refuses([&] { fc::validate_native_selection(payload, short_domain, mask); });
+    refuses([&] { fc::validate_native_gather(payload, short_domain, points, gathered); });
+    require(gathered == output_before, "gather domain refusal preserves output");
+    std::vector<u64> wide_values(512);
+    wide_values.back() = ~u64{0};
+    fc::native wide(wide_values);
+    auto& residuals = std::get<std::vector<u64>>(wide.values);
+    const auto residuals_before = residuals;
+    refuses([&] { fc::validate_native_gather(wide, domain, points, std::span(residuals).first(3)); });
+    refuses([&] { fc::validate_native_gather(wide, domain, points, std::span(residuals).last(3)); });
+    require(residuals == residuals_before, "gather payload-overlap refusal preserves source/output");
+    std::array<std::size_t, 3> mutable_rows{0, 511, 0};
+    const auto borrowed_points = fc::point_requests::bind(mutable_rows, 512);
+    refuses([&] { fc::validate_native_gather(wide, domain, borrowed_points, mutable_rows); });
+    require((mutable_rows == std::array<std::size_t, 3>{0, 511, 0}), "gather request-overlap refusal preserves requests/output");
+    std::array<u64, 1> mutable_coarse{3};
+    const auto borrowed_domain = fc::block_mask::bind(mutable_coarse, 512);
+    const auto one_point = fc::point_requests::bind(std::span(rows).first(1), 512);
+    refuses([&] { fc::validate_native_gather(wide, borrowed_domain, one_point, mutable_coarse); });
+    require(mutable_coarse[0] == 3, "gather coarse-overlap refusal preserves mask/output");
+    const auto base_before = wide.base;
+    refuses([&] { fc::validate_native_gather(wide, domain, one_point, std::span(&wide.base, 1)); });
+    require(wide.base == base_before, "gather owner-overlap refusal preserves owner/output");
     const std::array<u64, 1> partial{7};
     const auto partial_mask = fc::row_mask::bind(partial, 3);
     require(partial_mask.all && !partial_mask.none, "partial mask admission");
