@@ -211,7 +211,7 @@ template <class L> void stage_local(const u64 *x, std::size_t n, u64 base, L *ou
 template <std::size_t S>
 choice guess_local(const u64 *x, std::size_t n, const cost_model &c, const cost_model &sc, const choice *prior) {
     const auto [mn, mx] = fast::minmax(x, n);
-    const unsigned vbits = bits(mx - mn), full_w = std::max(c.min_width, vbits);
+    const unsigned vbits = bits(mx - mn), full_w = c.full_width(vbits);
     const choice full{mn, full_w, 0, 0, c(full_w, 0, 0, vbits)};
     if (!vbits)
         return full;
@@ -307,7 +307,7 @@ choice choose(const u64 *x, std::size_t n, const cost_model &c, const cost_model
     const u64 lo = c.pinned_lo;
     if (mn < lo)
         std::abort();  // values below a pinned lo are outside the admitted set
-    const unsigned vbits = bits(mx - lo), full_w = std::max(c.min_width, vbits);
+    const unsigned vbits = bits(mx - lo), full_w = c.full_width(vbits);
     choice best{lo, full_w, 0, 0, c(full_w, 0, 0, vbits)};
     auto run = [&]<class L>(L) {
         alignas(64) L r[256];

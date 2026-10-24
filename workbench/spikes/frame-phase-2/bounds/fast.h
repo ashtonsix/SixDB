@@ -283,7 +283,7 @@ struct options {
 
 template <unsigned T, std::size_t S, class V>
 choice guess_narrow(const V *r, std::size_t n, unsigned vbits, const cost_model &c, const cost_model &sc, const choice *prior, const options &o) {
-    const choice full{0, std::max(c.min_width, vbits), 0, 0, c(std::max(c.min_width, vbits), 0, 0, vbits)};
+    const choice full{0, c.full_width(vbits), 0, 0, c(c.full_width(vbits), 0, 0, vbits)};
     sampled<V> smp{{0, full.width, 0, 0, full.bytes}, 0};
     choice ladder_dominant = full;
     if (o.sample && n < 2 * S) {
@@ -357,7 +357,7 @@ choice guess_narrow(const V *r, std::size_t n, unsigned vbits, const cost_model 
 template <class V, std::size_t S>
 choice guess_lean(const V *r, std::size_t n, unsigned vbits, const cost_model &c, const cost_model &sc, const choice *prior) {
     using W = lanes<V, S>;
-    const unsigned full_w = std::max(c.min_width, vbits);
+    const unsigned full_w = c.full_width(vbits);
     W v;
     const std::size_t stride = n / S;
     for (std::size_t i = 0; i < S; ++i)
@@ -449,7 +449,7 @@ choice guess(const u64 *x, std::size_t n, const cost_model &c, const cost_model 
 // the control that separates the lane width from the choice of method.
 inline choice min_exhaustive(const u64 *x, std::size_t n, const cost_model &c) {
     return with_residuals(x, n, [&]<class V>(const V *r, unsigned vbits, u64) {
-        const unsigned full = std::max(c.min_width, vbits);
+        const unsigned full = c.full_width(vbits);
         choice best{0, full, 0, 0, c(full, 0, 0, vbits)};
         for (unsigned K = c.min_width; K < vbits; ++K) {
             std::array<u32, 1> low, high;

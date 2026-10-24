@@ -37,6 +37,16 @@ struct cost_model {
     u64 pinned_lo = 0;
     // Exception values are stored relative to lo at whole bytes, with a sign
     // bit once any value lies below lo. value_bits covers max - min.
+    // The no-exception width for values spanning value_bits: the cheapest
+    // admitted width at least that wide. Tile costs need not be monotone,
+    // so a wider width can be smaller (17 Bulk fields: K1 32 bytes, K8 24).
+    unsigned full_width(unsigned value_bits) const {
+        unsigned best = std::max(min_width, value_bits);
+        for (unsigned K = best + 1; K <= 64; ++K)
+            if (body[K] < body[best])
+                best = K;
+        return best;
+    }
     std::size_t operator()(unsigned K, std::size_t low, std::size_t high, unsigned value_bits) const {
         const std::size_t ex = low + high;
         if (!ex)
@@ -103,7 +113,7 @@ inline choice evaluate(const u64 *x, std::size_t n, u64 lo, unsigned K, unsigned
 // value_bits sizes exceptions (the whole series' span, for a sample).
 inline choice exact_sorted(const u64 *s, std::size_t n, const cost_model &c, unsigned value_bits) {
     const unsigned vbits = bits(s[n - 1] - s[0]);
-    const unsigned full = std::max(c.min_width, vbits);
+    const unsigned full = c.full_width(vbits);
     choice best{s[0], full, 0, 0, c(full, 0, 0, value_bits)};
     for (unsigned K = c.min_width; K < vbits; ++K) {
         const u64 w = mask(K);
@@ -135,7 +145,7 @@ inline choice exact(const u64 *x, std::size_t n, const cost_model &c, std::vecto
 // Today's runs-spike stage: lo = minimum, one counting pass per width.
 inline choice min_exhaustive(const u64 *x, std::size_t n, const cost_model &c) {
     const auto [mn, mx] = minmax(x, n);
-    const unsigned vbits = bits(mx - mn), full = std::max(c.min_width, vbits);
+    const unsigned vbits = bits(mx - mn), full = c.full_width(vbits);
     choice best{mn, full, 0, 0, c(full, 0, 0, vbits)};
     for (unsigned K = c.min_width; K < vbits; ++K) {
         std::size_t ex = 0;
@@ -154,7 +164,7 @@ inline choice min_prior(const u64 *x, std::size_t n, const cost_model &c, int pr
     if (prior < 0)
         return min_exhaustive(x, n, c);
     const auto [mn, mx] = minmax(x, n);
-    const unsigned vbits = bits(mx - mn), full = std::max(c.min_width, vbits);
+    const unsigned vbits = bits(mx - mn), full = c.full_width(vbits);
     choice best{mn, full, 0, 0, c(full, 0, 0, vbits)};
     for (int d = -1; d <= 1; ++d) {
         const int K = prior + d;
@@ -353,7 +363,7 @@ template <unsigned T, std::size_t S> choice guess(const u64 *x, std::size_t n, c
     const unsigned vbits = bits(e.large[0] - e.small[0]);
     const choice os = from_extremes<T>(e, n, vbits, c);
     const choice smp = sample_guess<S>(x, n, sc, vbits);
-    const auto full = std::max(c.min_width, vbits);
+    const auto full = c.full_width(vbits);
     const auto r = realise_all<4>(
         x, n, {{{os.lo, os.width}, {smp.lo, smp.width}, {prior.valid ? prior.lo : e.small[0], prior.valid ? prior.width : full}, {e.small[0], full}}}, vbits,
         c);

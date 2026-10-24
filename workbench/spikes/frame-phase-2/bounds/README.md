@@ -245,6 +245,23 @@ Operations compensate for lo:
 compensation inside SeriesPack operations belongs to the SeriesPack
 operations thread.
 
+## Review fixes (Ikea LEAD, 2026-10-24)
+
+Codex's review against `6d938670` (`build/frame-collab/bounds-current-review/REVIEW.md`)
+found that short series omitted zero-extended widths that tile costs make
+cheaper: 17 values of 0 and 1 with K1 at 32 bytes and K8 at 24 returned K1.
+Every search now takes the cheapest admitted width at least as wide as the
+span (`cost_model::full_width`). [check.cpp](check.cpp) carries that witness, a
+top-of-domain containment case and 3,000 random short series under
+nonmonotone tables against a brute force. It fails 95 times on the previous
+commit and passes now. The 256-row results are unchanged, because their
+tables are monotone.
+
+The composition's reported `bytes` price the modelled patch values (relative
+to lo, sign bit). The timed control stores decoded u64 values, padded
+64-byte position chunks and a shared suffix, so its retained bytes are
+larger. Those stay separate accounts, as the SEAMS rows now say.
+
 ## Next
 
 - The narrow-column floor: a cheaper gather of the sample (it is 32 scalar
