@@ -1,6 +1,6 @@
 #pragma once
-#include <ikea/bec256/author/write.h>
-#include <ikea/bec256/detail/write.h>
+#include <ikea/bec/author/write.h>
+#include <ikea/bec/detail/write.h>
 
 namespace bec_study {
 namespace bc = ikea::bec256;

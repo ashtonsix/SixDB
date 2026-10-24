@@ -8,7 +8,7 @@ target_link_libraries(loom_spike_microtask PUBLIC loom_spike_support)
 
 add_library(loom_spike_bec STATIC ../bec256-composition/metadata.cpp ../bec256-composition/consumer.cpp)
 sixdb_target(loom_spike_bec)
-target_link_libraries(loom_spike_bec PUBLIC ikea::bec256 ikea::seriespack ikea::tuplepack)
+target_link_libraries(loom_spike_bec PUBLIC ikea::bec ikea::seriespack ikea::tuplepack)
 
 add_executable(loom_microtask microtask_bench.cpp)
 sixdb_target(loom_microtask)

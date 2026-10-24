@@ -1,6 +1,6 @@
 add_library(bec_composition STATIC metadata.cpp consumer.cpp casing.cpp algebra.cpp)
 sixdb_target(bec_composition)
-target_link_libraries(bec_composition PUBLIC ikea::bec256 ikea::seriespack ikea::tuplepack)
+target_link_libraries(bec_composition PUBLIC ikea::bec ikea::seriespack ikea::tuplepack)
 add_executable(bec_composition_check check.cpp)
 sixdb_target(bec_composition_check)
 target_link_libraries(bec_composition_check PRIVATE bec_composition)

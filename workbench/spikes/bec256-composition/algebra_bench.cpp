@@ -1,6 +1,6 @@
 #include "algebra.h"
 #include "workloads.h"
-#include <ikea/bec256/author/analysis.h>
+#include <ikea/bec/author/analysis.h>
 #include <benchmark/benchmark.h>
 #include <random>
 

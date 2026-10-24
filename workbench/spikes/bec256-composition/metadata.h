@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/bec256/author/native.h>
+#include <ikea/bec/author/native.h>
 #include <ikea/seriespack.h>
 #include <ikea/tuplepack.h>
 #include <ikea/tuplepack/author/execution.h>

@@ -131,7 +131,7 @@ body fits in 47 bytes, while one native path uses a 64-byte readable window.
 An 8-byte tail plus 56-byte payload fits the body, but does not by itself
 grant a 64-byte window across mutable metadata. A containing cluster can
 supply overlapping readable windows while exact writers touch only their own
-bodies. The [Bec256 bounds](../../ikea/docs/bec256/usage.md#memory-access-bounds)
+bodies. The [Bec256 bounds](../../ikea/docs/bec/bec256.md#memory-access-bounds)
 illustrate how composition can unlock a different execution path.
 
 The [trie-remapping findings](../spikes/trie-remapping/FINDINGS.md) provide another

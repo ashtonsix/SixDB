@@ -1,5 +1,5 @@
 #include "kernels.h"
-#include "../../benchmarks/bec256/fixture.h"
+#include "../../benchmarks/bec/fixture.h"
 #include <benchmark/benchmark.h>
 #include <sys/auxv.h>
 #include <asm/hwcap.h>

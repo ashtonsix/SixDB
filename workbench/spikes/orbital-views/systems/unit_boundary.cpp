@@ -1,6 +1,6 @@
 #include "journal.h"
 #include "material.h"
-#include <ikea/bec256.h>
+#include <ikea/bec.h>
 #include <algorithm>
 #include <array>
 #include <atomic>

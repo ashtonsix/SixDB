@@ -29,7 +29,7 @@ PAIRS = [
     ('filters-ordinary', 'ikea/examples/filters/ordinary.cpp', 'ikea/examples/filters/ordinary.cpp'),
     ('seriespack-readers', 'ikea/src/seriespack/readers.cpp', 'ikea/src/seriespack/readers.cpp'),
     ('tuplepack-initialize', 'ikea/src/tuplepack/construction.cpp', 'ikea/src/tuplepack/initialize.cpp'),
-    ('bec256-ordinary', 'ikea/examples/bec256/ordinary.cpp', 'ikea/examples/bec256/ordinary.cpp'),
+    ('bec256-ordinary', 'ikea/examples/bec/ordinary.cpp', 'ikea/examples/bec/ordinary.cpp'),
     ('hashtable-ordinary', 'ikea/examples/hashtable/ordinary.cpp', 'ikea/examples/hashtable/ordinary.cpp'),
     ('selection', None, 'ikea/test/selection.cpp'),
 ]

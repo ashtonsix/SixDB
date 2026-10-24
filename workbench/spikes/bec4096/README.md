@@ -1,5 +1,12 @@
 # Bec4096
 
+Bec4096 has **graduated** into Ikea's `ikea::bec` module (renamed from
+`ikea::bec256`), beside Bec256: see the [Bec4096 guide](../../../ikea/docs/bec/bec4096.md).
+The module adds a portable fallback, prepared encodings and validation;
+checks and examples live with it, and the comparison benchmark and storage
+tool moved to the [Bec suite](../../benchmarks/bec/README.md#bec4096-against-sixteen-bec256-bodies).
+This study keeps the findings, rejected alternatives and retained evidence.
+
 One headless body for 4096 positions, with Bec256's count tree and byte ranks,
 one population/length/address per 4096 positions instead of sixteen, and
 access to any 256-position block, its byte counts or a rank without decoding
@@ -9,7 +16,7 @@ kernel core with Bec256.
 
 ## Starting point
 
-- [Bec256's representation](../../../ikea/docs/bec256/representation.md) supplies
+- [Bec256's representation](../../../ikea/docs/bec/representation.md) supplies
   the law: split fields (left count minus its lower bound, width from the
   parent) and byte ranks. Its native kernels walk one block's five split levels
   root to leaf; the pair decoder (`decode2`) interleaves two such chains.
@@ -186,25 +193,22 @@ walk takes stream starts from the frame. The length table therefore stays.
 
 ## Code and reproduction
 
-| File | Contents |
-| --- | --- |
-| [bec4096.h](bec4096.h) | Value, reader/frame, ordinary API and length bounds |
-| [codec.h](codec.h), [codec.cpp](codec.cpp) | Frame, per-block access, rank, encode plan and emission, validation |
-| [native.h](native.h) | Block entry at a bit offset, counted blocks, packing |
-| [fused.h](fused.h) | Fused sixteen-stream decode and counts |
-| [reference.h](reference.h) | Independent encoder and length bounds from this README |
-| [check.cpp](check.cpp) | Wire, guard-page exact reads, every access path, corruptions, exact writes |
-| [bench.cpp](bench.cpp), [sizes.cpp](sizes.cpp) | Timings against sixteen Bec256 bodies; storage |
+The spike's sources were removed at graduation; commit `a5daf941` holds them,
+including the diagnostic `prepare`/`emit`/`head` benchmark arms used for the
+encode findings. The maintained code is in `ikea/include/ikea/bec/` (`bec4096.h`,
+`author/bec4096.h`, `detail/bec4096.h`) and `ikea/src/bec/bec4096.cpp`, with the
+shared level step in `detail/native/{neon,avx512}.h`. Rerun the comparison with
+the suite's helper:
 
 ```sh
-python3 workbench/tools/worker.py run workbench/spikes/bec4096/run.sh \
+python3 workbench/tools/worker.py run workbench/benchmarks/bec/run.sh \
   --machine neoverse-v2 --arg neon      # or --machine zen5 --arg avx512
-python3 workbench/spikes/bec4096/summarise.py build/workers/JOB/results/samples.json
+python3 workbench/benchmarks/bec/summarise_bec4096.py \
+  build/workers/JOB/results/bec4096-samples.json
 ```
 
-The runner builds with fixed 64-byte code alignment, runs the checks and sizes,
-then times every case. `compare_arms.py` compares two sample files (used for the
-Bec256 before/after captures). Evidence: [V2](evidence/neoverse-v2/samples.json) and
-[Zen 5](evidence/zen5/samples.json) final runs (with `sizes.txt`), and the
-Bec256 before/after captures in `evidence/bec256-core-{before,after}-*`. Each
-directory's `artifact.json` recovers the full worker bundle.
+[compare_arms.py](compare_arms.py) compares two sample files (used for the
+Bec256 before/after captures). Evidence: [V2](evidence/neoverse-v2/samples.json)
+and [Zen 5](evidence/zen5/samples.json) final spike runs (with `sizes.txt`),
+and the Bec256 before/after captures in `evidence/bec256-core-{before,after}-*`.
+Each directory's `artifact.json` recovers the full worker bundle.

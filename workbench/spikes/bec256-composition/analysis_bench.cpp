@@ -1,6 +1,6 @@
-#include <ikea/bec256/author/analysis.h>
-#include <ikea/bec256/author/write.h>
-#include "../../../ikea/test/bec256/reference.h"
+#include <ikea/bec/author/analysis.h>
+#include <ikea/bec/author/write.h>
+#include "../../../ikea/test/bec/reference.h"
 #include <benchmark/benchmark.h>
 #include <algorithm>
 #include <filesystem>

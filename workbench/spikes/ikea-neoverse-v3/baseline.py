@@ -28,15 +28,15 @@ benches = {
     'seriespack': ('ikea_seriespack_bench', ['--suite=all']),
     'tuplepack': ('ikea_tuplepack_bench', []),
     'words': ('ikea_tuplepack_word_bench', []),
-    'bec256': ('ikea_bec256_bench', []),
+    'bec256': ('ikea_bec_bench', []),
 }
-checks = ['ikea_bec256_check', 'ikea_bec256_composition_check',
+checks = ['ikea_bec_check', 'ikea_bec_composition_check',
           'ikea_tuplepack_packets_check', 'ikea_tuplepack_gpr_check']
 if ctx.member == 'c8g':
     build = Path('build/ikea-neoverse-v3/baseline')
     ctx.progress('building-baseline')
     run(['cmake', '-S', '.', '-B', build, '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release',
-         '-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec256',
+         '-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec',
          '-DSIXDB_MARCH=armv8.2-a+simd', '-DSIXDB_TUNE=neoverse-v2'], 'configure.log')
     run(['cmake', '--build', build, '--target', *[v[0] for v in benches.values()], *checks,
          '-j', os.environ.get('SIXDB_BUILD_JOBS', '2')], 'build.log')

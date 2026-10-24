@@ -66,11 +66,11 @@ def main():
             build = ROOT / 'build/ikea-cohesion-v2-bec-diagnostic' / profile / arm
             command(['cmake', '-S', str(ROOT / native.STUDY / 'cohesion-native'), '-B', str(build), '-G', 'Ninja',
                      '-DCOHESION_SOURCE_ROOT=' + str(source), '-DCOHESION_BEFORE=' + str(int(arm == 'before')),
-                     '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_BENCHMARKS=bec256', '-DIKEA_COMPARISONS=OFF',
+                     '-DCMAKE_BUILD_TYPE=Release', '-DSIXDB_BENCHMARKS=bec', '-DIKEA_COMPARISONS=OFF',
                      '-DSIXDB_MARCH=' + march, '-DSIXDB_TUNE=' + tune], logs / 'configure.log')
-            command(['cmake', '--build', str(build), '--target', 'ikea_bec256_bench', '-j', os.environ.get('SIXDB_BUILD_JOBS', '2')], logs / 'build.log')
-            binary = logs / 'ikea_bec256_bench'
-            shutil.copy2(build / 'sixdb/workbench/benchmarks/bec256/ikea_bec256_bench', binary)
+            command(['cmake', '--build', str(build), '--target', 'ikea_bec_bench', '-j', os.environ.get('SIXDB_BUILD_JOBS', '2')], logs / 'build.log')
+            binary = logs / 'ikea_bec_bench'
+            shutil.copy2(build / 'sixdb/workbench/benchmarks/bec/ikea_bec_bench', binary)
             binaries[arm] = binary
             shutil.copy2(build / 'compile_commands.json', logs / 'compile_commands.json')
             receipt['binaries'].append({'profile': profile, 'arm': arm, 'sha256': native.sha(binary.read_bytes())})

@@ -30,28 +30,28 @@ for profile in v2-neon v3-neon; do
     mkdir -p "$result"
     original=""; if [[ "$variant" == stock ]]; then original="$archive"; fi
     cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DSIXDB_SPIKES=ikea-neoverse-v3 '-DSIXDB_BENCHMARKS=bec256;tuplepack' \
+      -DSIXDB_SPIKES=ikea-neoverse-v3 '-DSIXDB_BENCHMARKS=bec;tuplepack' \
       -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" -DV3_SPIKE_TUNE="$tune" \
       -DV3_BEC_BASELINE_ARCHIVE="$original" > "$result/configure.log" 2>&1
-    cmake --build "$build" --target ikea_bec256_bench ikea_v3_bench \
-      ikea_bec256_check ikea_bec256_composition_check ikea_example_bec256_ordinary \
-      ikea_example_bec256_native ikea_tuplepack_bench ikea_tuplepack_word_bench \
+    cmake --build "$build" --target ikea_bec_bench ikea_v3_bench \
+      ikea_bec_check ikea_bec_composition_check ikea_example_bec_ordinary \
+      ikea_example_bec_native ikea_tuplepack_bench ikea_tuplepack_word_bench \
       ikea_tuplepack_gpr_check ikea_tuplepack_packets_check ikea_tuplepack_wire_check \
       ikea_tuplepack_operations_check ikea_tuplepack_execution_check \
       -j "$SIXDB_BUILD_JOBS" > "$result/build.log" 2>&1
-    for check in ikea_bec256_check ikea_bec256_composition_check ikea_example_bec256_ordinary ikea_example_bec256_native ikea_tuplepack_gpr_check ikea_tuplepack_packets_check ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check; do
+    for check in ikea_bec_check ikea_bec_composition_check ikea_example_bec_ordinary ikea_example_bec_native ikea_tuplepack_gpr_check ikea_tuplepack_packets_check ikea_tuplepack_wire_check ikea_tuplepack_operations_check ikea_tuplepack_execution_check; do
       taskset -c "$SIXDB_CPU" "$build/ikea/$check" >> "$result/checks.txt" 2>&1
     done
-    python3 ikea/test/headers.py "$build" --module bec256 >> "$result/checks.txt" 2>&1
+    python3 ikea/test/headers.py "$build" --module bec >> "$result/checks.txt" 2>&1
     python3 ikea/test/headers.py "$build" --module tuplepack >> "$result/checks.txt" 2>&1
     for binary in ikea_tuplepack_bench ikea_tuplepack_word_bench; do
       cp "$build/workbench/benchmarks/tuplepack/$binary" "$result/"
     done
     llvm-objdump-21 -d --demangle "$build/ikea/libikea_tuplepack.a" > "$result/tuple-kernels.asm"
-    cp "$build/workbench/benchmarks/bec256/ikea_bec256_bench" "$result/"
+    cp "$build/workbench/benchmarks/bec/ikea_bec_bench" "$result/"
     cp "$build/workbench/spikes/ikea-neoverse-v3/ikea_v3_bench" "$result/"
     cp "$build/compile_commands.json" "$result/"
-    llvm-objdump-21 -d --demangle "$result/ikea_bec256_bench" > "$result/kernels.asm"
+    llvm-objdump-21 -d --demangle "$result/ikea_bec_bench" > "$result/kernels.asm"
   done
 done
 for trial in 1 2 3 4; do
@@ -62,7 +62,7 @@ for trial in 1 2 3 4; do
     for variant in $variants; do
       result="$out/$profile/$variant"
       for suite in maintained shapes tuple words; do
-        binary=ikea_bec256_bench; args=()
+        binary=ikea_bec_bench; args=()
         if [[ "$suite" == shapes ]]; then binary=ikea_v3_bench; args+=('--benchmark_filter=^pair/.*/maintained$'); fi
         if [[ "$suite" == tuple ]]; then binary=ikea_tuplepack_bench; fi
         if [[ "$suite" == words ]]; then
@@ -85,11 +85,11 @@ for tune in neoverse-v2 neoverse-v3; do
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Debug \
     -DSIXDB_MARCH=armv8.2-a+simd -DSIXDB_TUNE="$tune" \
     '-DCMAKE_CXX_FLAGS=-O1 -fsanitize=address,undefined -fno-omit-frame-pointer' > "$result/configure.log" 2>&1
-  cmake --build "$build" --target ikea_bec256_check ikea_bec256_composition_check \
+  cmake --build "$build" --target ikea_bec_check ikea_bec_composition_check \
     ikea_tuplepack_gpr_check ikea_tuplepack_packets_check ikea_tuplepack_wire_check \
     ikea_tuplepack_operations_check ikea_tuplepack_execution_check \
     -j "$SIXDB_BUILD_JOBS" > "$result/build.log" 2>&1
-  for check in bec256 bec256_composition tuplepack_gpr tuplepack_packets tuplepack_wire tuplepack_operations tuplepack_execution; do
+  for check in bec bec_composition tuplepack_gpr tuplepack_packets tuplepack_wire tuplepack_operations tuplepack_execution; do
     "$build/ikea/ikea_${check}_check" >> "$result/checks.txt" 2>&1
   done
 done

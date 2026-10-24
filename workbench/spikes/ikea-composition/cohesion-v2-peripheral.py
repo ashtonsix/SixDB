@@ -18,7 +18,7 @@ native = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(native)
 ROOT = native.ROOT
 TARGETS = {
-    'bec256': 'sixdb/workbench/benchmarks/bec256/ikea_bec256_bench',
+    'bec256': 'sixdb/workbench/benchmarks/bec/ikea_bec_bench',
     'htable8': 'sixdb/workbench/benchmarks/hashtable/ikea_hashtable_operations_k14_b10_v8',
     'htable64': 'sixdb/workbench/benchmarks/hashtable/ikea_hashtable_operations_k30_b10_v64',
     'stream': 'sixdb/workbench/spikes/streampack/streampack_implementation_bench',
@@ -29,7 +29,7 @@ BEC_FILTER = r'^codec/(random|runs|terminal)/(read_exact|read_padded|encode_chec
 def amend(before, after, scratch, manifest):
     # Identify the Ikea implementation so the primary cohort can be matched to it.
     expected = {k:v for k,v in manifest['source_sha256']['after'].items() if k.startswith('ikea/')}
-    name = 'workbench/benchmarks/bec256/fixture.h'
+    name = 'workbench/benchmarks/bec/fixture.h'
     oracle = '''            // Independent plain-value oracle, outside every timed loop.
             std::array<bc::byte, 32> roundtrip{};
             bc::decode(*a, roundtrip);
@@ -114,7 +114,7 @@ def run(args):
             logs.mkdir(parents=True,exist_ok=True)
             command(['cmake','-S',str(ROOT/native.STUDY/'cohesion-native'),'-B',str(build),'-G','Ninja',
                      '-DCOHESION_SOURCE_ROOT='+str(source),'-DCOHESION_BEFORE='+str(int(arm=='before')),
-                     '-DCMAKE_BUILD_TYPE=Release','-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec256;hashtable',
+                     '-DCMAKE_BUILD_TYPE=Release','-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec;hashtable',
                      '-DSIXDB_SPIKES=streampack','-DIKEA_COMPARISONS=OFF',
                      '-DSIXDB_MARCH='+march,'-DSIXDB_TUNE='+tune,
                      '-DCMAKE_CXX_FLAGS='+os.environ.get('COHESION_CXXFLAGS','')],ROOT,logs/'configure.log')

@@ -174,7 +174,7 @@ python3 workbench/tools/worker.py run workbench/spikes/bec256-composition/run.sh
 
 Use `neoverse-v2`, `c8g.medium`, and `neon` for ARM. The runner checks the module,
 range composition, exact-write casing and whole-bitset algebra before timing.
-The small [routine codec suite](../../benchmarks/bec256/README.md) is independent
+The small [routine codec suite](../../benchmarks/bec/README.md) is independent
 of this broader investigation.
 
 The [Zen](evidence/whole-zen5/cases.csv) and

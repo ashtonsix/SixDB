@@ -2,7 +2,7 @@
 // attached with an equal law, and effect records keep the plane origin they
 // were issued against. Expected values come from the layouts and buffers here,
 // not from the implementation under test.
-#include <ikea/bec256.h>
+#include <ikea/bec.h>
 #include <ikea/seriespack.h>
 #include <ikea/streampack.h>
 #include <ikea/tuplepack.h>

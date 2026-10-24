@@ -2,8 +2,8 @@
 #include "support.h"
 #include "../bec256-composition/consumer.h"
 
-#include <ikea/bec256/author/native.h>
-#include <ikea/bec256/codec.h>
+#include <ikea/bec/author/native.h>
+#include <ikea/bec/bec256.h>
 #include <algorithm>
 #include <array>
 #include <bit>

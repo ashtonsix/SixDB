@@ -11,10 +11,10 @@ spikes='streampack;packed-filters;tuple-layout;ikea-composition;intervals'
 if test "$profile" = neon; then spikes="$spikes;neon-local-transpose;bec256-composition"; fi
 cmake -S . -B "$dir" -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" -DSIXDB_SPIKES="$spikes" \
-  '-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec256;hashtable' -DIKEA_COMPARISONS=ON \
+  '-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec;hashtable' -DIKEA_COMPARISONS=ON \
   -DSIXDB_HEAVY_COMPILE_JOBS=4 > "$SIXDB_RESULTS/configure.log" 2>&1
 targets=(ikea_seriespack_bench ikea_seriespack_compare ikea_tuplepack_bench
-  ikea_tuplepack_word_bench ikea_bec256_bench ikea_hashtable_reads
+  ikea_tuplepack_word_bench ikea_bec_bench ikea_hashtable_reads
   ikea_hashtable_operations_k14_b10_v8 ikea_hashtable_operations_k30_b10_v64
   ikea_hashtable_accumulation_basic_8 ikea_hashtable_accumulation_wide_64
   streampack_implementation_bench streampack_implementation_loom_check streampack_implementation_orbital_check

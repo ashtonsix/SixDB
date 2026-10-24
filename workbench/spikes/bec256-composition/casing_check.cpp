@@ -1,5 +1,5 @@
 #include "casing.h"
-#include "../../../ikea/test/bec256/reference.h"
+#include "../../../ikea/test/bec/reference.h"
 #include <cassert>
 #include <cstdio>
 #include <random>

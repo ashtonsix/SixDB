@@ -1,6 +1,6 @@
-#include <ikea/bec256/author/write.h>
-#include <ikea/bec256/author/chain.h>
-#include "../../../ikea/test/bec256/reference.h"
+#include <ikea/bec/author/write.h>
+#include <ikea/bec/author/chain.h>
+#include "../../../ikea/test/bec/reference.h"
 #include <benchmark/benchmark.h>
 #include <random>
 

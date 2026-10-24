@@ -341,7 +341,7 @@ def run(args):
                 native.run_command(argv,cwd=cwd,log=log,receipt=receipt['commands'])
             command(['cmake','-S',str(ROOT/STUDY/'cohesion-native'),'-B',str(build),'-G','Ninja',
                '-DCOHESION_SOURCE_ROOT='+str(source),'-DCOHESION_BEFORE='+str(int(arm=='before')),
-               '-DCMAKE_BUILD_TYPE=Release','-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec256;hashtable',
+               '-DCMAKE_BUILD_TYPE=Release','-DSIXDB_BENCHMARKS=seriespack;tuplepack;bec;hashtable',
                '-DSIXDB_SPIKES=streampack','-DIKEA_COMPARISONS=OFF',
                '-DSIXDB_MARCH='+march,'-DSIXDB_TUNE='+tune,
                *(['-DCMAKE_CXX_FLAGS=-falign-functions='+str(args.function_alignment)]

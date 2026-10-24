@@ -2,7 +2,7 @@
 from pathlib import Path
 import sys
 root, output = map(Path, sys.argv[1:])
-relative = Path('ikea/bec256/author/native.h')
+relative = Path('ikea/bec/author/native.h')
 text = (root / 'ikea/include' / relative).read_text()
 assert 'defined(__ARM_FEATURE_SVE)' in text, 'Replay this rejected candidate from the promotion-screen source capture'
 text = text.replace('defined(__ARM_FEATURE_SVE)', '0')

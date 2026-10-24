@@ -30,7 +30,7 @@ for profile in v2-neon v3-neon; do
     mkdir -p "$result"
     original=""; if [[ "$variant" == stock ]]; then original="$archive"; fi
     cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DSIXDB_SPIKES=ikea-neoverse-v3 '-DSIXDB_BENCHMARKS=bec256;tuplepack' \
+      -DSIXDB_SPIKES=ikea-neoverse-v3 '-DSIXDB_BENCHMARKS=bec;tuplepack' \
       -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" -DV3_SPIKE_TUNE="$tune" \
       -DV3_BEC_BASELINE_ARCHIVE="$original" > "$result/configure.log" 2>&1
     cmake --build "$build" --target ikea_tuplepack_bench ikea_tuplepack_word_bench \

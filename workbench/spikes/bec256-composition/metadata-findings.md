@@ -85,7 +85,7 @@ Loom scheduling, an Engine planner or a durable larger-bitset owner.
 writer, including checks and issued-byte effects. It measures neither body
 replacement nor length-change propagation. A real mutation must repair dependent
 checkpoints/addresses, maintain summaries and publish coherently. Bec256's
-[Ikea integration example](../../../ikea/examples/bec256/integration.cpp) shows a
+[Ikea integration example](../../../ikea/examples/bec/integration.cpp) shows a
 body and independently placed TuplePack metadata entry in one owner protocol;
 it is not a packed-directory migration implementation.
 
@@ -220,7 +220,7 @@ and other code. They demonstrate reduced driver duplication, not a whole-library
 binary-size or compilation-time win. No isolated build-time comparison between
 the execution choices was made. This directory consumer therefore supports the shared region as its useful
 default. It does not establish a universal penalty for native continuations: the
-[routine pair consumer](../../benchmarks/bec256/README.md) has a much smaller gap.
+[routine pair consumer](../../benchmarks/bec/README.md) has a much smaller gap.
 
 The [Zen supplement](evidence/cps-zen5/cases.csv) and
 [V2 supplement](evidence/cps-neoverse-v2/cases.csv) retain all five repetitions

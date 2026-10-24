@@ -1,5 +1,5 @@
 #pragma once
-#include <ikea/bec256/author/native.h>
+#include <ikea/bec/author/native.h>
 #include <arm_neon.h>
 #include <array>
 #include <cstdint>

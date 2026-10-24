@@ -73,24 +73,28 @@ target_include_directories(ikea_tuplepack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/in
 target_compile_features(ikea_tuplepack PUBLIC cxx_std_23)
 target_link_libraries(ikea_tuplepack PUBLIC ikea_core)
 
-add_library(ikea_bec256 STATIC src/bec256/codec.cpp src/bec256/validation.cpp src/bec256/analysis.cpp)
-add_library(ikea::bec256 ALIAS ikea_bec256)
-sixdb_target(ikea_bec256)
-target_include_directories(ikea_bec256 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_compile_features(ikea_bec256 PUBLIC cxx_std_23)
-target_link_libraries(ikea_bec256 PUBLIC ikea_core)
-add_executable(ikea_bec256_check EXCLUDE_FROM_ALL test/bec256/check.cpp test/bec256/analysis.cpp test/bec256/block.cpp)
-sixdb_target(ikea_bec256_check)
-target_link_libraries(ikea_bec256_check PRIVATE ikea::bec256)
-add_executable(ikea_bec256_composition_check EXCLUDE_FROM_ALL test/bec256/composition.cpp)
-sixdb_target(ikea_bec256_composition_check)
-target_link_libraries(ikea_bec256_composition_check PRIVATE ikea::bec256)
-foreach(example ordinary native integration)
-  add_executable(ikea_example_bec256_${example} EXCLUDE_FROM_ALL examples/bec256/${example}.cpp)
-  sixdb_target(ikea_example_bec256_${example})
-  target_link_libraries(ikea_example_bec256_${example} PRIVATE ikea::bec256)
+add_library(ikea_bec STATIC src/bec/bec256.cpp src/bec/validation.cpp src/bec/analysis.cpp
+  src/bec/bec4096.cpp)
+add_library(ikea::bec ALIAS ikea_bec)
+sixdb_target(ikea_bec)
+target_include_directories(ikea_bec PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_compile_features(ikea_bec PUBLIC cxx_std_23)
+target_link_libraries(ikea_bec PUBLIC ikea_core)
+add_executable(ikea_bec_check EXCLUDE_FROM_ALL test/bec/check.cpp test/bec/analysis.cpp test/bec/block.cpp)
+sixdb_target(ikea_bec_check)
+target_link_libraries(ikea_bec_check PRIVATE ikea::bec)
+add_executable(ikea_bec4096_check EXCLUDE_FROM_ALL test/bec/bec4096.cpp)
+sixdb_target(ikea_bec4096_check)
+target_link_libraries(ikea_bec4096_check PRIVATE ikea::bec)
+add_executable(ikea_bec_composition_check EXCLUDE_FROM_ALL test/bec/composition.cpp)
+sixdb_target(ikea_bec_composition_check)
+target_link_libraries(ikea_bec_composition_check PRIVATE ikea::bec)
+foreach(example ordinary native integration bec4096)
+  add_executable(ikea_example_bec_${example} EXCLUDE_FROM_ALL examples/bec/${example}.cpp)
+  sixdb_target(ikea_example_bec_${example})
+  target_link_libraries(ikea_example_bec_${example} PRIVATE ikea::bec)
 endforeach()
-target_link_libraries(ikea_example_bec256_integration PRIVATE ikea::tuplepack)
+target_link_libraries(ikea_example_bec_integration PRIVATE ikea::tuplepack)
 
 add_executable(ikea_tuplepack_wire_check EXCLUDE_FROM_ALL test/tuplepack/wire.cpp)
 sixdb_target(ikea_tuplepack_wire_check)
@@ -210,7 +214,8 @@ set(ikea_example_targets
   ikea_example_tuplepack_ordinary ikea_example_tuplepack_composition
   ikea_example_tuplepack_integration ikea_example_tuplepack_packets
   ikea_example_tuplepack_words ikea_example_tuplepack_groups
-  ikea_example_bec256_ordinary ikea_example_bec256_native ikea_example_bec256_integration)
+  ikea_example_bec_ordinary ikea_example_bec_native ikea_example_bec_integration
+  ikea_example_bec_bec4096)
 set(ikea_check_targets
   ikea_intervals_search_check ikea_intervals_cuts_check ikea_intervals_sparse_check ikea_intervals_seams_check
   ikea_streampack_compact_geometry_check ikea_streampack_compact_cuts_check ikea_streampack_compact_edits_check
@@ -221,7 +226,7 @@ set(ikea_check_targets
   ikea_tuplepack_operations_check ikea_tuplepack_execution_check
   ikea_tuplepack_packets_check ikea_tuplepack_access_check ikea_tuplepack_predicate_check
   ikea_tuplepack_gpr_check ikea_tuplepack_ownership_check
-  ikea_bec256_check ikea_bec256_composition_check)
+  ikea_bec_check ikea_bec4096_check ikea_bec_composition_check)
 add_custom_target(ikea_examples DEPENDS ${ikea_example_targets})
 sixdb_heavy_compile(ikea_seriespack_check ikea_filters_check ikea_tuplepack_packets_check
   ikea_intervals_sparse_check ikea_streampack_compact_geometry_check ikea_streampack_encodings_check)
@@ -241,7 +246,7 @@ include(cmake/Hashtable.cmake)
 
 add_executable(ikea_contracts_check EXCLUDE_FROM_ALL test/contracts.cpp)
 sixdb_target(ikea_contracts_check)
-target_link_libraries(ikea_contracts_check PRIVATE ikea::seriespack ikea::tuplepack ikea::streampack ikea::bec256)
+target_link_libraries(ikea_contracts_check PRIVATE ikea::seriespack ikea::tuplepack ikea::streampack ikea::bec)
 add_test(NAME ikea_contracts_check COMMAND $<TARGET_FILE:ikea_contracts_check>)
 add_dependencies(ikea_validate ikea_contracts_check)
 

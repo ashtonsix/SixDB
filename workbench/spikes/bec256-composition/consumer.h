@@ -1,6 +1,6 @@
 #pragma once
 #include "metadata.h"
-#include <ikea/bec256/author/chain.h>
+#include <ikea/bec/author/chain.h>
 
 namespace bec_study {
 enum class execution { inline_body, shared_body, materialized, cps, cps_fused };

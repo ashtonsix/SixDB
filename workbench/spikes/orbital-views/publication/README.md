@@ -71,9 +71,9 @@ must reconstruct material to produce that same root; a cheap hash of its new
 records would answer a different question.
 
 This certifies equality of a **byte cut**, not every unit's logical content.
-[Bec256](../../../../ikea/src/bec256/codec.cpp) empty and full sets both have
+[Bec256](../../../../ikea/src/bec/bec256.cpp) empty and full sets both have
 zero-byte bodies; population metadata gives them opposite meanings. Its
-[prepared encoding](../../../../ikea/include/ikea/bec256/codec.h) writes an exact
+[prepared encoding](../../../../ikea/include/ikea/bec/bec256.h) writes an exact
 body while the owner coordinates population, length, location and summaries.
 Existing Ikea effects describe stores, not a full delta/recovery API. A unit's
 content check must bind the interpretation it requires.

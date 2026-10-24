@@ -46,8 +46,8 @@ Concurrent preserving stores still need protection for issued bytes.
 
 Bec256 demonstrates why byte damage is insufficient: empty and full sets both
 have zero-byte bodies and emit no body stores, yet decode to opposite values.
-The [codec](../../../ikea/src/bec256/codec.cpp) uses the caller's population to
-interpret those bodies. Its [prepared encoding](../../../ikea/include/ikea/bec256/codec.h)
+The [codec](../../../ikea/src/bec/bec256.cpp) uses the caller's population to
+interpret those bodies. Its [prepared encoding](../../../ikea/include/ikea/bec/bec256.h)
 owns transient replacement bytes; population, length, location and summaries
 remain separate owner state. Unit reconstruction and certification must include
 the required interpretation, not simply a hash or diff of body bytes.
@@ -82,7 +82,7 @@ private-copy cancellation from dirty in-place cancellation.
 
 TuplePack's [observations](../../../ikea/include/ikea/tuplepack/author/maintenance.h)
 bracket child writes and can depend on untouched fields. The
-[Bec256 adapter](../../../ikea/examples/bec256/integration.cpp) admits body and
+[Bec256 adapter](../../../ikea/examples/bec/integration.cpp) admits body and
 directory updates before either writes. Persistent metadata and summaries need
 their own coverage and coordinated visibility.
 

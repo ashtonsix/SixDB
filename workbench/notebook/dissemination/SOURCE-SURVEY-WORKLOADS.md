@@ -262,7 +262,7 @@ represent pointer/length/restart-dependent remote fetches or checkpoint placemen
 ### W18 — Estimates can decline work; exact sizes can reserve it
 
 **Recorded:** [PFOR bounds](../pfor-bounds.md) and
-[Bec256 use](../../../ikea/docs/bec256/usage.md) distinguish cheap estimates,
+[Bec256 use](../../../ikea/docs/bec/bec256.md) distinguish cheap estimates,
 proofs, exact preparation and encoded footprint.
 **Generalization:** gate expensive encode/transfer choices with a cheap statistic,
 then reserve from a valid bound or exact prepared size. Favor it where rejected
@@ -785,7 +785,7 @@ repository unless a local link states otherwise.
 - workbench/spikes/executable-placement/: layout-recovery.md;
   evidence/checked-point-layout-20260911/summary.md.
 - ikea/docs/seriespack/extending.md; ikea/docs/tuplepack/extending.md;
-  ikea/docs/bec256/usage.md.
+  ikea/docs/bec/bec256.md.
 - workbench/spikes/orbital-scenarios/: ELT-WORKED.md; CONVERGENCE.md;
   PIPELINING.md; reconsideration/README.md; reconsideration/READS.md;
   reconsideration/WRITES.md; reconsideration/COMPOSITION.md;

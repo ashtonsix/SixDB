@@ -137,24 +137,26 @@ grant additionally permits bounded reads through initialized, read-isolated
 inactive interior units; stride geometry alone does not grant that access.
 Sparse stores and effects still exclude inactive units.
 
-## Bec256 source boundaries
+## Bec source boundaries
 
-Paths below are relative to [include/ikea/bec256](../include/ikea/bec256)
+Paths below are relative to [include/ikea/bec](../include/ikea/bec)
 unless marked `src/`.
 
 | Responsibility | Owning files |
 | --- | --- |
-| Ordinary sources, destinations and prepared replacements | `codec.h`; `src/bec256/codec.cpp` |
-| Statistical size estimates and cutoff calibration statistic | `analysis.h`, `author/analysis.h`; `src/bec256/analysis.cpp`, `detail/estimate.h` |
-| Exact framing validation and diagnostics | `src/bec256/validation.cpp` |
+| Bec256 ordinary sources, destinations and prepared replacements | `bec256.h`; `src/bec/bec256.cpp` |
+| Statistical size estimates and cutoff calibration statistic | `analysis.h`, `author/analysis.h`; `src/bec/analysis.cpp`, `detail/estimate.h` |
+| Exact framing validation and diagnostics | `src/bec/validation.cpp` |
 | Native blocks, pairs and bounded read adapters | `author/native.h` |
 | Shared checked and trusted native writes | `author/write.h`; `detail/write.h` |
-| Count-tree, byte-rank and bit-packing bodies | `detail/{tables,pack,scalar}.h`, `detail/native/{avx512,neon}.h` |
+| Count-tree, byte-rank and bit-packing bodies, including the stream-generic level step | `detail/{tables,pack,scalar}.h`, `detail/native/{avx512,neon}.h` |
 | Register bitstream assembly and exact stores | `detail/native/{assemble,emit}.h` |
 | Native pipeline carrier | `author/chain.h` |
+| Bec4096 ordinary API, validation and prepared replacements | `bec4096.h`; `src/bec/bec4096.cpp` |
+| Bec4096 framing, block access, fused sixteen-stream walk and emission | `author/bec4096.h`; `detail/bec4096.h` |
 
-The [representation guide](bec256/representation.md) defines one fixed wire
-format. Population, body length, placement and directory schema belong to the
+The [representation guide](bec/representation.md) defines Bec256's fixed wire
+format; the [Bec4096 guide](bec/bec4096.md) builds on it. Population, body length, placement and directory schema belong to the
 caller. Native immediate writes retain values through admission and exact stores;
 prepared replacements own transient bytes that can survive an owner wait.
 Both report the issued body span. Metadata and summaries are separate children

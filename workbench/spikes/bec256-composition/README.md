@@ -23,12 +23,12 @@ decoding accepts independent addresses and produces a 512-bit bitset; neither
 directory layout nor block adjacency is implied. Experiment choices here are
 not public Ikea presets or an Engine analyser policy.
 
-The supported codec lives in [Ikea](../../../ikea/docs/bec256/usage.md); this study
+The supported codec lives in [Ikea](../../../ikea/docs/bec/bec256.md); this study
 owns comparative policies and evidence. Historical probes and their source archives stay intact.
 
 The [codec findings](codec-findings.md) explain the reset of the ordinary write
 boundary, register bitstream assembly, rejected approaches and the remaining ARM
-exact-write cost. The [Ikea guides](../../../ikea/docs/bec256/usage.md) own supported
+exact-write cost. The [Ikea guides](../../../ikea/docs/bec/bec256.md) own supported
 caller and native contracts.
 The [metadata investigation](metadata-findings.md) defines directory choices,
 address reconstruction, prefilter semantics and the scope of the comparisons.
