@@ -123,6 +123,16 @@ struct counted {
     template <class Sink> [[gnu::always_inline]] auto encode(unsigned c, Sink &&sink) const {
         return a::encode_counts(bits, counts, c, sink);
     }
+    /// Sum of byte-rank widths: the stream's bits outside its count tree.
+    [[gnu::always_inline]] unsigned enum_bits() const {
+        const auto widths = _mm256_shuffle_epi8(
+            _mm256_broadcastsi128_si256(_mm_loadu_si128(
+                reinterpret_cast<const __m128i *>(ikea::bec::detail::byte_width.data()))),
+            counts);
+        const auto sums = _mm256_sad_epu8(widths, _mm256_setzero_si256());
+        const auto h = _mm_add_epi64(_mm256_castsi256_si128(sums), _mm256_extracti128_si256(sums, 1));
+        return unsigned(_mm_cvtsi128_si64(h) + _mm_extract_epi64(h, 1));
+    }
 };
 
 #elif defined(__aarch64__)
@@ -211,6 +221,11 @@ struct counted {
     template <class Sink> [[gnu::always_inline]] auto encode(unsigned c, Sink &&sink) const {
         return n::encode_counts(bits, b0, b1, c, sink);
     }
+    /// Sum of byte-rank widths: the stream's bits outside its count tree.
+    [[gnu::always_inline]] unsigned enum_bits() const {
+        const auto table = vld1q_u8(ikea::bec::detail::byte_width.data());
+        return vaddvq_u8(vqtbl1q_u8(table, b0)) + vaddvq_u8(vqtbl1q_u8(table, b1));
+    }
 };
 #else
 // Portable profile: byte-aligned copies of each stream feed Bec256's scalar
@@ -253,10 +268,18 @@ struct counted {
             count += std::popcount(b);
     }
     unsigned population() const { return count; }
+    unsigned enum_bits() const {
+        unsigned result = 0;
+        for (auto b : bits)
+            result += ikea::bec::detail::byte_width[std::popcount(b)];
+        return result;
+    }
     template <class Sink> unsigned encode(unsigned c, Sink &&sink) const {
-        alignas(8) std::uint8_t stream[64] = {};
-        ikea::bec::detail::encode_scalar(bits.data(), c, stream);
-        std::memcpy(sink.words, stream, 64);
+        if constexpr (requires { sink.words; }) {
+            alignas(8) std::uint8_t stream[64] = {};
+            ikea::bec::detail::encode_scalar(bits.data(), c, stream);
+            std::memcpy(sink.words, stream, 64);
+        }
         return stream_bits(bits.data(), c);
     }
 };
@@ -300,6 +323,17 @@ struct pack_sink {
 #endif
         return 8;
     }
+};
+// Exact stream bits without rank values or packing: with only the widths
+// read, the shared encoder's value work is dead code.
+struct size_sink {
+    [[gnu::always_inline]] unsigned operator()(const std::uint64_t *, const std::uint64_t *w) const {
+        unsigned bits = 0;
+        for (unsigned i = 0; i < 8; ++i)
+            bits += unsigned(w[i]);
+        return bits;
+    }
+    [[gnu::always_inline]] unsigned singleton(std::uint8_t) const { return 8; }
 };
 // Head and length-table fields, computed in vectors and combined four at a
 // time into eight groups of at most 48 bits. Head field f is bisection node
@@ -811,10 +845,21 @@ struct plan {
         const native::counted block(input + 32 * k);
         const unsigned c = block.population();
         total += c;
-        const unsigned length =
-            terminal(c) ? 0 : block.encode(c, native::pack_sink{out.words[k]});
-        // A stream longer than the block itself is stored raw instead.
-        const bool raw = length > raw_bits;
+        // A stream longer than the block itself is stored raw instead. The
+        // rank-width sum predicts which: below 144 bits (Calico's calibrated
+        // shortcut) no measured block went raw, so encode and check; at or
+        // above it, an exact size pass without rank values or packing decides
+        // first. Either way the choice is exact; the gate only orders the work.
+        bool raw = false;
+        unsigned length = 0;
+        if (!terminal(c)) {
+            if (block.enum_bits() >= raw_gate_bits)
+                raw = block.encode(c, native::size_sink{}) > raw_bits;
+            if (!raw) {
+                length = block.encode(c, native::pack_sink{out.words[k]});
+                raw = length > raw_bits;
+            }
+        }
         out.raw |= unsigned(raw) << k;
         if (raw)
             std::memcpy(out.words[k], input + 32 * k, 32);

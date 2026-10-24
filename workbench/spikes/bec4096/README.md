@@ -196,6 +196,21 @@ all-raw group binds in 103 / 61 ns, counting its raw blocks. Evidence:
 [Zen 5](../../benchmarks/bec/evidence/bec4096-raw-zen5/bec4096-samples.json),
 [AVX2-only](../../benchmarks/bec/evidence/bec4096-raw-avx2/bec4096-samples.json).
 
+### Early exit for raw blocks
+
+Calico's prototype declined coding when a chunk's rank-width sum reached 144
+bits, a calibrated guess. On the RealRoaring windows no block below 144 went
+raw, but 13% of blocks at or above it still coded within 256 bits, so using
+it as the decision would change bodies and lose bytes. Bec4096 uses it only to
+order work: below 144 it encodes and checks the length; at or above, an exact
+size pass (the shared encoder with only widths consumed, so rank lookups and
+packing are dead code) decides before packing. A provable gate (106 rank bits
+plus at most 150 tree bits) measured the same on these inputs but would send
+85% of density-0.2 blocks through the extra pass. Encode of random groups
+fell from 486 to 250 ns on V2 and 241 to 127 ns on Zen (0.45 / 0.51× of
+sixteen Bec256 encodes); mixed groups 324 to 281 ns on V2; natural groups
+unchanged within 3%.
+
 ## Negative results and open points
 
 - **Vector head decode** (NEON `tbl4` with 32-bit field windows, AVX-512 with
