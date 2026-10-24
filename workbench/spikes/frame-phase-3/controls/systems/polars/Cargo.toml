@@ -1,0 +1,24 @@
+[package]
+name = "frame-polars-check"
+version = "0.1.0"
+edition = "2024"
+publish = false
+autobins = false
+
+[[bin]]
+name = "frame3-polars-corpus"
+path = "src/main.rs"
+
+[workspace]
+
+[dependencies]
+polars = { path = "../../../../../../build/frame-helper/polars/sources/polars-0df0c25d4db895ec8cad773bedc4e98400e3135e/crates/polars", default-features = false, features = ["lazy", "nightly", "cse", "dtype-i8", "dtype-i16", "dtype-u8", "dtype-u16", "dtype-i128", "dtype-u128"] }
+
+[patch.crates-io]
+object_store = { path = "../../../../../../build/frame-helper/polars/sources/arrow-rs-object-store-f50a6e5c564b2b5933eca15cd20ff9b5614374a1" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 16
+debug = "line-tables-only"
