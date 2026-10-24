@@ -1,0 +1,30 @@
+== build/workers/20261024T184042Z-d9ae5387/results/avx512/calibrate.jsonl
+column          preset            bits  part    sum pred/meas  count pred/meas  point pred/meas
+OS              compact           9.26  0.98      6.8/   16.1      9.8/   18.0      6.2/   22.4
+OS              bulk              9.26  0.98      6.8/   15.7      9.3/   17.1      7.0/   22.7
+OS              compact_groups    9.26  0.98      7.2/   20.2     10.6/   21.9      6.8/   24.1
+RegionID        compact          14.40  0.98     10.5/   21.3     12.0/   21.1      6.4/   18.0
+RegionID        bulk             14.40  0.98     10.5/   21.4     11.6/   21.0      6.6/   18.3
+RegionID        compact_groups   14.40  0.98     11.2/   24.9     12.8/   25.0      7.1/   19.6
+ResolutionWidth compact          10.64  0.91      4.0/   11.0     11.2/   19.3      4.8/   15.5
+ResolutionWidth bulk             10.64  0.91      4.0/   11.2     11.1/   18.9      4.8/   15.7
+ResolutionWidth compact_groups   10.64  0.91      4.9/   14.8     11.7/   22.3      5.3/   17.3
+ClientIP        compact          31.70  0.98      8.0/   12.6     11.3/   14.2      3.9/    7.2
+ClientIP        bulk             31.70  0.98      8.1/   12.5     11.3/   15.5      4.0/    7.2
+ClientIP        compact_groups   31.70  0.98      9.3/   13.6     13.0/   16.1      4.2/    8.7
+UserID          compact          51.90  0.00     16.4/   42.7      1.1/    2.1      4.8/   17.9
+UserID          bulk             51.90  0.00     16.3/   43.9      1.1/    1.9      4.7/   18.2
+UserID          compact_groups   51.90  0.00     17.9/   81.2      1.1/    2.5      5.0/   21.2
+EventTime       compact          17.41  0.76      4.3/    7.8      6.0/   11.8      3.1/    6.8
+EventTime       bulk             17.41  0.76      4.4/    7.8      5.7/   11.8      3.4/    6.7
+EventTime       compact_groups   17.41  0.76      5.1/   10.8      6.7/   13.2      3.5/    8.5
+URLHash         compact          64.41  1.00     51.4/   72.6     21.1/   26.8      4.2/    6.9
+URLHash         bulk             64.41  1.00     50.7/   81.9     21.3/   29.4      4.2/    7.1
+URLHash         compact_groups   64.41  1.00     55.6/   91.7     23.3/   32.0      4.4/    8.9
+CounterID       compact           0.48  0.00      0.7/    0.8      0.7/    0.8      9.0/    2.9
+CounterID       bulk              0.48  0.00      0.8/    0.8      0.8/    0.8      9.5/    2.7
+CounterID       compact_groups    0.48  0.00      0.8/    0.9      0.8/    0.8      9.7/    2.9
+sum: median relative error 0.51, worst 0.78
+count: median relative error 0.43, worst 0.56
+point: median relative error 0.69, worst 2.53
+preset picks within 5% of the measured best: 21 of 24
