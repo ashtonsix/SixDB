@@ -14,8 +14,8 @@
 // Baseline: phase 1's u8 ends-minus-one plane read by run_end_source. Work:
 // 65,536 random (block, row) points answered as run ranks, and SUM over runs
 // (sum of size times the run's value for every run block). Every answer is
-// checked against the original column. Warm only (the column's run geometry
-// is a few hundred KB).
+// checked against the original column. Warm, and cold after a 256 MB sweep
+// (the cold point batch warms as it goes: 65,536 points over ~11,000 blocks).
 //
 // usage: frame_runs_read COLS_DIR ROWS ROUNDS COLUMN...
 #include <ikea/intervals.h>
@@ -253,6 +253,169 @@ struct composed {
         return first + in::reverse(in::sparse_sizes<64, u8, u16>{w, cp + g, m, cp[g], limit}, row);
     }
 };
+
+// Group-continuous composition: the run sizes of 16 consecutive run blocks
+// form one series, packed by SeriesPack at one width per group (compact, or
+// the bulk_x86 preset's geometry at that width), so Bulk's 64-256-row tiles
+// fill. Group checkpoints (u16 group coordinates, every G runs) locate a
+// region; each block's first run index in the group converts the group rank
+// back to the block's rank. Exceptions are (u16 group rank, u8 value).
+// Coordinates: the j-th run block of a group owns rows [256j, 256j + 256).
+struct grouped_sizes {
+    static constexpr unsigned group_blocks = 16;
+    unsigned G;
+    sp::preset preset;
+    struct width_array {
+        std::vector<u64> staged;
+        std::vector<ikea::byte> bytes;
+        std::optional<sp::erased_reader<u8>> reader;
+        sp::geometry geometry = sp::geometry::local;
+        std::size_t tile_rows = 8, tile_bytes = 0;
+    };
+    std::array<width_array, 9> arrays;
+    std::vector<u8> width;
+    std::vector<u32> offset, runs;             // per group: field offset, total runs
+    std::vector<u32> cp_first, ex_first, block_first_first;
+    std::vector<u16> checkpoints;              // group checkpoint column
+    std::vector<u16> block_first_run;          // per block: first run index within its group
+    std::vector<std::pair<u16, u8>> exceptions;
+    bool with_exceptions;
+
+    static std::pair<std::size_t, std::size_t> tile(unsigned K, sp::preset p) {
+        // Tile rows and bytes of the preset's geometry at width K.
+        std::pair<std::size_t, std::size_t> out;
+        [&]<unsigned... I>(std::integer_sequence<unsigned, I...>) {
+            ((K == I + 1 ? (p == sp::preset::compact
+                                ? (out = {sp::preset_layout<I + 1, sp::preset::compact>::tile_rows, sp::preset_layout<I + 1, sp::preset::compact>::tile_bytes})
+                                : (out = {sp::preset_layout<I + 1, sp::preset::bulk_x86>::tile_rows, sp::preset_layout<I + 1, sp::preset::bulk_x86>::tile_bytes}),
+                            0)
+                         : 0),
+             ...);
+        }(std::make_integer_sequence<unsigned, 8>{});
+        return out;
+    }
+    std::size_t bytes() const {
+        std::size_t n = 0;
+        for (const auto &a : arrays)
+            n += a.bytes.size();
+        // Checkpoints at two bytes except each group's leading 0; one byte per
+        // block for its first run index; a width byte per group; exceptions
+        // three bytes each plus a count byte per group that has any.
+        std::size_t ex_groups = 0;
+        for (std::size_t g = 0; g < width.size(); ++g)
+            ex_groups += ex_first[g + 1] != ex_first[g];
+        return n + 2 * (checkpoints.size() - width.size()) + block_first_run.size() + width.size() + ex_groups + 3 * exceptions.size();
+    }
+    grouped_sizes(const std::vector<run_block> &blocks, unsigned g, sp::preset p, bool ex) : G(g), preset(p), with_exceptions(ex) {
+        for (std::size_t first = 0; first < blocks.size(); first += group_blocks) {
+            const std::size_t last = std::min(blocks.size(), first + group_blocks);
+            std::vector<unsigned> f;
+            cp_first.push_back(static_cast<u32>(checkpoints.size()));
+            block_first_first.push_back(static_cast<u32>(block_first_run.size()));
+            for (std::size_t b = first; b < last; ++b) {
+                block_first_run.push_back(static_cast<u16>(f.size()));
+                const auto &e = blocks[b].ends;
+                const unsigned base = static_cast<unsigned>((b - first) * block_rows);
+                for (std::size_t i = 0; i < e.size(); ++i) {
+                    const unsigned start = base + (i ? e[i - 1] : 0);
+                    if (f.size() % G == 0)
+                        checkpoints.push_back(static_cast<u16>(start));
+                    f.push_back(e[i] - (i ? e[i - 1] : 0) - 1);
+                }
+            }
+            // Bounds over the group's series, scored on this preset's tiles.
+            const unsigned full = bits(*std::max_element(f.begin(), f.end()));
+            unsigned best_k = full;
+            auto cost = [&](unsigned K, std::size_t ex_count) {
+                const auto [tr, tb] = tile(K, p);
+                return (f.size() + tr - 1) / tr * tb + (ex_count ? 1 + 3 * ex_count : 0);
+            };
+            std::size_t best = cost(full, 0);
+            if (ex)
+                for (unsigned K = 1; K < full; ++K) {
+                    std::size_t c = 0;
+                    for (unsigned x : f)
+                        c += x >> K != 0;
+                    if (cost(K, c) < best)
+                        best = cost(K, c), best_k = K;
+                }
+            ex_first.push_back(static_cast<u32>(exceptions.size()));
+            for (std::size_t i = 0; i < f.size(); ++i)
+                if (f[i] >> best_k)
+                    exceptions.push_back({static_cast<u16>(i), static_cast<u8>(f[i])});
+            auto &arr = arrays[best_k];
+            const auto [tr, tb] = tile(best_k, p);
+            arr.tile_rows = std::max<std::size_t>(tr, 16), arr.tile_bytes = tb;
+            width.push_back(static_cast<u8>(best_k));
+            offset.push_back(static_cast<u32>(arr.staged.size()));
+            runs.push_back(static_cast<u32>(f.size()));
+            for (unsigned x : f)
+                arr.staged.push_back(x >> best_k ? 0 : x);
+            // Groups start on a whole tile (and a 16-row group) of their array.
+            arr.staged.resize((arr.staged.size() + arr.tile_rows - 1) / arr.tile_rows * arr.tile_rows, 0);
+        }
+        cp_first.push_back(static_cast<u32>(checkpoints.size()));
+        ex_first.push_back(static_cast<u32>(exceptions.size()));
+        block_first_first.push_back(static_cast<u32>(block_first_run.size()));
+        for (unsigned K = 1; K <= 8; ++K) {
+            auto &arr = arrays[K];
+            if (arr.staged.empty())
+                continue;
+            arr.geometry = p == sp::preset::compact ? sp::geometry::local : sp::resolve(p, K);
+            const auto [tr, tb] = tile(K, p);
+            arr.staged.resize((arr.staged.size() + tr - 1) / tr * tr, 0);
+            arr.bytes.assign(arr.staged.size() / tr * tb, ikea::byte{0});
+            const sp::dense_output target{K, arr.geometry, arr.bytes, arr.staged.size()};
+            std::vector<ikea::journal::entry> records(*sp::effect_capacity_initialize(target));
+            ikea::journal effects{records};
+            if (!sp::initialize(target, std::span<const u64>(arr.staged), effects))
+                std::abort();
+            auto r = sp::bind_reader<u8>(sp::dense_input{K, arr.geometry, arr.bytes, arr.staged.size()});
+            if (!r)
+                std::abort();
+            arr.reader.emplace(*r);
+        }
+    }
+    // Block index -> (group, position in group).
+    unsigned rank(std::size_t b, unsigned row) const {
+        const std::size_t g = b / group_blocks;
+        const unsigned j = static_cast<unsigned>(b % group_blocks);
+        const unsigned R = j * block_rows + row;
+        const u16 *cp = checkpoints.data() + cp_first[g];
+        const unsigned regions = cp_first[g + 1] - cp_first[g];
+        const unsigned r = in::upper_bound(in::direct_source<u16>{cp, regions}, R) - 1;
+        const unsigned first = r * G, m = std::min(G, runs[g] - first);
+        alignas(64) u8 w[64 + 16];
+        arrays[width[g]].reader->read_unchecked(offset[g] + first, (m + 15) / 16 * 16, w);
+        for (unsigned i = 0; i < m; ++i)
+            w[i] += 1;
+        // Exceptions are in rank order: patch only the region's slice.
+        const auto *e0 = exceptions.data() + ex_first[g], *e1 = exceptions.data() + ex_first[g + 1];
+        for (auto *e = std::lower_bound(e0, e1, std::pair<u16, u8>{static_cast<u16>(first), 0}); e < e1 && e->first < first + m; ++e)
+            w[e->first - first] = static_cast<u8>(e->second + 1);
+        std::fill(w + m, w + (m + 15) / 16 * 16, u8{0});
+        const unsigned blocks_in_group = block_first_first[g + 1] - block_first_first[g];
+        const u16 limit = r + 1 < regions ? cp[r + 1] : static_cast<u16>(blocks_in_group * block_rows);
+        unsigned grank;
+        if (G == 16)
+            grank = first + in::reverse(in::sparse_sizes<16, u8, u16>{w, cp + r, m, cp[r], limit}, R);
+        else
+            grank = first + in::reverse(in::sparse_sizes<64, u8, u16>{w, cp + r, m, cp[r], limit}, R);
+        return grank - block_first_run[block_first_first[g] + j];
+    }
+    // SUM over runs: one long read per group, consumed with the one added inline.
+    template <class F> void each_group(F &&f) const {
+        alignas(64) static thread_local std::vector<u8> buf;
+        for (std::size_t g = 0; g < width.size(); ++g) {
+            const unsigned n = runs[g];
+            buf.resize((n + 63) / 64 * 64 + 64);
+            arrays[width[g]].reader->read_unchecked(offset[g], n, buf.data());
+            for (u32 e = ex_first[g]; e < ex_first[g + 1]; ++e)
+                buf[exceptions[e].first] = exceptions[e].second;
+            f(buf.data(), n);
+        }
+    }
+};
 }  // namespace
 
 int main(int argc, char **argv) {
@@ -379,6 +542,32 @@ int main(int argc, char **argv) {
                                 return s;
                             }});
         }
+        std::vector<std::unique_ptr<grouped_sizes>> gkeep;
+        for (auto [label, G, p, ex] : {std::tuple{"group_sizes_g16_compact_bounds", 16u, sp::preset::compact, true},
+                                       std::tuple{"group_sizes_g64_compact_bounds", 64u, sp::preset::compact, true},
+                                       std::tuple{"group_sizes_g64_compact", 64u, sp::preset::compact, false},
+                                       std::tuple{"group_sizes_g16_bulk_bounds", 16u, sp::preset::bulk_x86, true},
+                                       std::tuple{"group_sizes_g64_bulk_bounds", 64u, sp::preset::bulk_x86, true}}) {
+            gkeep.push_back(std::make_unique<grouped_sizes>(blocks, G, p, ex));
+            const grouped_sizes *c = gkeep.back().get();
+            arms.push_back({label, c->bytes(),
+                            [&queries, c] {
+                                u64 s = 0;
+                                for (const auto &[b, row] : queries)
+                                    s += c->rank(b, row);
+                                return s;
+                            },
+                            [&run_values, c] {
+                                unsigned __int128 s = 0;
+                                std::size_t k = 0;
+                                c->each_group([&](const u8 *sizes, unsigned n) {
+                                    for (unsigned i = 0; i < n; ++i)
+                                        s += static_cast<unsigned __int128>(sizes[i] + 1u) * run_values[k + i];
+                                    k += n;
+                                });
+                                return s;
+                            }});
+        }
         for (const auto &x : arms)
             if (x.points() != rank_oracle || x.sum() != sum_oracle) {
                 std::fprintf(stderr, "%s %s: wrong answer (points %llu want %llu; sum %llu:%llu want %llu:%llu)\n", name.c_str(), x.name.c_str(),
@@ -386,7 +575,16 @@ int main(int argc, char **argv) {
                              (unsigned long long)x.sum(), (unsigned long long)(sum_oracle >> 64), (unsigned long long)sum_oracle);
                 return 1;
             }
-        std::vector<std::vector<double>> tp(arms.size()), ts(arms.size());
+        // Cold condition: a 256 MB sweep (several times either host's LLC)
+        // before each timed call evicts every arm's geometry and run values.
+        static std::vector<u64> sweep(32u << 20, 1);
+        auto evict = [] {
+            u64 x = 0;
+            for (std::size_t i = 0; i < sweep.size(); i += 8)
+                x += sweep[i]++;
+            asm volatile("" ::"r"(x));
+        };
+        std::vector<std::vector<double>> tp(arms.size()), ts(arms.size()), tpc(arms.size()), tsc(arms.size());
         for (int r = 0; r < rounds; ++r)
             for (std::size_t j = 0; j < arms.size(); ++j) {
                 const std::size_t i = (j + static_cast<std::size_t>(r)) % arms.size();
@@ -394,6 +592,10 @@ int main(int argc, char **argv) {
                 arms[i].points();
                 tp[i].push_back(time_ns([&] { ok &= arms[i].points() == rank_oracle; }));
                 ts[i].push_back(time_ns([&] { ok &= arms[i].sum() == sum_oracle; }));
+                evict();
+                tpc[i].push_back(time_ns([&] { ok &= arms[i].points() == rank_oracle; }));
+                evict();
+                tsc[i].push_back(time_ns([&] { ok &= arms[i].sum() == sum_oracle; }));
                 if (!ok)
                     return 1;
             }
@@ -402,8 +604,8 @@ int main(int argc, char **argv) {
             runs += r.ends.size();
         for (std::size_t i = 0; i < arms.size(); ++i)
             std::printf("{\"column\":\"%s\",\"arm\":\"%s\",\"run_blocks\":%zu,\"runs\":%zu,\"bytes\":%zu,\"bits_per_run_block_row\":%.3f,"
-                        "\"ns_per_point\":%.2f,\"sum_ns_per_block\":%.2f}\n",
+                        "\"ns_per_point\":%.2f,\"sum_ns_per_block\":%.2f,\"cold_ns_per_point\":%.2f,\"cold_sum_ns_per_block\":%.2f}\n",
                         name.c_str(), arms[i].name.c_str(), nb, runs, arms[i].bytes, 8.0 * arms[i].bytes / (nb * block_rows),
-                        median(tp[i]) / queries.size(), median(ts[i]) / nb);
+                        median(tp[i]) / queries.size(), median(ts[i]) / nb, median(tpc[i]) / queries.size(), median(tsc[i]) / nb);
     }
 }
