@@ -5,7 +5,7 @@
 set(FRAME3_PRESETS "compact;bulk_x86;bulk_arm" CACHE STRING "SeriesPack presets to instantiate width arrays for")
 # FRAME3_LEAF=runtime uses SeriesPack's compiled-once runtime-width operations
 # for every width and preset, and compiles no width TUs at all.
-set(FRAME3_LEAF "typed" CACHE STRING "typed (width TUs) or runtime (SeriesPack compiled-once operations)")
+set(FRAME3_LEAF "runtime" CACHE STRING "typed (width TUs) or runtime (SeriesPack compiled-once operations)")
 if(FRAME3_LEAF STREQUAL "runtime")
     set(FRAME3_PRESETS "")
 endif()

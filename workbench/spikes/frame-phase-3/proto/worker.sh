@@ -16,7 +16,7 @@ case "$(uname -m)" in
   *) isas="${ISAS:-native}" ;;
 esac
 columns="${COLUMNS:-OS RegionID ResolutionWidth ClientIP UserID EventTime URLHash WatchID CounterID gen_ts gen_walk}"
-for leaf in ${LEAVES:-typed}; do
+for leaf in ${LEAVES:-runtime}; do
 for isa in $isas; do
   case "$isa" in
     avx2) flags="-DSIXDB_MARCH=x86-64-v3 -DSIXDB_TUNE=zen5" ;;

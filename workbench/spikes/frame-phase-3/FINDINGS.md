@@ -164,6 +164,22 @@ COUNT and filter words per comparison, the checked setter, the point
 kernel), Frame would instantiate no width-specialised code at all. This is a
 proposal for the SeriesPack owner, not done here.
 
+### SeriesPack's compiled-once operations, adopted
+
+The SeriesPack owner landed runtime-width range operations (ikea 0d44d527).
+[runtime_width.h](proto/runtime_width.h) puts the pack leaf on them for every
+width and preset, behind the same `width_array` seam
+(`-DFRAME3_LEAF=runtime`). The full check passes on it, including the stream
+round trip, on both hosts and on the 8 GB local VM, which could not build the
+typed width TUs at all. Against the typed leaf in the same run
+([leaf-v1-zen5.jsonl](proto/evidence/leaf-v1-zen5.jsonl),
+[leaf-v1-graviton4.jsonl](proto/evidence/leaf-v1-graviton4.jsonl)), SUM,
+COUNT, FILTER and points through `bound → pack`, the point plan and
+`intervals → bound → pack` cost 0.79–1.17× (median 0.98–1.03) on Zen 5 and
+0.94–1.04× on Graviton 4. A whole worker build takes half as long (1:34 vs
+3:09 on Zen 5, 3:05 vs 6:12 on Graviton 4) at less peak memory. The runtime
+leaf is the landing's leaf; the typed TUs stay only as a control.
+
 ## 4. Writes: exception slack, delta buffer or re-encode
 
 [writes.cpp](proto/writes.cpp) applies writes through [change.h](proto/change.h)
