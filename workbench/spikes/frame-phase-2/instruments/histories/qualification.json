@@ -1,0 +1,42 @@
+{
+  "scope": "Independent original-row fixtures and access laws; no timing or candidate lifecycle claim",
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)",
+  "language": "C++23",
+  "march": "armv8-a+simd",
+  "tune": "neoverse-v2",
+  "platform": "local Linux AArch64",
+  "source_sha256": {
+    "history.h": "d33fab8546243606f6a40a14d9c796fae482d809a3e2745a8ac4a59a5c5edd69",
+    "history.cpp": "ecdbe7e0df389d2f686b2a9acddbdbc7f3a52671245fac6059284af975372605",
+    "check.cpp": "80ab597354975ea2e9d9b3d4f8964fa118e3c627e6627c75701c627628eac0d2",
+    "CMakeLists.txt": "c4fc4de7190233a81e12b9a5ed76cd60574ecf740176038f5eceb1a905e3979d"
+  },
+  "runs": [
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "7",
+        "build/clang/frame-cells-local/workbench/spikes/frame-phase-2/instruments/histories/frame_histories_check"
+      ],
+      "binary_sha256": "25c12417c0cd48a5a1bd93efb37b6e82a0d691bab44c076df7a705834d6fb1e5",
+      "result": {
+        "checks": 2066,
+        "status": "pass"
+      }
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "7",
+        "build/clang/frame-cells-local/workbench/spikes/frame-phase-2/instruments/histories/frame_histories_sanitize"
+      ],
+      "binary_sha256": "12b17d1b0db8870d063c46fb705aebdb4d22a10f1e9ccbdc632331a1a259a697",
+      "result": {
+        "checks": 2066,
+        "status": "pass"
+      }
+    }
+  ]
+}

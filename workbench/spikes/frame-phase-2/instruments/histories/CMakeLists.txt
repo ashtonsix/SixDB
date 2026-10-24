@@ -1,0 +1,11 @@
+add_library(frame_history_oracles STATIC EXCLUDE_FROM_ALL history.cpp)
+sixdb_target(frame_history_oracles)
+target_include_directories(frame_history_oracles PUBLIC .)
+add_executable(frame_histories_check EXCLUDE_FROM_ALL check.cpp)
+sixdb_target(frame_histories_check)
+target_link_libraries(frame_histories_check PRIVATE frame_history_oracles)
+add_executable(frame_histories_sanitize EXCLUDE_FROM_ALL check.cpp history.cpp)
+sixdb_target(frame_histories_sanitize)
+target_compile_options(frame_histories_sanitize PRIVATE
+  -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer)
+target_link_options(frame_histories_sanitize PRIVATE -fsanitize=address,undefined)

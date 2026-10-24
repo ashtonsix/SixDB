@@ -7,6 +7,10 @@ performance target for the module.
 The [direction review](DIRECTION.md) proposes the next decision-changing work:
 one stored representation across mixed queries and edits, construction costs,
 and corrections versus relocation, using the controls already established.
+The [original-row histories](histories/README.md) supply ordered A/B edits,
+frozen mixed reads and independent exact expected answers to the substrate's
+correction and ownership witnesses. Their guard-page checks qualify the
+oracle's coarse exclusions, separately from a candidate's access behavior.
 
 The [calibration findings](FINDINGS.md) retain the fixed-work caveat, corrected
 common-window Zen 5 rates, PMU limits and the smaller-instance experiment plan.
