@@ -8,6 +8,8 @@
 //            (u8 position, value) at the residual's byte width) -> SeriesPack
 //            at that width under one preset: compact (Local), bulk_x86 or
 //            bulk_arm. A 256-row block is whole tiles in every preset.
+//   group RLE as RLE, but the RLE blocks of each 16-block group share one
+//            sizes series and one values series (one long read per group).
 //   RLE      run sizes (minus one) with the bounds stage and G16 checkpoints,
 //            and run values with FOR, both packed by SeriesPack Local at
 //            16-row placement (runs.README.md); taken only where its bytes
@@ -175,7 +177,25 @@ struct small_series {
 enum class kind : u8 { constant, packed, runs };
 
 template <sp::preset P> struct pipeline {
-    bool rle;
+    bool rle, group_rle;
+    // Group-continuous RLE: the RLE blocks of each 16-block group share one
+    // sizes series and one values series (values relative to the group's
+    // smallest block minimum), with u16 group checkpoints every 16 runs in
+    // group coordinates (the j-th RLE block of a group owns [256j, 256j+256)).
+    struct pending_run {
+        std::size_t block;
+        std::vector<unsigned> ends;
+        std::vector<u64> values;  // absolute
+    };
+    std::vector<pending_run> pending;
+    struct run_group {
+        u64 base;
+        u8 size_width, value_width;
+        u32 size_at, value_at, runs, blocks, cp_at, cp_end, ex_at, ex_end;
+    };
+    std::vector<run_group> groups;
+    std::vector<u32> block_group, block_first_run, block_j;  // per RLE block (indexed by slot)
+    std::vector<std::pair<u16, u8>> group_size_exceptions;
     std::vector<kind> kinds;
     std::vector<u64> base;
     std::vector<u8> width;
@@ -194,7 +214,7 @@ template <sp::preset P> struct pipeline {
     std::vector<std::pair<u8, u8>> size_exceptions;
     std::size_t bytes = 0, constant_blocks = 0, run_blocks = 0, packed_blocks = 0;
 
-    pipeline(const std::vector<u64> &v, bool with_rle) : rle(with_rle) {
+    pipeline(const std::vector<u64> &v, bool with_rle, bool grouped = false) : rle(with_rle), group_rle(grouped) {
         const std::size_t blocks = v.size() / block_rows;
         std::array<std::vector<u64>, 65> staged;
         for (std::size_t b = 0; b < blocks; ++b) {
@@ -250,7 +270,15 @@ template <sp::preset P> struct pipeline {
                 vk = bits(*std::max_element(rv.begin(), rv.end()));
                 rbytes = sb + (sz.size() - 1) / 16 + padded / 8 * vk;
             }
-            if (rbytes < pbytes) {
+            if (rbytes < pbytes && group_rle) {
+                kinds.push_back(kind::runs), base.push_back(mn), width.push_back(0), slot.push_back(static_cast<u32>(pending.size()));
+                ex_first.push_back(static_cast<u32>(exceptions.size()));
+                std::vector<u64> abs;
+                for (u64 r : rv)
+                    abs.push_back(r + mn);
+                pending.push_back({b, ends, abs});
+                ++run_blocks;
+            } else if (rbytes < pbytes) {
                 kinds.push_back(kind::runs), base.push_back(mn), width.push_back(0), slot.push_back(static_cast<u32>(runs.size()));
                 ex_first.push_back(static_cast<u32>(exceptions.size()));
                 run_desc d{static_cast<u8>(ends.size()), static_cast<u8>(sk), static_cast<u8>(vk), sizes.append(sk, sz), values.append(vk, rv),
@@ -279,7 +307,78 @@ template <sp::preset P> struct pipeline {
         for (unsigned K = 1; K <= 64; ++K)
             if (!staged[K].empty())
                 packed[K] = make_width<P>(K, staged[K]);
+        if (group_rle)
+            build_groups();
         sizes.seal(), values.seal();
+    }
+    void build_groups() {
+        block_group.resize(pending.size()), block_first_run.resize(pending.size()), block_j.resize(pending.size());
+        for (std::size_t first = 0; first < pending.size();) {
+            std::size_t last = first;
+            const std::size_t g16 = pending[first].block / 16;
+            while (last < pending.size() && pending[last].block / 16 == g16)
+                ++last;
+            run_group grp{};
+            grp.base = ~u64{0};
+            for (std::size_t i = first; i < last; ++i)
+                for (u64 x : pending[i].values)
+                    grp.base = std::min(grp.base, x);
+            std::vector<u64> sz, val;
+            grp.cp_at = static_cast<u32>(checkpoints.size());
+            for (std::size_t i = first; i < last; ++i) {
+                const auto &pr = pending[i];
+                const unsigned j = static_cast<unsigned>(i - first);
+                block_group[i] = static_cast<u32>(groups.size()), block_first_run[i] = static_cast<u32>(sz.size()), block_j[i] = j;
+                for (std::size_t r = 0; r < pr.ends.size(); ++r) {
+                    const unsigned start = (r ? pr.ends[r - 1] : 0);
+                    if (sz.size() % 16 == 0)
+                        checkpoints.push_back(static_cast<u16>(j * block_rows + start));
+                    sz.push_back(pr.ends[r] - start - 1);
+                    val.push_back(pr.values[r] - grp.base);
+                }
+            }
+            grp.cp_end = static_cast<u32>(checkpoints.size());
+            // Bounds over the group's sizes.
+            const unsigned sfull = bits(*std::max_element(sz.begin(), sz.end()));
+            const std::size_t padded = (sz.size() + 15) / 16 * 16;
+            unsigned sk = sfull;
+            std::size_t sb = padded / 8 * sfull;
+            for (unsigned K = 1; K < sfull; ++K) {
+                std::size_t ex = 0;
+                for (u64 x : sz)
+                    ex += x >> K != 0;
+                const std::size_t c = padded / 8 * K + (ex ? 1 + 3 * ex : 0);
+                if (c < sb)
+                    sb = c, sk = K;
+            }
+            grp.ex_at = static_cast<u32>(group_size_exceptions.size());
+            for (std::size_t i = 0; i < sz.size(); ++i)
+                if (sz[i] >> sk)
+                    group_size_exceptions.push_back({static_cast<u16>(i), static_cast<u8>(sz[i])}), sz[i] = 0;
+            grp.ex_end = static_cast<u32>(group_size_exceptions.size());
+            grp.size_width = static_cast<u8>(sk);
+            grp.value_width = static_cast<u8>(bits(*std::max_element(val.begin(), val.end())));
+            grp.size_at = sizes.append(sk, sz), grp.value_at = values.append(grp.value_width, val);
+            grp.runs = static_cast<u32>(sz.size()), grp.blocks = static_cast<u32>(last - first);
+            // Bytes: both series, checkpoints after the first, outliers, a u16
+            // first-run index per block, and the group's base and widths.
+            bytes += sb + padded / 8 * grp.value_width + 2 * (grp.cp_end - grp.cp_at - 1) + 2 * grp.blocks + 10 + grp.blocks;  // + kind per block
+            groups.push_back(grp);
+            first = last;
+        }
+    }
+    // Group-continuous RLE contributions to SUM and COUNT.
+    template <class F> void each_group(F &&f) const {
+        static thread_local std::vector<u64> s, val;
+        for (const auto &g : groups) {
+            const unsigned padded = (g.runs + 15) / 16 * 16;
+            s.resize(padded), val.resize(padded);
+            sizes.readers[g.size_width]->read_unchecked(g.size_at, padded, s.data());
+            values.readers[g.value_width]->read_unchecked(g.value_at, padded, val.data());
+            for (u32 e = g.ex_at; e < g.ex_end; ++e)
+                s[group_size_exceptions[e].first] = group_size_exceptions[e].second;
+            f(g, s.data(), val.data());
+        }
     }
 
     u128 sum() const {
@@ -294,6 +393,8 @@ template <sp::preset P> struct pipeline {
                     total += exceptions[e].second;
                 break;
             case kind::runs: {
+                if (group_rle)
+                    break;
                 const auto &d = runs[slot[b]];
                 const unsigned padded = (d.n + 15u) / 16 * 16;
                 sizes.readers[d.size_width]->read_unchecked(d.size_at, padded, s);
@@ -308,12 +409,21 @@ template <sp::preset P> struct pipeline {
             }
             }
         }
+        if (group_rle)
+            each_group([&](const run_group &g, const u64 *sz, const u64 *val) {
+                u128 t = 0;
+                for (unsigned i = 0; i < g.runs; ++i)
+                    t += static_cast<u128>(sz[i] + 1) * val[i];
+                total += t + static_cast<u128>(g.base) * g.blocks * block_rows;
+            });
         return total;
     }
     u64 count_ge(u64 t) const {
         u64 c = 0;
         alignas(64) u64 s[max_runs + 16], val[max_runs + 16];
         for (std::size_t b = 0; b < kinds.size(); ++b) {
+            if (group_rle && kinds[b] == kind::runs)
+                continue;  // counted per group below
             if (t <= base[b]) {
                 c += block_rows;
                 continue;
@@ -343,7 +453,37 @@ template <sp::preset P> struct pipeline {
             }
             }
         }
+        if (group_rle)
+            each_group([&](const run_group &g, const u64 *sz, const u64 *val) {
+                if (t <= g.base) {
+                    c += u64{g.blocks} * block_rows;
+                    return;
+                }
+                const u64 rhs = t - g.base;
+                for (unsigned i = 0; i < g.runs; ++i)
+                    c += val[i] >= rhs ? sz[i] + 1 : 0;
+            });
         return c;
+    }
+    u64 group_point(std::size_t b, unsigned r) const {
+        const u32 i = slot[b];
+        const auto &g = groups[block_group[i]];
+        const unsigned R = block_j[i] * block_rows + r;
+        const u16 *cp = checkpoints.data() + g.cp_at;
+        const unsigned regions = g.cp_end - g.cp_at;
+        const unsigned k = in::upper_bound(in::direct_source<u16>{cp, regions}, R) - 1;
+        const unsigned first = k * 16, m = std::min(16u, g.runs - first);
+        alignas(64) u64 w64[16];
+        alignas(64) u8 w[16];
+        sizes.readers[g.size_width]->read_unchecked(g.size_at + first, 16, w64);
+        for (unsigned q = 0; q < 16; ++q)
+            w[q] = q < m ? static_cast<u8>(w64[q] + 1) : 0;
+        const auto *e0 = group_size_exceptions.data() + g.ex_at, *e1 = group_size_exceptions.data() + g.ex_end;
+        for (auto *e = std::lower_bound(e0, e1, std::pair<u16, u8>{static_cast<u16>(first), 0}); e < e1 && e->first < first + m; ++e)
+            w[e->first - first] = static_cast<u8>(e->second + 1);
+        const u16 limit = k + 1 < regions ? cp[k + 1] : static_cast<u16>(g.blocks * block_rows);
+        const unsigned rank = first + in::reverse(in::sparse_sizes<16, u8, u16>{w, cp + k, m, cp[k], limit}, R);
+        return g.base + values.readers[g.value_width]->get_unchecked(g.value_at + rank);
     }
     u64 point(std::size_t row) const {
         const std::size_t b = row / block_rows;
@@ -360,6 +500,8 @@ template <sp::preset P> struct pipeline {
             return base[b] + packed[width[b]]->get(std::size_t{slot[b]} * block_rows + r);
         }
         case kind::runs: {
+            if (group_rle)
+                return group_point(b, r);
             const auto &d = runs[slot[b]];
             const u16 *cp = checkpoints.data() + d.cp_at;
             const unsigned regions = (d.n + 15u) / 16;
@@ -392,8 +534,8 @@ struct arm {
 
 template <sp::preset P>
 void add(std::vector<arm> &arms, std::vector<std::shared_ptr<void>> &keep, const std::vector<u64> &v, bool rle, const char *name, u64 t,
-         const std::vector<u32> &rows) {
-    auto p = std::make_shared<pipeline<P>>(v, rle);
+         const std::vector<u32> &rows, bool grouped = false) {
+    auto p = std::make_shared<pipeline<P>>(v, rle, grouped);
     keep.push_back(p);
     const auto *q = p.get();
     arms.push_back({name, q->bytes, q->constant_blocks, q->run_blocks, q->packed_blocks, [q] { return q->sum(); }, [q, t] { return q->count_ge(t); },
@@ -439,6 +581,9 @@ int main(int argc, char **argv) {
         add<sp::preset::compact>(arms, keep, v, true, "rle_then_compact", t, rows);
         add<sp::preset::bulk_x86>(arms, keep, v, true, "rle_then_bulk_x86", t, rows);
         add<sp::preset::bulk_arm>(arms, keep, v, true, "rle_then_bulk_arm", t, rows);
+        add<sp::preset::compact>(arms, keep, v, true, "group_rle_then_compact", t, rows, true);
+        add<sp::preset::bulk_x86>(arms, keep, v, true, "group_rle_then_bulk_x86", t, rows, true);
+        add<sp::preset::bulk_arm>(arms, keep, v, true, "group_rle_then_bulk_arm", t, rows, true);
         for (const auto &x : arms)
             if (x.sum() != sum_oracle || x.count() != count_oracle || x.points() != point_oracle) {
                 std::fprintf(stderr, "%s %s: wrong answer (sum %d count %d points %d)\n", name.c_str(), x.name.c_str(), x.sum() == sum_oracle,
