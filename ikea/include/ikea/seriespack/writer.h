@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include <ikea/seriespack/detail/mutation/composed_construction.h>
 #include <ikea/seriespack/selection.h>
 #include <ikea/seriespack/detail/mutation/admission.h>
@@ -304,4 +305,24 @@ extern template std::expected<void, error> initialize(const dense_output&, std::
 extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint16_t>, journal&);
 extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint32_t>, journal&);
 extern template std::expected<void, error> initialize(const dense_output&, std::span<const std::uint64_t>, journal&);
+/// Compiled point replacement for a runtime width: the same checks, store and
+/// effects as a bound writer's set, with records naming target. Range, value
+/// and capacity errors leave bytes and effects unchanged.
+template <class U>
+[[nodiscard]] std::expected<void, error> set(const dense_output& target, std::size_t row, U value, journal& effects);
+extern template std::expected<void, error> set(const dense_output&, std::size_t, std::uint8_t, journal&);
+extern template std::expected<void, error> set(const dense_output&, std::size_t, std::uint16_t, journal&);
+extern template std::expected<void, error> set(const dense_output&, std::size_t, std::uint32_t, journal&);
+extern template std::expected<void, error> set(const dense_output&, std::size_t, std::uint64_t, journal&);
+/// The bytes of target.bytes a point replacement at row stores (stores,
+/// one record each) and the bytes its value occupies (reads), as offsets.
+/// A point touches at most a body span and three residual fragments.
+struct point_footprint {
+    struct span {
+        std::size_t offset, size;
+    };
+    std::array<span, 4> stores, reads;
+    unsigned store_count = 0, read_count = 0;
+};
+[[nodiscard]] std::expected<point_footprint, error> footprint(const dense_output& target, std::size_t row);
 } // namespace ikea::seriespack

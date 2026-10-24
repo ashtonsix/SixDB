@@ -82,6 +82,7 @@ void check_ranges() {
 #if defined(__aarch64__) || defined(__AVX2__)
     check_maximum();
     check_empty();
+    check_runtime_widths();
     for (const std::size_t lead_tiles : {1, 2, 3}) {
         check_lower_bound<sp::layout<1>>(lead_tiles);
         check_lower_bound<sp::layout<3>>(lead_tiles);

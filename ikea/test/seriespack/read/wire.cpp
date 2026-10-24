@@ -55,6 +55,14 @@ template <unsigned K, sp::geometry G = sp::geometry::local> void check() {
         IKEA_CHECK(sp::get_unchecked(*v, i) == expected[i]);
         IKEA_CHECK(decoder.get_unchecked(i) == expected[i]);
     }
+    // The runtime-width reader: compiled range operations, then the decoded
+    // fallback over the same bytes, give the same answers.
+    {
+        const auto runtime = sp::bind_range_reader<std::uint64_t>(sp::dense_input{K, G, std::as_bytes(std::span(encoded)), N});
+        IKEA_CHECK(runtime && runtime->compiled_ranges());
+        check_erased_operations(*runtime, expected, N);
+        check_erased_operations(runtime->with_operations(nullptr), expected, N);
+    }
     check_reader_operations(typed_reader, expected, N);
 #if defined(__aarch64__) || defined(__AVX2__)
     const auto expression = sp::author::expression(*dense);

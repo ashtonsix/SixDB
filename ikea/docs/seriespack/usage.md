@@ -95,6 +95,22 @@ ikea::journal effects{records};
 assert(sp::initialize(target, std::span<const std::uint64_t>(values), effects));
 ```
 
+`bind_range_reader<U>(dense_input)` returns the same erased reader with the
+layout's compiled range operations (`compiled_ranges()` is true): `sum`,
+`sum_masked`, `count` and `filter_words` for a runtime comparison, and
+`weighted_sum`, each running the same native kernels as the typed reader.
+Every erased reader answers these methods; without compiled operations they
+decode and reduce. The tables are compiled once per layout inside SeriesPack,
+so a consumer that dispatches widths at run time instantiates no kernels of its
+own. Linking `bind_range_reader` retains every layout's tables (several MB of
+code); `bind_reader<U>(dense_input)` does not. `point_kernel()` and `resource()`
+expose the point body for a caller's own fused point path.
+
+`set(dense_output, row, value, effects)` is the matching runtime point
+replacement: a bound writer's checks and stores, with records naming the
+`dense_output`. `footprint(dense_output, row)` reports the bytes it would store
+and read, for a caller's write envelope; it reads no data.
+
 Keep named views, byte owners and any borrowed reader/writer at stable addresses
 until the last invocation and effect-identity resolution. Copying a view copies
 a borrow. Replacing placement or moving a borrowed operation requires rebinding.
@@ -110,6 +126,10 @@ A dense proof does not require its source wrapper to survive.
 | Filter a window | `reader.filter<Op>(first, count, rhs, active)` | Up to 64 values; one result bit per original position |
 | Sum selected values below a cutoff | `reader.sum(first, count, cutoff, mask)` | Modulo-u64 sum; mask names original 16-row coordinates |
 | Find the first equality match | `reader.indexof(first, count, rhs, active)` | Position relative to first, or count when absent; up to 64 values |
+| Count matches in a range | `reader.count<Op>(first, count, rhs)` | Rows satisfying Op; any count, one pass |
+| Filter a range | `reader.filter_words<Op>(first, count, rhs, words)` | Bit i of word i / 64 is row first + i; exactly ⌈count / 64⌉ words, unused high bits zero |
+| Sum every row | `reader.sum(first, count)` | Modulo-u64 sum including maximum values |
+| Position-weighted sum | `reader.weighted_sum_unchecked(first, count, weights)` | Modulo-u64 Σ weights[row % 16] × value; trusted only |
 | Replace a point | `write.set(row, value, effects, summary)` | A scalar value crosses the boundary directly |
 | Replace a selected range | `write.replace(first, input_span, effects, selection, summary)` | All checks precede any local write |
 

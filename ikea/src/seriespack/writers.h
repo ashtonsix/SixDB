@@ -56,6 +56,25 @@ template <class Body> auto dispatch(const dense_output& target, unsigned limit, 
     });
     return result;
 }
+template <class L, class U>
+std::expected<void, error> set_point(const dense_output& target, std::size_t row, U value, journal& effects) {
+    const auto destination = attach<L>(target);
+    if (!destination)
+        return std::unexpected(destination.error());
+    if (row >= target.count)
+        return std::unexpected(error::range);
+    if constexpr (L::width < sizeof(U) * 8)
+        if (value >> L::width)
+            return std::unexpected(error::value);
+    std::size_t needed = 0;
+    author::visit_writes_point(*destination, row, [&](ikea::detail::write_span) { ++needed; });
+    if (effects.used > effects.storage.size() || needed > effects.storage.size() - effects.used)
+        return std::unexpected(error::effects);
+    named<L> coverage{target, effects};
+    author::no_summary summary;
+    author::replace_point_unchecked(*destination, row, value, summary, coverage);
+    return {};
+}
 } // namespace writers_detail
 
 template <class U>
@@ -66,5 +85,18 @@ std::expected<void, error> initialize(const dense_output& target, std::span<cons
     return writers_detail::dispatch(target, sizeof(U) * 8, [&]<class L>() {
         return writers_detail::construct<L, U>(target, input, effects);
     });
+}
+template <class U>
+std::expected<void, error> set(const dense_output& target, std::size_t row, U value, journal& effects) {
+    // A narrow input fits any width; one compiled u64 body serves every U.
+    if constexpr (!std::is_same_v<U, std::uint64_t>)
+        return set(target, row, std::uint64_t{value}, effects);
+    else {
+        if (auto rows = writers_detail::rows(target); !rows)
+            return std::unexpected(error::description);
+        return writers_detail::dispatch(target, 64, [&]<class L>() {
+            return writers_detail::set_point<L, std::uint64_t>(target, row, value, effects);
+        });
+    }
 }
 } // namespace ikea::seriespack

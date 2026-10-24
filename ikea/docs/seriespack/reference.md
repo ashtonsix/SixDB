@@ -73,6 +73,40 @@ range body at binding. Its rvalue-view overload is deleted. Dense sources copy
 a pointer/count proof into either form of erased reader and require only the
 bytes to survive. None of these forms extends the data owner's lifetime.
 
+## Runtime range operations
+
+`bind_range_reader<U>(dense_input)` attaches a `range_operations` table with
+static storage duration; it describes the same bytes, count and layout as the
+reader's resource. `with_operations` is an adapter seam for an author who has
+that proof: the table must be complete and must describe the reader's source.
+Readers from `bind_reader`, typed `erase<U>()` or `dense_source` carry no
+table and answer the range methods by decoding.
+
+- **Read authority.** A range method may read every occupied byte of the
+  tiles holding [first, first + count). A zero mask does not withhold any of
+  them: the decoding route reads the whole range before masking.
+- **Masks.** `masks[0]` describes the 16-row region containing first; bit j
+  of each word is absolute row 16 × region + j. With a nonzero period,
+  `masks[k % period]` describes the k-th region from there, so period counts
+  mask words, not rows. For first 19 and count 17, `masks[0]` covers rows
+  16–31 and `masks[1]` rows 32–47; with period 3 the words repeat every 48
+  rows. A typed prefilter instead receives absolute aligned origins.
+- **Filter words.** Bit i of `words[i / 64]` is row first + i, unlike mask
+  bits. Exactly ⌈count / 64⌉ words are written, with unused high bits zero; a
+  checked call that fails writes nothing.
+- **Weighted sums.** The result is the modulo-2^64 Σ weights[row % 16] ×
+  value, with weights indexed by the absolute row, not relative to first. A
+  nonempty call reads all sixteen weights; an empty call reads none.
+- **Runtime point set.** `set(dense_output, row, value, effects)` performs a bound
+  writer's checks: range, value fit (a narrow input type fits any width) and
+  effect capacity, before any write. Its records name the `dense_output`, so keep
+  that named object alive and stable until its effects are resolved; a
+  temporary descriptor is no retained source.
+- **Footprint.** `footprint` reports byte spans as offsets into
+  `dense_output::bytes`: the stores, including preserved neighbouring bits,
+  and the bytes holding the current value (those `visit_point_reads` names).
+  It reads nothing and grants neither lifetime nor synchronization.
+
 ## Scalar point building blocks
 
 `<ikea/seriespack/point.h>` exposes ordinary `get` and `get_unchecked` over

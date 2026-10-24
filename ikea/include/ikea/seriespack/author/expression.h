@@ -393,7 +393,7 @@ std::uint64_t sum_regions(const Source& source, std::size_t first, std::size_t c
         constexpr unsigned grain = Source::bit_width <= 8 ? 64 : Source::bit_width <= 32 ? 32 : 16;
         wide_ops<grain> wide;
         native_group::sum_state partial;
-        constexpr std::uint64_t full = grain == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << grain) - 1;
+        constexpr std::uint64_t full = ~std::uint64_t{0} >> (64 - grain);
         const bool open = [&] {
             if constexpr (std::is_same_v<Cutoff, all_rows>)
                 return true;
@@ -463,6 +463,95 @@ template <class Source, class Group, class Edge>
     });
     for (; count; ++i, --count)
         edge(i, read(scalar, source, i, true).value);
+}
+/// The sum, modulo 2^64, of weights[row % 16] * value over [first, first +
+/// count): a position-weighted SUM in one decode (a delta stage's SUM law
+/// needs the in-region position of each delta). Lanes are multiplied in
+/// registers inside scan_regions; edges are scalar.
+template <class Source>
+std::uint64_t weighted_sum_regions(const Source& source, std::size_t first, std::size_t count,
+                                   const std::uint8_t* weights) {
+    constexpr unsigned K = Source::bit_width;
+    if (!count)
+        return 0;  // reads no weight
+    std::uint64_t edges = 0;
+#if defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
+    // Eight u64 lanes per part; a part's rows are 8 * (p % 2) + lane mod 16.
+    alignas(64) std::uint64_t w[16];
+    for (unsigned j = 0; j < 16; ++j)
+        w[j] = weights[j];
+    const __m512i low = _mm512_load_si512(w), high = _mm512_load_si512(w + 8);
+    __m512i acc = _mm512_setzero_si512();
+    scan_regions(
+        source, first, count,
+        [&](std::size_t, const auto& x) __attribute__((always_inline)) {
+            const auto y = zmm::widen<64>(x);
+            detail::each<y.v.size()>([&](auto p) __attribute__((always_inline)) {
+                acc = _mm512_add_epi64(acc, _mm512_mullo_epi64(y.v[p], p % 2 ? high : low));
+            });
+        },
+        [&](std::size_t row, std::uint64_t value) { edges += weights[row % 16] * value; });
+    return edges + static_cast<std::uint64_t>(_mm512_reduce_add_epi64(acc));
+#elif defined(__aarch64__)
+    // Per 16-row block: u32 lanes multiply-accumulate into u64; 64-bit values
+    // multiply as two 32-bit halves.
+    std::array<uint32x4_t, 4> w32;
+    for (unsigned j = 0; j < 4; ++j)
+        w32[j] = vmovl_u16(vget_low_u16(vmovl_u8(vcreate_u8(std::uint64_t{weights[4 * j]} | std::uint64_t{weights[4 * j + 1]} << 8 |
+                                                               std::uint64_t{weights[4 * j + 2]} << 16 |
+                                                               std::uint64_t{weights[4 * j + 3]} << 24))));
+    const auto w8 = vld1q_u8(weights);
+    const std::array<uint16x8_t, 2> w16{vmovl_u8(vget_low_u8(w8)), vmovl_high_u8(w8)};
+    auto acc = vdupq_n_u64(0);
+    scan_regions(
+        source, first, count,
+        [&](std::size_t, const auto& x) __attribute__((always_inline)) {
+            detail::each<std::tuple_size_v<std::remove_cvref_t<decltype(x.block)>>>([&](auto p) __attribute__((always_inline)) {
+                if constexpr (K <= 8) {
+                    // u8 x u8 products in u16 lanes, pairwise into u32, then u64.
+                    const auto v = x.block[p].v[0];
+                    auto pairs = vpaddlq_u16(vmull_u8(vget_low_u8(v), vget_low_u8(w8)));
+                    pairs = vpadalq_u16(pairs, vmull_high_u8(v, w8));
+                    acc = vpadalq_u32(acc, pairs);
+                } else if constexpr (K <= 16) {
+                    detail::each<2>([&](auto j) __attribute__((always_inline)) {
+                        const auto v = vreinterpretq_u16_u8(x.block[p].v[j]);
+                        acc = vpadalq_u32(acc, vmull_u16(vget_low_u16(v), vget_low_u16(w16[j])));
+                        acc = vpadalq_u32(acc, vmull_high_u16(v, w16[j]));
+                    });
+                } else if constexpr (K <= 32) {
+                    const auto y = neon::widen<32>(x.block[p]);
+                    detail::each<4>([&](auto j) __attribute__((always_inline)) {
+                        const auto v = vreinterpretq_u32_u8(y.v[j]);
+                        acc = vmlal_u32(acc, vget_low_u32(v), vget_low_u32(w32[j]));
+                        acc = vmlal_high_u32(acc, v, w32[j]);
+                    });
+                } else {
+                    const auto y = neon::widen<64>(x.block[p]);
+                    detail::each<8>([&](auto j) __attribute__((always_inline)) {
+                        const auto v = vreinterpretq_u64_u8(y.v[j]);
+                        const auto wj = j % 2 ? vget_high_u32(w32[j / 2]) : vget_low_u32(w32[j / 2]);
+                        acc = vmlal_u32(acc, vmovn_u64(v), wj);
+                        acc = vaddq_u64(acc, vshlq_n_u64(vmull_u32(vshrn_n_u64(v, 32), wj), 32));
+                    });
+                }
+            });
+        },
+        [&](std::size_t row, std::uint64_t value) { edges += weights[row % 16] * value; });
+    return edges + vaddvq_u64(acc);
+#else
+    std::uint64_t total = 0;
+    scan_regions(
+        source, first, count,
+        [&](std::size_t row, const auto& x) {
+            std::uint64_t values[16];
+            native::store16(values, x);
+            for (unsigned j = 0; j < 16; ++j)
+                total += weights[(row + j) % 16] * values[j];
+        },
+        [&](std::size_t row, std::uint64_t value) { edges += weights[row % 16] * value; });
+    return edges + total;
+#endif
 }
 /// The layout of a headless whole-source dense expression, else void.
 template <class E> struct dense_layout {

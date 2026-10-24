@@ -249,6 +249,10 @@ template <class Expression> class reader {
             return std::unexpected(error::range);
         return sum_unchecked(first, count);
     }
+    /// The sum, modulo 2^64, of weights[row % 16] * value over [first, first + count).
+    std::uint64_t weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights) const {
+        return with_physical([&](const auto& e) { return author::weighted_sum_regions(e, first, count, weights); });
+    }
 #endif
     template <class Prefilter>
     [[nodiscard]] std::expected<std::uint64_t, error>
@@ -393,6 +397,9 @@ template <class L> class reader<dense_source<L>> {
     [[nodiscard]] std::expected<std::uint64_t, error> sum(std::size_t first, std::size_t count) const {
         return composed().sum(first, count);
     }
+    std::uint64_t weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights) const {
+        return composed().weighted_sum_unchecked(first, count, weights);
+    }
 #endif
     template <class U> erased_reader<U> erase() const {
         return detail::erase_dense_reader<U>(source_);
@@ -418,4 +425,14 @@ extern template std::expected<erased_reader<std::uint8_t>, error> bind_reader(co
 extern template std::expected<erased_reader<std::uint16_t>, error> bind_reader(const dense_input&);
 extern template std::expected<erased_reader<std::uint32_t>, error> bind_reader(const dense_input&);
 extern template std::expected<erased_reader<std::uint64_t>, error> bind_reader(const dense_input&);
+/// The same runtime binding with the layout's compiled range operations
+/// (erased_reader::compiled_ranges()): sum, masked and weighted sums, counts
+/// and filter words run native kernels rather than decoding. Linking it
+/// retains every layout's tables (several MB of code); bind_reader does not.
+template <class U>
+[[nodiscard]] std::expected<erased_reader<U>, error> bind_range_reader(const dense_input& source);
+extern template std::expected<erased_reader<std::uint8_t>, error> bind_range_reader(const dense_input&);
+extern template std::expected<erased_reader<std::uint16_t>, error> bind_range_reader(const dense_input&);
+extern template std::expected<erased_reader<std::uint32_t>, error> bind_range_reader(const dense_input&);
+extern template std::expected<erased_reader<std::uint64_t>, error> bind_range_reader(const dense_input&);
 } // namespace ikea::seriespack

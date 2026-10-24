@@ -55,9 +55,12 @@ foreach(example ordinary composition)
 endforeach()
 
 add_library(ikea_seriespack STATIC
-  src/seriespack/readers.cpp src/seriespack/admission.cpp src/seriespack/layout.cpp
+  src/seriespack/readers.cpp src/seriespack/readers_ranges.cpp src/seriespack/admission.cpp src/seriespack/layout.cpp
   src/seriespack/writers_u8.cpp src/seriespack/writers_u16.cpp
-  src/seriespack/writers_u32.cpp src/seriespack/writers_u64.cpp)
+  src/seriespack/writers_u32.cpp src/seriespack/writers_u64.cpp
+  src/seriespack/operations_1.cpp src/seriespack/operations_9.cpp src/seriespack/operations_17.cpp
+  src/seriespack/operations_25.cpp src/seriespack/operations_33.cpp src/seriespack/operations_41.cpp
+  src/seriespack/operations_49.cpp src/seriespack/operations_57.cpp)
 add_library(ikea::seriespack ALIAS ikea_seriespack)
 sixdb_target(ikea_seriespack)
 target_include_directories(ikea_seriespack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
