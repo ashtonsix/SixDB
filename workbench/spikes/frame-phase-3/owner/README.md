@@ -28,20 +28,27 @@ timings do not establish this candidate's performance.
 [description.h](description.h) provides a bounded, versioned description in
 Ikea's existing five-byte envelope (`Fr`, version 1). Node identities and
 ordered edges preserve sharing; child coordinates distinguish identity,
-checkpoint, present-rank and record-field relationships. Decode checks exact
+checkpoint, present-rank, record-field and run-ordinal relationships. Decode checks exact
 length, parameters, topology and reachability before a binding is attempted.
 This is an envelope for composition, not a replacement SeriesPack format.
-Fr version 1 freezes the resolved geometry per width for its packing families;
+Fr version 1 freezes the resolved geometry per remaining-payload width for its packing families;
 a future SeriesPack preset recommendation cannot reinterpret old bytes:
 
-| Fr/v1 packing family | Striped widths | Remaining widths 1–64 |
+| Fr/v1 packing family | Striped payload widths P=K−H | Other payload widths |
 | --- | --- | --- |
 | `compact` | None | Local |
 | `bulk_x86` | 1–7, 12, 20 | Local |
 | `bulk_arm` | 1–7, 10, 12, 14, 15, 20 | Local |
 
-These laws use no separated head planes (`H=0`). Width 0 is a constant with no
-leaf body. The CPU-oriented names identify byte-law families, not the CPU on
+The currently executable Frame recipes use `H=0`; width K=0 then has no leaf
+body. The description can also name H=8/H=16 as a leaf-interpretation
+placeholder, independently of the packing family. Actual image width K must
+satisfy H≤K, and geometry applies to P=K−H. A description alone cannot prove
+that relationship. H0 descriptions retain their previous bytes; the former
+reserved u16 now names heads, and every non-pack node still requires zero.
+Older strict readers reject the new placeholder descriptions; unchanged H0
+bytes do not imply forward compatibility with those descriptions.
+The CPU-oriented names identify byte-law families, not the CPU on
 which they must execute. The checked factory verifies compiled-family
 availability and equality with the frozen mapping before passing a SeriesPack
 preset to the shared backend; a changed recommendation refuses rather than
@@ -53,10 +60,37 @@ The executable subset is group-local `pack`, optionally under `bound`, and
 an `intervals_sizes` or `intervals_relative_ends` root with separate basic
 field/checkpoint children. It uses
 the existing SeriesPack presets; an omitted compiled preset refuses before any
-payload access. Shared tuple records, rank maps, split nodes and
+payload access. Runs, headed leaves, shared tuple records, rank maps, split nodes and
 nested interval programs can describe an extension's **shape**, but the checked
 factory refuses their execution until the corresponding stage contract exists.
 Shape validation is distinct from executable byte-law and operation support.
+
+### Required placeholder witnesses
+
+The canonical `runs` node has two ordered numeric children: run sizes minus
+one, then run values. Both edges use this parent's `run_ordinal` domain, with
+the same data-dependent cardinality M. Parameter 0 fixes the current semantic
+scope: runs terminate at each `description.block_rows` boundary. M and the
+parent-block→child-row map belong to image interpretation, not the pipeline
+description. No Part assignment, image section or global-run mode is implied.
+
+The existing shared in-memory `runs` stage supplies the reference witness. For
+257 equal values, its two children have two rows, sizes-minus-one `[255,0]`
+and equal run values. Alternating input has 257 singleton runs and zero sizes
+minus one. Exact reads, points across rows 255/256 and SUM preserve the original
+values in both cases. The canonical graph round-trips, but the checked owner
+factory refuses it before touching an inaccessible payload: RLE image import,
+publication, write and operation-binding support remain research.
+
+The leading-plane witness uses existing SeriesPack layouts directly at
+K/H=12/8, 20/8, 20/16 and 32/16, with 257 rows and a partial final tile. It writes
+and reads actual body/head planes, checks the leading bytes against each
+layout's K, and matches the remaining-payload geometry to the canonical family.
+This distinguishes a fitted-width head from a fixed logical high-bit split.
+Canonical H8/H16 leaves round-trip, while plain and bound-headed owner recipes
+refuse before payload access. This proves the existing leaf's physical seam;
+it establishes no headed Frame group-image placement, dependency or execution
+contract. Shared TuplePack record/field nodes remain shape placeholders too.
 
 [manifest.h](manifest.h) retains each stream's node identity, actual row count
 and group sections as `(owner Part, offset, extent)`. `part_extents` bounds
@@ -239,10 +273,12 @@ partial tails, guarded missing dependencies and atomic two-section replacement
 with old readers. Pure same-version conversions run in both directions between
 sizes and relative ends: rebuilt target images are independently checked before
 adoption, while retained source readers keep their own interpretation and rows.
-The latest facade tests also cover FILTER/SELECT output guarantees,
-payload-free domain settles and metadata-only basis changes. Matching frozen
-normal and ASan/UBSan checks pass with the compiled runtime leaf; the linked
-SeriesPack archive remains uninstrumented and is covered by hardware guards.
+The facade tests also cover FILTER/SELECT output guarantees, payload-free
+domain settles and metadata-only basis changes. The checked relative-owner
+baseline passes frozen normal and ASan/UBSan checks with the compiled runtime
+leaf. The new RLE/head placeholder extension also passes matching normal and
+owner/runtime/Orbital ASan/UBSan checks. The linked SeriesPack archive remains
+uninstrumented and is covered by hardware guards.
 See [evidence status](EVIDENCE.md) for exact scopes; interval writes here use
 full rebuilds for correctness, not a claimed optimized setter.
 

@@ -15,10 +15,10 @@ enum class output_kind { series, bitmap, record };
 
 bool known(node_kind kind) noexcept {
     const auto k = static_cast<unsigned>(kind);
-    return k >= static_cast<unsigned>(node_kind::pack) && k <= static_cast<unsigned>(node_kind::split);
+    return k >= static_cast<unsigned>(node_kind::pack) && k <= static_cast<unsigned>(node_kind::runs);
 }
 bool known(coordinate mapping) noexcept {
-    return static_cast<unsigned>(mapping) <= static_cast<unsigned>(coordinate::record_field);
+    return static_cast<unsigned>(mapping) <= static_cast<unsigned>(coordinate::run_ordinal);
 }
 output_kind output(node_kind kind) noexcept {
     return kind == node_kind::bec ? output_kind::bitmap :
@@ -83,7 +83,8 @@ std::expected<void, error> validate(const description &d) noexcept {
     for (std::size_t i = 0; i < d.nodes.size(); ++i) {
         const node &n = d.nodes[i];
         if (!known(n.kind)) return std::unexpected(error::kind);
-        if (n.reserved) return std::unexpected(error::parameters);
+        if (n.heads && (n.kind != node_kind::pack || (n.heads != 8 && n.heads != 16)))
+            return std::unexpected(error::parameters);
         if (n.children.size() > maximum_children || n.children.size() > maximum_edges - edges)
             return std::unexpected(error::limit);
         edges += n.children.size();
@@ -133,6 +134,11 @@ std::expected<void, error> validate(const description &d) noexcept {
             if (!child(0, coordinate::identity, output_kind::series) ||
                 !child(1, coordinate::identity, output_kind::series)) return std::unexpected(error::coordinates);
             break;
+        case node_kind::runs:
+            if (n.parameter || !shape(2)) return std::unexpected(error::parameters);
+            if (!child(0, coordinate::run_ordinal, output_kind::series) ||
+                !child(1, coordinate::run_ordinal, output_kind::series)) return std::unexpected(error::coordinates);
+            break;
         }
     }
     if (output(d.nodes[d.root].kind) != output_kind::series) return std::unexpected(error::root);
@@ -161,7 +167,7 @@ std::expected<std::size_t, error> encode(const description &d, std::span<std::by
     w.u16(d.block_rows), w.u16(d.group_blocks), w.u16(static_cast<unsigned>(d.nodes.size())), w.u16(d.root);
     for (const node &n : d.nodes) {
         w.u8(static_cast<unsigned>(n.kind));
-        w.u16(n.parameter), w.u16(n.reserved), w.u8(static_cast<unsigned>(n.children.size()));
+        w.u16(n.parameter), w.u16(n.heads), w.u8(static_cast<unsigned>(n.children.size()));
         for (const edge &e : n.children)
             w.u16(e.child), w.u8(static_cast<unsigned>(e.mapping));
     }
@@ -196,14 +202,14 @@ std::expected<description, error> decode(std::span<const std::byte> input) {
     d.nodes.reserve(nodes);
     std::size_t edges = 0;
     for (unsigned i = 0; i < nodes; ++i) {
-        unsigned kind, parameter, reserved, children;
-        if (!r.u8(kind) || !r.u16(parameter) || !r.u16(reserved) || !r.u8(children))
+        unsigned kind, parameter, heads, children;
+        if (!r.u8(kind) || !r.u16(parameter) || !r.u16(heads) || !r.u8(children))
             return std::unexpected(error::truncated);
         if (!known(static_cast<node_kind>(kind))) return std::unexpected(error::kind);
         if (children > maximum_children || children > maximum_edges - edges) return std::unexpected(error::limit);
         edges += children;
         if (children > (r.bytes.size() - r.at) / edge_bytes) return std::unexpected(error::truncated);
-        node n{static_cast<node_kind>(kind), static_cast<std::uint16_t>(parameter), static_cast<std::uint16_t>(reserved), {}};
+        node n{static_cast<node_kind>(kind), static_cast<std::uint16_t>(parameter), static_cast<std::uint16_t>(heads), {}};
         n.children.reserve(children);
         for (unsigned j = 0; j < children; ++j) {
             unsigned id, mapping;
@@ -226,7 +232,7 @@ std::expected<bound_pack_recipe, error> binding_recipe(const description &d, std
     const node *leaf = &d.nodes[root_node];
     bool bounded = leaf->kind == node_kind::bound;
     if (bounded) leaf = &d.nodes[leaf->children[0].child];
-    if (leaf->kind != node_kind::pack) return std::unexpected(error::unsupported);
+    if (leaf->kind != node_kind::pack || leaf->heads != 0) return std::unexpected(error::unsupported);
     return bound_pack_recipe{static_cast<pack_preset>(leaf->parameter), bounded};
 }
 } // namespace frame3_owner

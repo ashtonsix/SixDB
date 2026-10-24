@@ -1,4 +1,5 @@
 #include "stream_binding.h"
+#include "../proto/placeholders.h"
 
 #include <algorithm>
 #include <array>
@@ -488,6 +489,102 @@ void domain_without_payload(fo::node_kind form) {
     check(take(reader->required(demand)).size() == 2, "point closure was incorrectly weakened by domain predicate settles");
     check(munmap(guard, extent) == 0, "domain guard release failed");
 }
+
+void placeholder_refusal(const fo::description &program) {
+    check(bool(fo::validate(program)), "placeholder has invalid description syntax");
+    refused(fo::make_tree(program), fo::binding_error::unsupported, "placeholder became executable without an image law");
+    const auto page = static_cast<std::size_t>(sysconf(_SC_PAGESIZE));
+    void *guard = mmap(nullptr, page, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    check(guard != MAP_FAILED, "placeholder guard allocation failed");
+    const std::array extents{std::size_t{1}};
+    const std::array streams{fo::stream_manifest{program.root, 257, {{0, 0, 1}}}};
+    const std::array supplied{fo::borrowed_part{0, {static_cast<const std::byte *>(guard), 1}}};
+    const std::array available{fo::section_key{program.root, 0}};
+    refused(fo::stream_binding::attach(program, 257, extents, streams, supplied, available),
+        fo::binding_error::unsupported, "placeholder touched bytes before refusing unsupported image binding");
+    check(munmap(guard, page) == 0, "placeholder guard release failed");
+}
+
+void runs_shape() {
+    fo::description d;
+    d.nodes = {{fo::node_kind::pack, 0, 0, {}}, {fo::node_kind::pack, 0, 0, {}},
+               {fo::node_kind::runs, 0, 0, {{0, fo::coordinate::run_ordinal}, {1, fo::coordinate::run_ordinal}}}};
+    d.root = 2;
+    d = take(fo::decode(take(fo::encode(d))));
+    check(d.nodes[2].children[0].child == 0 && d.nodes[2].children[1].child == 1,
+        "run child roles lost their identities in the description");
+    for (bool alternating : {false, true}) {
+        std::vector<u64> values(257, 77);
+        if (alternating)
+            for (unsigned r = 0; r < values.size(); ++r) values[r] += r % 2;
+        // The existing in-memory prototype witnesses this graph's row law.
+        // It has no imported-image law; no substitute encoder is introduced.
+        frame3::column column(std::make_unique<frame3::runs>(
+            std::make_unique<frame3::pack<ikea::seriespack::preset::compact>>(),
+            std::make_unique<frame3::pack<ikea::seriespack::preset::compact>>()), values);
+        const auto children = column.root().children();
+        const std::size_t run_count = alternating ? 257 : 2;
+        check(children.size() == 2 && children[0]->rows(0) == run_count && children[1]->rows(0) == run_count,
+            "run cardinality was confused with original rows or a fixed checkpoint ratio");
+        std::vector<u64> sizes(run_count), run_values(run_count);
+        children[0]->read(0, 0, static_cast<unsigned>(run_count), sizes.data());
+        children[1]->read(0, 0, static_cast<unsigned>(run_count), run_values.data());
+        if (alternating) {
+            check(std::all_of(sizes.begin(), sizes.end(), [](u64 n) { return n == 0; }) && run_values == values,
+                "singleton run sizes-minus-one or run ordinal changed");
+        } else {
+            check(sizes == std::vector<u64>{255, 0} && run_values == std::vector<u64>{77, 77},
+                "block-local RLE incorrectly merged equal values across a block boundary");
+        }
+        std::vector<u64> decoded(values.size());
+        column.read(decoded.data());
+        check(decoded == values && column.get(255) == values[255] && column.get(256) == values[256],
+            "run child ranges lost the parent block-to-run mapping");
+        u128 sum = 0;
+        for (auto x : values) sum += x;
+        check(column.sum() == sum, "run-size multiplication does not reconstruct the original SUM");
+    }
+    placeholder_refusal(d);
+}
+
+template <unsigned K, unsigned H> void headed_leaf_shape() {
+    namespace sp = ikea::seriespack;
+    using F = sp::preset_layout<K, sp::preset::bulk_x86, H>;
+    constexpr unsigned payload = K - H;
+    constexpr u64 head_mask = (u64{1} << H) - 1, suffix_mask = (u64{1} << payload) - 1;
+    constexpr std::size_t rows = 257, tiles = (rows + F::tile_rows - 1) / F::tile_rows;
+    Bytes body(tiles * F::tile_bytes), high(tiles * F::tile_rows), next(H == 16 ? tiles * F::tile_rows : 0);
+    auto view = take(sp::view<F>::attach(rows,
+        {{{body, F::tile_bytes}, {high, F::tile_rows}, {next, H == 16 ? F::tile_rows : 0}}}));
+    std::vector<u64> values(rows);
+    for (unsigned r = 0; r < rows; ++r) {
+        const u64 head = ((H == 8 ? 0xABu : 0xABCDu) + r * 3) & head_mask;
+        values[r] = (head << payload) | ((5 + r * 13) & suffix_mask);
+    }
+    auto writer = take(sp::bind_writer(view));
+    std::vector<ikea::journal::entry> records(take(writer.effect_capacity_initialize()));
+    ikea::journal effects{records};
+    check(bool(writer.initialize(std::span<const u64>(values), effects)), "headed SeriesPack initialization refused");
+    auto immutable = view.as_const();
+    auto reader = sp::bind_reader(immutable);
+    std::vector<u64> decoded(rows);
+    reader.read_unchecked(0, rows, decoded.data());
+    check(decoded == values, "existing headed leaf failed exact reconstruction");
+    for (unsigned r = 0; r < rows; ++r) {
+        check(std::to_integer<unsigned>(high[r]) == (values[r] >> (K - 8)),
+            "head byte used a fixed logical shift rather than this block's fitted K");
+        if constexpr (H == 16)
+            check(std::to_integer<unsigned>(next[r]) == ((values[r] >> (K - 16)) & 255),
+                "second head byte lost its fitted-width basis");
+    }
+    fo::description d;
+    d.nodes = {{fo::node_kind::pack, static_cast<std::uint16_t>(fo::pack_preset::bulk_x86), H, {}}};
+    const auto recovered = take(fo::decode(take(fo::encode(d))));
+    check(recovered.nodes[0].heads == H &&
+        (fo::packing_geometry(fo::pack_preset::bulk_x86, payload) == fo::pack_geometry::striped) ==
+            (F::storage == sp::geometry::striped), "head option and remaining-payload geometry were conflated");
+    placeholder_refusal(recovered);
+}
 } // namespace
 
 int main() {
@@ -500,5 +597,10 @@ int main() {
         constants(form);
         domain_without_payload(form);
     }
+    runs_shape();
+    headed_leaf_shape<12, 8>();
+    headed_leaf_shape<20, 8>();
+    headed_leaf_shape<20, 16>();
+    headed_leaf_shape<32, 16>();
     std::printf("stream_binding_check: %u checks\n", checks);
 }

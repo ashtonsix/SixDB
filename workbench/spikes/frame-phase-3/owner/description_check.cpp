@@ -22,9 +22,9 @@ void expect(bool ok, const char *what) {
 template <class T> void refused(const std::expected<T, fo::error> &result, fo::error error, const char *what) {
     expect(!result && result.error() == error, what);
 }
-fo::description packed(fo::pack_preset preset = fo::pack_preset::compact, bool bounded = false) {
+fo::description packed(fo::pack_preset preset = fo::pack_preset::compact, bool bounded = false, std::uint16_t heads = 0) {
     fo::description d;
-    d.nodes.push_back({fo::node_kind::pack, static_cast<std::uint16_t>(preset), 0, {}});
+    d.nodes.push_back({fo::node_kind::pack, static_cast<std::uint16_t>(preset), heads, {}});
     if (bounded) {
         d.nodes.push_back({fo::node_kind::bound, 0, 0, {{0, fo::coordinate::identity}}});
         d.root = 1;
@@ -163,6 +163,120 @@ void placeholder_contract() {
     presence.nodes[0].parameter = 0;
     refused(fo::validate(presence), fo::error::coordinates, "a numeric child cannot silently become the presence bitmap");
 }
+void runs_contract() {
+    fo::description runs;
+    runs.nodes = {{fo::node_kind::pack, 0, 0, {}},
+                  {fo::node_kind::pack, 2, 0, {}},
+                  {fo::node_kind::runs, 0, 0,
+                   {{0, fo::coordinate::run_ordinal}, {1, fo::coordinate::run_ordinal}}}};
+    runs.root = 2;
+    // Independent Fr/v1 wire: three nodes, root2; pack compact, pack ARM,
+    // block-local runs(kind10/mode0), sizes-minus-one/value operand order.
+    // Both edges explicitly use run_ordinal(4), not parent rows or checkpoints.
+    const auto golden = literal({0x46, 0x72, 1, 33, 0,
+                                  1, 0, 1, 16, 0, 3, 0, 2, 0,
+                                  1, 0, 0, 0, 0, 0,
+                                  1, 2, 0, 0, 0, 0,
+                                  10, 0, 0, 0, 0, 2, 0, 0, 4, 1, 0, 4});
+    expect(bytes(runs) == golden, "block-local run placeholder has known wire bytes");
+    const auto recovered = fo::decode(golden);
+    expect(recovered && *recovered == runs, "independent run-ordinal golden input decodes");
+    roundtrip(runs, false);
+    expect(fo::binding_recipe(runs, 0).has_value() && fo::binding_recipe(runs, 1).has_value(),
+        "run placeholder retains its independent basic child identities");
+    for (auto mapping : {fo::coordinate::identity, fo::coordinate::checkpoints,
+                         fo::coordinate::present_rank, fo::coordinate::record_field})
+        for (unsigned child : {0u, 1u}) {
+            auto bad = runs;
+            bad.nodes[2].children[child].mapping = mapping;
+            refused(fo::validate(bad), fo::error::coordinates, "each run child requires its parent's run-ordinal domain");
+        }
+    auto bad_wire = golden;
+    bad_wire[34] = std::byte{0};
+    refused(fo::decode(bad_wire), fo::error::coordinates, "wire run edge cannot inherit parent row coordinates");
+    auto bad = runs;
+    bad.nodes[2].children.pop_back();
+    refused(fo::validate(bad), fo::error::parameters, "run placeholder requires both ordered operands");
+    bad = runs;
+    bad.nodes[0] = {fo::node_kind::bec, 256, 0, {}};
+    refused(fo::validate(bad), fo::error::coordinates, "run sizes-minus-one must be a numeric series");
+    bad = runs;
+    bad.nodes[1] = {fo::node_kind::tuple_record, 1, 0, {}};
+    refused(fo::validate(bad), fo::error::coordinates, "run values must be a numeric series, not a record");
+    for (unsigned global_mode : {1u, 65535u}) {
+        bad = runs;
+        bad.nodes[2].parameter = static_cast<std::uint16_t>(global_mode);
+        refused(fo::validate(bad), fo::error::parameters, "unresearched global-run mode is not block-local mode0");
+    }
+    bad = packed(fo::pack_preset::compact, true);
+    bad.nodes[1].children[0].mapping = fo::coordinate::run_ordinal;
+    refused(fo::validate(bad), fo::error::coordinates, "run ordinal is not an identity coordinate for another stage");
+    auto wrapped = runs;
+    wrapped.nodes.push_back({fo::node_kind::bound, 0, 0, {{2, fo::coordinate::identity}}});
+    wrapped.root = 3;
+    roundtrip(wrapped, false);
+    bad = runs;
+    bad.nodes[2].heads = 8;
+    refused(fo::validate(bad), fo::error::parameters, "run node cannot carry a pack head parameter");
+}
+void heads_contract() {
+    // H0 stays byte-for-byte identical to the existing golden pack schema.
+    // H8/H16 occupy only the old reserved u16, independent of preset.
+    const auto golden8 = literal({0x46, 0x72, 1, 15, 0,
+                                   1, 0, 1, 16, 0, 1, 0, 0, 0,
+                                   1, 0, 0, 8, 0, 0});
+    const auto golden16 = literal({0x46, 0x72, 1, 15, 0,
+                                    1, 0, 1, 16, 0, 1, 0, 0, 0,
+                                    1, 2, 0, 16, 0, 0});
+    const auto head8 = packed(fo::pack_preset::compact, false, 8);
+    const auto head16 = packed(fo::pack_preset::bulk_arm, false, 16);
+    expect(bytes(head8) == golden8 && bytes(head16) == golden16, "H8/H16 have independent little-endian golden bytes");
+    const auto recovered8 = fo::decode(golden8), recovered16 = fo::decode(golden16);
+    expect(recovered8 && *recovered8 == head8 && recovered16 && *recovered16 == head16,
+        "headed-leaf golden inputs preserve preset and head count independently");
+    for (auto preset : {fo::pack_preset::compact, fo::pack_preset::bulk_x86, fo::pack_preset::bulk_arm})
+        for (bool bounded : {false, true})
+            for (std::uint16_t heads : {std::uint16_t{8}, std::uint16_t{16}}) {
+                const auto d = packed(preset, bounded, heads);
+                roundtrip(d, false);
+                refused(fo::binding_recipe(d, 0), fo::error::unsupported, "headed basic leaf cannot silently bind as H0");
+                auto h0 = d;
+                h0.nodes[0].heads = 0;
+                expect(bytes(h0) == bytes(packed(preset, bounded)), "clearing heads restores the original H0 description bytes");
+            }
+    for (unsigned invalid : {1u, 7u, 9u, 15u, 17u, 64u, 65535u}) {
+        auto bad = packed();
+        bad.nodes[0].heads = static_cast<std::uint16_t>(invalid);
+        refused(fo::validate(bad), fo::error::parameters, "unsupported head count is refused");
+    }
+    auto bad_wire = golden8;
+    bad_wire[18] = std::byte{1};
+    refused(fo::decode(bad_wire), fo::error::parameters, "head parameter is validated as full u16, not a truncated byte");
+    auto bad = packed(fo::pack_preset::compact, true);
+    bad.nodes[1].heads = 8;
+    refused(fo::validate(bad), fo::error::parameters, "bound cannot carry a pack head parameter");
+    fo::description field;
+    field.nodes = {{fo::node_kind::tuple_record, 1, 16, {}},
+                   {fo::node_kind::tuple_field, 0, 0, {{0, fo::coordinate::record_field}}}};
+    field.root = 1;
+    refused(fo::validate(field), fo::error::parameters, "record node cannot carry a pack head parameter");
+    fo::description intervals;
+    intervals.nodes = {{fo::node_kind::pack, 0, 0, {}}, {fo::node_kind::pack, 0, 0, {}},
+                       {fo::node_kind::intervals_sizes, 16, 8,
+                        {{0, fo::coordinate::identity}, {1, fo::coordinate::checkpoints}}}};
+    intervals.root = 2;
+    refused(fo::validate(intervals), fo::error::parameters, "interval stage cannot carry a pack head parameter");
+    // Remaining-payload geometry: these legal (K,H) pairs differ from the
+    // geometry one would choose by mistakenly applying a preset to full K.
+    expect(fo::packing_geometry(fo::pack_preset::bulk_arm, 18 - 8) == fo::pack_geometry::striped,
+        "H8 leaves a ten-bit ARM-striped payload");
+    expect(fo::packing_geometry(fo::pack_preset::bulk_arm, 26 - 16) == fo::pack_geometry::striped,
+        "H16 leaves a ten-bit ARM-striped payload");
+    expect(fo::packing_geometry(fo::pack_preset::bulk_x86, 18 - 8) == fo::pack_geometry::local,
+        "the same H8 payload remains Local in the x86 family");
+    expect(fo::packing_geometry(fo::pack_preset::bulk_x86, 28 - 8) == fo::pack_geometry::striped,
+        "H8 leaves a twenty-bit x86-striped payload");
+}
 void malformed_contract() {
     const auto valid = bytes(packed(fo::pack_preset::bulk_x86, true));
     for (std::size_t n = 0; n < valid.size(); ++n)
@@ -190,7 +304,7 @@ void malformed_contract() {
     refused(fo::decode(bad), fo::error::parameters, "unknown pack preset is refused");
     bad = valid;
     bad[17] = std::byte{1};
-    refused(fo::decode(bad), fo::error::parameters, "nonzero reserved parameter is refused");
+    refused(fo::decode(bad), fo::error::parameters, "illegal one-bit head separation is refused");
     bad = valid;
     bad[10] = bad[11] = std::byte{255};
     refused(fo::decode(bad), fo::error::limit, "hostile node count is bounded before allocation");
@@ -298,6 +412,8 @@ void guarded_input_contract() {
 int main() {
     wire_contract();
     placeholder_contract();
+    runs_contract();
+    heads_contract();
     malformed_contract();
     output_contract();
     guarded_input_contract();
