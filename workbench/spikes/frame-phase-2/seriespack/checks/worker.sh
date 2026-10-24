@@ -21,7 +21,7 @@ for isa in $isas; do
   build="build/clang/frame-checks-$isa"
   out="$SIXDB_RESULTS/$isa"
   mkdir -p "$out"
-  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release $flags > "$out/configure.txt" 2>&1
+  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSIXDB_TEST_SCOPE="${TEST_SCOPE:-fast}" $flags > "$out/configure.txt" 2>&1
   targets="ikea_seriespack_check ikea_seriespack_admission_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check ikea_filters_check"
   cmake --build "$build" --target $targets -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1 || { echo "build failed" >> "$out/summary.txt"; status=1; }
   for t in $targets; do
