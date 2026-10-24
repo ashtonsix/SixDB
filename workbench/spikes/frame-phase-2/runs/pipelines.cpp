@@ -175,6 +175,10 @@ struct small_series {
 
 enum class kind : u8 { constant, packed, runs };
 
+// One containment rule for the window [lo, lo + 2^K), used by the recount
+// and by emission: subtraction cannot wrap where lo + mask(K) can.
+inline bool inside(u64 x, u64 lo, unsigned K) { return x >= lo && x - lo <= frame_bounds::mask(K); }
+
 template <sp::preset P> struct pipeline {
     bool rle, group_rle;
     bool stage = false;  // no-RLE bounds through frame_bounds::fast::choose (bounds/stage.h)
@@ -269,10 +273,9 @@ template <sp::preset P> struct pipeline {
             {
                 // Emission-exact bytes for the chosen window (the stage's counts
                 // can be upper bounds after tightening).
-                const u64 hi = pk >= 64 ? ~u64{0} : lo + ((u64{1} << pk) - 1);
                 std::size_t low = 0, high = 0;
                 for (unsigned i = 0; i < block_rows; ++i)
-                    low += x[i] < lo, high += x[i] > hi;
+                    low += x[i] < lo, high += !(x[i] < lo) && !inside(x[i], lo, pk);
                 pbytes = costs(pk, low, high, bits(span));
                 prior = {lo, pk, static_cast<u32>(low), static_cast<u32>(high), pbytes}, have_prior = true;
             }
@@ -331,7 +334,7 @@ template <sp::preset P> struct pipeline {
                 slot.push_back(static_cast<u32>(staged[pk].size() / block_rows));
                 ex_first.push_back(static_cast<u32>(exceptions.size()));
                 for (unsigned i = 0; i < block_rows; ++i) {
-                    if (x[i] < lo || (x[i] - lo) >> pk)
+                    if (!inside(x[i], lo, pk))
                         exceptions.push_back({static_cast<u8>(i), x[i]}), staged[pk].push_back(0);
                     else
                         staged[pk].push_back(x[i] - lo);
