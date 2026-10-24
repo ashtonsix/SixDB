@@ -13,6 +13,10 @@
 #include "cells.h"
 #include "image.h"
 #include "sort.h"
+#if __has_include("weighted.h")
+#include "weighted.h"
+#define FRAME_WEIGHTED_LEAVES 1
+#endif
 
 #include <algorithm>
 #include <chrono>
@@ -166,6 +170,8 @@ struct image_program final : program {
     }
 };
 
+template <class T> T run_value(bodies::runs<T>);
+
 struct dict_program final : program {
     std::vector<std::vector<u64>> dict;
     fi::image codes;
@@ -210,6 +216,39 @@ struct dict_program final : program {
     }
     u128 block_sum(std::size_t b, const u64 *sel) const {
         const u64 *d = dict[b / part_blocks].data() + codes.base[b];
+#if FRAME_WEIGHTED_LEAVES
+        // Front C's per-code weight leaves (bodies/weighted.h): D indexed by
+        // the block's code residuals, so the table pointer starts at its base.
+        {
+            const u8 *p = codes.bytes.data() + codes.offset[b];
+            const unsigned w = codes.width[b];
+            switch (codes.kind_of[b]) {
+            case fi::constant: {
+                const unsigned cnt = sel ? std::popcount(sel[0]) + std::popcount(sel[1]) + std::popcount(sel[2]) + std::popcount(sel[3]) : fi::block_rows;
+                return static_cast<u128>(d[0]) * cnt;
+            }
+            case fi::runs:
+                if (!sel) {
+                    u128 r = 0;
+                    fi::with_runs(w, [&](auto rr) { r = bodies::runs_weighted<decltype(run_value(rr))>::weighted_sum(p, codes.n[b], d); });
+                    return r;
+                }
+                break;
+            case fi::plane:
+                if (w <= 16) {
+                    u128 r = 0;
+                    fi::with_plane(w, [&](auto K) {
+                        if constexpr (K <= 16)
+                            r = sel ? bodies::packed_weighted<bodies::layout::plane256, K>::masked_weighted_sum(p, sel, d)
+                                    : bodies::packed_weighted<bodies::layout::plane256, K>::weighted_sum(p, d);
+                    });
+                    return r;
+                }
+                break;
+            default: break;
+            }
+        }
+#endif
         alignas(64) u32 x[fi::block_rows + 32];  // run unpack writes up to 32 rows past 256 (bodies/README.md, write envelopes)
         unpack(b, x);
         u64 lo = 0, hi = 0;
