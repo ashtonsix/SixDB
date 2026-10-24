@@ -73,8 +73,29 @@ template <class V> void parts(const char *col, const std::vector<u64> &v, std::s
                std::sort(s.begin(), s.end());
                sink = sink + s[3];
            }, reps));
+    report("quantiles32", per_call([&](std::size_t i) { sink = sink + fast::sample_quantiles<V, 32>(R(i), 256, s8, vb[i % blocks], 3, 5).best.lo; }, reps));
+    report("quantiles16", per_call([&](std::size_t i) { sink = sink + fast::sample_quantiles<V, 16>(R(i), 256, s16, vb[i % blocks], 3, 5).best.lo; }, reps));
+    report("ladder32", per_call([&](std::size_t i) { sink = sink + fast::sample_ladder<V, 32>(R(i), 256, s8, vb[i % blocks]).first.lo; }, reps));
+    report("ladder16", per_call([&](std::size_t i) { sink = sink + fast::sample_ladder<V, 16>(R(i), 256, s16, vb[i % blocks]).first.lo; }, reps));
+    report("guess_narrow_ladder32", per_call([&](std::size_t i) {
+               fast::options o;
+               o.ladder = true;
+               sink = sink + fast::guess_narrow<7, 32, V>(R(i), 256, vb[i % blocks], c, s8, nullptr, o).lo;
+           }, reps));
+    report("guess_lean32", per_call([&](std::size_t i) { sink = sink + fast::guess_lean<V, 32>(R(i), 256, vb[i % blocks], c, s8, nullptr).lo; }, reps));
+    report("guess_lean16", per_call([&](std::size_t i) { sink = sink + fast::guess_lean<V, 16>(R(i), 256, vb[i % blocks], c, s16, nullptr).lo; }, reps));
     report("sample32_t9", per_call([&](std::size_t i) { sink = sink + fast::sample_guess<9, V, 32>(R(i), 256, s8, vb[i % blocks]).best.lo; }, reps));
     report("sample16_t5", per_call([&](std::size_t i) { sink = sink + fast::sample_guess<5, V, 16>(R(i), 256, s16, vb[i % blocks]).best.lo; }, reps));
+    report("guess_narrow_quant32", per_call([&](std::size_t i) {
+               fast::options o;
+               o.quantiles = true;
+               sink = sink + fast::guess_narrow<7, 32, V>(R(i), 256, vb[i % blocks], c, s8, nullptr, o).lo;
+           }, reps));
+    report("guess_narrow_quant16", per_call([&](std::size_t i) {
+               fast::options o;
+               o.quantiles = true;
+               sink = sink + fast::guess_narrow<7, 16, V>(R(i), 256, vb[i % blocks], c, s16, nullptr, o).lo;
+           }, reps));
     report("guess_narrow_s32",
            per_call([&](std::size_t i) { sink = sink + fast::guess_narrow<5, 32, V>(R(i), 256, vb[i % blocks], c, s8, nullptr, {}).lo; }, reps));
 }

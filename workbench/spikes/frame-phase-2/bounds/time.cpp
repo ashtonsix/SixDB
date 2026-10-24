@@ -58,7 +58,7 @@ std::size_t run(const std::vector<const u64 *> &blocks, const method &m) {
     for (std::size_t b = 0; b < blocks.size(); ++b) {
         const choice r = m(blocks[b], b, prior);
         total += r.bytes;
-        prior = {r.lo, r.width, true};
+        prior = {r.lo, r.width, true, r.low, r.high};
     }
     return total;
 }
@@ -86,27 +86,87 @@ int main(int argc, char **argv) {
         {"narrow_min_exhaustive", [&](const u64 *x, std::size_t, const window &) { return fast::min_exhaustive(x, block_rows, c); }},
         {"fast_t7_s32",
          [&](const u64 *x, std::size_t, const window &p) {
-             const choice pc{p.lo, p.width, 0, 0, 0};
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
              return fast::guess<7, 32>(x, block_rows, c, s32, p.valid ? &pc : nullptr);
          }},
         {"fast_t5_s32",
          [&](const u64 *x, std::size_t, const window &p) {
-             const choice pc{p.lo, p.width, 0, 0, 0};
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
              return fast::guess<5, 32>(x, block_rows, c, s32, p.valid ? &pc : nullptr);
          }},
         {"fast_t7_s32_e7",
          [&](const u64 *x, std::size_t, const window &p) {
-             const choice pc{p.lo, p.width, 0, 0, 0};
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
              return fast::guess<7, 32>(x, block_rows, c, s32, p.valid ? &pc : nullptr, {1, true});
+         }},
+        {"quant_s32",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.quantiles = true;
+             return fast::guess<7, 32>(x, block_rows, c, s32, p.valid ? &pc : nullptr, o);
+         }},
+        {"quant_s16",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.quantiles = true;
+             return fast::guess<7, 16>(x, block_rows, c, s16, p.valid ? &pc : nullptr, o);
+         }},
+        {"ladder_s32",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.ladder = true;
+             return fast::guess<7, 32>(x, block_rows, c, s32, p.valid ? &pc : nullptr, o);
+         }},
+        {"ladder_s16",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.ladder = true;
+             return fast::guess<7, 16>(x, block_rows, c, s16, p.valid ? &pc : nullptr, o);
+         }},
+        {"lean_s32",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.lean = true;
+             return fast::guess<7, 32>(x, block_rows, c, s32, p.valid ? &pc : nullptr, o);
+         }},
+        {"lean_s16",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.lean = true;
+             return fast::guess<7, 16>(x, block_rows, c, s16, p.valid ? &pc : nullptr, o);
+         }},
+        {"local_s32",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             return fast::guess_local<32>(x, block_rows, c, s32, p.valid ? &pc : nullptr);
+         }},
+        {"local_s16",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             return fast::guess_local<16>(x, block_rows, c, s16, p.valid ? &pc : nullptr);
+         }},
+        {"quant_s16_noref",
+         [&](const u64 *x, std::size_t, const window &p) {
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
+             fast::options o;
+             o.quantiles = true;
+             o.refine_rounds = 0;
+             return fast::guess<7, 16>(x, block_rows, c, s16, p.valid ? &pc : nullptr, o);
          }},
         {"fast_prior_ref2",
          [&](const u64 *x, std::size_t, const window &p) {
-             const choice pc{p.lo, p.width, 0, 0, 0};
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
              return fast::guess<5, 16>(x, block_rows, c, s16, p.valid ? &pc : nullptr, {2, false, false});
          }},
         {"fast_s16_ref1",
          [&](const u64 *x, std::size_t, const window &p) {
-             const choice pc{p.lo, p.width, 0, 0, 0};
+             const choice pc{p.lo, p.width, p.low, p.high, 0};
              return fast::guess<5, 16>(x, block_rows, c, s16, p.valid ? &pc : nullptr);
          }},
     };

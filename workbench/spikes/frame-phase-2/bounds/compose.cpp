@@ -4,14 +4,17 @@
 // (runs/pipelines.cpp's no-RLE path, with lo in place of the minimum).
 //
 // Representation of a packed block: lo (u64), width K, the block's slot in
-// its width's SeriesPack array, and its exceptions as (u8 position, signed
-// value x - lo), costed at whole bytes with a sign bit once any lies below lo. Exception slots store field 0. Operations
-// compensate for lo at the decode level (the SeriesPack thread owns fused
-// compensation):
-//   SUM      fields + lo * 256 + sum of (x - lo) over exceptions
+// its width's SeriesPack array, and its exceptions, costed as (u8 position,
+// value x - lo at whole bytes with a sign bit once any lies below lo).
+// Exception slots store field 0. Here the exceptions sit in compact columns
+// (positions padded to 64-lane registers, decoded u64 values); the cost
+// model may cap them per block (max_exceptions). Operations compensate for
+// lo with SeriesPack's own range kernels:
+//   SUM      fields + lo * (256 - E) + sum of exception values
 //   COUNT>=t t <= lo: every non-exception row, else fields >= t - lo; then
 //            each exception by its own value
-//   point    field + lo, unless the row is an exception
+//   point    field first; only a zero field compares the row against the
+//            block's positions, one register per 64 exceptions
 // Every answer is checked against the raw column.
 //
 // usage: frame_bounds_compose COLS_DIR ROWS ROUNDS COLUMN...
@@ -19,7 +22,9 @@
 
 #include <ikea/seriespack.h>
 
+#include <bit>
 #include <chrono>
+#include <cstring>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -131,24 +136,30 @@ struct column {
     std::vector<u8> width;  // 0 for a constant block
     std::vector<u64> lo;    // the block's base: lo, or the constant
     std::vector<u32> slot, ex_first;
-    std::vector<std::pair<u8, i128>> exceptions;  // (position, x - lo); 64-bit spans need the sign beyond i64
+    // Exceptions in compact columns: each block's positions padded to whole
+    // 64-lane registers of u8 (unused lanes past the block's count), and
+    // their decoded values at the domain's width.
+    std::vector<u8> positions;
+    std::vector<u32> position_at;  // per block, into positions
+    std::vector<u64> values;
     std::array<std::unique_ptr<packed_width>, 65> packed;
-    std::size_t bytes = 0, low_exceptions = 0, high_exceptions = 0;
+    std::size_t bytes = 0, low_exceptions = 0, high_exceptions = 0, max_block_exceptions = 0;
     double encode_ns = 0;
 
     // c prices the stored bytes; the stage chooses under choose (c plus
-    // Engine's per-exception penalty).
+    // Engine's per-exception penalty and capacity).
     column(const std::vector<u64> &v, method m, const cost_model &c, const cost_model &choose, const cost_model &sc) {
         const std::size_t blocks = v.size() / block_rows;
         std::array<std::vector<u64>, 65> staged;
         choice prior;
         bool have_prior = false;
         // Encode: bounds, exception extraction and staging, timed together;
-        // SeriesPack packing per width is timed separately below.
+        // SeriesPack packing per width is not timed.
         encode_ns = time_ns([&] {
             for (std::size_t b = 0; b < blocks; ++b) {
                 const u64 *x = v.data() + b * block_rows;
-                ex_first.push_back(static_cast<u32>(exceptions.size()));
+                ex_first.push_back(static_cast<u32>(values.size()));
+                position_at.push_back(static_cast<u32>(positions.size()));
                 const auto [mn, mx] = minmax(x, block_rows);
                 if (mn == mx) {
                     width.push_back(0), lo.push_back(mn), slot.push_back(0);
@@ -157,7 +168,6 @@ struct column {
                 }
                 const choice ch = m == method::today ? fast::min_exhaustive(x, block_rows, choose)
                                                      : fast::guess<7, 32>(x, block_rows, choose, sc, have_prior ? &prior : nullptr);
-                prior = ch, have_prior = true;
                 const unsigned K = ch.width;
                 const u64 top = ch.lo > ~u64{0} - mask(K) ? ~u64{0} : ch.lo + mask(K);  // saturates at the domain's top
                 width.push_back(static_cast<u8>(K)), lo.push_back(ch.lo), slot.push_back(static_cast<u32>(staged[K].size() / block_rows));
@@ -165,32 +175,38 @@ struct column {
                 for (unsigned i = 0; i < block_rows; ++i) {
                     const bool out = x[i] < ch.lo || x[i] > top;
                     if (out)
-                        exceptions.push_back({static_cast<u8>(i), static_cast<i128>(x[i]) - static_cast<i128>(ch.lo)});
+                        positions.push_back(static_cast<u8>(i)), values.push_back(x[i]);
                     staged[K].push_back(out ? 0 : x[i] - ch.lo);
                     low += x[i] < ch.lo, high += out && x[i] >= ch.lo;
                 }
-                low_exceptions += low, high_exceptions += high;
+                positions.resize((positions.size() + 63) / 64 * 64, 0);
+                low_exceptions += low, high_exceptions += high, max_block_exceptions = std::max(max_block_exceptions, low + high);
                 bytes += c(K, low, high, bits(mx - mn)) + 10;
+                prior = ch, prior.low = static_cast<u32>(low), prior.high = static_cast<u32>(high), have_prior = true;
             }
         });
-        ex_first.push_back(static_cast<u32>(exceptions.size()));
+        ex_first.push_back(static_cast<u32>(values.size()));
+        position_at.push_back(static_cast<u32>(positions.size()));
+        values.resize(values.size() + 64, 0);  // readable slack for the branch-free select
         for (unsigned K = 1; K <= 64; ++K)
             if (!staged[K].empty())
                 packed[K] = make_width(K, staged[K]);
     }
 
     u128 sum() const {
-        i128 total = 0;
+        u128 total = 0;
         for (std::size_t b = 0; b < width.size(); ++b) {
             if (!width[b]) {
-                total += static_cast<i128>(lo[b]) * block_rows;
+                total += static_cast<u128>(lo[b]) * block_rows;
                 continue;
             }
-            total += static_cast<i128>(packed[width[b]]->sum(slot[b])) + static_cast<i128>(lo[b]) * block_rows;
-            for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
-                total += exceptions[e].second;
+            // Exception slots hold field 0: lo counts only for the other rows.
+            const u32 e0 = ex_first[b], e1 = ex_first[b + 1];
+            total += packed[width[b]]->sum(slot[b]) + static_cast<u128>(lo[b]) * (block_rows - (e1 - e0));
+            for (u32 e = e0; e < e1; ++e)
+                total += values[e];
         }
-        return static_cast<u128>(total);
+        return total;
     }
     u64 count_ge(u64 t) const {
         u64 n = 0;
@@ -206,20 +222,41 @@ struct column {
             else if (bits(t - base) <= width[b])
                 n += packed[width[b]]->count_ge(slot[b], t - base);  // exception slots hold 0 < t - base
             for (u32 e = e0; e < e1; ++e)
-                n += static_cast<u64>(static_cast<i128>(base) + exceptions[e].second) >= t;
+                n += values[e] >= t;
         }
         return n;
     }
+    // Up to 64 exceptions: one compare of the row against the block's u8
+    // positions, branch-free (the field read and the patch select overlap).
+    // More: field first (a non-zero field is never an exception), then one
+    // register per 64 positions.
     u64 get(std::size_t row) const {
         const std::size_t b = row / block_rows;
         if (!width[b])
             return lo[b];
-        const auto *e0 = exceptions.data() + ex_first[b], *e1 = exceptions.data() + ex_first[b + 1];
         const u8 r = static_cast<u8>(row % block_rows);
-        const auto *e = std::lower_bound(e0, e1, std::pair<u8, i128>{r, -(static_cast<i128>(1) << 100)});
-        if (e < e1 && e->first == r)
-            return static_cast<u64>(static_cast<i128>(lo[b]) + e->second);
-        return packed[width[b]]->get(slot[b] * block_rows + r) + lo[b];
+        const u64 field = packed[width[b]]->get(slot[b] * block_rows + r);
+        const u32 e0 = ex_first[b], count = ex_first[b + 1] - e0;
+        using u8x64 = u8 __attribute__((vector_size(64)));
+        using b64 = bool __attribute__((ext_vector_type(64)));
+        auto hits = [&](u32 at) {
+            u8x64 p;
+            std::memcpy(&p, positions.data() + position_at[b] + at, 64);
+            const std::uint64_t valid = count - at >= 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << (count - at)) - 1;
+            return std::bit_cast<std::uint64_t>(__builtin_convertvector(p == r, b64)) & valid;
+        };
+        if (count <= 64) {
+            const std::uint64_t hit = count ? hits(0) : 0;
+            // values has a trailing slot, so the index is always readable.
+            const u64 patched = values[e0 + static_cast<u32>(std::countr_zero(hit | (std::uint64_t{1} << 63)) & 63)];
+            return hit ? patched : field + lo[b];
+        }
+        if (field)
+            return field + lo[b];
+        for (u32 at = 0; at < count; at += 64)
+            if (const std::uint64_t hit = hits(at))
+                return values[e0 + at + static_cast<u32>(std::countr_zero(hit))];
+        return lo[b];
     }
 };
 }  // namespace
@@ -247,9 +284,15 @@ int main(int argc, char **argv) {
         std::vector<u32> points(65536);
         for (auto &p : points)
             p = static_cast<u32>(g() % v.size());
-        for (auto [m, penalty] : {std::pair{method::today, 0u}, {method::guess, 0u}, {method::guess, 2u}, {method::guess, 8u}}) {
+        struct arm {
+            method m;
+            unsigned penalty, cap;
+        };
+        for (auto [m, penalty, cap] : {arm{method::today, 0, 256}, arm{method::guess, 0, 256}, arm{method::guess, 2, 256}, arm{method::guess, 8, 256},
+                                       arm{method::today, 0, 64}, arm{method::guess, 0, 64}, arm{method::guess, 2, 64}, arm{method::guess, 0, 32}, arm{method::guess, 2, 32}}) {
             cost_model choose = c, scp = sc;
             choose.exception_penalty = scp.exception_penalty = penalty;
+            choose.max_exceptions = scp.max_exceptions = cap;
             std::vector<double> enc, sum_ns, count_ns, point_ns;
             std::optional<column> col;
             for (unsigned r = 0; r < rounds; ++r) {
@@ -283,9 +326,9 @@ int main(int argc, char **argv) {
             std::size_t body = 0;
             for (const auto &w : col->packed)
                 body += w ? w->bytes() : 0;
-            std::printf("{\"column\":\"%s\",\"method\":\"%s\",\"exception_penalty\":%u,\"bits_per_value\":%.4f,\"body_bytes\":%zu,\"bytes\":%zu,\"low_exceptions\":%zu,"
+            std::printf("{\"column\":\"%s\",\"method\":\"%s\",\"exception_penalty\":%u,\"max_exceptions\":%u,\"block_exceptions_max\":%zu,\"bits_per_value\":%.4f,\"body_bytes\":%zu,\"bytes\":%zu,\"low_exceptions\":%zu,"
                         "\"high_exceptions\":%zu,\"encode_ns_per_block\":%.1f,\"sum_ns_per_block\":%.1f,\"count_ns_per_block\":%.1f,\"point_ns\":%.1f}\n",
-                        name.c_str(), m == method::today ? "today" : "guess", penalty, 8.0 * col->bytes / v.size(), body, col->bytes, col->low_exceptions,
+                        name.c_str(), m == method::today ? "today" : "guess", penalty, cap, col->max_block_exceptions, 8.0 * col->bytes / v.size(), body, col->bytes, col->low_exceptions,
                         col->high_exceptions, median(enc), median(sum_ns), median(count_ns), median(point_ns));
             std::fflush(stdout);
         }

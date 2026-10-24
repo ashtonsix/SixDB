@@ -29,12 +29,17 @@ struct cost_model {
     // Engine's read-time weight: bytes charged per exception on top of its
     // storage (patching costs points and scans; runs/README.md).
     unsigned exception_penalty = 0;
+    // A block's exception capacity: positions fit one 64-byte register of u8
+    // lanes, so a point finds its patch with one compare. More is infeasible.
+    unsigned max_exceptions = 256;
     // Exception values are stored relative to lo at whole bytes, with a sign
     // bit once any value lies below lo. value_bits covers max - min.
     std::size_t operator()(unsigned K, std::size_t low, std::size_t high, unsigned value_bits) const {
         const std::size_t ex = low + high;
         if (!ex)
             return body[K];
+        if (ex > max_exceptions)
+            return std::size_t{1} << 40;
         const unsigned vb = (value_bits + (low != 0) + 7) / 8;
         return body[K] + header_bytes + ex * (position_bytes + vb + exception_penalty);
     }
@@ -338,6 +343,7 @@ struct window {
     u64 lo = 0;
     unsigned width = 0;
     bool valid = false;
+    u32 low = 0, high = 0;  // the window's exceptions in its own block
 };
 template <unsigned T, std::size_t S> choice guess(const u64 *x, std::size_t n, const cost_model &c, const cost_model &sc, const window &prior, unsigned refine_rounds = 0) {
     const auto e = order_stats<T>(x, n);

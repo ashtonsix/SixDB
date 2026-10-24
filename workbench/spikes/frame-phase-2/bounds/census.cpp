@@ -147,12 +147,13 @@ void census(const std::string &column, const std::vector<u64> &v) {
     const cost_model c = seriespack_cost<sp::preset::compact>(block_rows);
     const char *names[] = {"exact",        "min_exhaustive", "min_prior",     "two_anchor",   "extremes5",    "distinct5",
                            "sample32",     "e5_s32",         "e5_s32_pw",     "e5_s32_pw_anchors", "e3_s32_pw",  "e5_s16_pw",
-                           "s32_pw",       "e5_pw_anchors",  "e9_s32_pw",     "e5_s32_pw_r16", "guess_e5_s32", "guess_e3_s16", "guess_e5_s32_ref1", "guess_e5_s32_ref4", "guess_e3_s16_ref4", "guess_e2_s16_ref4", "guess_e1_s32_ref1", "guess_e2_s32_ref1", "guess_e3_s32_ref1", "guess_e1_s32_ref2", "guess_e1_s16_ref2", "fast_s32_ref1", "fast_s32_ref1_e5", "fast_s16_ref1", "fast_prior_ref2", "narrow_min_exhaustive", "fast_fb_e5", "fast_fb_exact", "gated_j1.00_r16", "gated_j1.03_r16", "gated_j1.10_r16", "gated_j1.03_r8", "gated_j1.03_r64", "fast_t9_s32", "fast_t7_s32", "fast_t5_s32", "fast_t4_s32", "fast_t5_s16"};
+                           "s32_pw",       "e5_pw_anchors",  "e9_s32_pw",     "e5_s32_pw_r16", "guess_e5_s32", "guess_e3_s16", "guess_e5_s32_ref1", "guess_e5_s32_ref4", "guess_e3_s16_ref4", "guess_e2_s16_ref4", "guess_e1_s32_ref1", "guess_e2_s32_ref1", "guess_e3_s32_ref1", "guess_e1_s32_ref2", "guess_e1_s16_ref2", "fast_s32_ref1", "fast_s32_ref1_e5", "fast_s16_ref1", "fast_prior_ref2", "narrow_min_exhaustive", "fast_fb_e5", "fast_fb_exact", "gated_j1.00_r16", "gated_j1.03_r16", "gated_j1.10_r16", "gated_j1.03_r8", "gated_j1.03_r64", "fast_t9_s32", "fast_t7_s32", "fast_t5_s32", "fast_t4_s32", "fast_t5_s16", "quant_s32", "quant_s16", "quant_s32_r16", "quant_s16_r8", "ladder_s32", "ladder_s16", "lean_s32", "lean_s16", "local_s32", "local_s16"};
     constexpr std::size_t M = std::size(names);
     std::array<tally, M> t{};
     std::array<int, M> kp;
     kp.fill(-1);
     std::array<prior, M> pr{};
+    std::array<std::pair<u32, u32>, M> prq{};  // the prior's exceptions below and above
     std::vector<u64> scratch;
     std::size_t constant = 0;
     std::array<std::size_t, M> fallback{};
@@ -218,7 +219,7 @@ void census(const std::string &column, const std::vector<u64> &v) {
         for (std::size_t m : {27, 28, 29, 30, 31, 32, 33}) {
             const choice pc{pr[m].lo, pr[m].K, 0, 0, 0};
             const choice *pp = pr[m].valid ? &pc : nullptr;
-            const choice q = m == 27   ? fast::guess<5, 32>(x, block_rows, c, sample_cost(c, 8), pp, {1, false, true, &tr})
+            const choice q = m == 27   ? fast::guess<5, 32>(x, block_rows, c, sample_cost(c, 8), pp, [&] { fast::options o; o.t = &tr; return o; }())
                              : m == 28 ? fast::guess<5, 32>(x, block_rows, c, sample_cost(c, 8), pp, {1, true})
                              : m == 29 ? fast::guess<5, 16>(x, block_rows, c, sample_cost(c, 16), pp)
                              : m == 30 ? fast::guess<5, 16>(x, block_rows, c, sample_cost(c, 16), pp, {2, false, false})
@@ -245,6 +246,53 @@ void census(const std::string &column, const std::vector<u64> &v) {
             ch[m] = realise(x, block_rows, q.lo, q.width, vbits, c);
             gs[m].prior.bytes = ch[m].bytes;  // the emission pass knows the exact bytes
             fallback[m] = gs[m].fallbacks + gs[m].refreshes;
+        }
+        for (std::size_t m = 52; m < 54; ++m) {
+            const choice pc{pr[m].lo, pr[m].K, prq[m].first, prq[m].second, 0};
+            const choice q = m == 52 ? fast::guess_local<32>(x, block_rows, c, sample_cost(c, 8), pr[m].valid ? &pc : nullptr)
+                                     : fast::guess_local<16>(x, block_rows, c, sample_cost(c, 16), pr[m].valid ? &pc : nullptr);
+            ch[m] = realise(x, block_rows, q.lo, q.width, vbits, c);
+            if (ch[m].bytes > q.bytes) {
+                std::fprintf(stderr, "%s b%zu m%zu: claimed lo %llu K %u %u/%u %zuB, realised %u/%u %zuB, min %llu vbits %u\n", column.c_str(), b, m,
+                             (unsigned long long)q.lo, q.width, q.low, q.high, q.bytes, ch[m].low, ch[m].high, ch[m].bytes, (unsigned long long)mn, vbits);
+                std::abort();
+            }
+        }
+        for (std::size_t m = 50; m < 52; ++m) {
+            const choice pc{pr[m].lo, pr[m].K, prq[m].first, prq[m].second, 0};
+            fast::options o;
+            o.lean = true;
+            const choice q = m == 50 ? fast::guess<7, 32>(x, block_rows, c, sample_cost(c, 8), pr[m].valid ? &pc : nullptr, o)
+                                     : fast::guess<7, 16>(x, block_rows, c, sample_cost(c, 16), pr[m].valid ? &pc : nullptr, o);
+            ch[m] = realise(x, block_rows, q.lo, q.width, vbits, c);
+        }
+        for (std::size_t m = 48; m < 50; ++m) {
+            const choice pc{pr[m].lo, pr[m].K, prq[m].first, prq[m].second, 0};
+            const choice *pp = pr[m].valid ? &pc : nullptr;
+            fast::options o;
+            o.ladder = true;
+            const choice q = m == 48 ? fast::guess<7, 32>(x, block_rows, c, sample_cost(c, 8), pp, o) : fast::guess<7, 16>(x, block_rows, c, sample_cost(c, 16), pp, o);
+            ch[m] = realise(x, block_rows, q.lo, q.width, vbits, c);
+        }
+        for (std::size_t m = 44; m < 48; ++m) {
+            // Quantile reads of a sorted sample, seeded by the prior's
+            // exception counts; _rN runs the full sample oracle every N blocks.
+            const cost_model s8 = sample_cost(c, 8), s16c = sample_cost(c, 16);
+            const unsigned every = m == 46 ? 16 : m == 47 ? 8 : 0;
+            const bool full_now = !pr[m].valid || (every && b % every == 0);
+            const choice pc{pr[m].lo, pr[m].K, prq[m].first, prq[m].second, 0};
+            const choice *pp = pr[m].valid ? &pc : nullptr;
+            fast::options o;
+            o.quantiles = !full_now;
+            const choice q = (m == 44 || m == 46) ? fast::guess<7, 32>(x, block_rows, c, s8, pp, o) : fast::guess<7, 16>(x, block_rows, c, s16c, pp, o);
+            ch[m] = realise(x, block_rows, q.lo, q.width, vbits, c);
+        }
+        if (std::getenv("BOUNDS_DEBUG") && ch[44].bytes > ch[0].bytes + 40) {
+            static int shown = 0;
+            if (shown++ < 12)
+                std::fprintf(stderr, "%s b%zu vbits %u exact K%u lo-ex %u hi-ex %u %zuB | quant K%u %u %u %zuB | prior counts %u %u K%u | t7 %zuB\n", column.c_str(), b,
+                             vbits, ch[0].width, ch[0].low, ch[0].high, ch[0].bytes, ch[44].width, ch[44].low, ch[44].high, ch[44].bytes, prq[44].first,
+                             prq[44].second, pr[44].K, ch[40].bytes);
         }
         for (std::size_t m = 39; m < 44; ++m) {
             const choice pc{pr[m].lo, pr[m].K, 0, 0, 0};
@@ -273,6 +321,7 @@ void census(const std::string &column, const std::vector<u64> &v) {
             t[m].low_ex += r.low, t[m].high_ex += r.high;
             kp[m] = static_cast<int>(r.width);
             pr[m] = {true, r.lo, r.width};
+            prq[m] = {r.low, r.high};
         }
     }
     for (std::size_t m = 0; m < M; ++m)
