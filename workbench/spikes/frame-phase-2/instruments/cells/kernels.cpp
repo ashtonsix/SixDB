@@ -1,6 +1,7 @@
 #include "cells.h"
 
 #include <algorithm>
+#include <bit>
 #include <limits>
 #include <stdexcept>
 #include <type_traits>
@@ -97,6 +98,97 @@ template<class A, class B> answer native_pair(const native& predicate, const nat
     return out;
 }
 
+template<class T> u64 native_count(const native& predicate, u64 threshold, const block_mask& selection, const std::vector<T>& values) {
+    if (threshold > predicate.maximum) return 0;
+    const bool all_values = threshold <= predicate.base;
+    const auto rhs = static_cast<T>(threshold - predicate.base);
+    const auto count = [&](std::size_t first, std::size_t end) {
+        if (all_values) return static_cast<u64>(end - first);
+        u64 out = 0;
+        for (std::size_t i = first; i < end; ++i) out += values[i] >= rhs;
+        return out;
+    };
+    if (selection.all) return count(0, values.size());
+    u64 out = 0;
+    for (std::size_t b = 0; b < selection.blocks; ++b)
+        if (selection.active(b)) out += count(b * fi::block_rows, (b + 1) * fi::block_rows);
+    return out;
+}
+
+template<class T, bool Dense> answer native_selected_sum(const native& payload, const block_mask& selection,
+                                                        const row_mask& fine, const std::vector<T>& values) {
+    answer out;
+    for (std::size_t b = 0; b < selection.blocks; ++b) {
+        if (!selection.active(b)) continue;
+        for (unsigned w = 0; w < 4; ++w) {
+            const auto word = b * 4 + w;
+            auto bits = fine.words[word];
+            if (!bits) continue;
+            const auto first = word * 64;
+            u64 lo = 0, hi = 0;
+            if (bits == ~u64{0}) {
+                for (unsigned j = 0; j < 64; ++j) {
+                    if constexpr (sizeof(T) < 8) lo += values[first + j];
+                    else {
+                        lo += static_cast<u32>(values[first + j]);
+                        hi += values[first + j] >> 32;
+                    }
+                }
+                out.count += 64;
+            } else if constexpr (Dense) {
+                for (unsigned j = 0; j < 64; ++j) {
+                    const auto keep = static_cast<T>(T{0} - static_cast<T>((bits >> j) & 1));
+                    const auto value = static_cast<T>(values[first + j] & keep);
+                    if constexpr (sizeof(T) < 8) lo += value;
+                    else { lo += static_cast<u32>(value); hi += value >> 32; }
+                }
+                out.count += std::popcount(bits);
+            } else {
+                out.count += std::popcount(bits);
+                for (; bits; bits &= bits - 1) {
+                    const auto value = values[first + std::countr_zero(bits)];
+                    if constexpr (sizeof(T) < 8) lo += value;
+                    else { lo += static_cast<u32>(value); hi += value >> 32; }
+                }
+            }
+            out.sum += u128{lo} + (u128{hi} << 32);
+        }
+    }
+    out.sum += u128{payload.base} * out.count;
+    return out;
+}
+
+template<class T, bool All> answer native_points(const native& payload, const block_mask& selection,
+                                                const point_requests& requests, const std::vector<T>& values) {
+    answer out;
+    // Bounded half sums avoid per-request carry chains, with four independent
+    // accumulators. Chunking also bounds full-u64 request lists, not just rows.
+    for (std::size_t first = 0; first < requests.rows.size();) {
+        const auto end = first + std::min<std::size_t>(65536, requests.rows.size() - first);
+        u64 lo[4]{}, hi[4]{};
+        const auto one = [&](std::size_t q, unsigned lane) {
+            const auto row = requests.rows[q];
+            if constexpr (!All) {
+                if (!selection.active(row / fi::block_rows)) return;
+                ++out.count;
+            }
+            const auto value = values[row];
+            if constexpr (sizeof(T) < 8) lo[lane] += value;
+            else { lo[lane] += static_cast<u32>(value); hi[lane] += value >> 32; }
+        };
+        std::size_t q = first;
+        for (; end - q >= 4; q += 4) {
+            one(q, 0); one(q + 1, 1); one(q + 2, 2); one(q + 3, 3);
+        }
+        for (; q < end; ++q) one(q, 0);
+        if constexpr (All) out.count += end - first;
+        for (unsigned i = 0; i < 4; ++i) out.sum += u128{lo[i]} + (u128{hi[i]} << 32);
+        first = end;
+    }
+    out.sum += u128{payload.base} * out.count;
+    return out;
+}
+
 void append_image(std::vector<range>& out, const fi::image& f, const std::string& prefix) {
     const auto add = [&](const auto& v, const char* role) {
         using T = typename std::decay_t<decltype(v)>::value_type;
@@ -143,6 +235,23 @@ block_mask block_mask::bind(std::span<const u64> words, std::size_t rows) {
     }
     return out;
 }
+row_mask row_mask::bind(std::span<const u64> words, std::size_t rows) {
+    if (words.size() != rows / 64 + (rows % 64 != 0))
+        throw std::invalid_argument("native fine mask domain mismatch");
+    row_mask out{words, rows, true, true};
+    for (std::size_t w = 0; w < words.size(); ++w) {
+        const auto expected = w + 1 == words.size() && rows % 64 ? (u64{1} << (rows % 64)) - 1 : ~u64{0};
+        if (words[w] & ~expected) throw std::invalid_argument("native fine mask has out-of-domain bits");
+        out.all &= words[w] == expected;
+        out.none &= words[w] == 0;
+    }
+    return out;
+}
+point_requests point_requests::bind(std::span<const std::size_t> rows, std::size_t domain_rows) {
+    for (const auto row : rows)
+        if (row >= domain_rows) throw std::invalid_argument("native point outside row domain");
+    return {rows, domain_rows};
+}
 answer native_sum_once(const native& payload, const block_mask& selection) {
     if (selection.none) return {};
     return std::visit([&](const auto& b) { return native_sum(payload, selection, b); }, payload.values);
@@ -151,11 +260,41 @@ void validate_native_domains(const native& payload, const block_mask& selection,
     if (payload.rows != selection.blocks * fi::block_rows || (predicate && predicate->rows != payload.rows))
         throw std::invalid_argument("native operands and selection need equal complete-block row domains");
 }
+void validate_native_selection(const native& payload, const block_mask& selection, const row_mask& fine) {
+    validate_native_domains(payload, selection);
+    if (fine.rows != payload.rows) throw std::invalid_argument("native fine selection needs the payload row domain");
+}
+void validate_native_points(const native& payload, const block_mask& selection, const point_requests& requests) {
+    validate_native_domains(payload, selection);
+    if (requests.domain_rows != payload.rows) throw std::invalid_argument("native points need the payload row domain");
+}
 answer native_pair_once(const native& predicate, const native& payload, u64 threshold, const block_mask& selection) {
     if (selection.none) return {};
     return std::visit([&](const auto& a, const auto& b) {
         return native_pair(predicate, payload, threshold, selection, a, b);
     }, predicate.values, payload.values);
+}
+u64 native_count_once(const native& predicate, u64 threshold, const block_mask& selection) {
+    if (selection.none) return 0;
+    return std::visit([&](const auto& values) { return native_count(predicate, threshold, selection, values); }, predicate.values);
+}
+answer native_selected_sum_once(const native& payload, const block_mask& selection, const row_mask& fine) {
+    if (selection.none || fine.none) return {};
+    if (fine.all) return native_sum_once(payload, selection);
+    return std::visit([&](const auto& values) { return native_selected_sum<typename std::decay_t<decltype(values)>::value_type, false>(payload, selection, fine, values); }, payload.values);
+}
+answer native_selected_sum_dense_once(const native& payload, const block_mask& selection, const row_mask& fine) {
+    if (selection.none || fine.none) return {};
+    if (fine.all) return native_sum_once(payload, selection);
+    return std::visit([&](const auto& values) { return native_selected_sum<typename std::decay_t<decltype(values)>::value_type, true>(payload, selection, fine, values); }, payload.values);
+}
+answer native_points_once(const native& payload, const block_mask& selection, const point_requests& requests) {
+    if (selection.none || requests.rows.empty()) return {};
+    return std::visit([&](const auto& values) {
+        using T = typename std::decay_t<decltype(values)>::value_type;
+        if (selection.all) return native_points<T, true>(payload, selection, requests, values);
+        return native_points<T, false>(payload, selection, requests, values);
+    }, payload.values);
 }
 
 std::vector<range> cell::ranges(operation op, method arm) const {

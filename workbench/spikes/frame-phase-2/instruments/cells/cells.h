@@ -46,14 +46,43 @@ struct block_mask {
     bool active(std::size_t b) const { return all || ((words[b / 64] >> (b % 64)) & 1); }
 };
 
+// Original-row bits, not block or packed-lane coordinates. Binding retains
+// no ownership; words and their derived flags must remain unchanged.
+struct row_mask {
+    std::span<const u64> words;
+    std::size_t rows = 0;
+    bool all = true, none = true;
+    static row_mask bind(std::span<const u64> words, std::size_t rows);
+};
+
+// Independent original-row requests. Duplicates are intentional and each
+// contributes once. Admission does not sort, deduplicate or acquire payload.
+struct point_requests {
+    std::span<const std::size_t> rows;
+    std::size_t domain_rows = 0;
+    static point_requests bind(std::span<const std::size_t> rows, std::size_t domain_rows);
+};
+
 // Admit equal operand/selection extents once before entering repeated work.
 void validate_native_domains(const native& payload, const block_mask& selection, const native* predicate = nullptr);
+void validate_native_selection(const native& payload, const block_mask& selection, const row_mask& fine);
+void validate_native_points(const native& payload, const block_mask& selection, const point_requests& requests);
 
-// Unchecked repeated-work entry points after validate_native_domains. Owners
-// and mask are immutable for the borrow. SUM returns exact u128 and the final
-// selected count; pair implements A>=threshold. No Frame image is required.
+// Unchecked repeated-work entry points after the corresponding domain,
+// selection or point validation. Owners and bindings are immutable for the
+// borrow. SUM returns exact u128 and the final selected count; pair implements
+// A>=threshold. No Frame image is required.
 answer native_sum_once(const native& payload, const block_mask& selection);
 answer native_pair_once(const native& predicate, const native& payload, u64 threshold, const block_mask& selection);
+u64 native_count_once(const native& predicate, u64 threshold, const block_mask& selection);
+
+// Both consume the supplied fine mask; neither produces a predicate mask.
+// Sparse walks set bits; dense uses vectorizable masked arithmetic within
+// nonempty words. Both skip empty words and excluded coarse blocks before
+// payload access. Partial words may read inactive values in the dense route.
+answer native_selected_sum_once(const native& payload, const block_mask& selection, const row_mask& fine);
+answer native_selected_sum_dense_once(const native& payload, const block_mask& selection, const row_mask& fine);
+answer native_points_once(const native& payload, const block_mask& selection, const point_requests& requests);
 
 enum class operation { sum, pair };
 enum class method { frame, native, alternative };
