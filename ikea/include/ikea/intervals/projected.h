@@ -3,7 +3,8 @@
 
 namespace ikea::intervals {
 /// Immutable Frame run ends in [1,256], stored as end-1. Comparisons translate
-/// the query once so native search sees the original contiguous byte plane.
+/// the query once so native search sees the original contiguous byte plane,
+/// at every count: short planes count exactly without count-dependent loops.
 /// No control/directory/tombstone bytes. The owner admits nondecreasing ends.
 struct run_end_source {
     const std::uint8_t *ends_minus_one;
@@ -14,29 +15,7 @@ struct run_end_source {
         return unsigned(detail::read_element(ends_minus_one, rank)) + 1;
     }
     unsigned extent() const noexcept { return count ? at(count - 1) : 0; }
-    template <class Body> decltype(auto) with_geometry(Body &&body) const {
-        // Bind the small projection once, outside a complete consumer's loop.
-        struct small_source {
-            const std::uint8_t *p; unsigned count;
-            unsigned size() const {return count;}
-            unsigned origin() const {return 0;}
-            unsigned at(unsigned rank) const {return unsigned(detail::read_element(p,rank))+1;}
-        };
-        if(count<16) return body(small_source{ends_minus_one,count});
-        return body(*this);
-    }
     template <edge E, class Q> [[gnu::always_inline]] unsigned boundary(const Q &point) const {
-        // Preserve the existing comparison projection for sub-native lists.
-        // Translating/range-classifying every tiny query costs more than it saves.
-        if (count < 16) {
-            unsigned lo=0,hi=count;
-            while(lo<hi) {
-                const auto mid=lo+(hi-lo)/2;
-                if(detail::meets<E>(at(mid),point)) hi=mid;
-                else lo=mid+1;
-            }
-            return lo;
-        }
         if constexpr (std::integral<Q>) {
             const detail::prepared_query<unsigned, Q> query(point);
             if (query.relation) return query.relation < 0 ? 0u : count;

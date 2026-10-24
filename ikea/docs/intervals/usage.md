@@ -180,7 +180,7 @@ The three live consumers use this seam differently:
 | --- | --- | --- |
 | StreamPack | Common kernels inside its typed, fused complete value reads and carried packing walks | Compact schema, count/extent, U, bitmap/retirement, payload movement and effects. Use the public StreamPack value API. |
 | Directory | Direct u32 separators and exact K-byte logical projections with ordinary lower/upper search | Tree-specific fences, selected child/Object access and coherent Scope lifetime. |
-| Frame | Raw projection for tiny/predictable point work; native-byte `run_end_source` for curated unpredictable point programs at16+ runs | Tiny/fused readers, descriptor interpretation, signed prediction/exception algebra, block masks and retained frame lifetime. |
+| Frame | Native-byte `run_end_source` (or `direct_source<u8>` over the end-1 plane, with a readable window where the image admits one) for point work at any run count; raw projection only where a predictable program measures better | Tiny/fused readers, descriptor interpretation, signed prediction/exception algebra, block masks and retained frame lifetime. |
 
 A namespace migration alone does not accelerate a caller. The
 [live caller audit](../../../workbench/spikes/intervals/AUDIT.md) distinguishes

@@ -195,13 +195,14 @@ actual workloads, timings, instruction/resource analysis and counterexamples.
 initialized bytes and no compact control, bitmap or checkpoint. Zero-size ranks
 can be represented by equal ends, except that the first logical end is at least 1.
 Native-byte search translates integral queries before comparing; it preserves
-negative, zero, 256 and wider out-of-domain cases. Counts below 16 retain the
-comparison projection; `with_geometry` resolves that tiny projection outside a
-complete body. The common API does not require Frame to replace its own stronger
-raw projection. Whole-getter qualification earns native-byte search for curated
-unpredictable point programs at16+ runs; keep the predictable raw program and
-tiny fallback. Signed previous-value predictions, full-width residual prefixes
-and delta exception reconstruction remain Frame algebra.
+negative, zero, 256 and wider out-of-domain cases. It serves every count: the
+earlier comparison projection below 16 runs lost once short planes counted
+exactly (11–13 ns against 1.1–7.4 ns on Frame-shaped blocks, see the
+[search study](../../../workbench/spikes/intervals-search/README.md)). The common
+API does not require Frame to replace its own raw projection where a
+predictable program measures better. Signed previous-value predictions,
+full-width residual prefixes and delta exception reconstruction remain Frame
+algebra.
 
 `fixed_source<P>{count,first,step}` represents nonnegative arithmetic geometry
 without a boundary plane. The owner proves all coordinates fit P without wrapping.
