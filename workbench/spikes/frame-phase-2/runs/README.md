@@ -148,20 +148,20 @@ and 2–6% on Graviton 4
     EventTime or WatchID. Where it applies it cuts bytes 2.2–3.6×. Where it
     doesn't, the stage costs nothing.
 11. **In group form, RLE scans faster as well as smaller on Zen 5.** SUM is
-    1.9–3.6× faster than no RLE and COUNT ≥ 1.4–4.6× faster, because one run's
+    1.8–3.6× faster than no RLE and COUNT ≥ 1.4–4.6× faster, because one run's
     work covers all of its rows. UserID's COUNT is the exception (3.7×
     slower), since without RLE its blocks are settled wholesale by their
     base.
 12. **On Graviton 4 the result splits by operation.** COUNT ≥ is 1.5–3.4×
     faster with RLE. SUM is 1.7× faster on OS, 1.3× on ResolutionWidth and
     2.6× on UserID, at parity on ClientIP, and 1.3× slower on RegionID.
-13. **Per-block RLE loses on scans** (SUM 2–4× slower than no RLE in the
-    contaminated runs too). It reads sizes and values in short per-block
+13. **Per-block RLE loses on scans** (pinned: SUM 1.9–2.7× slower than no RLE
+    on OS, RegionID and ClientIP). It reads sizes and values in short per-block
     calls, so group-continuous placement is a requirement, not a tuning
     option.
 14. **Bulk against Local matters on Graviton 4 behind no RLE.** OS SUM takes
     45.7 ns per block under bulk_arm against 61.1 under compact, and COUNT 74
-    against 98. On Zen 5 the presets are within about 10%.
+    against 98. On Zen 5 the presets are within about 12%.
 15. **Points are RLE's cost** (50–63 ns on Zen 5 against 6–34 without RLE).
     A point-heavy part should skip RLE, or keep u8 run ends (3–5 ns per
     point). Packed-block points here (19–34 ns on OS, RegionID and UserID)
