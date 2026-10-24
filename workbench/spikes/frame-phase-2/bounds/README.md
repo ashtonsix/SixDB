@@ -192,8 +192,9 @@ against the oracle on every real column; with 16, at most 1.7% (OS).
 
 8. **Wide columns now pay for choosing lo several times over.** On Zen 5 the
    window-local path is 2.5–8× faster than today's search on URLHash,
-   WatchID, UserID, ClientIP and EventTime, and 5–19× faster on Graviton 4.
-   Narrow columns are 1–1.8× slower than today's search on Zen 5. Their
+   WatchID, UserID, ClientIP and EventTime, and 4.7–21× faster on Graviton 4.
+   Narrow columns are 1–1.8× slower than today's search on Zen 5 (IsRefresh,
+   nearly constant, 2.9×). Their
    floor is now the sample (gather, sort, ladder: about 40–60 ns on Zen 5)
    plus the minimum and maximum.
 9. **The prior is a candidate, not a gate.** Trusting the previous block's
