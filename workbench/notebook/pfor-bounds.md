@@ -80,6 +80,17 @@ need a different workload from independent array replacements. Mutation and
 publication follow [Ikea's owner contracts](../../ikea/docs/integration.md).
 Bounds over inliers must also remain distinct from summaries over all rows.
 
+## Phase 2 bounds stage (2026-10-24)
+
+[The Frame phase 2 bounds study](../spikes/frame-phase-2/bounds/README.md)
+made the objective concrete: SeriesPack tile bytes plus exception bytes, with
+an optional per-exception read penalty from Engine. Choosing lo saves 3–12%
+of packed bytes on real ClickBench columns over lo = minimum. A strided
+sample's oracle over distinct values, its mode, the previous block's window
+and one local refinement stay within 0.5% of an exact sorted oracle. Order
+statistics alone, the prior alone, and cost-jump gating all failed. Run
+sizes gain nothing from lo.
+
 ## Evidence worth seeking when the question becomes concrete
 
 The exploratory runs covered native 8/16/32/64-bit domains, AVX-512 on Zen 5

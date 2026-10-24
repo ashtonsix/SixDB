@@ -39,6 +39,8 @@ Engine's analyser will later solve (data distribution, access patterns) →
   bit-sliced compares), compose-versus-fuse findings and the remaining gaps.
 - [Run boundaries as composed stages](runs/README.md): Intervals forms, the
   bounds stage and SeriesPack packing, with the bytes/speed frontier Engine chooses on.
+- [Bounds stage](bounds/README.md): choosing lo and width by guess, verify
+  and refine against an exact oracle, priced on SeriesPack's tiles.
 - [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
   and packed bodies across operation families.
 - [Cross-thread seams](SEAMS.md): the contracts every thread shares, with owners.

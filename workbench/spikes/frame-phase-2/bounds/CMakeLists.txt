@@ -1,0 +1,16 @@
+# The bounds stage: choosing lo and width with exceptions (guess, verify,
+# fall back), priced on SeriesPack's tiles.
+add_executable(frame_bounds_census census.cpp)
+sixdb_target(frame_bounds_census)
+target_link_libraries(frame_bounds_census PRIVATE ikea::seriespack)
+add_executable(frame_bounds_time time.cpp)
+sixdb_target(frame_bounds_time)
+target_link_libraries(frame_bounds_time PRIVATE ikea::seriespack)
+add_executable(frame_bounds_compose compose.cpp)
+sixdb_target(frame_bounds_compose)
+target_link_libraries(frame_bounds_compose PRIVATE ikea::seriespack)
+add_executable(frame_bounds_parts parts.cpp)
+sixdb_target(frame_bounds_parts)
+add_executable(frame_bounds_sizes sizes.cpp)
+sixdb_target(frame_bounds_sizes)
+target_link_libraries(frame_bounds_sizes PRIVATE ikea::seriespack)
