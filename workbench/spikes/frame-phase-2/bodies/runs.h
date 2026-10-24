@@ -236,7 +236,9 @@ template <class T> struct runs {
     }
     // Pass transitions deposited at run starts (PDEP), then a prefix XOR:
     // no per-run loop.
-    static void mask_ge_starts(const u8 *body, unsigned n, const u64 *starts, u64 c, u64 *m) {
+    // sve: compiled for SVE2 bit permutes and PMULL (Graviton 4), so BDEP and
+    // the carry-less prefix inline instead of a call per word.
+    template <bool sve> static inline __attribute__((always_inline)) void mask_ge_starts_impl(const u8 *body, unsigned n, const u64 *starts, u64 c, u64 *m) {
         // Pass bits of 64 runs per compare, kept in registers (a vector
         // store reloaded as words stalled store forwarding: 16 ns per block).
         typedef T t64 __attribute__((ext_vector_type(64)));
@@ -264,17 +266,51 @@ template <class T> struct runs {
         for (unsigned w = 0; w < 4; ++w) {
             const unsigned q = rank >> 6, sh = rank & 63;
             const u64 bits = sh ? (word(q) >> sh | word(q + 1) << (64 - sh)) : word(q);
-            const u64 x = prefix_xor(pdep(bits, starts[w])) ^ prefix;
+            u64 dep, x;
+#if defined(__aarch64__)
+            if constexpr (sve) {
+                dep = sve_bdep(bits, starts[w]);
+                x = pmull_prefix_xor(dep) ^ prefix;
+            } else
+#endif
+            {
+                dep = pdep(bits, starts[w]);
+                x = prefix_xor(dep) ^ prefix;
+            }
             prefix = u64{0} - (x >> 63);
             m[w] = x;
             rank += static_cast<unsigned>(std::popcount(starts[w]));
         }
     }
+#if defined(__aarch64__)
+    __attribute__((target("sve2-bitperm,aes"))) static void mask_ge_starts_sve(const u8 *body, unsigned n, const u64 *starts, u64 c,
+                                                                             u64 *m) {
+        mask_ge_starts_impl<true>(body, n, starts, c, m);
+    }
+#endif
+    static void mask_ge_starts(const u8 *body, unsigned n, const u64 *starts, u64 c, u64 *m) {
+#if defined(__aarch64__)
+        if (has_bitperm)
+            return mask_ge_starts_sve(body, n, starts, c, m);
+#endif
+        mask_ge_starts_impl<false>(body, n, starts, c, m);
+    }
     static u64 point_starts(const u8 *body, unsigned n, const u64 *starts, unsigned row) {
         const unsigned w = row >> 6;
+#if BODIES_ISA_NEON
+        // One vector rank: the words below row's word whole, its own masked.
+        const uint64x2_t lo = vld1q_u64(starts), hi = vld1q_u64(starts + 2);
+        const u64 own = ~u64{0} >> (63 - (row & 63));
+        const uint64x2_t mlo = {w > 0 ? ~u64{0} : w == 0 ? own : 0, w > 1 ? ~u64{0} : w == 1 ? own : 0};
+        const uint64x2_t mhi = {w > 2 ? ~u64{0} : w == 2 ? own : 0, w == 3 ? own : 0};
+        const uint8x16_t cnt = vaddq_u8(vcntq_u8(vreinterpretq_u8_u64(vandq_u64(lo, mlo))),
+                                        vcntq_u8(vreinterpretq_u8_u64(vandq_u64(hi, mhi))));
+        const unsigned idx = vaddlvq_u8(cnt);
+#else
         unsigned idx = static_cast<unsigned>(std::popcount(starts[w] & (~u64{0} >> (63 - (row & 63)))));
         for (unsigned q = 0; q < w; ++q)
             idx += static_cast<unsigned>(std::popcount(starts[q]));
+#endif
         return load_le<T>(values(body, n) + idx - 1);
     }
     static u64 pdep(u64 x, u64 m) { return bodies::pdep(x, m); }

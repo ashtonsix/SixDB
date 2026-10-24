@@ -10,6 +10,8 @@
 //        frame_bodies_measure ROWS ROUNDS patched E K...
 //        frame_bodies_measure ROWS ROUNDS compact K...
 //        frame_bodies_measure ROWS ROUNDS histogram K...
+//        frame_bodies_measure ROWS ROUNDS wide K... (33, 40, 48, 56, 63, 64)
+//        frame_bodies_measure ROWS ROUNDS weighted K... (4, 6, 8, 10, 12, 16)
 // Prints one JSON line per (arm, operation): median, min and max over rounds
 // of ns per block (per point for point reads). Every arm's result is checked
 // against the u64 arm before timing.
@@ -18,6 +20,7 @@
 #include "compact.h"
 #include "exceptions.h"
 #include "sort.h"
+#include "weighted.h"
 #include "sweeps.h"
 #include "kernels.h"
 #include "packing.h"
@@ -153,6 +156,26 @@ void packed_cell(std::size_t rows, unsigned rounds, unsigned k, std::mt19937_64 
         add("u64", logical);
         for (const auto &im : images)
             add(im.l == layout::lane ? "native" : layout_name(im.l), im);
+        if (var.o == op::sum || var.o == op::point) {
+            const packed_leaf &f = packed_leaves(layout::local8, k);
+            const u8 *p = images[1].bytes.data();
+            const std::size_t stride = 32 * k;
+            if (var.o == op::sum)
+                arms.push_back({"local8-exact", images[1].bytes.size() - 256, [=] {
+                                    u64 s = 0;
+                                    for (std::size_t b = 0; b < blocks; ++b)
+                                        s += with_exact_body(p + b * stride, stride, [&](const u8 *x) { return f.sum(x); });
+                                    return s;
+                                }});
+            else
+                arms.push_back({"local8-exact", images[1].bytes.size() - 256, [=] {
+                                    u64 s = 0;
+                                    for (std::size_t i = 0; i < a.npoints; ++i)
+                                        s += with_exact_body(p + (a.points[i] >> 8) * stride, stride,
+                                                             [&](const u8 *x) { return f.point(x, a.points[i] & 255); });
+                                    return s;
+                                }});
+        }
         if (var.o == op::sum || var.o == op::count_ge || var.o == op::masked_sum || var.o == op::point ||
             var.o == op::unpack) {
             const u8 *p = images[1].bytes.data();
@@ -299,6 +322,37 @@ void runs_cell(std::size_t rows, unsigned rounds, unsigned w, unsigned target, s
                                         for (std::size_t i = 0; i < a.npoints; ++i) {
                                             const u32 b = a.points[i] >> 8;
                                             s += runs<T>::point_starts(p + off[b], nn[b], st + 4 * b, a.points[i] & 255);
+                                        }
+                                        return s;
+                                    }});
+            };
+            const unsigned lane = run_lane(w);
+            if (lane == 1)
+                with(u8{});
+            else if (lane == 2)
+                with(u16{});
+            else
+                with(u32{});
+        }
+        if (var.o == op::sum || var.o == op::point) {
+            // The exact boundary route: every body read from a zero-tailed copy.
+            const unsigned ww = w;
+            const auto with = [&](auto t) {
+                using T = decltype(t);
+                if (var.o == op::sum)
+                    arms.push_back({"runs-exact", runs_size + 3 * blocks, [=] {
+                                        u64 s = 0;
+                                        for (std::size_t b = 0; b < blocks; ++b)
+                                            s += with_exact_body(p + off[b], runs_bytes(nn[b], ww), [&](const u8 *x) { return runs<T>::sum(x, nn[b]); });
+                                        return s;
+                                    }});
+                else
+                    arms.push_back({"runs-exact", runs_size + 3 * blocks, [=] {
+                                        u64 s = 0;
+                                        for (std::size_t i = 0; i < a.npoints; ++i) {
+                                            const u32 b = a.points[i] >> 8;
+                                            s += with_exact_body(p + off[b], runs_bytes(nn[b], ww),
+                                                                 [&](const u8 *x) { return runs<T>::point(x, nn[b], a.points[i] & 255); });
                                         }
                                         return s;
                                     }});
@@ -607,6 +661,164 @@ void histogram_cell(std::size_t rows, unsigned rounds, unsigned k, std::mt19937_
         measure(head, arms, rounds, double(blocks), nullptr, 0);
     }
 }
+// K 33..64: plane256 (u128 sums) against the u64 lane, which is the native
+// narrow array at these widths.
+template <unsigned K> void wide_cell(std::size_t rows, unsigned rounds, std::mt19937_64 &rng) {
+    using P = packed<layout::plane256, K>;
+    using N = lanes<u64>;
+    const std::size_t blocks = rows / block_rows;
+    const u64 top = K == 64 ? ~u64{0} : (u64{1} << K) - 1;
+    std::vector<u64> v(blocks * block_rows);
+    for (auto &x : v)
+        x = rng() & top;
+    std::vector<u8> plane(blocks * 32 * K + 256), native(blocks * 2048 + 256);
+    for (std::size_t b = 0; b < blocks; ++b)
+        encode(layout::plane256, K, v.data() + b * block_rows, plane.data() + b * 32 * K);
+    std::memcpy(native.data(), v.data(), v.size() * 8);
+    v = {};
+    std::vector<u64> mask_out(4 * blocks);
+    const std::vector<u64> sel = selection(blocks, 2, rng);
+    std::vector<u32> points(std::min<std::size_t>(rows, 1u << 20));
+    for (auto &x : points)
+        x = static_cast<u32>((rng() % blocks) << 8 | (rng() & 255));
+    alignas(64) static u64 scratch[block_rows];
+    const u64 c = u64{1} << (K - 1);
+    const u8 *pp = plane.data(), *np = native.data();
+    const auto cellrun = [&](const char *op, auto fp, auto fn, double units, bool mask) {
+        std::vector<arm> arms = {{"native", native.size() - 256, [=] { return fn(np); }},
+                                 {"plane256", plane.size() - 256, [=] { return fp(pp); }}};
+        char head[200];
+        std::snprintf(head, sizeof head, "\"body\":\"wide\",\"k\":%u,\"rows\":%zu,\"op\":\"%s\",\"variant\":\"-\"", K, rows, op);
+        measure(head, arms, rounds, units, mask ? mask_out.data() : nullptr, mask_out.size());
+    };
+    const double nb = double(blocks);
+    // SUM folds modulo 2^64 (the u64 arm's law) so both arms agree.
+    cellrun("sum", [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += static_cast<u64>(P::sum(x + b * 32 * K)); return s; },
+            [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += N::sum(x + b * 2048); return s; }, nb, false);
+    cellrun("count_ge", [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += P::count_ge(x + b * 32 * K, c); return s; },
+            [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += N::count_ge(x + b * 2048, c); return s; }, nb, false);
+    u64 *mo = mask_out.data();
+    cellrun("mask_ge", [=](const u8 *x) { for (std::size_t b = 0; b < blocks; ++b) P::mask_ge(x + b * 32 * K, c, mo + 4 * b); return mo[5]; },
+            [=](const u8 *x) { for (std::size_t b = 0; b < blocks; ++b) N::mask_ge(x + b * 2048, c, mo + 4 * b); return mo[5]; }, nb, true);
+    const u64 *sp = sel.data();
+    cellrun("masked_sum", [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += static_cast<u64>(P::masked_sum(x + b * 32 * K, sp + 4 * b)); return s; },
+            [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += N::masked_sum(x + b * 2048, sp + 4 * b); return s; }, nb, false);
+    const u32 *pt = points.data();
+    const std::size_t np_ = points.size();
+    cellrun("point", [=](const u8 *x) { u64 s = 0; for (std::size_t i = 0; i < np_; ++i) s += P::point(x + (pt[i] >> 8) * 32 * K, pt[i] & 255); return s; },
+            [=](const u8 *x) { u64 s = 0; for (std::size_t i = 0; i < np_; ++i) s += N::point(x + (pt[i] >> 8) * 2048, pt[i] & 255); return s; }, double(np_), false);
+    cellrun("max", [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += P::max(x + b * 32 * K); return s; },
+            [=](const u8 *x) { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += N::max(x + b * 2048); return s; }, nb, false);
+    cellrun("unpack", [=](const u8 *x) { u64 f = 0; for (std::size_t b = 0; b < blocks; ++b) { P::unpack64(x + b * 32 * K, scratch); asm volatile("" ::"r"(scratch) : "memory"); f += scratch[b & 255]; } return f; },
+            [=](const u8 *x) { u64 f = 0; for (std::size_t b = 0; b < blocks; ++b) { std::memcpy(scratch, x + b * 2048, 2048); asm volatile("" ::"r"(scratch) : "memory"); f += scratch[b & 255]; } return f; }, nb, false);
+}
+void wide(std::size_t rows, unsigned rounds, unsigned k, std::mt19937_64 &rng) {
+    switch (k) {
+    case 33: return wide_cell<33>(rows, rounds, rng);
+    case 40: return wide_cell<40>(rows, rounds, rng);
+    case 48: return wide_cell<48>(rows, rounds, rng);
+    case 56: return wide_cell<56>(rows, rounds, rng);
+    case 63: return wide_cell<63>(rows, rounds, rng);
+    case 64: return wide_cell<64>(rows, rounds, rng);
+    default: std::abort();
+    }
+}
+// SUM of D[code] over blocks of K-bit dictionary codes: plane256 codes
+// (histogram dot D, or decode and gather), runs, and the native code lane,
+// against the u64 array of materialised values.
+template <unsigned K> void weighted_cell(std::size_t rows, unsigned rounds, std::mt19937_64 &rng) {
+    const std::size_t blocks = rows / block_rows;
+    const u64 top = (u64{1} << K) - 1;
+    std::vector<u64> D(std::size_t{1} << K);
+    for (auto &d : D)
+        d = rng() >> 16;
+    using T = std::conditional_t<(K <= 8), u8, u16>;
+    for (const char *shape : {"uniform", "runs24"}) {
+        std::vector<u64> v(blocks * block_rows);
+        for (std::size_t b = 0; b < blocks; ++b) {
+            u64 x = rng() & top;
+            for (unsigned i = 0; i < block_rows; ++i) {
+                if (shape[0] == 'u')
+                    x = rng() & top;
+                else if (rng() % 11 == 0)
+                    x = (x + 1 + rng() % top) & top;
+                v[b * block_rows + i] = x;
+            }
+        }
+        std::vector<u8> plane(blocks * 32 * K + 256), lane(blocks * 256 * sizeof(T) + 256), values(blocks * 2048 + 256);
+        std::vector<u8> runs_img;
+        std::vector<u32> offset(blocks);
+        std::vector<u16> n(blocks);
+        u128 want = 0;
+        for (std::size_t b = 0; b < blocks; ++b) {
+            const u64 *x = v.data() + b * block_rows;
+            encode(layout::plane256, K, x, plane.data() + b * 32 * K);
+            encode(layout::lane, K, x, lane.data() + b * 256 * sizeof(T));
+            for (unsigned i = 0; i < block_rows; ++i) {
+                const u64 d = D[x[i]];
+                std::memcpy(values.data() + (b * block_rows + i) * 8, &d, 8);
+                want += d;
+            }
+            n[b] = static_cast<u16>(count_runs(x));
+            offset[b] = static_cast<u32>(runs_img.size());
+            if (n[b] < 2) {
+                runs_img.push_back(255);
+                runs_img.resize(runs_img.size() + sizeof(T));
+                std::memcpy(runs_img.data() + offset[b] + 1, &x[0], sizeof(T));
+                n[b] = 1;
+            } else {
+                runs_img.resize(runs_img.size() + runs_bytes(n[b], K));
+                encode_runs(x, K, runs_img.data() + offset[b]);
+            }
+        }
+        const std::size_t runs_size = runs_img.size();
+        runs_img.resize(runs_size + 256);
+        const u64 *d = D.data();
+        const u8 *pp = plane.data(), *lp = lane.data(), *vp = values.data(), *rp = runs_img.data();
+        const u32 *op = offset.data();
+        const u16 *np = n.data();
+        std::vector<arm> arms = {
+            {"u64", values.size() - 256, [=] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += lanes<u64>::sum(vp + b * 2048); return s; }},
+            {"native", lane.size() - 256, [=] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += static_cast<u64>(lane_weighted<T>::weighted_sum(lp + b * 256 * sizeof(T), d)); return s; }},
+            {"plane256", plane.size() - 256, [=] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += static_cast<u64>(packed_weighted<layout::plane256, K>::weighted_sum(pp + b * 32 * K, d)); return s; }},
+            {"runs", runs_size, [=] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += static_cast<u64>(runs_weighted<T>::weighted_sum(rp + op[b], np[b], d)); return s; }}};
+        if constexpr (K <= 8) {
+            // Prepared byte tables: built once per dictionary, outside the timing.
+            static byte_tables *tables = nullptr;
+            delete tables;
+            tables = new byte_tables(d, 1u << K);
+            const byte_tables *tp = tables;
+            arms.push_back({"plane256-tables", plane.size() - 256, [=] {
+                                u64 s = 0;
+                                for (std::size_t b = 0; b < blocks; ++b)
+                                    s += static_cast<u64>(packed_weighted<layout::plane256, K>::weighted_sum(pp + b * 32 * K, *tp));
+                                return s;
+                            }});
+        }
+        if (static_cast<u64>(want) != arms[0].run()) {
+            std::fprintf(stderr, "MISMATCH weighted oracle k=%u\n", K);
+            std::exit(1);
+        }
+        double mean_runs = 0;
+        for (u16 x : n)
+            mean_runs += x;
+        char head[220];
+        std::snprintf(head, sizeof head, "\"body\":\"weighted\",\"k\":%u,\"rows\":%zu,\"op\":\"weighted_sum\",\"variant\":\"%s\",\"mean_runs\":%.1f",
+                      K, rows, shape, mean_runs / blocks);
+        measure(head, arms, rounds, double(blocks), nullptr, 0);
+    }
+}
+void weighted(std::size_t rows, unsigned rounds, unsigned k, std::mt19937_64 &rng) {
+    switch (k) {
+    case 4: return weighted_cell<4>(rows, rounds, rng);
+    case 6: return weighted_cell<6>(rows, rounds, rng);
+    case 8: return weighted_cell<8>(rows, rounds, rng);
+    case 10: return weighted_cell<10>(rows, rounds, rng);
+    case 12: return weighted_cell<12>(rows, rounds, rng);
+    case 16: return weighted_cell<16>(rows, rounds, rng);
+    default: std::abort();
+    }
+}
 }  // namespace
 
 int main(int argc, char **argv) {
@@ -625,6 +837,12 @@ int main(int argc, char **argv) {
         const unsigned w = static_cast<unsigned>(std::atoi(argv[4]));
         for (int i = 5; i < argc; ++i)
             runs_cell(rows, rounds, w, static_cast<unsigned>(std::atoi(argv[i])), rng);
+    } else if (body == "weighted") {
+        for (int i = 4; i < argc; ++i)
+            weighted(rows, rounds, static_cast<unsigned>(std::atoi(argv[i])), rng);
+    } else if (body == "wide") {
+        for (int i = 4; i < argc; ++i)
+            wide(rows, rounds, static_cast<unsigned>(std::atoi(argv[i])), rng);
     } else if (body == "histogram") {
         for (int i = 4; i < argc; ++i)
             histogram_cell(rows, rounds, static_cast<unsigned>(std::atoi(argv[i])), rng);

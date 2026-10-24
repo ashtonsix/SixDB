@@ -114,7 +114,9 @@ template <layout L, unsigned K> inline group<K> fetch(const u8 *body, unsigned g
 
 // Leaves over a packed block in a bit layout (local8, plane64, plane256).
 template <layout L, unsigned K> struct packed {
-    static_assert(L != layout::lane && K >= 1 && K <= 32);
+    static_assert(L != layout::lane && K >= 1 && K <= 64);
+    // Block sums: u64 to K = 32, u128 above (256 values of up to 64 bits).
+    using total = std::conditional_t<(K > 32), u128, u64>;
     static constexpr unsigned B = K / 8, R = K % 8;
 
     typedef u64 v4 __attribute__((ext_vector_type(4)));  // one word per 64-row group
@@ -146,13 +148,13 @@ template <layout L, unsigned K> struct packed {
         }
     };
 
-    static u64 sum(const u8 *body) {
+    static total sum(const u8 *body) {
         const groups gs(body);
         simd::acc a[B ? B : 1];
         for (unsigned g = 0; g < 4; ++g)
             for (unsigned j = 0; j < B; ++j)
                 a[j].add(slice(body, gs.x, j, g));
-        u64 p = 0;
+        total p = 0;
 #if BODIES_ISA_NEON
         if constexpr (L == layout::plane256 && R > 0) {
             // NEON: byte popcounts weighted by plane into u16 lanes, one
@@ -187,7 +189,7 @@ template <layout L, unsigned K> struct packed {
             p = __builtin_reduce_add(acc);
         }
         for (unsigned j = 0; j < B; ++j)
-            p += a[j].total() << (R + 8 * j);
+            p += static_cast<total>(a[j].total()) << (R + 8 * j);
         return p;
     }
 
@@ -200,6 +202,22 @@ template <layout L, unsigned K> struct packed {
         if constexpr (B > 0) {
             u64 g4[4], e4[4];
             for (unsigned g = 0; g < 4; ++g) {
+#if BODIES_ISA_NEON
+                // In the byte domain across slices, then one conversion per
+                // mask per group instead of two per slice.
+                simd::v64 gtm = simd::zero(), eqm = simd::splat(0xff);
+                for (unsigned j = B; j-- > 0;) {
+                    const u8 cj = static_cast<u8>(c >> (R + 8 * j));
+                    const simd::v64 x = slice(body, gs.x, j, g);
+                    if constexpr (!eq_only)
+                        gtm = simd::or_(gtm, simd::and_(eqm, simd::gtm(x, cj)));
+                    eqm = simd::and_(eqm, simd::eqm(x, cj));
+                }
+                if constexpr (R == 0 && !eq_only)
+                    g4[g] = simd::to_bits(simd::or_(gtm, eqm)), e4[g] = 0;  // >= in one conversion
+                else
+                    g4[g] = eq_only ? 0 : simd::to_bits(gtm), e4[g] = simd::to_bits(eqm);
+#else
                 u64 gt1 = 0, eq1 = ~u64{0};
                 for (unsigned j = B; j-- > 0;) {
                     const u8 cj = static_cast<u8>(c >> (R + 8 * j));
@@ -209,6 +227,7 @@ template <layout L, unsigned K> struct packed {
                     eq1 &= simd::eq(x, cj);
                 }
                 g4[g] = gt1, e4[g] = eq1;
+#endif
             }
             gt = v4{g4[0], g4[1], g4[2], g4[3]};
             eq = v4{e4[0], e4[1], e4[2], e4[3]};
@@ -232,7 +251,45 @@ template <layout L, unsigned K> struct packed {
         const v4 r = compare<false>(body, c);
         std::memcpy(m, &r, 32);
     }
-    static unsigned count_ge(const u8 *body, u64 c) { return popcount4(compare<false>(body, c)); }
+    static unsigned count_ge(const u8 *body, u64 c) {
+#if BODIES_ISA_NEON
+        if constexpr (B > 0) {
+            // Rows with a greater body are counted in the byte domain; only
+            // the equal-body rows become bits for the plane comparison.
+            const groups gs(body);
+            uint8x16_t acc = vdupq_n_u8(0);
+            u64 e4[4];
+            for (unsigned g = 0; g < 4; ++g) {
+                simd::v64 gtm = simd::zero(), eqm = simd::splat(0xff);
+                for (unsigned j = B; j-- > 0;) {
+                    const u8 cj = static_cast<u8>(c >> (R + 8 * j));
+                    const simd::v64 x = slice(body, gs.x, j, g);
+                    gtm = simd::or_(gtm, simd::and_(eqm, simd::gtm(x, cj)));
+                    eqm = simd::and_(eqm, simd::eqm(x, cj));
+                }
+                if constexpr (R == 0)
+                    gtm = simd::or_(gtm, eqm);
+                for (unsigned q = 0; q < 4; ++q)
+                    acc = vsubq_u8(acc, gtm.x.val[q]);  // at most 4 per lane
+                if constexpr (R > 0)
+                    e4[g] = simd::to_bits(eqm);
+            }
+            unsigned n = vaddlvq_u8(acc);
+            if constexpr (R > 0) {
+                v4 gt = 0, eq = v4{e4[0], e4[1], e4[2], e4[3]};
+                for (unsigned b = R; b-- > 0;) {
+                    const v4 w = plane_words(body, gs.x, b);
+                    const u64 cb = u64{0} - (c >> b & 1);
+                    gt |= eq & w & ~cb;
+                    eq &= ~(w ^ cb);
+                }
+                n += popcount4(gt | eq);
+            }
+            return n;
+        }
+#endif
+        return popcount4(compare<false>(body, c));
+    }
     static unsigned count_eq(const u8 *body, u64 c) { return popcount4(compare<true>(body, c)); }
 
     // Exact MAX (or MIN) without decoding: the extreme byte of each slice
@@ -263,7 +320,13 @@ template <layout L, unsigned K> struct packed {
                     cand[g] = simd::eq(slice(body, gs.x, B - 1, g), best);
                     left += static_cast<unsigned>(std::popcount(cand[g]));
                 }
-                if (left <= 8) {
+                // With one slice the planes narrow branch-free below. Point reads
+                // of the few candidates only pay with lower slices left, and
+                // only where masked byte reductions are dear (NEON): their
+                // data-dependent loop mispredicts, which throttles memory
+                // parallelism beyond L2 (Zen 5 v6: 17-20 ns per block at
+                // K >= 8 against 4 at L2).
+                if (B >= 2 && !BODIES_ISA_AVX512 && left <= 8) {
                     u64 e = is_max ? 0 : ~u64{0};
                     for (unsigned g = 0; g < 4; ++g)
                         for (u64 c = cand[g]; c; c &= c - 1) {
@@ -300,14 +363,16 @@ template <layout L, unsigned K> struct packed {
     static u64 max(const u8 *body) { return extremum<true>(body); }
     static u64 min(const u8 *body) { return extremum<false>(body); }
     // First row with residual >= c, or 256.
+    // Branch-free over the groups: the position of a sparse first match is
+    // unpredictable, so a loop exit mispredicts.
     static unsigned first_ge(const u8 *body, u64 c) {
         const v4 r = compare<false>(body, c);
-        for (unsigned g = 0; g < 4; ++g)
-            if (r[g])
-                return 64 * g + static_cast<unsigned>(std::countr_zero(r[g]));
-        return block_rows;
+        unsigned first = block_rows;
+        for (unsigned g = 4; g-- > 0;)
+            first = r[g] ? 64 * g + static_cast<unsigned>(std::countr_zero(r[g])) : first;
+        return first;
     }
-    static u64 masked_sum(const u8 *body, const u64 *sel) {
+    static total masked_sum(const u8 *body, const u64 *sel) {
         const groups gs(body);
         simd::acc a[B ? B : 1];
         // No per-group skip: with sparse random selections the branch
@@ -320,9 +385,9 @@ template <layout L, unsigned K> struct packed {
         v4 acc = 0;
         for (unsigned b = 0; b < R; ++b)
             acc += __builtin_elementwise_popcount(plane_words(body, gs.x, b) & s) << b;
-        u64 p = __builtin_reduce_add(acc);
+        total p = __builtin_reduce_add(acc);
         for (unsigned j = 0; j < B; ++j)
-            p += a[j].total() << (R + 8 * j);
+            p += static_cast<total>(a[j].total()) << (R + 8 * j);
         return p;
     }
 
@@ -349,16 +414,43 @@ template <layout L, unsigned K> struct packed {
         return v;
     }
 
-    static void unpack(const u8 *body, u32 *out) {
+    // Unpack to W lanes (u32 to K = 32; u64 for any K).
+    template <class W> static void unpack_to(const u8 *body, W *out) {
+        static_assert(8 * sizeof(W) >= K);
         typedef u8 bytes __attribute__((ext_vector_type(64)));
-        typedef u32 words __attribute__((ext_vector_type(64)));
+        typedef W words __attribute__((ext_vector_type(64)));
         for (unsigned g = 0; g < 4; ++g) {
             const group<K> x = fetch<L, K>(body, g);
             words v = 0;
             if constexpr (R) {
+#if BODIES_ISA_NEON
+                // Each plane's 0/0xff byte mask shift-inserted above the
+                // planes so far (SRI), then one shift down: three ops per
+                // plane and 16 rows (table, test, insert) instead of four.
+                simd::v64 res;
+                for (unsigned q = 0; q < 4; ++q)
+                    res.x.val[q] = vdupq_n_u8(0);
+                for (unsigned b = 0; b < R; ++b) {
+                    const simd::v64 m = simd::expand(x.w[b]);
+                    for (unsigned q = 0; q < 4; ++q)
+                        res.x.val[q] = vsriq_n_u8(m.x.val[q], res.x.val[q], 1);
+                }
+                for (unsigned q = 0; q < 4; ++q)
+                    res.x.val[q] = vshrq_n_u8(res.x.val[q], 8 - R);
+#else
                 simd::v64 res = simd::and_(simd::expand(x.w[0]), simd::splat(1));
                 for (unsigned b = 1; b < R; ++b)
                     res = simd::or_(res, simd::and_(simd::expand(x.w[b]), simd::splat(static_cast<u8>(1u << b))));
+#endif
+                if constexpr (K <= 16 && B == 1) {
+                    // Combine in u16 lanes, widen once.
+                    typedef u16 halves __attribute__((ext_vector_type(64)));
+                    const halves h = __builtin_convertvector(__builtin_bit_cast(bytes, res), halves) |
+                                     __builtin_convertvector(__builtin_bit_cast(bytes, x.s[0]), halves) << R;
+                    v = __builtin_convertvector(h, words);
+                    std::memcpy(out + 64 * g, &v, sizeof v);
+                    continue;
+                }
                 v = __builtin_convertvector(__builtin_bit_cast(bytes, res), words);
             }
             for (unsigned j = 0; j < B; ++j)
@@ -366,6 +458,12 @@ template <layout L, unsigned K> struct packed {
             std::memcpy(out + 64 * g, &v, sizeof v);
         }
     }
+    static void unpack(const u8 *body, u32 *out)
+        requires(K <= 32)
+    {
+        unpack_to(body, out);
+    }
+    static void unpack64(const u8 *body, u64 *out) { unpack_to(body, out); }
 };
 
 // Leaves over a byte-lane block: 256 values of T. The native narrow array is

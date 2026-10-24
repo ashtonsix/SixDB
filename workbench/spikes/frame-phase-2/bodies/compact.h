@@ -102,7 +102,10 @@ template <layout L, unsigned K> struct compactor {
                     std::memcpy(ob + stride + 256 * j, c + first, n - first);
 #endif
             }
-            // Planes are ORed into, so a block's planes are cleared as rows first reach it.
+            // Planes are ORed into, so a block's planes are cleared as rows
+            // first reach it. Concatenating a block's four group extracts in
+            // registers and ORing once per block was slower (Zen 5 v6: K = 5
+            // 39 vs 19 ns): u128 variable shifts and variable deposit loops.
             if (f == 0)
                 std::memset(ob + 256 * B, 0, 32 * R);
             if (first < n)

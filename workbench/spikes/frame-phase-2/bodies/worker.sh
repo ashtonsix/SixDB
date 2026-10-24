@@ -6,8 +6,8 @@
 # Usage: worker.py run workbench/spikes/frame-phase-2/bodies/worker.sh --machine zen5|neoverse-v2
 #   env: ISAS, ROUNDS, TIERS ("l2 llc dram"), WIDTHS_L2, WIDTHS_BIG, RUN_W, RUN_N,
 #        SWEEP=0 skips the synthetic sweep, COLUMNS=0 the real columns,
-#        EXTRA=0 the patched, compaction and histogram cells, PEERS=0 the
-#        TurboPFor/FastLanes arms
+#        CELLS (packed runs patched compact histogram; patched, compact and
+#        histogram skip the LLC tier), PEERS=0 skips the TurboPFor/FastLanes arms
 set -euo pipefail
 inputs=workbench/spikes/frame-phase-1/encoding/worker-inputs.json
 if [ "${COLUMNS:-1}" = 1 ]; then
@@ -63,23 +63,21 @@ for isa in $isas; do
     done
   fi
   [ "${SWEEP:-1}" = 1 ] || continue
+  m() { taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" "$@" \
+          | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"; }
   for tier in ${TIERS:-l2 llc dram}; do
     if [ "$tier" = l2 ]; then widths="$widths_l2"; else widths="$widths_big"; fi
-    taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" packed $widths \
-      | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"
-    for w in $run_w; do
-      taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" runs "$w" $run_n \
-        | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"
+    for cell in ${CELLS:-packed runs patched compact histogram wide weighted}; do
+      case "$cell" in
+        packed) m packed $widths ;;
+        runs) for w in $run_w; do m runs "$w" $run_n; done ;;
+        patched) [ "$tier" = llc ] || for e in 1 4 16; do m patched "$e" 4 8 12 16 20; done ;;
+        compact) [ "$tier" = llc ] || m compact ${COMPACT_K:-1 3 5 8 12 16 20 32} ;;
+        histogram) [ "$tier" = llc ] || m histogram 1 2 3 4 5 6 7 8 ;;
+        wide) m wide 33 40 48 56 63 64 ;;
+        weighted) [ "$tier" = llc ] || m weighted 4 6 8 10 12 16 ;;
+      esac
     done
-    [ "$tier" = llc ] || [ "${EXTRA:-1}" = 0 ] && continue
-    for e in 1 4 16; do
-      taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" patched "$e" 4 8 12 16 20 \
-        | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"
-    done
-    taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" compact 1 3 5 8 12 16 20 32 \
-      | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"
-    taskset -c "$SIXDB_CPU" "$dir/frame_bodies_measure" "${rows[$tier]}" "$rounds" histogram 1 2 3 4 5 6 7 8 \
-      | sed "s/^{/{\"tier\":\"$tier\",/" >> "$out/samples.jsonl"
   done
 done
 echo done > "$SIXDB_RESULTS/status.txt"

@@ -4,11 +4,14 @@
 // every row as a point. local8 bytes must equal SeriesPack Local's own
 // encoding (phase 1's pack()), so the phase 1 arm reads identical bytes.
 #include "catalogue.h"
+#include "packed.h"
+#include "weighted.h"
 #include "exceptions.h"
 #include "runs.h"
 #include "packing.h"
 
 #include <algorithm>
+#include <memory>
 #include <cstdio>
 #include <cstdlib>
 #include <random>
@@ -315,6 +318,108 @@ template <unsigned K> void check_patched_k(std::mt19937_64 &rng) {
             }
         }
 }
+// K 33..64 on the plane layouts: u128 sums, u64 unpack.
+template <unsigned K> void check_wide_k(std::mt19937_64 &rng) {
+    for (layout l : {layout::plane256, layout::plane64}) {
+        for (unsigned shape = 0; shape < 4; ++shape) {
+            const auto v = values(K, shape, rng);
+            std::vector<u8> img(block_bytes(l, K) + 256);
+            encode(l, K, v.data(), img.data());
+            ++blocks_checked;
+            const auto run = [&](auto P) {
+                using X = decltype(P);
+                u128 s = 0;
+                for (u64 x : v)
+                    s += x;
+                if (X::sum(img.data()) != s)
+                    fail("wide-sum", l, K, static_cast<u64>(X::sum(img.data())), static_cast<u64>(s));
+                for (u64 c : constants(v, K, rng)) {
+                    unsigned ge = 0, first = block_rows;
+                    u64 m[4], want[4] = {0, 0, 0, 0};
+                    for (unsigned i = 0; i < block_rows; ++i) {
+                        ge += v[i] >= c;
+                        want[i / 64] |= u64{v[i] >= c} << (i % 64);
+                        if (v[i] >= c && first == block_rows)
+                            first = i;
+                    }
+                    if (X::count_ge(img.data(), c) != ge)
+                        fail("wide-count_ge", l, K, X::count_ge(img.data(), c), ge);
+                    if (X::first_ge(img.data(), c) != first)
+                        fail("wide-first_ge", l, K, X::first_ge(img.data(), c), first);
+                    X::mask_ge(img.data(), c, m);
+                    for (unsigned w = 0; w < 4; ++w)
+                        if (m[w] != want[w])
+                            fail("wide-mask_ge", l, K, m[w], want[w]);
+                }
+                for (const auto &sel : selections(rng)) {
+                    u128 want = 0;
+                    for (unsigned i = 0; i < block_rows; ++i)
+                        if (sel[i / 64] >> (i % 64) & 1)
+                            want += v[i];
+                    if (X::masked_sum(img.data(), sel.data()) != want)
+                        fail("wide-masked_sum", l, K, 0, 1);
+                }
+                const auto [lo, hi] = std::minmax_element(v.begin(), v.end());
+                if (X::max(img.data()) != *hi || X::min(img.data()) != *lo)
+                    fail("wide-minmax", l, K, X::max(img.data()), *hi);
+                u64 out[block_rows];
+                X::unpack64(img.data(), out);
+                for (unsigned i = 0; i < block_rows; ++i)
+                    if (out[i] != v[i] || X::point(img.data(), i) != v[i])
+                        fail("wide-unpack-point", l, K, out[i], v[i]);
+            };
+            if (l == layout::plane256)
+                run(packed<layout::plane256, K>{});
+            else
+                run(packed<layout::plane64, K>{});
+        }
+    }
+}
+// Weighted code SUM (all paths), over plane256 and runs codes.
+template <unsigned K> void check_weighted_k(std::mt19937_64 &rng) {
+    std::vector<u64> D(std::size_t{1} << K);
+    for (auto &d : D)
+        d = rng();
+    for (unsigned shape = 0; shape < 4; ++shape) {
+        const auto v = values(K, shape, rng);
+        std::vector<u8> img(block_bytes(layout::plane256, K) + 256);
+        encode(layout::plane256, K, v.data(), img.data());
+        ++blocks_checked;
+        u128 want = 0;
+        for (u64 x : v)
+            want += D[x];
+        using W = packed_weighted<layout::plane256, K>;
+        if (W::weighted_sum(img.data(), D.data()) != want)
+            fail("weighted", layout::plane256, K, 0, 1);
+        const unsigned runs_n = count_runs(v.data());
+        using T = std::conditional_t<(K <= 8), u8, u16>;
+        std::vector<u8> rimg(runs_bytes(runs_n, K) + 256);
+        if (runs_n >= 2) {
+            encode_runs(v.data(), K, rimg.data());
+            if (runs_weighted<T>::weighted_sum(rimg.data(), runs_n, D.data()) != want)
+                fail("weighted-runs", layout::plane256, K, 0, 1);
+        }
+        std::unique_ptr<byte_tables> tables;
+        if constexpr (K <= 8) {
+            tables = std::make_unique<byte_tables>(D.data(), 1u << K);
+            if (W::weighted_sum(img.data(), *tables) != want)
+                fail("weighted-tables", layout::plane256, K, 0, 1);
+        }
+        for (const auto &sel : selections(rng)) {
+            u128 ws = 0;
+            for (unsigned i = 0; i < block_rows; ++i)
+                if (sel[i / 64] >> (i % 64) & 1)
+                    ws += D[v[i]];
+            if (W::masked_weighted_sum(img.data(), sel.data(), D.data()) != ws)
+                fail("weighted-masked", layout::plane256, K, 0, 1);
+            if constexpr (K <= 8)
+                if (W::masked_weighted_sum(img.data(), sel.data(), *tables) != ws)
+                    fail("weighted-masked-tables", layout::plane256, K, 0, 1);
+            if (runs_n >= 2 && runs_weighted<T>::masked_weighted_sum(rimg.data(), runs_n, sel.data(), D.data()) != ws)
+                fail("weighted-masked-runs", layout::plane256, K, 0, 1);
+        }
+    }
+}
 template <std::size_t... I> void check_patched(std::mt19937_64 &rng, std::index_sequence<I...>) {
     (check_patched_k<I + 1>(rng), ...);
 }
@@ -330,6 +435,10 @@ int main() {
     for (unsigned w = 1; w <= 32; ++w)
         check_runs(w, rng);
     check_patched(rng, std::make_index_sequence<31>{});
+    check_wide_k<33>(rng), check_wide_k<40>(rng), check_wide_k<47>(rng), check_wide_k<48>(rng);
+    check_wide_k<56>(rng), check_wide_k<57>(rng), check_wide_k<63>(rng), check_wide_k<64>(rng);
+    check_weighted_k<1>(rng), check_weighted_k<4>(rng), check_weighted_k<6>(rng), check_weighted_k<7>(rng);
+    check_weighted_k<8>(rng), check_weighted_k<10>(rng), check_weighted_k<13>(rng), check_weighted_k<16>(rng);
     std::printf("%s bodies check: %ld blocks, %d failures\n", isa_name(), blocks_checked, failures);
     return failures != 0;
 }

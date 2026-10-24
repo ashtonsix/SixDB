@@ -21,6 +21,15 @@
 #else
 #error "bodies needs AVX-512BW, AVX2 or NEON"
 #endif
+#ifndef BODIES_ISA_AVX512
+#define BODIES_ISA_AVX512 0
+#endif
+#ifndef BODIES_ISA_AVX2
+#define BODIES_ISA_AVX2 0
+#endif
+#ifndef BODIES_ISA_NEON
+#define BODIES_ISA_NEON 0
+#endif
 
 namespace bodies {
 using u8 = std::uint8_t;
@@ -53,6 +62,9 @@ __attribute__((target("sve2-bitperm"))) inline u64 sve_bdep(u64 x, u64 m) {
 }
 __attribute__((target("sve2-bitperm"))) inline u64 sve_bext(u64 x, u64 m) {
     return svlastb_u64(svptrue_pat_b64(SV_VL1), svbext_n_u64(svdup_n_u64(x), m));
+}
+__attribute__((target("aes"))) inline u64 pmull_prefix_xor(u64 x) {
+    return vgetq_lane_u64(vreinterpretq_u64_p128(vmull_p64(x, ~u64{0})), 0);
 }
 inline const bool has_bitperm = (getauxval(AT_HWCAP2) & (1ul << 4)) != 0;  // HWCAP2_SVEBITPERM
 #endif
@@ -272,6 +284,17 @@ inline u64 eq(v64 v, u8 c) {
     const uint8x16_t k = vdupq_n_u8(c);
     return bits(vceqq_u8(v.x.val[0], k), vceqq_u8(v.x.val[1], k), vceqq_u8(v.x.val[2], k), vceqq_u8(v.x.val[3], k));
 }
+// Byte masks (0 / 0xff) for comparisons kept in the byte domain, and one
+// conversion to row bits (NEON has no movemask: an AND and three pairwise adds).
+inline v64 gtm(v64 v, u8 c) {
+    const uint8x16_t k = vdupq_n_u8(c);
+    return {{vcgtq_u8(v.x.val[0], k), vcgtq_u8(v.x.val[1], k), vcgtq_u8(v.x.val[2], k), vcgtq_u8(v.x.val[3], k)}};
+}
+inline v64 eqm(v64 v, u8 c) {
+    const uint8x16_t k = vdupq_n_u8(c);
+    return {{vceqq_u8(v.x.val[0], k), vceqq_u8(v.x.val[1], k), vceqq_u8(v.x.val[2], k), vceqq_u8(v.x.val[3], k)}};
+}
+inline u64 to_bits(v64 m) { return bits(m.x.val[0], m.x.val[1], m.x.val[2], m.x.val[3]); }
 inline v64 expand(u64 rows) {
     const uint8x16_t b = vreinterpretq_u8_u64(vdupq_n_u64(rows));
     const uint8x16_t w = {1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8, 16, 32, 64, 128};

@@ -1,0 +1,771 @@
+isa rows policy column op variant frame native u64 native/frame
+avx2 65536 bytes ClientIP count_ge median 3.07 6.37 16.01 2.07x
+avx2 65536 bytes ClientIP mask_ge median 20.11 7.59 13.54 0.38x
+avx2 65536 bytes ClientIP masked_sum RegionID>=median 17.16 19.56 31.87 1.14x
+avx2 65536 bytes ClientIP point uniform 7.56 3.80 1.35 0.50x
+avx2 65536 bytes ClientIP sum all 4.78 9.05 15.55 1.89x
+avx2 65536 bytes ConnectTiming count_ge median 0.29 0.01 16.01 0.02x
+avx2 65536 bytes ConnectTiming mask_ge median 0.72 3.45 13.56 4.79x
+avx2 65536 bytes ConnectTiming masked_sum OS>=median 12.66 10.88 31.85 0.86x
+avx2 65536 bytes ConnectTiming point uniform 15.24 3.83 1.35 0.25x
+avx2 65536 bytes ConnectTiming sum all 3.87 4.59 15.54 1.19x
+avx2 65536 bytes CounterID count_ge median 0.34 1.89 16.02 5.57x
+avx2 65536 bytes CounterID mask_ge median 0.76 2.07 13.55 2.71x
+avx2 65536 bytes CounterID point uniform 1.09 3.80 1.35 3.47x
+avx2 65536 bytes CounterID sum all 0.18 1.53 15.54 8.72x
+avx2 65536 bytes EventTime count_ge median 8.36 6.37 16.07 0.76x
+avx2 65536 bytes EventTime mask_ge median 7.17 7.61 13.58 1.06x
+avx2 65536 bytes EventTime masked_sum EventTime>=median 8.31 19.43 31.77 2.34x
+avx2 65536 bytes EventTime point uniform 3.80 3.81 1.35 1.00x
+avx2 65536 bytes EventTime sum all 3.90 9.07 15.58 2.33x
+avx2 65536 bytes IsRefresh count_ge median 0.35 0.01 16.00 0.02x
+avx2 65536 bytes IsRefresh mask_ge median 0.69 2.06 13.57 2.99x
+avx2 65536 bytes IsRefresh point uniform 2.19 3.80 1.35 1.73x
+avx2 65536 bytes IsRefresh sum all 0.87 1.53 15.52 1.77x
+avx2 65536 bytes OS count_ge median 2.03 1.88 15.96 0.93x
+avx2 65536 bytes OS mask_ge median 18.07 1.95 13.61 0.11x
+avx2 65536 bytes OS masked_sum RegionID>=median 7.92 4.25 32.13 0.54x
+avx2 65536 bytes OS point uniform 5.53 3.80 1.35 0.69x
+avx2 65536 bytes OS sum all 2.09 1.38 15.54 0.66x
+avx2 65536 bytes RegionID count_ge median 2.36 6.44 16.01 2.73x
+avx2 65536 bytes RegionID mask_ge median 18.45 7.59 13.60 0.41x
+avx2 65536 bytes RegionID masked_sum OS>=median 9.38 19.55 31.86 2.08x
+avx2 65536 bytes RegionID point uniform 10.88 3.80 1.35 0.35x
+avx2 65536 bytes RegionID sum all 2.57 9.04 15.54 3.52x
+avx2 65536 bytes ResolutionWidth count_ge median 2.38 4.06 16.03 1.71x
+avx2 65536 bytes ResolutionWidth mask_ge median 17.72 3.40 13.57 0.19x
+avx2 65536 bytes ResolutionWidth masked_sum OS>=median 8.99 10.90 31.91 1.21x
+avx2 65536 bytes ResolutionWidth point uniform 7.90 3.81 1.35 0.48x
+avx2 65536 bytes ResolutionWidth sum all 2.48 4.61 15.55 1.86x
+avx2 65536 bytes URLHash count_ge median 13.90 16.10 16.27 1.16x
+avx2 65536 bytes URLHash mask_ge median 64.52 13.75 13.66 0.21x
+avx2 65536 bytes URLHash masked_sum UserID>=median 44.61 16.39 16.49 0.37x
+avx2 65536 bytes URLHash point uniform 8.20 1.38 1.37 0.17x
+avx2 65536 bytes URLHash sum all 20.05 15.60 15.58 0.78x
+avx2 65536 bytes UserID count_ge median 0.49 16.02 15.99 32.75x
+avx2 65536 bytes UserID mask_ge median 0.88 13.58 13.65 15.49x
+avx2 65536 bytes UserID masked_sum OS>=median 17.44 31.84 32.18 1.83x
+avx2 65536 bytes UserID point uniform 7.63 1.37 1.36 0.18x
+avx2 65536 bytes UserID sum all 5.25 15.56 15.56 2.96x
+avx2 65536 bytes WatchID count_ge median 16.39 16.01 16.03 0.98x
+avx2 65536 bytes WatchID mask_ge median 14.30 13.65 13.58 0.95x
+avx2 65536 bytes WatchID masked_sum EventTime>=median 32.16 32.04 31.81 1.00x
+avx2 65536 bytes WatchID point uniform 1.73 1.35 1.36 0.78x
+avx2 65536 bytes WatchID sum all 15.76 15.54 15.57 0.99x
+avx2 65536 bytes+starts ClientIP count_ge median 3.05 6.43 16.01 2.11x
+avx2 65536 bytes+starts ClientIP mask_ge median 14.30 7.59 13.55 0.53x
+avx2 65536 bytes+starts ClientIP masked_sum RegionID>=median 17.12 19.47 31.78 1.14x
+avx2 65536 bytes+starts ClientIP point uniform 4.03 3.80 1.36 0.94x
+avx2 65536 bytes+starts ClientIP sum all 4.77 9.02 15.51 1.89x
+avx2 65536 bytes+starts ConnectTiming count_ge median 0.32 0.01 16.01 0.02x
+avx2 65536 bytes+starts ConnectTiming mask_ge median 0.76 3.41 13.56 4.48x
+avx2 65536 bytes+starts ConnectTiming masked_sum OS>=median 12.65 10.88 31.85 0.86x
+avx2 65536 bytes+starts ConnectTiming point uniform 8.67 3.80 1.37 0.44x
+avx2 65536 bytes+starts ConnectTiming sum all 3.80 4.60 15.52 1.21x
+avx2 65536 bytes+starts CounterID count_ge median 0.36 1.89 16.03 5.31x
+avx2 65536 bytes+starts CounterID mask_ge median 0.74 2.08 13.60 2.82x
+avx2 65536 bytes+starts CounterID point uniform 1.09 3.81 1.35 3.48x
+avx2 65536 bytes+starts CounterID sum all 0.18 1.57 15.53 8.91x
+avx2 65536 bytes+starts EventTime count_ge median 8.33 6.34 16.00 0.76x
+avx2 65536 bytes+starts EventTime mask_ge median 6.95 7.59 13.53 1.09x
+avx2 65536 bytes+starts EventTime masked_sum EventTime>=median 8.26 19.38 31.64 2.35x
+avx2 65536 bytes+starts EventTime point uniform 3.62 3.80 1.35 1.05x
+avx2 65536 bytes+starts EventTime sum all 3.88 9.02 15.49 2.33x
+avx2 65536 bytes+starts IsRefresh count_ge median 0.34 0.01 16.01 0.02x
+avx2 65536 bytes+starts IsRefresh mask_ge median 0.70 2.08 13.57 2.98x
+avx2 65536 bytes+starts IsRefresh point uniform 2.20 3.81 1.36 1.73x
+avx2 65536 bytes+starts IsRefresh sum all 0.87 1.57 15.51 1.81x
+avx2 65536 bytes+starts OS count_ge median 2.04 1.89 15.98 0.93x
+avx2 65536 bytes+starts OS mask_ge median 10.06 1.96 13.61 0.19x
+avx2 65536 bytes+starts OS masked_sum RegionID>=median 7.89 4.25 32.07 0.54x
+avx2 65536 bytes+starts OS point uniform 4.06 3.80 1.35 0.93x
+avx2 65536 bytes+starts OS sum all 2.11 1.39 15.49 0.66x
+avx2 65536 bytes+starts RegionID count_ge median 2.35 6.43 16.01 2.74x
+avx2 65536 bytes+starts RegionID mask_ge median 11.88 7.59 13.54 0.64x
+avx2 65536 bytes+starts RegionID masked_sum OS>=median 9.35 19.52 31.81 2.09x
+avx2 65536 bytes+starts RegionID point uniform 7.69 3.80 1.35 0.49x
+avx2 65536 bytes+starts RegionID sum all 2.57 9.03 15.51 3.52x
+avx2 65536 bytes+starts ResolutionWidth count_ge median 2.37 4.03 16.01 1.70x
+avx2 65536 bytes+starts ResolutionWidth mask_ge median 11.94 3.40 13.54 0.28x
+avx2 65536 bytes+starts ResolutionWidth masked_sum OS>=median 8.96 10.87 31.81 1.21x
+avx2 65536 bytes+starts ResolutionWidth point uniform 4.01 3.79 1.36 0.95x
+avx2 65536 bytes+starts ResolutionWidth sum all 2.48 4.59 15.51 1.85x
+avx2 65536 bytes+starts URLHash count_ge median 13.82 16.03 16.25 1.16x
+avx2 65536 bytes+starts URLHash mask_ge median 26.91 13.58 13.93 0.50x
+avx2 65536 bytes+starts URLHash masked_sum UserID>=median 44.41 16.28 16.39 0.37x
+avx2 65536 bytes+starts URLHash point uniform 4.28 1.36 1.36 0.32x
+avx2 65536 bytes+starts URLHash sum all 20.03 15.51 15.85 0.77x
+avx2 65536 bytes+starts UserID count_ge median 0.48 16.00 15.98 33.33x
+avx2 65536 bytes+starts UserID mask_ge median 0.98 13.55 13.63 13.86x
+avx2 65536 bytes+starts UserID masked_sum OS>=median 17.40 31.75 32.03 1.83x
+avx2 65536 bytes+starts UserID point uniform 4.05 1.35 1.35 0.33x
+avx2 65536 bytes+starts UserID sum all 5.27 15.48 15.49 2.94x
+avx2 65536 bytes+starts WatchID count_ge median 16.39 16.01 16.02 0.98x
+avx2 65536 bytes+starts WatchID mask_ge median 14.26 13.63 13.56 0.96x
+avx2 65536 bytes+starts WatchID masked_sum EventTime>=median 32.08 31.99 31.74 1.00x
+avx2 65536 bytes+starts WatchID point uniform 1.73 1.36 1.35 0.79x
+avx2 65536 bytes+starts WatchID sum all 15.73 15.50 15.52 0.99x
+avx2 65536 packed ClientIP count_ge median 13.68 6.46 15.97 0.47x
+avx2 65536 packed ClientIP mask_ge median 11.50 7.63 13.54 0.66x
+avx2 65536 packed ClientIP masked_sum RegionID>=median 10.65 19.49 31.81 1.83x
+avx2 65536 packed ClientIP point uniform 3.21 3.80 1.35 1.18x
+avx2 65536 packed ClientIP sum all 6.52 9.02 15.52 1.38x
+avx2 65536 packed ConnectTiming count_ge median 0.32 0.01 15.95 0.02x
+avx2 65536 packed ConnectTiming mask_ge median 0.70 3.18 13.62 4.52x
+avx2 65536 packed ConnectTiming masked_sum OS>=median 5.29 10.88 32.10 2.06x
+avx2 65536 packed ConnectTiming point uniform 11.63 3.81 1.36 0.33x
+avx2 65536 packed ConnectTiming sum all 3.34 4.59 15.51 1.37x
+avx2 65536 packed CounterID count_ge median 0.39 1.89 16.27 4.86x
+avx2 65536 packed CounterID mask_ge median 0.69 2.08 14.05 3.02x
+avx2 65536 packed CounterID point uniform 1.09 3.80 1.36 3.49x
+avx2 65536 packed CounterID sum all 0.18 1.57 15.95 8.95x
+avx2 65536 packed EventTime count_ge median 8.48 6.34 15.99 0.75x
+avx2 65536 packed EventTime mask_ge median 6.72 7.62 13.60 1.13x
+avx2 65536 packed EventTime masked_sum EventTime>=median 7.20 19.38 31.89 2.69x
+avx2 65536 packed EventTime point uniform 3.43 3.80 1.35 1.11x
+avx2 65536 packed EventTime sum all 3.70 9.00 15.53 2.43x
+avx2 65536 packed IsRefresh count_ge median 0.37 0.01 16.27 0.02x
+avx2 65536 packed IsRefresh mask_ge median 0.69 2.07 14.00 3.02x
+avx2 65536 packed IsRefresh point uniform 2.19 3.80 1.36 1.73x
+avx2 65536 packed IsRefresh sum all 0.88 1.57 15.91 1.78x
+avx2 65536 packed OS count_ge median 4.55 1.89 16.06 0.41x
+avx2 65536 packed OS mask_ge median 3.60 1.98 13.77 0.55x
+avx2 65536 packed OS masked_sum RegionID>=median 4.73 4.23 33.13 0.89x
+avx2 65536 packed OS point uniform 9.14 3.81 1.38 0.42x
+avx2 65536 packed OS sum all 3.52 1.43 15.60 0.40x
+avx2 65536 packed RegionID count_ge median 7.45 6.34 16.00 0.85x
+avx2 65536 packed RegionID mask_ge median 5.96 7.62 13.66 1.28x
+avx2 65536 packed RegionID masked_sum OS>=median 7.75 19.68 32.40 2.54x
+avx2 65536 packed RegionID point uniform 9.69 3.81 1.37 0.39x
+avx2 65536 packed RegionID sum all 4.20 9.01 15.57 2.15x
+avx2 65536 packed ResolutionWidth count_ge median 5.99 4.02 16.02 0.67x
+avx2 65536 packed ResolutionWidth mask_ge median 5.10 3.36 13.55 0.66x
+avx2 65536 packed ResolutionWidth masked_sum OS>=median 6.35 10.87 31.85 1.71x
+avx2 65536 packed ResolutionWidth point uniform 7.05 3.81 1.36 0.54x
+avx2 65536 packed ResolutionWidth sum all 3.13 4.61 15.56 1.47x
+avx2 65536 packed URLHash count_ge median 16.39 16.00 16.03 0.98x
+avx2 65536 packed URLHash mask_ge median 14.29 13.67 13.60 0.96x
+avx2 65536 packed URLHash masked_sum UserID>=median 16.52 16.47 16.31 1.00x
+avx2 65536 packed URLHash point uniform 1.72 1.35 1.35 0.79x
+avx2 65536 packed URLHash sum all 15.76 15.52 15.53 0.98x
+avx2 65536 packed UserID count_ge median 8.42 16.00 15.96 1.90x
+avx2 65536 packed UserID mask_ge median 7.60 13.56 13.59 1.78x
+avx2 65536 packed UserID masked_sum OS>=median 31.99 31.92 32.01 1.00x
+avx2 65536 packed UserID point uniform 1.77 1.36 1.36 0.77x
+avx2 65536 packed UserID sum all 15.68 15.52 15.51 0.99x
+avx2 65536 packed WatchID count_ge median 16.37 15.98 15.96 0.98x
+avx2 65536 packed WatchID mask_ge median 14.01 13.64 13.62 0.97x
+avx2 65536 packed WatchID masked_sum EventTime>=median 31.71 31.92 31.93 1.01x
+avx2 65536 packed WatchID point uniform 1.75 1.35 1.35 0.77x
+avx2 65536 packed WatchID sum all 15.76 15.52 15.52 0.98x
+avx2 2999808 bytes ClientIP count_ge median 5.76 9.77 22.54 1.70x
+avx2 2999808 bytes ClientIP mask_ge median 64.77 14.83 32.15 0.23x
+avx2 2999808 bytes ClientIP masked_sum RegionID>=median 34.23 21.89 39.52 0.64x
+avx2 2999808 bytes ClientIP point uniform 16.37 3.86 2.08 0.24x
+avx2 2999808 bytes ClientIP sum all 10.21 11.17 22.53 1.09x
+avx2 2999808 bytes ConnectTiming count_ge median 0.26 0.00 22.25 0.00x
+avx2 2999808 bytes ConnectTiming mask_ge median 0.68 5.14 22.16 7.54x
+avx2 2999808 bytes ConnectTiming masked_sum OS>=median 8.80 11.24 36.20 1.28x
+avx2 2999808 bytes ConnectTiming point uniform 13.05 3.86 2.51 0.30x
+avx2 2999808 bytes ConnectTiming sum all 2.61 5.14 22.65 1.97x
+avx2 2999808 bytes CounterID count_ge median 0.27 4.80 21.46 17.54x
+avx2 2999808 bytes CounterID mask_ge median 0.68 5.14 21.83 7.52x
+avx2 2999808 bytes CounterID point uniform 1.43 3.82 2.04 2.68x
+avx2 2999808 bytes CounterID sum all 0.15 5.02 21.44 33.28x
+avx2 2999808 bytes EventTime count_ge median 7.23 10.25 24.85 1.42x
+avx2 2999808 bytes EventTime mask_ge median 6.56 10.48 24.35 1.60x
+avx2 2999808 bytes EventTime masked_sum EventTime>=median 6.58 15.73 26.81 2.39x
+avx2 2999808 bytes EventTime point uniform 6.17 3.85 2.09 0.62x
+avx2 2999808 bytes EventTime sum all 5.78 10.23 23.88 1.77x
+avx2 2999808 bytes IsRefresh count_ge median 0.24 0.00 21.80 0.00x
+avx2 2999808 bytes IsRefresh mask_ge median 0.66 2.61 21.86 3.97x
+avx2 2999808 bytes IsRefresh point uniform 7.94 3.88 2.06 0.49x
+avx2 2999808 bytes IsRefresh sum all 1.52 2.34 22.45 1.54x
+avx2 2999808 bytes OS count_ge median 3.27 2.03 22.30 0.62x
+avx2 2999808 bytes OS mask_ge median 56.98 2.92 26.94 0.05x
+avx2 2999808 bytes OS masked_sum RegionID>=median 12.26 4.49 37.01 0.37x
+avx2 2999808 bytes OS point uniform 13.73 3.82 2.06 0.28x
+avx2 2999808 bytes OS sum all 3.63 2.55 23.19 0.70x
+avx2 2999808 bytes RegionID count_ge median 4.49 9.48 25.70 2.11x
+avx2 2999808 bytes RegionID mask_ge median 54.09 14.95 33.81 0.28x
+avx2 2999808 bytes RegionID masked_sum OS>=median 18.80 20.47 37.62 1.09x
+avx2 2999808 bytes RegionID point uniform 18.19 3.89 2.16 0.21x
+avx2 2999808 bytes RegionID sum all 5.74 11.01 27.26 1.92x
+avx2 2999808 bytes ResolutionWidth count_ge median 3.65 4.89 22.85 1.34x
+avx2 2999808 bytes ResolutionWidth mask_ge median 52.90 8.04 31.96 0.15x
+avx2 2999808 bytes ResolutionWidth masked_sum OS>=median 13.38 11.53 37.63 0.86x
+avx2 2999808 bytes ResolutionWidth point uniform 14.78 3.87 2.08 0.26x
+avx2 2999808 bytes ResolutionWidth sum all 4.05 5.32 23.47 1.31x
+avx2 2999808 bytes URLHash count_ge median 27.53 29.61 29.74 1.08x
+avx2 2999808 bytes URLHash mask_ge median 55.04 34.56 35.42 0.63x
+avx2 2999808 bytes URLHash masked_sum UserID>=median 31.39 19.47 19.40 0.62x
+avx2 2999808 bytes URLHash point uniform 9.17 2.55 2.76 0.28x
+avx2 2999808 bytes URLHash sum all 28.78 29.55 30.25 1.03x
+avx2 2999808 bytes UserID count_ge median 0.51 22.75 21.33 44.69x
+avx2 2999808 bytes UserID mask_ge median 0.95 22.69 22.31 23.83x
+avx2 2999808 bytes UserID masked_sum OS>=median 49.03 42.61 41.65 0.87x
+avx2 2999808 bytes UserID point uniform 16.47 2.14 2.49 0.13x
+avx2 2999808 bytes UserID sum all 10.94 25.53 24.56 2.33x
+avx2 2999808 bytes WatchID count_ge median 29.16 29.95 28.96 1.03x
+avx2 2999808 bytes WatchID mask_ge median 30.04 31.18 29.99 1.04x
+avx2 2999808 bytes WatchID masked_sum EventTime>=median 29.15 28.83 28.34 0.99x
+avx2 2999808 bytes WatchID point uniform 4.19 2.17 2.52 0.52x
+avx2 2999808 bytes WatchID sum all 29.57 30.42 29.38 1.03x
+avx2 2999808 bytes+starts ClientIP count_ge median 5.74 9.97 23.26 1.74x
+avx2 2999808 bytes+starts ClientIP mask_ge median 15.98 10.39 24.54 0.65x
+avx2 2999808 bytes+starts ClientIP masked_sum RegionID>=median 34.24 21.43 38.44 0.63x
+avx2 2999808 bytes+starts ClientIP point uniform 7.41 3.83 2.44 0.52x
+avx2 2999808 bytes+starts ClientIP sum all 10.15 11.36 24.58 1.12x
+avx2 2999808 bytes+starts ConnectTiming count_ge median 0.26 0.00 23.16 0.00x
+avx2 2999808 bytes+starts ConnectTiming mask_ge median 0.71 5.01 22.99 7.09x
+avx2 2999808 bytes+starts ConnectTiming masked_sum OS>=median 8.86 11.22 36.40 1.27x
+avx2 2999808 bytes+starts ConnectTiming point uniform 8.97 3.83 2.06 0.43x
+avx2 2999808 bytes+starts ConnectTiming sum all 2.60 5.15 24.00 1.98x
+avx2 2999808 bytes+starts CounterID count_ge median 0.27 4.81 21.42 17.64x
+avx2 2999808 bytes+starts CounterID mask_ge median 0.68 5.11 21.59 7.54x
+avx2 2999808 bytes+starts CounterID point uniform 1.41 3.83 2.05 2.72x
+avx2 2999808 bytes+starts CounterID sum all 0.15 5.00 21.51 33.03x
+avx2 2999808 bytes+starts EventTime count_ge median 7.02 9.60 22.83 1.37x
+avx2 2999808 bytes+starts EventTime mask_ge median 6.13 10.48 22.48 1.71x
+avx2 2999808 bytes+starts EventTime masked_sum EventTime>=median 6.54 15.60 25.91 2.39x
+avx2 2999808 bytes+starts EventTime point uniform 5.99 3.88 2.10 0.65x
+avx2 2999808 bytes+starts EventTime sum all 5.29 10.88 23.34 2.06x
+avx2 2999808 bytes+starts IsRefresh count_ge median 0.24 0.00 21.67 0.00x
+avx2 2999808 bytes+starts IsRefresh mask_ge median 0.67 2.60 21.30 3.90x
+avx2 2999808 bytes+starts IsRefresh point uniform 8.41 3.83 2.06 0.46x
+avx2 2999808 bytes+starts IsRefresh sum all 1.51 2.51 22.45 1.66x
+avx2 2999808 bytes+starts OS count_ge median 3.28 2.27 23.78 0.69x
+avx2 2999808 bytes+starts OS mask_ge median 10.95 2.94 26.84 0.27x
+avx2 2999808 bytes+starts OS masked_sum RegionID>=median 12.27 4.51 37.61 0.37x
+avx2 2999808 bytes+starts OS point uniform 6.80 3.86 2.08 0.57x
+avx2 2999808 bytes+starts OS sum all 3.63 2.58 23.12 0.71x
+avx2 2999808 bytes+starts RegionID count_ge median 4.49 9.73 23.40 2.17x
+avx2 2999808 bytes+starts RegionID mask_ge median 13.63 11.13 26.73 0.82x
+avx2 2999808 bytes+starts RegionID masked_sum OS>=median 18.73 20.54 36.96 1.10x
+avx2 2999808 bytes+starts RegionID point uniform 10.31 3.84 2.45 0.37x
+avx2 2999808 bytes+starts RegionID sum all 5.77 11.26 25.46 1.95x
+avx2 2999808 bytes+starts ResolutionWidth count_ge median 3.64 5.04 24.49 1.38x
+avx2 2999808 bytes+starts ResolutionWidth mask_ge median 12.60 5.57 25.40 0.44x
+avx2 2999808 bytes+starts ResolutionWidth masked_sum OS>=median 13.25 11.41 37.57 0.86x
+avx2 2999808 bytes+starts ResolutionWidth point uniform 7.20 3.86 2.10 0.54x
+avx2 2999808 bytes+starts ResolutionWidth sum all 4.03 5.25 24.47 1.30x
+avx2 2999808 bytes+starts URLHash count_ge median 26.86 29.41 29.05 1.09x
+avx2 2999808 bytes+starts URLHash mask_ge median 38.07 29.85 29.64 0.78x
+avx2 2999808 bytes+starts URLHash masked_sum UserID>=median 32.08 19.56 19.74 0.61x
+avx2 2999808 bytes+starts URLHash point uniform 7.17 2.19 2.68 0.31x
+avx2 2999808 bytes+starts URLHash sum all 28.44 29.58 29.03 1.04x
+avx2 2999808 bytes+starts UserID count_ge median 0.49 22.67 22.58 45.82x
+avx2 2999808 bytes+starts UserID mask_ge median 0.90 22.55 21.69 24.93x
+avx2 2999808 bytes+starts UserID masked_sum OS>=median 48.60 40.82 41.58 0.84x
+avx2 2999808 bytes+starts UserID point uniform 7.63 2.15 2.57 0.28x
+avx2 2999808 bytes+starts UserID sum all 10.79 25.04 25.77 2.32x
+avx2 2999808 bytes+starts WatchID count_ge median 30.69 31.75 29.17 1.03x
+avx2 2999808 bytes+starts WatchID mask_ge median 30.63 32.30 29.24 1.05x
+avx2 2999808 bytes+starts WatchID masked_sum EventTime>=median 28.45 28.59 27.67 1.00x
+avx2 2999808 bytes+starts WatchID point uniform 3.97 2.32 2.53 0.59x
+avx2 2999808 bytes+starts WatchID sum all 30.78 32.02 29.36 1.04x
+avx2 2999808 packed ClientIP count_ge median 20.08 10.50 27.26 0.52x
+avx2 2999808 packed ClientIP mask_ge median 18.42 11.46 28.26 0.62x
+avx2 2999808 packed ClientIP masked_sum RegionID>=median 17.56 20.91 37.73 1.19x
+avx2 2999808 packed ClientIP point uniform 6.57 3.91 2.70 0.59x
+avx2 2999808 packed ClientIP sum all 10.95 10.64 25.24 0.97x
+avx2 2999808 packed ConnectTiming count_ge median 0.26 0.00 22.46 0.00x
+avx2 2999808 packed ConnectTiming mask_ge median 0.73 5.12 22.57 7.01x
+avx2 2999808 packed ConnectTiming masked_sum OS>=median 3.97 11.21 35.96 2.82x
+avx2 2999808 packed ConnectTiming point uniform 9.72 3.83 2.45 0.39x
+avx2 2999808 packed ConnectTiming sum all 1.82 5.20 23.19 2.86x
+avx2 2999808 packed CounterID count_ge median 0.27 4.82 21.24 17.65x
+avx2 2999808 packed CounterID mask_ge median 0.67 5.13 21.17 7.66x
+avx2 2999808 packed CounterID point uniform 1.42 3.83 2.05 2.69x
+avx2 2999808 packed CounterID sum all 0.15 5.03 21.08 33.17x
+avx2 2999808 packed EventTime count_ge median 7.08 10.45 23.42 1.48x
+avx2 2999808 packed EventTime mask_ge median 6.07 10.80 23.47 1.78x
+avx2 2999808 packed EventTime masked_sum EventTime>=median 6.20 15.64 26.25 2.52x
+avx2 2999808 packed EventTime point uniform 5.89 3.84 2.05 0.65x
+avx2 2999808 packed EventTime sum all 5.11 10.04 22.29 1.97x
+avx2 2999808 packed IsRefresh count_ge median 0.24 0.00 20.52 0.00x
+avx2 2999808 packed IsRefresh mask_ge median 0.68 2.61 21.02 3.85x
+avx2 2999808 packed IsRefresh point uniform 3.35 3.83 2.06 1.14x
+avx2 2999808 packed IsRefresh sum all 0.82 2.49 20.66 3.03x
+avx2 2999808 packed OS count_ge median 4.82 2.28 23.83 0.47x
+avx2 2999808 packed OS mask_ge median 4.18 2.66 24.34 0.64x
+avx2 2999808 packed OS masked_sum RegionID>=median 4.98 4.41 36.27 0.88x
+avx2 2999808 packed OS point uniform 8.71 3.86 2.17 0.44x
+avx2 2999808 packed OS sum all 3.13 2.60 24.25 0.83x
+avx2 2999808 packed RegionID count_ge median 8.30 9.50 24.76 1.15x
+avx2 2999808 packed RegionID mask_ge median 7.03 10.37 24.13 1.47x
+avx2 2999808 packed RegionID masked_sum OS>=median 8.52 20.34 36.96 2.39x
+avx2 2999808 packed RegionID point uniform 11.91 3.94 2.24 0.33x
+avx2 2999808 packed RegionID sum all 5.07 10.92 23.37 2.15x
+avx2 2999808 packed ResolutionWidth count_ge median 5.73 4.83 23.19 0.84x
+avx2 2999808 packed ResolutionWidth mask_ge median 5.08 5.17 22.91 1.02x
+avx2 2999808 packed ResolutionWidth masked_sum OS>=median 6.42 11.25 36.45 1.75x
+avx2 2999808 packed ResolutionWidth point uniform 7.24 3.88 2.10 0.54x
+avx2 2999808 packed ResolutionWidth sum all 3.23 5.05 22.78 1.56x
+avx2 2999808 packed URLHash count_ge median 30.74 30.38 29.79 0.99x
+avx2 2999808 packed URLHash mask_ge median 31.92 31.93 30.64 1.00x
+avx2 2999808 packed URLHash masked_sum UserID>=median 19.97 20.19 19.77 1.01x
+avx2 2999808 packed URLHash point uniform 4.47 2.40 2.29 0.54x
+avx2 2999808 packed URLHash sum all 29.89 30.33 29.58 1.01x
+avx2 2999808 packed UserID count_ge median 9.46 25.14 22.80 2.66x
+avx2 2999808 packed UserID mask_ge median 8.99 25.32 23.23 2.82x
+avx2 2999808 packed UserID masked_sum OS>=median 39.05 38.97 38.01 1.00x
+avx2 2999808 packed UserID point uniform 4.10 2.61 2.13 0.64x
+avx2 2999808 packed UserID sum all 30.16 29.80 28.77 0.99x
+avx2 2999808 packed WatchID count_ge median 29.97 29.36 28.22 0.98x
+avx2 2999808 packed WatchID mask_ge median 31.16 30.36 28.81 0.97x
+avx2 2999808 packed WatchID masked_sum EventTime>=median 28.58 28.36 27.81 0.99x
+avx2 2999808 packed WatchID point uniform 4.14 2.18 2.11 0.52x
+avx2 2999808 packed WatchID sum all 30.49 29.58 28.88 0.97x
+avx512 65536 bytes ClientIP count_ge median 2.43 7.27 16.75 2.99x
+avx512 65536 bytes ClientIP mask_ge median 15.07 5.01 16.54 0.33x
+avx512 65536 bytes ClientIP masked_sum RegionID>=median 6.95 10.57 21.59 1.52x
+avx512 65536 bytes ClientIP point uniform 7.42 3.79 1.35 0.51x
+avx512 65536 bytes ClientIP sum all 2.63 5.67 14.02 2.16x
+avx512 65536 bytes ConnectTiming count_ge median 0.27 0.01 15.18 0.02x
+avx512 65536 bytes ConnectTiming mask_ge median 0.73 2.64 14.54 3.64x
+avx512 65536 bytes ConnectTiming masked_sum OS>=median 7.16 5.73 16.75 0.80x
+avx512 65536 bytes ConnectTiming point uniform 15.23 3.81 1.35 0.25x
+avx512 65536 bytes ConnectTiming sum all 2.85 2.82 11.52 0.99x
+avx512 65536 bytes CounterID count_ge median 0.33 1.55 15.26 4.64x
+avx512 65536 bytes CounterID mask_ge median 0.71 1.54 14.59 2.17x
+avx512 65536 bytes CounterID point uniform 1.16 3.79 1.35 3.27x
+avx512 65536 bytes CounterID sum all 0.19 1.29 13.13 6.87x
+avx512 65536 bytes EventTime count_ge median 5.24 7.27 16.66 1.39x
+avx512 65536 bytes EventTime mask_ge median 5.45 5.01 16.33 0.92x
+avx512 65536 bytes EventTime masked_sum EventTime>=median 5.76 10.57 21.15 1.84x
+avx512 65536 bytes EventTime point uniform 3.78 3.80 1.35 1.01x
+avx512 65536 bytes EventTime sum all 3.13 5.62 13.86 1.80x
+avx512 65536 bytes IsRefresh count_ge median 0.34 0.01 15.25 0.02x
+avx512 65536 bytes IsRefresh mask_ge median 0.65 1.54 14.61 2.38x
+avx512 65536 bytes IsRefresh point uniform 2.24 3.80 1.35 1.70x
+avx512 65536 bytes IsRefresh sum all 0.46 1.29 13.15 2.82x
+avx512 65536 bytes OS count_ge median 1.75 1.55 16.82 0.88x
+avx512 65536 bytes OS mask_ge median 13.48 1.54 16.51 0.11x
+avx512 65536 bytes OS masked_sum RegionID>=median 5.08 2.64 21.44 0.52x
+avx512 65536 bytes OS point uniform 5.39 3.81 1.35 0.71x
+avx512 65536 bytes OS sum all 1.59 1.36 13.84 0.86x
+avx512 65536 bytes RegionID count_ge median 2.05 7.27 14.78 3.56x
+avx512 65536 bytes RegionID mask_ge median 14.18 5.05 14.61 0.36x
+avx512 65536 bytes RegionID masked_sum OS>=median 5.49 10.57 16.70 1.93x
+avx512 65536 bytes RegionID point uniform 10.70 3.80 1.35 0.36x
+avx512 65536 bytes RegionID sum all 1.92 5.63 11.47 2.93x
+avx512 65536 bytes ResolutionWidth count_ge median 2.10 2.75 15.22 1.31x
+avx512 65536 bytes ResolutionWidth mask_ge median 13.49 2.65 14.61 0.20x
+avx512 65536 bytes ResolutionWidth masked_sum OS>=median 5.50 5.72 16.72 1.04x
+avx512 65536 bytes ResolutionWidth point uniform 7.73 3.81 1.36 0.49x
+avx512 65536 bytes ResolutionWidth sum all 1.92 2.83 12.18 1.48x
+avx512 65536 bytes URLHash count_ge median 10.21 15.04 16.94 1.47x
+avx512 65536 bytes URLHash mask_ge median 56.47 14.66 17.11 0.26x
+avx512 65536 bytes URLHash masked_sum UserID>=median 67.61 8.63 11.03 0.13x
+avx512 65536 bytes URLHash point uniform 8.65 1.57 1.35 0.18x
+avx512 65536 bytes URLHash sum all 12.12 11.38 14.01 0.94x
+avx512 65536 bytes UserID count_ge median 0.45 17.19 16.92 38.17x
+avx512 65536 bytes UserID mask_ge median 0.89 16.71 16.51 18.74x
+avx512 65536 bytes UserID masked_sum OS>=median 24.58 21.46 21.43 0.87x
+avx512 65536 bytes UserID point uniform 7.37 1.58 1.36 0.21x
+avx512 65536 bytes UserID sum all 3.97 14.36 14.10 3.62x
+avx512 65536 bytes WatchID count_ge median 16.86 17.10 15.53 1.01x
+avx512 65536 bytes WatchID mask_ge median 17.43 16.97 14.66 0.97x
+avx512 65536 bytes WatchID masked_sum EventTime>=median 23.63 21.55 16.83 0.91x
+avx512 65536 bytes WatchID point uniform 1.70 1.57 1.35 0.92x
+avx512 65536 bytes WatchID sum all 13.94 14.00 11.99 1.00x
+avx512 65536 bytes+starts ClientIP count_ge median 2.45 7.26 15.16 2.96x
+avx512 65536 bytes+starts ClientIP mask_ge median 7.96 5.01 14.60 0.63x
+avx512 65536 bytes+starts ClientIP masked_sum RegionID>=median 6.95 10.58 16.55 1.52x
+avx512 65536 bytes+starts ClientIP point uniform 3.54 3.79 1.35 1.07x
+avx512 65536 bytes+starts ClientIP sum all 2.60 5.67 13.21 2.18x
+avx512 65536 bytes+starts ConnectTiming count_ge median 0.28 0.01 15.26 0.02x
+avx512 65536 bytes+starts ConnectTiming mask_ge median 0.75 2.66 14.61 3.55x
+avx512 65536 bytes+starts ConnectTiming masked_sum OS>=median 7.17 5.72 16.51 0.80x
+avx512 65536 bytes+starts ConnectTiming point uniform 8.01 3.80 1.36 0.48x
+avx512 65536 bytes+starts ConnectTiming sum all 2.80 2.82 11.66 1.01x
+avx512 65536 bytes+starts CounterID count_ge median 0.33 1.54 15.86 4.64x
+avx512 65536 bytes+starts CounterID mask_ge median 0.70 1.54 14.62 2.21x
+avx512 65536 bytes+starts CounterID point uniform 1.16 3.79 1.35 3.28x
+avx512 65536 bytes+starts CounterID sum all 0.18 1.36 13.57 7.39x
+avx512 65536 bytes+starts EventTime count_ge median 5.25 7.26 16.70 1.38x
+avx512 65536 bytes+starts EventTime mask_ge median 5.15 5.02 16.78 0.97x
+avx512 65536 bytes+starts EventTime masked_sum EventTime>=median 5.75 10.57 21.41 1.84x
+avx512 65536 bytes+starts EventTime point uniform 3.52 3.81 1.35 1.08x
+avx512 65536 bytes+starts EventTime sum all 3.13 5.68 14.08 1.81x
+avx512 65536 bytes+starts IsRefresh count_ge median 0.35 0.01 15.84 0.02x
+avx512 65536 bytes+starts IsRefresh mask_ge median 0.66 1.54 14.61 2.33x
+avx512 65536 bytes+starts IsRefresh point uniform 2.24 3.79 1.35 1.70x
+avx512 65536 bytes+starts IsRefresh sum all 0.45 1.36 13.55 3.00x
+avx512 65536 bytes+starts OS count_ge median 1.77 1.54 17.18 0.87x
+avx512 65536 bytes+starts OS mask_ge median 7.50 1.55 16.80 0.21x
+avx512 65536 bytes+starts OS masked_sum RegionID>=median 5.09 2.65 21.37 0.52x
+avx512 65536 bytes+starts OS point uniform 3.46 3.80 1.36 1.10x
+avx512 65536 bytes+starts OS sum all 1.59 1.30 14.30 0.81x
+avx512 65536 bytes+starts RegionID count_ge median 2.06 7.26 15.18 3.52x
+avx512 65536 bytes+starts RegionID mask_ge median 7.74 5.01 14.61 0.65x
+avx512 65536 bytes+starts RegionID masked_sum OS>=median 5.50 10.56 16.55 1.92x
+avx512 65536 bytes+starts RegionID point uniform 7.41 3.80 1.36 0.51x
+avx512 65536 bytes+starts RegionID sum all 1.94 5.67 13.08 2.93x
+avx512 65536 bytes+starts ResolutionWidth count_ge median 2.12 2.82 15.39 1.33x
+avx512 65536 bytes+starts ResolutionWidth mask_ge median 7.69 2.67 14.66 0.35x
+avx512 65536 bytes+starts ResolutionWidth masked_sum OS>=median 5.48 5.73 16.53 1.05x
+avx512 65536 bytes+starts ResolutionWidth point uniform 3.45 3.80 1.35 1.10x
+avx512 65536 bytes+starts ResolutionWidth sum all 1.92 2.82 12.61 1.47x
+avx512 65536 bytes+starts URLHash count_ge median 10.26 15.35 16.94 1.50x
+avx512 65536 bytes+starts URLHash mask_ge median 12.94 14.61 16.67 1.13x
+avx512 65536 bytes+starts URLHash masked_sum UserID>=median 67.61 8.56 11.03 0.13x
+avx512 65536 bytes+starts URLHash point uniform 3.71 1.57 1.35 0.42x
+avx512 65536 bytes+starts URLHash sum all 12.10 11.74 13.97 0.97x
+avx512 65536 bytes+starts UserID count_ge median 0.45 16.64 17.14 37.14x
+avx512 65536 bytes+starts UserID mask_ge median 0.89 16.52 16.69 18.60x
+avx512 65536 bytes+starts UserID masked_sum OS>=median 24.50 21.44 21.62 0.87x
+avx512 65536 bytes+starts UserID point uniform 3.57 1.58 1.35 0.44x
+avx512 65536 bytes+starts UserID sum all 3.98 14.03 14.36 3.53x
+avx512 65536 bytes+starts WatchID count_ge median 17.26 18.19 15.53 1.05x
+avx512 65536 bytes+starts WatchID mask_ge median 17.39 17.32 14.62 1.00x
+avx512 65536 bytes+starts WatchID masked_sum EventTime>=median 23.50 21.80 16.49 0.93x
+avx512 65536 bytes+starts WatchID point uniform 1.72 1.58 1.35 0.92x
+avx512 65536 bytes+starts WatchID sum all 13.95 14.42 12.77 1.03x
+avx512 65536 packed ClientIP count_ge median 9.65 7.26 15.19 0.75x
+avx512 65536 packed ClientIP mask_ge median 9.80 5.01 14.60 0.51x
+avx512 65536 packed ClientIP masked_sum RegionID>=median 9.60 10.60 16.60 1.10x
+avx512 65536 packed ClientIP point uniform 3.22 3.80 1.35 1.18x
+avx512 65536 packed ClientIP sum all 7.20 5.61 13.22 0.78x
+avx512 65536 packed ConnectTiming count_ge median 0.29 0.01 17.44 0.02x
+avx512 65536 packed ConnectTiming mask_ge median 0.88 2.76 16.95 3.14x
+avx512 65536 packed ConnectTiming masked_sum OS>=median 3.83 5.05 21.26 1.32x
+avx512 65536 packed ConnectTiming point uniform 11.52 3.80 1.57 0.33x
+avx512 65536 packed ConnectTiming sum all 1.90 2.75 14.30 1.45x
+avx512 65536 packed CounterID count_ge median 0.36 1.52 15.38 4.28x
+avx512 65536 packed CounterID mask_ge median 0.68 1.54 14.60 2.27x
+avx512 65536 packed CounterID point uniform 1.16 3.79 1.56 3.26x
+avx512 65536 packed CounterID sum all 0.18 1.35 13.09 7.37x
+avx512 65536 packed EventTime count_ge median 5.54 7.25 16.67 1.31x
+avx512 65536 packed EventTime mask_ge median 5.34 5.02 16.64 0.94x
+avx512 65536 packed EventTime masked_sum EventTime>=median 5.77 10.63 21.29 1.84x
+avx512 65536 packed EventTime point uniform 3.42 3.79 1.35 1.11x
+avx512 65536 packed EventTime sum all 2.92 5.60 13.85 1.92x
+avx512 65536 packed IsRefresh count_ge median 0.36 0.01 15.38 0.02x
+avx512 65536 packed IsRefresh mask_ge median 0.67 1.54 14.58 2.30x
+avx512 65536 packed IsRefresh point uniform 2.18 3.79 1.57 1.74x
+avx512 65536 packed IsRefresh sum all 0.45 1.35 13.09 2.99x
+avx512 65536 packed OS count_ge median 3.14 1.46 17.68 0.46x
+avx512 65536 packed OS mask_ge median 3.14 1.46 17.24 0.46x
+avx512 65536 packed OS masked_sum RegionID>=median 3.50 2.03 21.31 0.58x
+avx512 65536 packed OS point uniform 9.11 3.79 1.37 0.42x
+avx512 65536 packed OS sum all 1.60 1.36 14.31 0.85x
+avx512 65536 packed RegionID count_ge median 4.67 7.23 16.62 1.55x
+avx512 65536 packed RegionID mask_ge median 4.57 5.06 16.26 1.11x
+avx512 65536 packed RegionID masked_sum OS>=median 4.69 9.39 21.53 2.00x
+avx512 65536 packed RegionID point uniform 9.82 3.79 1.35 0.39x
+avx512 65536 packed RegionID sum all 2.61 5.28 14.09 2.03x
+avx512 65536 packed ResolutionWidth count_ge median 3.72 2.74 17.59 0.74x
+avx512 65536 packed ResolutionWidth mask_ge median 3.84 2.65 17.32 0.69x
+avx512 65536 packed ResolutionWidth masked_sum OS>=median 4.11 5.71 21.32 1.39x
+avx512 65536 packed ResolutionWidth point uniform 7.09 3.79 1.35 0.53x
+avx512 65536 packed ResolutionWidth sum all 2.10 2.82 14.29 1.34x
+avx512 65536 packed URLHash count_ge median 17.57 18.38 15.52 1.05x
+avx512 65536 packed URLHash mask_ge median 17.75 17.51 14.65 0.99x
+avx512 65536 packed URLHash masked_sum UserID>=median 12.04 11.05 8.62 0.92x
+avx512 65536 packed URLHash point uniform 1.73 1.59 1.35 0.92x
+avx512 65536 packed URLHash sum all 14.46 14.52 13.40 1.00x
+avx512 65536 packed UserID count_ge median 9.09 15.11 18.27 1.66x
+avx512 65536 packed UserID mask_ge median 9.35 14.59 17.35 1.56x
+avx512 65536 packed UserID masked_sum OS>=median 23.54 16.62 22.13 0.71x
+avx512 65536 packed UserID point uniform 1.74 1.57 1.37 0.90x
+avx512 65536 packed UserID sum all 13.97 12.62 14.41 0.90x
+avx512 65536 packed WatchID count_ge median 14.62 18.38 17.07 1.26x
+avx512 65536 packed WatchID mask_ge median 15.31 17.49 16.61 1.14x
+avx512 65536 packed WatchID masked_sum EventTime>=median 17.26 21.86 21.31 1.27x
+avx512 65536 packed WatchID point uniform 1.73 1.59 1.35 0.92x
+avx512 65536 packed WatchID sum all 12.44 14.66 14.01 1.18x
+avx512 2999808 bytes ClientIP count_ge median 5.43 10.83 27.03 1.99x
+avx512 2999808 bytes ClientIP mask_ge median 66.29 15.03 28.07 0.23x
+avx512 2999808 bytes ClientIP masked_sum RegionID>=median 11.83 12.92 51.24 1.09x
+avx512 2999808 bytes ClientIP point uniform 15.71 3.81 2.08 0.24x
+avx512 2999808 bytes ClientIP sum all 5.06 11.03 25.96 2.18x
+avx512 2999808 bytes ConnectTiming count_ge median 0.25 0.00 28.18 0.00x
+avx512 2999808 bytes ConnectTiming mask_ge median 0.69 4.42 21.15 6.37x
+avx512 2999808 bytes ConnectTiming masked_sum OS>=median 5.24 6.59 41.93 1.26x
+avx512 2999808 bytes ConnectTiming point uniform 12.69 3.81 2.05 0.30x
+avx512 2999808 bytes ConnectTiming sum all 1.85 4.93 25.17 2.66x
+avx512 2999808 bytes CounterID count_ge median 0.27 4.00 26.86 14.91x
+avx512 2999808 bytes CounterID mask_ge median 0.72 4.25 28.13 5.87x
+avx512 2999808 bytes CounterID point uniform 1.41 3.85 2.07 2.72x
+avx512 2999808 bytes CounterID sum all 0.16 4.59 31.15 28.84x
+avx512 2999808 bytes EventTime count_ge median 5.50 8.15 27.53 1.48x
+avx512 2999808 bytes EventTime mask_ge median 5.58 8.26 29.72 1.48x
+avx512 2999808 bytes EventTime masked_sum EventTime>=median 5.81 8.07 28.65 1.39x
+avx512 2999808 bytes EventTime point uniform 5.76 3.84 2.07 0.67x
+avx512 2999808 bytes EventTime sum all 4.75 8.70 32.96 1.83x
+avx512 2999808 bytes IsRefresh count_ge median 0.23 0.00 27.11 0.00x
+avx512 2999808 bytes IsRefresh mask_ge median 0.66 2.45 28.01 3.71x
+avx512 2999808 bytes IsRefresh point uniform 7.56 3.81 2.04 0.50x
+avx512 2999808 bytes IsRefresh sum all 1.09 2.16 31.83 1.98x
+avx512 2999808 bytes OS count_ge median 2.77 2.27 26.89 0.82x
+avx512 2999808 bytes OS mask_ge median 58.58 3.30 33.43 0.06x
+avx512 2999808 bytes OS masked_sum RegionID>=median 7.07 2.99 41.37 0.42x
+avx512 2999808 bytes OS point uniform 13.59 3.84 2.08 0.28x
+avx512 2999808 bytes OS sum all 2.45 2.24 30.57 0.91x
+avx512 2999808 bytes RegionID count_ge median 3.97 11.65 28.01 2.93x
+avx512 2999808 bytes RegionID mask_ge median 54.59 15.21 35.40 0.28x
+avx512 2999808 bytes RegionID masked_sum OS>=median 9.04 12.81 46.15 1.42x
+avx512 2999808 bytes RegionID point uniform 17.68 3.84 2.10 0.22x
+avx512 2999808 bytes RegionID sum all 3.63 10.30 31.48 2.83x
+avx512 2999808 bytes ResolutionWidth count_ge median 3.23 5.14 31.11 1.59x
+avx512 2999808 bytes ResolutionWidth mask_ge median 55.21 5.80 32.03 0.11x
+avx512 2999808 bytes ResolutionWidth masked_sum OS>=median 7.44 6.70 45.65 0.90x
+avx512 2999808 bytes ResolutionWidth point uniform 14.11 3.86 2.06 0.27x
+avx512 2999808 bytes ResolutionWidth sum all 2.87 4.48 30.91 1.56x
+avx512 2999808 bytes URLHash count_ge median 32.62 33.16 35.76 1.02x
+avx512 2999808 bytes URLHash mask_ge median 58.65 36.15 39.96 0.62x
+avx512 2999808 bytes URLHash masked_sum UserID>=median 41.82 20.56 22.50 0.49x
+avx512 2999808 bytes URLHash point uniform 9.47 2.58 2.32 0.27x
+avx512 2999808 bytes URLHash sum all 35.98 36.25 41.49 1.01x
+avx512 2999808 bytes UserID count_ge median 0.45 28.25 31.63 62.84x
+avx512 2999808 bytes UserID mask_ge median 0.96 28.06 28.37 29.14x
+avx512 2999808 bytes UserID masked_sum OS>=median 67.88 79.57 77.96 1.17x
+avx512 2999808 bytes UserID point uniform 16.09 2.50 2.10 0.16x
+avx512 2999808 bytes UserID sum all 7.48 34.27 34.71 4.58x
+avx512 2999808 bytes WatchID count_ge median 35.33 33.48 34.75 0.95x
+avx512 2999808 bytes WatchID mask_ge median 35.70 26.28 34.17 0.74x
+avx512 2999808 bytes WatchID masked_sum EventTime>=median 40.78 36.48 39.29 0.89x
+avx512 2999808 bytes WatchID point uniform 4.08 2.71 2.17 0.66x
+avx512 2999808 bytes WatchID sum all 42.73 36.43 41.82 0.85x
+avx512 2999808 bytes+starts ClientIP count_ge median 5.30 8.17 27.51 1.54x
+avx512 2999808 bytes+starts ClientIP mask_ge median 9.95 9.74 32.23 0.98x
+avx512 2999808 bytes+starts ClientIP masked_sum RegionID>=median 11.90 11.57 50.32 0.97x
+avx512 2999808 bytes+starts ClientIP point uniform 6.80 3.83 2.04 0.56x
+avx512 2999808 bytes+starts ClientIP sum all 5.05 8.91 33.54 1.77x
+avx512 2999808 bytes+starts ConnectTiming count_ge median 0.25 0.00 30.35 0.00x
+avx512 2999808 bytes+starts ConnectTiming mask_ge median 0.70 4.31 26.93 6.19x
+avx512 2999808 bytes+starts ConnectTiming masked_sum OS>=median 5.29 6.85 42.39 1.30x
+avx512 2999808 bytes+starts ConnectTiming point uniform 8.39 3.82 2.05 0.45x
+avx512 2999808 bytes+starts ConnectTiming sum all 1.88 4.26 29.85 2.27x
+avx512 2999808 bytes+starts CounterID count_ge median 0.27 4.65 19.75 17.39x
+avx512 2999808 bytes+starts CounterID mask_ge median 0.68 4.29 19.95 6.27x
+avx512 2999808 bytes+starts CounterID point uniform 1.41 3.82 2.05 2.71x
+avx512 2999808 bytes+starts CounterID sum all 0.16 4.60 21.35 29.11x
+avx512 2999808 bytes+starts EventTime count_ge median 4.77 10.74 26.86 2.25x
+avx512 2999808 bytes+starts EventTime mask_ge median 4.91 9.74 30.07 1.98x
+avx512 2999808 bytes+starts EventTime masked_sum EventTime>=median 5.38 9.35 27.64 1.74x
+avx512 2999808 bytes+starts EventTime point uniform 5.70 3.92 2.11 0.69x
+avx512 2999808 bytes+starts EventTime sum all 4.87 10.43 32.45 2.14x
+avx512 2999808 bytes+starts IsRefresh count_ge median 0.23 0.00 19.96 0.00x
+avx512 2999808 bytes+starts IsRefresh mask_ge median 0.68 2.56 19.50 3.77x
+avx512 2999808 bytes+starts IsRefresh point uniform 8.02 3.81 2.05 0.48x
+avx512 2999808 bytes+starts IsRefresh sum all 1.09 2.21 21.37 2.03x
+avx512 2999808 bytes+starts OS count_ge median 2.75 2.24 27.70 0.82x
+avx512 2999808 bytes+starts OS mask_ge median 8.92 2.70 29.78 0.30x
+avx512 2999808 bytes+starts OS masked_sum RegionID>=median 7.08 2.92 44.66 0.41x
+avx512 2999808 bytes+starts OS point uniform 5.96 3.80 2.03 0.64x
+avx512 2999808 bytes+starts OS sum all 2.48 2.21 31.79 0.89x
+avx512 2999808 bytes+starts RegionID count_ge median 4.05 11.29 28.51 2.79x
+avx512 2999808 bytes+starts RegionID mask_ge median 9.24 10.61 30.13 1.15x
+avx512 2999808 bytes+starts RegionID masked_sum OS>=median 9.01 12.55 50.64 1.39x
+avx512 2999808 bytes+starts RegionID point uniform 9.82 3.89 2.10 0.40x
+avx512 2999808 bytes+starts RegionID sum all 3.64 10.56 32.81 2.90x
+avx512 2999808 bytes+starts ResolutionWidth count_ge median 3.17 4.68 21.28 1.48x
+avx512 2999808 bytes+starts ResolutionWidth mask_ge median 8.70 4.30 21.07 0.49x
+avx512 2999808 bytes+starts ResolutionWidth masked_sum OS>=median 7.43 6.36 42.89 0.86x
+avx512 2999808 bytes+starts ResolutionWidth point uniform 6.51 3.82 2.05 0.59x
+avx512 2999808 bytes+starts ResolutionWidth sum all 2.85 4.65 23.43 1.63x
+avx512 2999808 bytes+starts URLHash count_ge median 33.60 38.21 36.80 1.14x
+avx512 2999808 bytes+starts URLHash mask_ge median 34.34 36.38 36.55 1.06x
+avx512 2999808 bytes+starts URLHash masked_sum UserID>=median 42.88 22.30 22.61 0.52x
+avx512 2999808 bytes+starts URLHash point uniform 6.76 2.60 2.22 0.38x
+avx512 2999808 bytes+starts URLHash sum all 35.56 41.31 42.05 1.16x
+avx512 2999808 bytes+starts UserID count_ge median 0.54 20.04 31.15 36.79x
+avx512 2999808 bytes+starts UserID mask_ge median 0.89 26.71 28.65 29.97x
+avx512 2999808 bytes+starts UserID masked_sum OS>=median 67.79 78.79 82.72 1.16x
+avx512 2999808 bytes+starts UserID point uniform 6.94 2.54 2.11 0.37x
+avx512 2999808 bytes+starts UserID sum all 7.73 28.61 35.10 3.70x
+avx512 2999808 bytes+starts WatchID count_ge median 36.11 36.26 33.44 1.00x
+avx512 2999808 bytes+starts WatchID mask_ge median 35.87 33.10 25.67 0.92x
+avx512 2999808 bytes+starts WatchID masked_sum EventTime>=median 40.24 41.55 35.62 1.03x
+avx512 2999808 bytes+starts WatchID point uniform 4.05 2.55 2.15 0.63x
+avx512 2999808 bytes+starts WatchID sum all 42.70 42.09 35.54 0.99x
+avx512 2999808 packed ClientIP count_ge median 13.16 9.23 30.20 0.70x
+avx512 2999808 packed ClientIP mask_ge median 13.06 9.15 30.95 0.70x
+avx512 2999808 packed ClientIP masked_sum RegionID>=median 13.50 11.63 55.79 0.86x
+avx512 2999808 packed ClientIP point uniform 6.31 3.94 2.21 0.62x
+avx512 2999808 packed ClientIP sum all 11.14 8.83 34.90 0.79x
+avx512 2999808 packed ConnectTiming count_ge median 0.24 0.00 30.79 0.00x
+avx512 2999808 packed ConnectTiming mask_ge median 0.75 4.24 28.38 5.68x
+avx512 2999808 packed ConnectTiming masked_sum OS>=median 3.15 6.71 44.22 2.13x
+avx512 2999808 packed ConnectTiming point uniform 10.06 3.83 2.04 0.38x
+avx512 2999808 packed ConnectTiming sum all 1.49 4.71 31.73 3.16x
+avx512 2999808 packed CounterID count_ge median 0.27 4.79 27.02 17.94x
+avx512 2999808 packed CounterID mask_ge median 0.69 4.53 28.99 6.56x
+avx512 2999808 packed CounterID point uniform 1.41 3.86 2.09 2.73x
+avx512 2999808 packed CounterID sum all 0.16 4.69 31.83 29.72x
+avx512 2999808 packed EventTime count_ge median 4.71 10.16 26.67 2.16x
+avx512 2999808 packed EventTime mask_ge median 4.81 9.28 27.82 1.93x
+avx512 2999808 packed EventTime masked_sum EventTime>=median 5.23 9.21 26.38 1.76x
+avx512 2999808 packed EventTime point uniform 5.65 3.89 2.11 0.69x
+avx512 2999808 packed EventTime sum all 4.76 9.90 32.04 2.08x
+avx512 2999808 packed IsRefresh count_ge median 0.23 0.00 20.16 0.00x
+avx512 2999808 packed IsRefresh mask_ge median 0.66 2.60 20.90 3.94x
+avx512 2999808 packed IsRefresh point uniform 3.28 3.82 2.03 1.16x
+avx512 2999808 packed IsRefresh sum all 0.44 2.25 22.86 5.14x
+avx512 2999808 packed OS count_ge median 3.35 2.40 27.80 0.72x
+avx512 2999808 packed OS mask_ge median 3.64 2.74 29.95 0.75x
+avx512 2999808 packed OS masked_sum RegionID>=median 3.95 3.09 43.25 0.78x
+avx512 2999808 packed OS point uniform 8.70 3.85 2.10 0.44x
+avx512 2999808 packed OS sum all 2.37 2.16 31.90 0.91x
+avx512 2999808 packed RegionID count_ge median 5.92 12.49 29.64 2.11x
+avx512 2999808 packed RegionID mask_ge median 6.21 11.48 23.43 1.85x
+avx512 2999808 packed RegionID masked_sum OS>=median 6.14 12.98 46.00 2.11x
+avx512 2999808 packed RegionID point uniform 11.69 3.82 2.04 0.33x
+avx512 2999808 packed RegionID sum all 4.54 11.06 27.50 2.44x
+avx512 2999808 packed ResolutionWidth count_ge median 3.85 4.44 28.94 1.15x
+avx512 2999808 packed ResolutionWidth mask_ge median 4.01 4.66 29.43 1.16x
+avx512 2999808 packed ResolutionWidth masked_sum OS>=median 4.41 6.83 46.56 1.55x
+avx512 2999808 packed ResolutionWidth point uniform 7.45 3.83 2.05 0.51x
+avx512 2999808 packed ResolutionWidth sum all 3.14 4.76 33.43 1.52x
+avx512 2999808 packed URLHash count_ge median 36.07 37.75 34.28 1.05x
+avx512 2999808 packed URLHash mask_ge median 36.74 37.84 31.44 1.03x
+avx512 2999808 packed URLHash masked_sum UserID>=median 19.48 19.98 17.35 1.03x
+avx512 2999808 packed URLHash point uniform 3.86 2.57 2.13 0.66x
+avx512 2999808 packed URLHash sum all 39.31 43.66 35.88 1.11x
+avx512 2999808 packed UserID count_ge median 13.11 33.58 29.85 2.56x
+avx512 2999808 packed UserID mask_ge median 13.17 33.53 27.17 2.55x
+avx512 2999808 packed UserID masked_sum OS>=median 117.51 115.46 114.19 0.98x
+avx512 2999808 packed UserID point uniform 4.11 2.49 2.12 0.61x
+avx512 2999808 packed UserID sum all 42.63 43.80 34.15 1.03x
+avx512 2999808 packed WatchID count_ge median 36.44 37.38 33.34 1.03x
+avx512 2999808 packed WatchID mask_ge median 37.05 37.47 30.68 1.01x
+avx512 2999808 packed WatchID masked_sum EventTime>=median 39.68 38.53 35.68 0.97x
+avx512 2999808 packed WatchID point uniform 4.05 2.55 2.15 0.63x
+avx512 2999808 packed WatchID sum all 40.91 43.22 34.80 1.06x
+
+isa rows policy column frame_bytes native_bytes constant runs packed wide mean_runs
+avx2 65536 bytes ClientIP 30191 262144 1 255 0 0 20.5
+avx2 65536 bytes ConnectTiming 27512 131072 2 253 1 0 37.2
+avx2 65536 bytes CounterID 4102 65536 255 1 0 0 3.0
+avx2 65536 bytes EventTime 141565 262144 0 13 243 0 137.8
+avx2 65536 bytes IsRefresh 12288 65536 0 0 256 0 0.0
+avx2 65536 bytes OS 10452 65536 4 252 0 0 12.6
+avx2 65536 bytes RegionID 16730 262144 2 254 0 0 16.3
+avx2 65536 bytes ResolutionWidth 17125 131072 1 255 0 0 17.0
+avx2 65536 bytes URLHash 289477 524288 0 256 0 0 123.9
+avx2 65536 bytes UserID 49033 524288 1 255 0 0 19.6
+avx2 65536 bytes WatchID 528384 524288 0 0 0 256 0.0
+avx2 65536 bytes+starts ClientIP 38351 262144 1 255 0 0 20.5
+avx2 65536 bytes+starts ConnectTiming 35608 131072 2 253 1 0 37.2
+avx2 65536 bytes+starts CounterID 4134 65536 255 1 0 0 3.0
+avx2 65536 bytes+starts EventTime 141981 262144 0 13 243 0 137.8
+avx2 65536 bytes+starts IsRefresh 12288 65536 0 0 256 0 0.0
+avx2 65536 bytes+starts OS 18516 65536 4 252 0 0 12.6
+avx2 65536 bytes+starts RegionID 24858 262144 2 254 0 0 16.3
+avx2 65536 bytes+starts ResolutionWidth 25285 131072 1 255 0 0 17.0
+avx2 65536 bytes+starts URLHash 297669 524288 0 256 0 0 123.9
+avx2 65536 bytes+starts UserID 57193 524288 1 255 0 0 19.6
+avx2 65536 bytes+starts WatchID 528384 524288 0 0 0 256 0.0
+avx2 65536 packed ClientIP 265056 262144 1 0 255 0 0.0
+avx2 65536 packed ConnectTiming 69120 131072 2 0 254 0 0.0
+avx2 65536 packed CounterID 4256 65536 255 0 1 0 0.0
+avx2 65536 packed EventTime 142848 262144 0 0 256 0 0.0
+avx2 65536 packed IsRefresh 12288 65536 0 0 256 0 0.0
+avx2 65536 packed OS 60608 65536 4 0 252 0 0.0
+avx2 65536 packed RegionID 110848 262144 2 0 254 0 0.0
+avx2 65536 packed ResolutionWidth 91520 131072 1 0 255 0 0.0
+avx2 65536 packed URLHash 528384 524288 0 0 0 256 0.0
+avx2 65536 packed UserID 526336 524288 1 0 0 255 0.0
+avx2 65536 packed WatchID 528384 524288 0 0 0 256 0.0
+avx2 2999808 bytes ClientIP 3585664 11999232 126 11578 14 0 58.5
+avx2 2999808 bytes ConnectTiming 1124975 5999616 6017 5555 146 0 58.3
+avx2 2999808 bytes CounterID 187582 5999616 11699 19 0 0 2.3
+avx2 2999808 bytes EventTime 6525528 11999232 0 139 11579 0 136.8
+avx2 2999808 bytes IsRefresh 407308 2999808 705 7828 3185 0 7.5
+avx2 2999808 bytes OS 1017984 2999808 177 11515 26 0 35.8
+avx2 2999808 bytes RegionID 2372918 11999232 151 11109 458 0 49.0
+avx2 2999808 bytes ResolutionWidth 1714864 5999616 1013 10485 220 0 46.0
+avx2 2999808 bytes URLHash 22087963 23998464 4 3135 0 8579 153.5
+avx2 2999808 bytes UserID 6086862 23998464 136 11582 0 0 56.6
+avx2 2999808 bytes WatchID 24185952 23998464 0 0 0 11718 0.0
+avx2 2999808 bytes+starts ClientIP 3956160 11999232 126 11578 14 0 58.5
+avx2 2999808 bytes+starts ConnectTiming 1302735 5999616 6017 5555 146 0 58.3
+avx2 2999808 bytes+starts CounterID 188190 5999616 11699 19 0 0 2.3
+avx2 2999808 bytes+starts EventTime 6529976 11999232 0 139 11579 0 136.8
+avx2 2999808 bytes+starts IsRefresh 657804 2999808 705 7828 3185 0 7.5
+avx2 2999808 bytes+starts OS 1386464 2999808 177 11515 26 0 35.8
+avx2 2999808 bytes+starts RegionID 2728406 11999232 151 11109 458 0 49.0
+avx2 2999808 bytes+starts ResolutionWidth 2050384 5999616 1013 10485 220 0 46.0
+avx2 2999808 bytes+starts URLHash 22188283 23998464 4 3135 0 8579 153.5
+avx2 2999808 bytes+starts UserID 6457486 23998464 136 11582 0 0 56.6
+avx2 2999808 bytes+starts WatchID 24185952 23998464 0 0 0 11718 0.0
+avx2 2999808 packed ClientIP 12049984 11999232 126 0 11592 0 0.0
+avx2 2999808 packed ConnectTiming 1948768 5999616 6017 0 5701 0 0.0
+avx2 2999808 packed CounterID 190464 5999616 11699 0 19 0 0.0
+avx2 2999808 packed EventTime 6538528 11999232 0 0 11718 0 0.0
+avx2 2999808 packed IsRefresh 539904 2999808 705 0 11013 0 0.0
+avx2 2999808 packed OS 2957440 2999808 177 0 11541 0 0.0
+avx2 2999808 packed RegionID 5552384 11999232 151 0 11567 0 0.0
+avx2 2999808 packed ResolutionWidth 3927520 5999616 1013 0 10705 0 0.0
+avx2 2999808 packed URLHash 24177760 23998464 4 0 0 11714 0.0
+avx2 2999808 packed UserID 23907424 23998464 136 0 0 11582 0.0
+avx2 2999808 packed WatchID 24185952 23998464 0 0 0 11718 0.0
+avx512 65536 bytes ClientIP 30191 262144 1 255 0 0 20.5
+avx512 65536 bytes ConnectTiming 27512 131072 2 253 1 0 37.2
+avx512 65536 bytes CounterID 4102 65536 255 1 0 0 3.0
+avx512 65536 bytes EventTime 141565 262144 0 13 243 0 137.8
+avx512 65536 bytes IsRefresh 12288 65536 0 0 256 0 0.0
+avx512 65536 bytes OS 10452 65536 4 252 0 0 12.6
+avx512 65536 bytes RegionID 16730 262144 2 254 0 0 16.3
+avx512 65536 bytes ResolutionWidth 17125 131072 1 255 0 0 17.0
+avx512 65536 bytes URLHash 289477 524288 0 256 0 0 123.9
+avx512 65536 bytes UserID 49033 524288 1 255 0 0 19.6
+avx512 65536 bytes WatchID 528384 524288 0 0 0 256 0.0
+avx512 65536 bytes+starts ClientIP 38351 262144 1 255 0 0 20.5
+avx512 65536 bytes+starts ConnectTiming 35608 131072 2 253 1 0 37.2
+avx512 65536 bytes+starts CounterID 4134 65536 255 1 0 0 3.0
+avx512 65536 bytes+starts EventTime 141981 262144 0 13 243 0 137.8
+avx512 65536 bytes+starts IsRefresh 12288 65536 0 0 256 0 0.0
+avx512 65536 bytes+starts OS 18516 65536 4 252 0 0 12.6
+avx512 65536 bytes+starts RegionID 24858 262144 2 254 0 0 16.3
+avx512 65536 bytes+starts ResolutionWidth 25285 131072 1 255 0 0 17.0
+avx512 65536 bytes+starts URLHash 297669 524288 0 256 0 0 123.9
+avx512 65536 bytes+starts UserID 57193 524288 1 255 0 0 19.6
+avx512 65536 bytes+starts WatchID 528384 524288 0 0 0 256 0.0
+avx512 65536 packed ClientIP 265056 262144 1 0 255 0 0.0
+avx512 65536 packed ConnectTiming 69120 131072 2 0 254 0 0.0
+avx512 65536 packed CounterID 4256 65536 255 0 1 0 0.0
+avx512 65536 packed EventTime 142848 262144 0 0 256 0 0.0
+avx512 65536 packed IsRefresh 12288 65536 0 0 256 0 0.0
+avx512 65536 packed OS 60608 65536 4 0 252 0 0.0
+avx512 65536 packed RegionID 110848 262144 2 0 254 0 0.0
+avx512 65536 packed ResolutionWidth 91520 131072 1 0 255 0 0.0
+avx512 65536 packed URLHash 528384 524288 0 0 0 256 0.0
+avx512 65536 packed UserID 526336 524288 1 0 0 255 0.0
+avx512 65536 packed WatchID 528384 524288 0 0 0 256 0.0
+avx512 2999808 bytes ClientIP 3585664 11999232 126 11578 14 0 58.5
+avx512 2999808 bytes ConnectTiming 1124975 5999616 6017 5555 146 0 58.3
+avx512 2999808 bytes CounterID 187582 5999616 11699 19 0 0 2.3
+avx512 2999808 bytes EventTime 6525528 11999232 0 139 11579 0 136.8
+avx512 2999808 bytes IsRefresh 407308 2999808 705 7828 3185 0 7.5
+avx512 2999808 bytes OS 1017984 2999808 177 11515 26 0 35.8
+avx512 2999808 bytes RegionID 2372918 11999232 151 11109 458 0 49.0
+avx512 2999808 bytes ResolutionWidth 1714864 5999616 1013 10485 220 0 46.0
+avx512 2999808 bytes URLHash 22087963 23998464 4 3135 0 8579 153.5
+avx512 2999808 bytes UserID 6086862 23998464 136 11582 0 0 56.6
+avx512 2999808 bytes WatchID 24185952 23998464 0 0 0 11718 0.0
+avx512 2999808 bytes+starts ClientIP 3956160 11999232 126 11578 14 0 58.5
+avx512 2999808 bytes+starts ConnectTiming 1302735 5999616 6017 5555 146 0 58.3
+avx512 2999808 bytes+starts CounterID 188190 5999616 11699 19 0 0 2.3
+avx512 2999808 bytes+starts EventTime 6529976 11999232 0 139 11579 0 136.8
+avx512 2999808 bytes+starts IsRefresh 657804 2999808 705 7828 3185 0 7.5
+avx512 2999808 bytes+starts OS 1386464 2999808 177 11515 26 0 35.8
+avx512 2999808 bytes+starts RegionID 2728406 11999232 151 11109 458 0 49.0
+avx512 2999808 bytes+starts ResolutionWidth 2050384 5999616 1013 10485 220 0 46.0
+avx512 2999808 bytes+starts URLHash 22188283 23998464 4 3135 0 8579 153.5
+avx512 2999808 bytes+starts UserID 6457486 23998464 136 11582 0 0 56.6
+avx512 2999808 bytes+starts WatchID 24185952 23998464 0 0 0 11718 0.0
+avx512 2999808 packed ClientIP 12049984 11999232 126 0 11592 0 0.0
+avx512 2999808 packed ConnectTiming 1948768 5999616 6017 0 5701 0 0.0
+avx512 2999808 packed CounterID 190464 5999616 11699 0 19 0 0.0
+avx512 2999808 packed EventTime 6538528 11999232 0 0 11718 0 0.0
+avx512 2999808 packed IsRefresh 539904 2999808 705 0 11013 0 0.0
+avx512 2999808 packed OS 2957440 2999808 177 0 11541 0 0.0
+avx512 2999808 packed RegionID 5552384 11999232 151 0 11567 0 0.0
+avx512 2999808 packed ResolutionWidth 3927520 5999616 1013 0 10705 0 0.0
+avx512 2999808 packed URLHash 24177760 23998464 4 0 0 11714 0.0
+avx512 2999808 packed UserID 23907424 23998464 136 0 0 11582 0.0
+avx512 2999808 packed WatchID 24185952 23998464 0 0 0 11718 0.0
