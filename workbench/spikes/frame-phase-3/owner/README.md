@@ -5,6 +5,29 @@ A7–A9/B8/B9 and the owner account of B12. It uses the **shared**
 [stage implementation](../proto/frame.h); there is no second encoding tree.
 It is research, not a promoted `ikea::frame` interface.
 
+## Consolidated boundary
+
+The owner investigation is closed for feature expansion. The candidate covers
+immutable non-null UInt64/H0 pack, bound/pack and both interval-root forms;
+checked sparse section binding; and basic single-stream group afterimages.
+The canonical graph also names deliberately refused extension shapes. The
+material and histories are a concrete Orbital integration example, with owner
+identity, retention and publication kept outside Frame's encoding contract.
+For extraction, keep Frame's portable program/image/binding types independent
+of Orbital ObjectStore and selection types. The concrete material remains a
+maintained example and conformance fixture. The internal stage-author protocol
+uses the shared logical/coordinate/effect vocabulary; a live C++ stage tree
+does not define stored interpretation. The prototype's one-part admission bound
+must remain explicit rather than become an accidental whole-column limit.
+
+The [qualification account](EVIDENCE.md) retains the current source epochs,
+counterexamples and completed preparation experiment. Current mutable-owner
+throughput against a strong native owner, in-place lock projection and a
+retained asynchronous preparation protocol remain outside the established
+surface. Append, conversion and interval mutation use caller-driven full
+rebuilds. These limits define the initial integration discussion; new performance
+and encoding studies stay deferred during consolidation.
+
 The earlier [end-to-end prototype](../proto/e2e.cpp) established retained
 group Parts and exact old readers, but attached every group for each write
 and kept interpretation in the driver. Its 9–17 µs draft/apply/emit cost was

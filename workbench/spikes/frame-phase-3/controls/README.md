@@ -1,9 +1,11 @@
 # Reusable native query controls
 
-This extends phase 2's existing `frame_cells_controls` for the phase-3 B12
-scorecard. It supplies standalone predicate COUNT, supplied-row-mask SUM and
-independent consumed points and materialized gathers. It adds no Frame representation, query driver,
-worker run, system-library comparison or performance claim.
+The phase-3 B12 controls extend the existing `frame_cells_controls` with
+standalone predicate COUNT, supplied-row-mask SUM, independent consumed points
+and materialized gathers. This page defines their callable contracts.
+The [scorecard](SCORECARD.md) owns measured results and comparison limits;
+the [system-query study](systems/README.md) owns the matched Frame/native,
+DuckDB and Polars driver, exact result law and retained evidence.
 
 The [qualified cells controls](../../frame-phase-2/instruments/cells/README.md)
 already use genuine typed u8/u16/u32/u64 arrays, a global FOR base, bounded

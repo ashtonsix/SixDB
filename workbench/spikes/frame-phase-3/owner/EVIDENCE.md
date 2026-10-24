@@ -1,174 +1,120 @@
-# Owner-side qualification
+# Owner-side qualification and preparation result
 
-## RLE and leading-plane placeholder extension
+This account closes the owner investigations for consolidation. It establishes
+a bounded immutable UInt64/H0 binding and private-afterimage composition,
+with explicit unsupported surfaces. It does not promote a public Frame API.
+The [usage and contract](README.md) and [comparison scorecard](../controls/SCORECARD.md)
+keep semantics and performance separate.
 
-25 October 2026. The latest source extension passes all seven owner checks
-both normally and with owner/runtime/Orbital ASan/UBSan:
+## Current conformance and source epochs
 
-| Check | Placeholder-extension result |
+| Epoch | Qualified surface and result |
 | --- | --- |
-| Description / manifest | 559 / 284 checks |
-| Material / group images | Material checks pass; 1,953 valid images, 991 guarded prefixes and 26 malformed cases |
-| Basic history | 785 total checks, including teardown |
-| Stream binding / history | 7,495 / 350,630 checks |
+| `ef08bed8`, local Linux AArch64 | All seven owner checks pass normally and with owner/runtime/Orbital ASan/UBSan: 559 description, 284 manifest; material lifetime checks; 1,953 valid images, 991 guarded truncated prefixes, 26 malformed cases; 785 basic history, 7,495 stream binding and 350,630 stream-history checks. This includes both interval forms and the described/refused RLE/head placeholders. |
+| `d4ad21a4`, earlier local baseline | Checked sizes/relative-ends G16/G64 admission and same-version conversions, checkpoint-slot negative witness and signed-evidence boundaries. It predates the placeholder extension; its earlier counts are not the current source qualification. |
+| Native shared captures | Jobs `20261024T223705Z-dec974e4` / `20261024T223751Z-8ddba6a7` captured owner `e90542d9`: sizes only, 142 manifest / 2,700 binding / 87,718 stream-history checks. Shared stage `a74e1c44` supported both forms, but that does not qualify the newer checked owner. |
 
-Receipts are `build/frame-owner-relative-v1/placeholders-finish.log` and
-`placeholders-san.log`. Production and check sources were rebuilt against the
-renamed node member; the normal run completed its final two test TUs after
-compiling the unchanged runtime-width bridge and core, and the sanitizer run
-rebuilt the owner set. The linked SeriesPack archive remains uninstrumented;
-hardware-guard and sanitizer coverage retain the limits below. No native
-placeholder or relative-owner qualification is claimed.
+The current local overlay uses shared stage `a74e1c44` and matching SeriesPack
+`0d44d527` headers/archive. `build/frame-owner-relative-v1/qualification-placeholders.json`
+seals its 60 source identities and results. `placeholders-finish.log` and
+`placeholders-san.log` retain the normal/SAN runs. All production/check TUs
+were rebuilt against the renamed node member; the normal build completed two
+corrected test TUs after compiling the production set, while SAN rebuilt all.
 
-The description now names block-local `runs` with ordered sizes-minus-one
-and values children in one data-dependent `run_ordinal` domain. Independent
-wire bytes and malformed coordinate/arity/type/global-mode cases are checked.
-The shared in-memory run stage demonstrates 257 equal rows becoming two runs
-(`[255,0]` sizes-minus-one), versus 257 alternating singleton runs. Its child
-cardinalities, reads, points and exact SUM are checked against original rows.
-This is a shape/reference witness, not a new RLE encoder or imported-image law.
+Owner, runtime-width bridge and Orbital code are instrumented. The linked
+SeriesPack archive is **uninstrumented**; hardware guards cover image boundaries.
+These checks establish local NEON correctness, not native CPU performance.
+The overlay reuses the earlier matching runtime capture without copying or
+rebuilding codec providers. Later source/dependency changes inherit no receipt.
 
-Pack nodes separately carry H=0/8/16 in the former reserved u16; other nodes
-require zero. H0 wire bytes stay unchanged. Independent H8/H16 golden inputs
-and refusals cover all packing families and bound/plain leaves. The physical
-witness uses existing SeriesPack K/H=12/8, 20/8, 20/16, 32/16 layouts at 257 rows:
-actual body/head planes reconstruct the input, leading bytes use each layout's
-K, and family geometry is selected from K−H. The description does not establish
-per-block K or H≤K. Checked owner factories refuse RLE and headed leaves
-before touching an inaccessible payload; Frame image placement and execution
-for those placeholders remain unsupported.
+## Consequential witnesses to preserve
 
-## Relative-ends admission and form conversion
+- Canonical byte fixtures distinguish stable H0 bytes from newly described
+  run/head kinds that old strict readers reject. Block-local runs use a common,
+  data-dependent run-ordinal domain, not parent rows or a fixed checkpoint ratio.
+  Existing shared runs and real SeriesPack physical head planes supply the
+  reference witnesses; checked factories refuse their image execution.
+- A structurally valid checkpoint child field changed from 2^63 to 2^63+1
+  leaves every decoded logical value unchanged but changes relative SUM by one.
+  Attachment refuses it. Removing only the zero-checkpoint-field proof makes
+  the independent negative control fail. Leaf validity and ordinary decode
+  equivalence do not establish every aggregate law.
+- Exactness covers -2^63 (accepted), +2^63 (false exact flag required), adjacent
+  differences that fit while a relative offset does not, and large jumps
+  between checkpoints whose relative offsets remain exact. Conservative false
+  evidence is legal; false last values and unsound true evidence refuse.
+- Complete stream/Part metadata and availability are checked before resolving
+  addresses. Sparse/missing dependency guards, K0/empty exception regions and
+  partial tails exercise the complete request admission boundary. FILTER/SELECT
+  preserve output sentinels on refusal and original-row order on success.
+- Domain-only COUNT/FILTER and empty fine demand settle without payload.
+  Selection remains separate from read authority. A root Part alone does not
+  automatically retain checkpoint payload in another Part.
+- Real Orbital histories keep old interpretations/readers after teardown,
+  publish root/checkpoint replacements together, distinguish logical updates
+  from same-version conversion and retry explicitly against a named fresh
+  basis. Valid metadata-only remapping defeats shallow address/pipeline checks.
 
-Owner baseline `d4ad21a4` uses shared stage `a74e1c44`, including its relative-ends
-mode. All seven owner checks pass in a small local Linux AArch64 runtime-leaf
-overlay, both normally and with owner/runtime/Orbital ASan/UBSan. The unchanged
-SeriesPack headers and archive are reused from the qualified runtime capture;
-no provider rebuild, corpus copy, worker or performance run is involved.
+## Completed O3 preparation experiment
 
-| Check | Qualified d4 baseline result |
-| --- | --- |
-| Description / manifest | 443 / 284 checks; both interval kinds retain their original node IDs and the same checkpoint cardinality/placement law. |
-| Material / group images / basic history | Pass; 1,953 valid, 991 guarded prefixes, 26 malformed images; 785 basic history checks. |
-| Stream binding | 5,885 checks: both forms, G16/G64, all predicates/results, sparse grants, constants and form-specific signed-offset evidence. |
-| Stream history | 350,630 checks: both forms at G16/G64, logical updates, old readers, and pure same-version conversion in both directions with exact original-row equivalence and full teardown. |
+[Retained samples and source identities](evidence/prepare-local-o3.json) cover
+65,536 original rows, touched group 7 (4,096 rows), six rotated rounds and eight
+independent preparations per timed round. The frozen owner is `ef08bed8`,
+shared stages `a74e1c44`, matching compiled runtime leaf/SeriesPack `0d44d527`;
+Clang 21.1.8 O3, armv8-a+simd/neoverse-v2, local Linux AArch64 VM, CPU 8.
+No compiler was active and the selected CPU passed the idle admission check.
+Source/binary identities were sealed and checked after execution.
 
-This local checked-owner qualification is distinct from the native shared
-captures: their owner files match `e90542d9` and qualify sizes only (142
-manifest, 2,700 binding and 87,718 stream-history checks). The shared stage in
-those captures exercises relative ends, but that does not qualify the later
-checked-owner admission/history or the new placeholder extension. See the
-[source-qualified comparison account](../controls/SCORECARD.md#source-and-qualification-scope).
+Microseconds per independently prepared batch, group-only / attach-all:
 
-One independent malformed-image witness changes a checkpoint child field from
-2^63 to 2^63+1, using the shared child's real builder/emitter. The child remains
-structurally valid and all decoded logical values stay unchanged, but relative
-SUM increases by one. Checked attachment refuses it. A negative control removing
-only the zero-checkpoint-field proof fails on that witness, rather than merely
-passing another round-trip assertion.
+| Column | 1 command | 8 commands | 64 commands | Copied / emitted image bytes |
+| --- | ---: | ---: | ---: | ---: |
+| OS | 21.282 / 30.318 | 45.740 / 54.928 | 57.069 / 67.017 | 4,691 / 4,691 |
+| UserID | 26.493 / 35.475 | 54.486 / 64.876 | 70.832 / 82.957 | 25,620 / 25,620 |
 
-The exactness tests separately cover -2^63 (accepted), +2^63 (false exact flag
-required), adjacent differences that fit while a relative offset does not, and
-large jumps between checkpoints whose relative offsets remain exact. Partial
-blocks retain the decoded fallback. Conservative false evidence remains legal.
+Group-only preparation removes about 9–12 µs of eager attachment work per batch
+in this cohort. Batches 8/64 exhaust slack and rebuild once; one-command batches
+do not rebuild. Both arms charge touched input/output image admission, private
+copy/binding, journal allocation, ordered commands, exact final SUM/min/max and
+contribution, and final emission. Every output, original-row answer, effect
+coverage and unchanged source is checked outside its timer.
 
-`build/frame-owner-relative-v1/` retains the small source overlay, dependency
-reference, normal/SAN logs, conversion recheck and checkpoint-negative receipt.
-The final conversion-only test-TU recheck is in `conversion.log`; its source
-change does not replace or qualify a different production implementation.
-The instrumentation limits below still apply: the SeriesPack archive is
-uninstrumented, and hardware guards cover its image boundaries. No native
-performance or optimized interval mutation claim follows from these checks.
+The eight calls are **independent drafts from the same original**, not successive
+publications. Construction, returned-image disposal, publication and durability
+are outside. This is not a native-owner comparison or complete write-history
+speedup. A local O3 observation does not fill native Zen/Graviton cells.
 
-## Earlier runtime-leaf capture
+Both paths request 4,096 journal entries per preparation, 128 KiB on this ABI,
+independently of their per-command live set. Source/output proofs and final
+statistics are also real charged work. Scratch reuse/right-sizing and reuse of
+an immutable checked source proof are opportunities, not measured explanations
+or changes made in this experiment. A future native comparison must use genuine
+typed storage, adapt once per batch when needed and avoid an artificial second
+emission copy. These investigations are deferred during consolidation.
 
-2026-10-24. The matching frozen runtime-leaf build passes normal and
-ASan/UBSan checks on local Linux AArch64 NEON with pinned Clang21.1.8.
-These are functional checks, not a native performance score. No native owner
-timing is established yet.
+Full local commands/logs and the qualification receipt remain at
+`build/frame-owner-relative-v1/prepare-qualification.json`; the compact evidence
+above preserves every raw timing record. Later stage work, including MAX and
+point-plan changes, is outside this frozen preparation source epoch.
 
-| Check | Completed in the earlier runtime capture |
-| --- | --- |
-| Canonical descriptions | 443 checks: independent little-endian bytes, exact lengths, malformed topology/coordinates, sharing, fixed Fr/v1 packing geometry and unchanged output on refusal. |
-| Stream manifests | 142 metadata-only checks: node IDs, child row/group domains, disjoint co-packing, bounded Part locations, closure and availability refusal; no payload access. |
-| Public Orbital material | Two-TU lifetime/identity/resource checks pass, including selected-Part interpretation after builder/Scope/Store destruction, retained backing without sibling payloads and co-packed stream metadata. |
-| Group image admission | 1,953 valid images, 991 guarded truncated prefixes and 26 malformed cases; all widths 0–64 and all packing presets. |
-| Basic owner history | 785 total checks: ordered/repeated/restored writes, slack exhaustion, exact summaries/contribution, rollback, sparse group 1 attachment, stale basis and explicit retry, untouched Part reuse, append, pack-only conversion and old readers. The earlier 751-check line in the log precedes teardown checks. |
-| Stream binding | 2,700 checks at G16/G64: real emitted images, K0/zero bodies and empty exception areas, partial tails, evidence validation, sparse/co-packed dependency refusal, FILTER/SELECT guarantees and payload-free domain predicates. |
-| Stream owner history | 87,718 checks: actual Orbital publication of root/checkpoint replacements together, retained old readers, exact original-row answers and a valid metadata-only remap that defeats shallow basis comparison. Interval changes use full rebuilds. |
+## Payload accounting and implementation limits
 
-## Source and instrumentation scope
+The basic functional history records 3,680 successful-private-source-copy bytes
+and 7,602 emitted bytes across preparation attempts, including the candidate
+later rejected as stale. It publishes 12,638 fresh image bytes and reuses 4,073.
+After conversion, the original reader alone retains 2,134 extra payload-capacity
+bytes. These fixture totals are not per-publication costs, traffic or RSS.
+Refused preparation work, scratch allocations, material metadata and allocator/
+control-block overhead are excluded. PMR resource allocations and interpretation
+vector capacities are accounted separately from payload backing.
 
-The capture uses landed SeriesPack `0d44d527` and shared Frame prototype
-`d1a439b4`, with the owner source hashes in
-`build/frame-owner-runtime-v1/sources.json`. Normal and sanitizer compile/run
-receipts are `check.log` and `check-san.log` in that directory.
-`qualification.json` seals that capture's source checks and result; its source
-identity predates the relative-owner and placeholder extensions above.
-All owner check TUs and the runtime-width bridge were rebuilt together; this
-receipt does not reuse the earlier template width objects against a new
-interpretation layout.
+Append/conversion and interval changes in these histories use full rebuilds.
+`prepare_group` supports basic single-stream afterimages; it supplies no checked
+interval point-setter, general in-place lock protocol, concurrent transaction,
+durable/recovery proof or retained asynchronous preparation API. Exact extrema
+in a prepared result do not imply a public checked MIN/MAX query binding.
 
-The owner code, compiled runtime-width bridge and Orbital runtime are
-ASan/UBSan-instrumented. The matching linked SeriesPack archive remains
-**uninstrumented**. Guarded source/image tests check hardware boundaries,
-including native leaf accesses; sanitizer success is not a claim that the
-whole Ikea library was instrumented. This is local NEON correctness evidence,
-not a native Zen5/Graviton4 throughput ranking.
-The basic/stream histories and stream-binding fixtures use compact packing;
-group-image admission separately covers all three packing families.
-
-## What the runtime-leaf baseline establishes
-
-- Fr/v1 packing families retain their fixed Local/striped geometry by width,
-  independent of future preset recommendations and execution ISA. K0 has no
-  leaf body; real constant streams with slack 0 exercise empty exception areas.
-- Explicit manifests separate physical `part_extents` from stream row domains
-  and section locations. `same_material` includes that complete immutable
-  meaning and selected Part geometry/addresses. A valid group remap can change
-  logical answers while pipeline bytes, row extent and addresses stay fixed.
-  This is a material-basis test, not a Store-cut or cross-participant proof.
-- FILTER preserves excluded coarse slots and clears partial-tail high bits.
-  SELECT preserves original-row order, output sentinels and unused capacity;
-  domain, fine-mask, availability and capacity refusal precedes writes.
-- COUNT/FILTER settle `>=0`, `<=UINT64_MAX`, `<0` and `>UINT64_MAX` from the
-  non-null UInt64 logical contract with every Part inaccessible and no section
-  keys available. Invalid comparisons/coarse coordinates still refuse.
-  Empty fine SUM/SELECT also need no payload. Other predicates remain subject
-  to payload closure; point/read `required()` stays conservative.
-
-## Payload accounting and limits
-
-The basic-history run records 3,680 successful-private-source-copy bytes and
-7,602 emitted bytes across its explicit preparation attempts, including the
-successfully prepared candidate later rejected as stale. These are not
-per-publication costs. It publishes 12,638 fresh image bytes and reuses 4,073
-image bytes. After conversion, the first old reader alone retains an extra
-2,134 actual payload-capacity bytes relative to the selected alternative.
-These are fixture observations, not general compression or memory-bus traffic
-claims.
-
-Append and conversion deliberately use full rebuilds. Refused `prepare_group`
-attempts, private preparation allocations, material metadata and allocator/
-control-block overhead are excluded from the payload counters. PMR live bytes
-count only resource allocations; interpretation vector capacities are
-accounted once per unique retained `&control.meaning()`, separately from
-payload backing.
-
-This earlier capture predates relative-ends admission. None of these captures
-establishes optimized interval mutation, hot/cold owner throughput,
-fitting/encoding speed or shared bandwidth.
-The [control scorecard](../controls/SCORECARD.md) owns performance evidence;
-functional checks do not fill unmeasured cells.
-
-## Earlier receipts
-
-`build/frame-owner-core-v1/` retains the earlier 804-check basic history;
-`build/frame-description-review/` and `build/frame-owner-material/` retain
-the separate early description/material/validator checks.
-`build/frame-owner-stream-v1/` retains the earlier multi-stream capture
-(251 description, 142 manifest, 2,120 binding and 87,628 history checks), with
-uninstrumented reused width kernels. Those snapshots predate the latest
-facade/basis changes and do not replace the later matching runtime-leaf
-receipt. Directory-wide commit `88cb8ee1` included unfinished owner files;
-its seam measurements alone never qualified their implementation.
+Earlier local capture sources/commands live in `build/frame-owner-runtime-v1/`,
+`frame-owner-stream-v1/` and `frame-owner-core-v1/`; they are historical provenance,
+not substitute qualification for a later source. The checkpoint-negative receipt
+and old-reader/basis counterexamples remain retained with the current overlay.

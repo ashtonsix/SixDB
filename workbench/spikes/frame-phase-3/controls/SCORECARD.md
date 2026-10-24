@@ -208,15 +208,42 @@ are not copied bytes, peak retained backing, traffic or RSS. The history checks
 matching old/new answers, reuse and contributions; it is not durable MVCC,
 concurrent publication or an Engine summary benchmark.
 
-## Finite remaining comparison cells
+The current owner-side preparation investigation is now complete. A frozen
+O3 local AArch64 comparison uses the checked `ef08bed8` owner, shared
+`a74e1c44` stages and matching SeriesPack `0d44d527`. Microseconds per
+independent batch, **group-only / attach-all**:
 
-Preserve the matched COUNT/gather controls and observed losses. The remaining
-measurement gaps are narrower than another complete matrix:
+| Column | 1 command | 8 commands | 64 commands |
+| --- | ---: | ---: | ---: |
+| OS | 21.282 / 30.318 | 45.740 / 54.928 | 57.069 / 67.017 |
+| UserID | 26.493 / 35.475 | 54.486 / 64.876 | 70.832 / 82.957 |
 
-1. Match whole SUM and URLHash COUNT to the qualified narrow native entries,
-   first at the existing 65,536-row system prefixes and then the larger corpus.
-   Existing four-column count-only timings need no rerun merely to obtain the
-   already-qualified operation.
+Both arms copy and emit identical images (4,691 B OS, 25,620 B UserID), verify
+every result and keep the source unchanged. Batches 8/64 rebuild once after
+slack exhaustion. Group-only removes about 9–12 µs of eager attachment work
+per batch here. Both paths allocate 4,096 journal entries and perform real
+input/output validation plus exact final facts; the result does not isolate
+those costs.
+
+These are eight independent drafts from one original per round, not successive
+publications. Construction, independent verification, returned-image disposal,
+publication and durability are outside. The [owner evidence](../owner/EVIDENCE.md#completed-o3-preparation-experiment)
+and [raw records](../owner/evidence/prepare-local-o3.json) preserve the boundary.
+No native-owner ranking or complete write-throughput claim follows. The current
+experiment is closed; scratch/source-proof and adaptive-native work is deferred.
+
+## Deferred comparisons
+
+The current cohorts establish the losses and useful pruning cases above.
+With the preparation experiment closed, the following cells remain research
+for the claims they would qualify. They are not another
+matrix to run during consolidation or prerequisites invented for every initial
+integration:
+
+1. Match larger/native-CPU whole SUM and URLHash COUNT to the qualified narrow
+   native entries. The six local 65,536-row prefix cells are complete below;
+   neither those cells nor the existing four-column native count-only timings
+   need repeating merely to obtain an already-qualified operation.
 2. On the existing EventTime/WatchID → ClientIP masks, time both named sparse
    and dense native supplied-mask SUM routes. Keep predicate production as a
    separate complete operation and retain the dispersed losing case.
@@ -229,9 +256,10 @@ measurement gaps are narrower than another complete matrix:
    from a timed writer comparison.
 
 Actual-buffer cache maintenance or a declared large sequential population must
-have its own allocation/access account. Actual Polars/DuckDB timing remains
-the other finite gap below; repeated local VM observations cannot fill native
-Zen/Graviton cells.
+have its own allocation/access account if that research is resumed. Actual
+Polars/DuckDB local timing is complete below; repeated local VM observations
+cannot fill native Zen/Graviton cells. The current evidence already supports
+retaining plain/narrow choices for wide scans, dispersed selections and points.
 
 ## Actual system cells
 
