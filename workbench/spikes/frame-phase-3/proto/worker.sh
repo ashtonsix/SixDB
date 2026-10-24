@@ -5,12 +5,11 @@
 # Usage: worker.py run workbench/spikes/frame-phase-3/proto/worker.sh --machine zen5|neoverse-v2
 set -euo pipefail
 inputs=workbench/spikes/frame-phase-1/encoding/worker-inputs.json
-# Inputs go to the worker's data cache, never under SIXDB_RESULTS (which is
-# collected locally); only the artifact reference is retained.
+# Inputs come from Workbench's cached-input helper (digest-keyed in the
+# worker's data cache), never under SIXDB_RESULTS; only the reference is kept.
 cp "$inputs" "$SIXDB_RESULTS/input-artifact.json"
-cache="$SIXDB_DATA_CACHE/frame-phase-1-encoding"
-[ -d "$cache/inputs/cols" ] || python3 workbench/tools/artifacts.py fetch "$inputs" "$cache" > "$SIXDB_RESULTS/input-fetch.txt" 2>&1
-cols="$cache/inputs/cols"
+input_root=$(python3 workbench/tools/artifacts.py input "$inputs" 2> "$SIXDB_RESULTS/input-fetch.txt")
+cols="$input_root/inputs/cols"
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
 clang++-21 --version > "$SIXDB_RESULTS/compiler.txt"
 case "$(uname -m)" in
