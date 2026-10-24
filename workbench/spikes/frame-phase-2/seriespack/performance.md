@@ -16,8 +16,10 @@ defects, fixed before landing:
 - the guarded-expression SUM failed to compile;
 - the dense reader lacked the new operations.
 
-Timing jobs on the final kernel sources: `20261024T061814Z-d13d707d` (Zen 5,
-AVX-512) and `20261024T061851Z-4ecc6c7c` (Graviton 4). Medians are in
+Timing jobs on the first batch's final kernel sources (landed as 7d34f479): `20261024T061814Z-d13d707d` (Zen 5,
+AVX-512) and `20261024T061851Z-4ecc6c7c` (Graviton 4). The second batch,
+striped points and two-byte-body NEON COUNT (reviewed by Codex; checks `20261024T072430Z-0f3315c7` and `20261024T072454Z-86b46a18` pass), was timed in jobs
+`20261024T070126Z-edea03ef` (Zen 5) and `20261024T070716Z-62f6198d` (Graviton 4); medians in [evidence/performance-batch2-zen5-avx512.txt](evidence/performance-batch2-zen5-avx512.txt) and [evidence/performance-batch2-graviton4.txt](evidence/performance-batch2-graviton4.txt). Medians are in
 [evidence/performance-zen5-avx512.txt](evidence/performance-zen5-avx512.txt)
 and [evidence/performance-graviton4.txt](evidence/performance-graviton4.txt).
 The "before" figures come from the remeasure jobs in [README.md](README.md) and
@@ -44,6 +46,8 @@ step, not proof of DRAM service.
 | Range `sum_unchecked(first, count)`, Local: plane popcounts plus body byte sums, one pass | compact K ≤ 6 0.20–0.59, K = 7 1.6, K 10–15 1.9–2.6 (native 2.6–2.7; `plane256` 1.2–4.7); K = 20 11.3 → 4.9, K = 24 8.5 → 6.3 (native 5.3) | compact K ≤ 7 1.1–5.3 (`plane256` 2.7–7.6); K 10–15 12–23; K = 24 unchanged at 43 |
 | Range SUM, striped: nibble tables over residual stripes | bulk K ≤ 7 1.25–2.0 → 0.31–1.9 | bulk K ≤ 7 7–12 → 1.7–10.5; K 10–20 15–18 → 7.7–15 |
 | Bit-sliced COUNT on stored Local planes (NEON; residual-only and one-byte bodies) | — | compact K ≤ 7 26–49 → 1.7–19.3, K 10–15 67–83 → 17.5–32.7 (native 17–19) |
+| Striped points at odd widths: a per-group table of the residual's two byte fields replaces a branch on the random group, which mispredicted | bulk K = 3, 5, 6, 7 1.9–3.7 → 1.1–1.2; K = 14, 15 3.2–4.6 → 2.1–2.2 (native 0.26) | bulk K = 3–7 2.8–4.5 → 1.8; K = 14, 15 4.3–5.2 → 3.2–3.3 (native 0.28–0.40) |
+| NEON bit-sliced COUNT for two-byte Local bodies (u16 compares narrowed to masks) | — | compact K = 20 103 → 28 (native 23) |
 | Short reads decode their partial edge packets | — | 10–22% faster locally; 0.9–1.2× native on Graviton 4 |
 
 Flushed, Zen 5 range SUM tracks bandwidth: compact K ≤ 7 takes 0.7–5.4, K 10–15 7.9–10.5 (native 11) and K = 24 23 (native 22, before 57). The group-driver SUM had left compact 2–3.5× behind bulk there.
@@ -65,9 +69,8 @@ Flushed, Zen 5 range SUM tracks bandwidth: compact K ≤ 7 takes 0.7–5.4, K 10
 
 ## Remaining gaps
 
-- NEON compact COUNT with two-byte bodies (K = 20: 103) still reconstructs values; one-byte bodies now bit-slice.
 - Graviton 4 compact decode (`read_u32`) runs 1.5–3.5× native at non-byte widths, and bulk decode 1.6–1.8× at K 10–20.
-- Bulk points at odd striped widths run 7–11×.
+- Bulk points at odd striped widths still run 4–8× native (compact 2–3.6×). Points need at least two dependent loads (body and a stripe) per row.
 - On NEON, two-byte-body Local range SUM (K 17–23) stays on the group driver: masking each body byte apart lost there (locally 26–40 against 18–29).
 - Short reads at 1.1–1.5× native warm.
 - Ashton's multi-yield decode (consumers fed per filled vector with residuals in registers) is untried. The range kernels here are the single-consumer form of it.
