@@ -77,4 +77,35 @@ inline grouped_view fold_group(const grouped_view &x, std::size_t g, std::span<c
     y.groups[g] = std::make_shared<const group_image>(group_rows);
     return y;
 }
+
+// Row masks of x >= t (four words per block, original coordinates) and SUM
+// over masked rows, group by group.
+inline u64 mask_ge(const grouped_view &x, u64 t, u64 *masks) {
+    u64 n = 0;
+    std::size_t at = 0;
+    for (const auto &g : x.groups) {
+        n += mask_ge(g->f, t, 0, g->f.blocks, masks + 4 * at);
+        at += g->f.blocks;
+    }
+    return n;
+}
+inline u128 masked_sum(const grouped_view &x, const u64 *masks) {
+    u128 s = 0;
+    std::size_t at = 0;
+    for (const auto &g : x.groups) {
+        s += masked_sum(g->f, masks + 4 * at);
+        at += g->f.blocks;
+    }
+    return s;
+}
+
+// A stored-program adapter for corrected_over<>: the column as a view.
+struct grouped_column {
+    grouped_view view;
+    u64 point(std::size_t row) const { return frame_image::point(view, row); }
+    u128 sum() const { return frame_image::sum(view); }
+    u64 count_ge(u64 t) const { return frame_image::count_ge(view, t); }
+    u64 mask_ge(u64 t, u64 *masks) const { return frame_image::mask_ge(view, t, masks); }
+    u128 masked_sum(const u64 *masks) const { return frame_image::masked_sum(view, masks); }
+};
 }  // namespace frame_image

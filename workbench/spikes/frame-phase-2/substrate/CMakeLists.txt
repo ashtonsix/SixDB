@@ -42,4 +42,7 @@ if(TARGET frame_history_oracles OR EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../instrum
     add_executable(frame_substrate_corrections_trace corrections_trace.cpp)
     sixdb_target(frame_substrate_corrections_trace)
     target_link_libraries(frame_substrate_corrections_trace PRIVATE frame_bodies frame_history_oracles ikea::intervals)
+    add_executable(frame_substrate_lifecycle lifecycle.cpp)
+    sixdb_target(frame_substrate_lifecycle)
+    target_link_libraries(frame_substrate_lifecycle PRIVATE frame_bodies frame_history_oracles ikea::intervals)
 endif()
