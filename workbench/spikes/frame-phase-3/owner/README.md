@@ -50,9 +50,10 @@ The 256-row blocks, 16-block groups and current 65,536-root-row limit are experi
 admission bounds, stated independently of addresses and physical Part counts.
 
 The executable subset is group-local `pack`, optionally under `bound`, and
-an `intervals_sizes` root with separate basic delta/checkpoint children. It uses
+an `intervals_sizes` or `intervals_relative_ends` root with separate basic
+field/checkpoint children. It uses
 the existing SeriesPack presets; an omitted compiled preset refuses before any
-payload access. Relative ends, shared tuple records, rank maps, split nodes and
+payload access. Shared tuple records, rank maps, split nodes and
 nested interval programs can describe an extension's **shape**, but the checked
 factory refuses their execution until the corresponding stage contract exists.
 Shape validation is distinct from executable byte-law and operation support.
@@ -115,9 +116,18 @@ There is no mutation or escaping point-plan API on this binding.
 
 The stream binding checks each child in its own row domain. With complete
 dependencies, ordinary decode proves stored last values and the soundness of
-true monotone/exact flags before shortcut laws are used. Exact here means each
-adjacent logical difference fits signed64; it does not promise that every
-relative prefix fits signed64. False flags may conservatively decline a law.
+true monotone/exact flags before shortcut laws are used. For sizes, exact means
+each adjacent logical difference fits signed64; it does not promise that every
+relative prefix fits signed64. For relative ends, exact means each value's
+offset from its region checkpoint fits signed64. A positive difference must be
+strictly below 2^63; a negative magnitude may equal 2^63. False flags may
+conservatively decline a law.
+
+Every checkpoint row's logical child field must be the offset-binary encoding
+of zero (2^63), including after bound/exception interpretation. Plain point and
+decode routes ignore those fields, while the relative-ends SUM law includes
+them. Therefore a successful decoded-value proof alone is insufficient: the
+attacher proves this additional premise before a group becomes ready.
 Available roots with missing checkpoint sections may attach structurally, but
 payload-dependent queries refuse. A new binding can be formed after the owner
 acquires the missing sections. Cached
@@ -224,8 +234,11 @@ escaping selected Parts, append, source reuse and adoption compatibility.
 Group-image and complete-history checks extend these to real stage images.
 `frame3_owner_manifest_check` tests metadata-only dependency/placement admission;
 `frame3_owner_stream_binding_check` and `frame3_owner_stream_history_check`
-exercise real G16/G64 images, constant/zero-body cases, partial tails, guarded
-missing dependencies and atomic two-section replacement with old readers.
+exercise real G16/G64 images of both interval forms, constant/zero-body cases,
+partial tails, guarded missing dependencies and atomic two-section replacement
+with old readers. Pure same-version conversions run in both directions between
+sizes and relative ends: rebuilt target images are independently checked before
+adoption, while retained source readers keep their own interpretation and rows.
 The latest facade tests also cover FILTER/SELECT output guarantees,
 payload-free domain settles and metadata-only basis changes. Matching frozen
 normal and ASan/UBSan checks pass with the compiled runtime leaf; the linked

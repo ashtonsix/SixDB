@@ -1,5 +1,42 @@
 # Owner-side qualification
 
+## Relative-ends admission and form conversion
+
+The current extension uses shared stage `a74e1c44`, including its relative-ends
+mode. All seven owner checks pass in a small local Linux AArch64 runtime-leaf
+overlay, both normally and with owner/runtime/Orbital ASan/UBSan. The unchanged
+SeriesPack headers and archive are reused from the qualified runtime capture;
+no provider rebuild, corpus copy, worker or performance run is involved.
+
+| Check | Current result |
+| --- | --- |
+| Description / manifest | 443 / 284 checks; both interval kinds retain their original node IDs and the same checkpoint cardinality/placement law. |
+| Material / group images / basic history | Pass; 1,953 valid, 991 guarded prefixes, 26 malformed images; 785 basic history checks. |
+| Stream binding | 5,885 checks: both forms, G16/G64, all predicates/results, sparse grants, constants and form-specific signed-offset evidence. |
+| Stream history | 350,630 checks: both forms at G16/G64, logical updates, old readers, and pure same-version conversion in both directions with exact original-row equivalence and full teardown. |
+
+One independent malformed-image witness changes a checkpoint child field from
+2^63 to 2^63+1, using the shared child's real builder/emitter. The child remains
+structurally valid and all decoded logical values stay unchanged, but relative
+SUM increases by one. Checked attachment refuses it. A negative control removing
+only the zero-checkpoint-field proof fails on that witness, rather than merely
+passing another round-trip assertion.
+
+The exactness tests separately cover -2^63 (accepted), +2^63 (false exact flag
+required), adjacent differences that fit while a relative offset does not, and
+large jumps between checkpoints whose relative offsets remain exact. Partial
+blocks retain the decoded fallback. Conservative false evidence remains legal.
+
+`build/frame-owner-relative-v1/` retains the small source overlay, dependency
+reference, normal/SAN logs, conversion recheck and checkpoint-negative receipt.
+The final conversion-only test-TU recheck is in `conversion.log`; its source
+change does not replace or qualify a different production implementation.
+The instrumentation limits below still apply: the SeriesPack archive is
+uninstrumented, and hardware guards cover its image boundaries. No native
+performance or optimized interval mutation claim follows from these checks.
+
+## Earlier runtime-leaf capture
+
 2026-10-24. The matching frozen runtime-leaf build passes normal and
 ASan/UBSan checks on local Linux AArch64 NEON with pinned Clang21.1.8.
 These are functional checks, not a native performance score. No native owner
@@ -73,8 +110,9 @@ count only resource allocations; interpretation vector capacities are
 accounted once per unique retained `&control.meaning()`, separately from
 payload backing.
 
-These checks do not establish relative-ends execution, optimized interval
-mutation, hot/cold owner throughput, fitting/encoding speed or shared bandwidth.
+This earlier capture predates relative-ends admission. Neither capture
+establishes optimized interval mutation, hot/cold owner throughput,
+fitting/encoding speed or shared bandwidth.
 The [control scorecard](../controls/SCORECARD.md) owns performance evidence;
 functional checks do not fill unmeasured cells.
 

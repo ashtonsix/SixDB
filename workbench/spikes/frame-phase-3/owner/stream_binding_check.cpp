@@ -38,39 +38,14 @@ struct fixture {
     std::vector<fo::stream_manifest> streams;
     std::vector<fo::section_key> keys;
 };
-std::uint16_t basic(fo::description &d, bool bounded) {
-    const auto leaf = static_cast<std::uint16_t>(d.nodes.size());
-    d.nodes.push_back({fo::node_kind::pack, 0, 0, {}});
-    if (!bounded) return leaf;
-    const auto root = static_cast<std::uint16_t>(d.nodes.size());
-    d.nodes.push_back({fo::node_kind::bound, 0, 0, {{leaf, fo::coordinate::identity}}});
-    return root;
-}
-fixture built(unsigned spacing, bool intervals = true, bool bounded_deltas = true, bool bounded_checkpoints = true,
-    unsigned boundary = 0, std::optional<u64> constant = {}, unsigned slack = 8) {
-    fixture f;
-    const auto delta = basic(f.program, bounded_deltas);
-    f.program.root = delta;
-    std::uint16_t cp = 0;
-    if (intervals) {
-        cp = basic(f.program, bounded_checkpoints);
-        f.program.root = static_cast<std::uint16_t>(f.program.nodes.size());
-        f.program.nodes.push_back({fo::node_kind::intervals_sizes, static_cast<std::uint16_t>(spacing), 0,
-                                  {{delta, fo::coordinate::identity}, {cp, fo::coordinate::checkpoints}}});
-    }
-    f.values.resize(4367);
-    for (std::size_t r = 0; r < f.values.size(); ++r) f.values[r] = 1000 + (r / 256) * 1024 + r % 256;
-    std::swap(f.values[259], f.values[260]); // A non-monotone block.
-    f.values[512] = 0; f.values[513] = std::numeric_limits<u64>::max(); f.values[514] = 0;
-    if (boundary == 1) f.values[0] = u64{1} << 63, f.values[1] = 0; // Exactly -2^63 fits.
-    if (boundary == 2) f.values[0] = 0, f.values[1] = u64{1} << 63; // +2^63 does not.
-    if (constant) std::fill(f.values.begin(), f.values.end(), *constant);
-    frame3::column column(take(fo::make_tree(f.program, {0, 64, slack})), f.values);
-    const auto images = column.streams();
-    check(images.size() == (intervals ? 2 : 1), "shared stage enumerated unexpected streams");
-    for (const auto &[role, stage] : images) {
+void images(fixture &f, frame3::column &column, std::uint16_t checkpoints) {
+    f.parts.clear(); f.extents.clear(); f.streams.clear(); f.keys.clear();
+    const auto streams = column.streams();
+    check(streams.size() == (fo::is_intervals(f.program.nodes[f.program.root].kind) ? 2 : 1),
+        "shared stage enumerated unexpected streams");
+    for (const auto &[role, stage] : streams) {
         check(role == "" || role == "checkpoints", "unexpected stream role");
-        const auto node = role.empty() ? f.program.root : cp;
+        const auto node = role.empty() ? f.program.root : checkpoints;
         fo::stream_manifest stream{node, stage->rows(0), {}};
         for (unsigned g = 0; g < stage->groups_in(0); ++g) {
             auto image = column.image(*stage, 0, g);
@@ -81,6 +56,40 @@ fixture built(unsigned spacing, bool intervals = true, bool bounded_deltas = tru
         }
         f.streams.push_back(std::move(stream));
     }
+}
+std::uint16_t basic(fo::description &d, bool bounded) {
+    const auto leaf = static_cast<std::uint16_t>(d.nodes.size());
+    d.nodes.push_back({fo::node_kind::pack, 0, 0, {}});
+    if (!bounded) return leaf;
+    const auto root = static_cast<std::uint16_t>(d.nodes.size());
+    d.nodes.push_back({fo::node_kind::bound, 0, 0, {{leaf, fo::coordinate::identity}}});
+    return root;
+}
+fixture built(unsigned spacing, bool intervals = true, bool bounded_deltas = true, bool bounded_checkpoints = true,
+    unsigned boundary = 0, std::optional<u64> constant = {}, unsigned slack = 8,
+    fo::node_kind form = fo::node_kind::intervals_sizes) {
+    fixture f;
+    const auto delta = basic(f.program, bounded_deltas);
+    f.program.root = delta;
+    std::uint16_t cp = 0;
+    if (intervals) {
+        cp = basic(f.program, bounded_checkpoints);
+        f.program.root = static_cast<std::uint16_t>(f.program.nodes.size());
+        f.program.nodes.push_back({form, static_cast<std::uint16_t>(spacing), 0,
+                                  {{delta, fo::coordinate::identity}, {cp, fo::coordinate::checkpoints}}});
+    }
+    f.values.resize(4367);
+    for (std::size_t r = 0; r < f.values.size(); ++r) f.values[r] = 1000 + (r / 256) * 1024 + r % 256;
+    std::swap(f.values[259], f.values[260]); // A non-monotone block.
+    f.values[512] = 0; f.values[513] = std::numeric_limits<u64>::max(); f.values[514] = 0;
+    if (boundary == 1) f.values[0] = u64{1} << 63, f.values[1] = 0; // Exactly -2^63 fits.
+    if (boundary == 2) f.values[0] = 0, f.values[1] = u64{1} << 63; // +2^63 does not.
+    if (boundary == 3) f.values[0] = 0, f.values[1] = u64{1} << 62, f.values[2] = u64{1} << 63;
+    if (boundary == 4)
+        for (unsigned r = 0; r < 256; ++r) f.values[r] = r < spacing ? 0 : std::numeric_limits<u64>::max();
+    if (constant) std::fill(f.values.begin(), f.values.end(), *constant);
+    frame3::column column(take(fo::make_tree(f.program, {0, 64, slack})), f.values);
+    images(f, column, cp);
     return f;
 }
 std::span<std::byte> section(fixture &f, fo::section_key key) {
@@ -184,9 +193,9 @@ void answers(const fo::stream_binding &reader, const fixture &f, bool full) {
     refused(reader.select(blocks, selected, gathered), fo::binding_error::range, "select admitted an out-of-tail fine bit");
     check(gathered == untouched, "invalid fine mask changed select output");
 }
-void complete_and_sparse() {
+void complete_and_sparse(fo::node_kind form) {
     for (unsigned spacing : {16u, 64u}) {
-        auto f = built(spacing);
+        auto f = built(spacing, true, true, true, 0, {}, 8, form);
         auto reader = take(bind(f));
         answers(*reader, f, true);
         const auto cp = f.program.nodes[f.program.root].children[1].child;
@@ -230,7 +239,7 @@ void complete_and_sparse() {
     }
     for (bool bounded_deltas : {false, true})
         for (bool bounded_checkpoints : {false, true}) {
-            auto f = built(64, true, bounded_deltas, bounded_checkpoints);
+            auto f = built(64, true, bounded_deltas, bounded_checkpoints, 0, {}, 8, form);
             answers(*take(bind(f)), f, true);
         }
     for (bool bounded : {false, true}) {
@@ -238,8 +247,8 @@ void complete_and_sparse() {
         answers(*take(bind(f)), f, true);
     }
 }
-void evidence() {
-    const auto original = built(64);
+void evidence(fo::node_kind form) {
+    const auto original = built(64, true, true, true, 0, {}, 8, form);
     const fo::section_key root{original.program.root, 0};
     auto bad = original;
     section(bad, root)[8] = std::byte{2};
@@ -264,16 +273,64 @@ void evidence() {
     auto conservative = original;
     section(conservative, root)[8] = section(conservative, root)[9] = std::byte{0};
     answers(*take(bind(conservative)), conservative, true);
-    auto negative = built(16, true, true, true, 1);
+    auto negative = built(16, true, true, true, 1, {}, 8, form);
     check(section(negative, {negative.program.root, 0})[9] == std::byte{1}, "negative -2^63 boundary witness is not exact");
     answers(*take(bind(negative)), negative, true);
-    auto positive = built(16, true, true, true, 2);
+    auto positive = built(16, true, true, true, 2, {}, 8, form);
     check(section(positive, {positive.program.root, 0})[9] == std::byte{0}, "positive +2^63 boundary witness was called exact");
     section(positive, {positive.program.root, 0})[9] = std::byte{1};
     refused(bind(positive), fo::binding_error::image, "positive +2^63 difference was admitted as signed exact");
+    if (form == fo::node_kind::intervals_relative_ends) {
+        // All adjacent differences fit, but row2 is +2^63 from its checkpoint.
+        auto wide = built(16, true, true, true, 3, {}, 8, form);
+        check(section(wide, {wide.program.root, 0})[9] == std::byte{0}, "wide relative offset was called exact");
+        answers(*take(bind(wide)), wide, true); // False exact uses full logical reconstruction.
+        section(wide, {wide.program.root, 0})[9] = std::byte{1};
+        refused(bind(wide), fo::binding_error::image, "adjacent differences falsely proved a relative-offset law");
+        // A jump between checkpoints does not invalidate exact relative ends.
+        for (unsigned spacing : {16u, 64u}) {
+            auto jumps = built(spacing, true, true, true, 4, {}, 8, form);
+            check(section(jumps, {jumps.program.root, 0})[9] == std::byte{1},
+                "checkpoint jump incorrectly disabled exact relative offsets");
+            answers(*take(bind(jumps)), jumps, true);
+        }
+    }
 }
-void no_access() {
-    auto f = built(64);
+void checkpoint_fields(fo::node_kind form) {
+    constexpr u64 bias = u64{1} << 63;
+    for (bool bounded : {false, true}) {
+        auto f = built(64, true, bounded, true, 0, {}, 8, form);
+        frame3::column column(take(fo::make_tree(f.program)), f.values);
+        std::vector<u64> fields(f.values.size());
+        for (std::size_t r = 0; r < fields.size(); ++r) {
+            const auto reference = form == fo::node_kind::intervals_relative_ends ? r - r % 64 : r - (r != 0);
+            fields[r] = r % 64 == 0 ? bias : (f.values[r] - f.values[reference]) ^ bias;
+        }
+        fields[64] = bias + 1; // Logical decode ignores this checkpoint field.
+        auto &child = *column.root().children()[0];
+        child.clear(0);
+        child.build(0, {fields});
+        std::vector<u64> logical(f.values.size());
+        column.read(logical.data());
+        check(logical == f.values, "checkpoint poison changed decoded logical values");
+        if (form == fo::node_kind::intervals_relative_ends) {
+            u128 expected = 0;
+            for (unsigned i = 0; i < 256; ++i) expected += f.values[i];
+            frame3::bitset256 first; first.set(0);
+            check(column.root().sum(0, first) == expected + 1,
+                "counterexample did not expose the unchecked SUM-law disagreement");
+        }
+        const auto cp = f.program.nodes[f.program.root].children[1].child;
+        images(f, column, cp);
+        const fo::section_key key{f.program.root, 0};
+        const auto image = section(f, key);
+        check(bool(fo::validate_group(image.subspan(16 * 10), fo::image_preset::compact, bounded,
+            f.values.size(), 0)), "checkpoint counterexample is not a structurally valid child image");
+        refused(bind(f), fo::binding_error::image, "ignored checkpoint field violated the zero-offset premise");
+    }
+}
+void no_access(fo::node_kind form) {
+    auto f = built(64, true, true, true, 0, {}, 8, form);
     const auto cp = f.program.nodes[f.program.root].children[1].child;
     const auto source_size = f.parts[0].size();
     const long page_size = sysconf(_SC_PAGESIZE);
@@ -307,7 +364,7 @@ void no_access() {
     refused(fo::stream_binding::attach(f.program, f.values.size(), f.extents, f.streams, short_part, f.keys),
         fo::binding_error::range, "supplied Part extent mismatch was admitted");
 }
-void empty() {
+void empty(fo::node_kind form) {
     for (bool intervals : {false, true}) {
         fixture f;
         const auto delta = basic(f.program, true);
@@ -316,7 +373,7 @@ void empty() {
         if (intervals) {
             const auto cp = basic(f.program, true);
             f.program.root = static_cast<std::uint16_t>(f.program.nodes.size());
-            f.program.nodes.push_back({fo::node_kind::intervals_sizes, 64, 0,
+            f.program.nodes.push_back({form, 64, 0,
                                       {{delta, fo::coordinate::identity}, {cp, fo::coordinate::checkpoints}}});
             f.streams[0].root_node = f.program.root;
             f.streams.push_back({cp, 0, {}});
@@ -331,7 +388,7 @@ void empty() {
             "empty filter/select called an unattached stage");
     }
 }
-void constants() {
+void constants(fo::node_kind form) {
     const auto qualify = [](fixture f, u64 value) {
         // Persist/recover the program; the images themselves come from the
         // shared stage's real emit and round-trip through checked attachment.
@@ -345,7 +402,7 @@ void constants() {
             "constant COUNT differs from hand answers");
         check(take(reader->get(0)) == value && take(reader->get(4366)) == value,
             "constant endpoint points differ from hand answers");
-        const bool intervals = f.program.nodes[f.program.root].kind == fo::node_kind::intervals_sizes;
+        const bool intervals = fo::is_intervals(f.program.nodes[f.program.root].kind);
         for (const auto &stream : f.streams) {
             const bool interval_root = intervals && stream.root_node == f.program.root;
             const auto basic_node = interval_root ? f.program.nodes[f.program.root].children[0].child : stream.root_node;
@@ -367,10 +424,10 @@ void constants() {
     qualify(built(16, false, false, false, 0, u64{0}, 0), 0);
     qualify(built(16, false, true, false, 0, u64{77}, 0), 77);
     for (unsigned spacing : {16u, 64u})
-        qualify(built(spacing, true, true, true, 0, u64{77}, 0), 77);
+        qualify(built(spacing, true, true, true, 0, u64{77}, 0, form), 77);
 }
-void domain_without_payload() {
-    auto f = built(64);
+void domain_without_payload(fo::node_kind form) {
+    auto f = built(64, true, true, true, 0, {}, 8, form);
     const long page_size = sysconf(_SC_PAGESIZE);
     check(page_size > 0, "domain guard page size unavailable");
     const auto page = static_cast<std::size_t>(page_size);
@@ -434,11 +491,14 @@ void domain_without_payload() {
 } // namespace
 
 int main() {
-    complete_and_sparse();
-    evidence();
-    no_access();
-    empty();
-    constants();
-    domain_without_payload();
+    for (auto form : {fo::node_kind::intervals_sizes, fo::node_kind::intervals_relative_ends}) {
+        complete_and_sparse(form);
+        evidence(form);
+        checkpoint_fields(form);
+        no_access(form);
+        empty(form);
+        constants(form);
+        domain_without_payload(form);
+    }
     std::printf("stream_binding_check: %u checks\n", checks);
 }

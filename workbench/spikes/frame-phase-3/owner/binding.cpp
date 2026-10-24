@@ -48,14 +48,16 @@ std::expected<std::unique_ptr<frame3::stage>, binding_error> make_tree(const des
     if (policy.exception_cap > 256 || policy.slack > 4096) return std::unexpected(binding_error::resources);
     if (!validate_program_shape(d)) return std::unexpected(binding_error::unsupported);
     const auto &root = d.nodes[d.root];
-    if (root.kind != node_kind::intervals_sizes)
+    if (!is_intervals(root.kind))
         return make_basic(*binding_recipe(d), policy);
     auto deltas = make_basic(*binding_recipe(d, root.children[0].child), policy);
     if (!deltas) return std::unexpected(deltas.error());
     auto checkpoints = make_basic(*binding_recipe(d, root.children[1].child), policy);
     if (!checkpoints) return std::unexpected(checkpoints.error());
+    const auto form = root.kind == node_kind::intervals_relative_ends ? frame3::interval_form::relative_ends :
+        frame3::interval_form::sizes;
     return std::unique_ptr<frame3::stage>(std::make_unique<frame3::intervals>(std::move(*deltas),
-        std::move(*checkpoints), root.parameter));
+        std::move(*checkpoints), root.parameter, form));
 } catch (const std::bad_alloc &) { return std::unexpected(binding_error::resources); }
 binding::binding(std::unique_ptr<frame3::stage> root, std::size_t rows, frame3::bitset256 blocks)
     : root_(std::move(root)), rows_(rows), available_(blocks) {}

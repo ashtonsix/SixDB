@@ -21,7 +21,10 @@ struct borrowed_part {
 // section address. Available intervals root groups whose checkpoint dependency
 // is missing may attach structurally, but cannot answer queries. With complete
 // dependencies, no-shortcut decode proves last/monotone/exact evidence once.
-// The resulting per-root-group closure/content proof is cached: queries admit
+// Checkpoint fields must encode zero offset in both interval forms; relative
+// SUM includes them even though point/decode reconstruction ignores them.
+// Signed-exact evidence refers to predecessor deltas for sizes and to each
+// region's checkpoint for relative ends. The per-root-group proof is cached: queries admit
 // the complete request before entering a stage or writing output. A false
 // monotone/exact flag may conservatively disable a law; a false last value or
 // an unsound true flag refuses attachment. There is no mutation/point-plan API.

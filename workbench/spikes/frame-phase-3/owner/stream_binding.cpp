@@ -84,7 +84,8 @@ std::expected<std::unique_ptr<stream_binding>, binding_error> stream_binding::at
     std::sort(result->available_.begin(), result->available_.end(), key_less);
     result->available_.erase(std::unique(result->available_.begin(), result->available_.end()), result->available_.end());
     result->rows_ = rows;
-    const bool intervals = d.nodes[d.root].kind == node_kind::intervals_sizes;
+    const bool intervals = is_intervals(d.nodes[d.root].kind);
+    const bool relative = d.nodes[d.root].kind == node_kind::intervals_relative_ends;
     const auto delta_node = intervals ? d.nodes[d.root].children[0].child : d.root;
     const auto delta_recipe = binding_recipe(d, delta_node);
     if (!delta_recipe) return std::unexpected(binding_error::unsupported);
@@ -141,11 +142,20 @@ std::expected<std::unique_ptr<stream_binding>, binding_error> stream_binding::at
                 const bool monotone = std::to_integer<unsigned>(image[b * 10 + 8]);
                 const bool exact = std::to_integer<unsigned>(image[b * 10 + 9]);
                 if (monotone && !std::is_sorted(values, values + count)) return std::unexpected(binding_error::image);
+                constexpr auto bias = frame3::u64{1} << 63;
+                const unsigned spacing = d.nodes[d.root].parameter;
+                // Decode ignores the field at every checkpoint row. The
+                // relative-ends SUM law includes it, so decoded logical values
+                // alone cannot establish that law's zero-offset premise.
+                for (unsigned i = 0; i < count; i += spacing)
+                    if (result->root_->children()[0]->get(0, block * 256 + i) != bias)
+                        return std::unexpected(binding_error::image);
                 if (exact) {
-                    constexpr auto bias = frame3::u64{1} << 63;
-                    for (unsigned i = 1; i < count; ++i)
-                        if (values[i] >= values[i - 1] ? values[i] - values[i - 1] >= bias : values[i - 1] - values[i] > bias)
+                    for (unsigned i = 1; i < count; ++i) {
+                        const auto reference = values[relative ? i - i % spacing : i - 1];
+                        if (values[i] >= reference ? values[i] - reference >= bias : reference - values[i] > bias)
                             return std::unexpected(binding_error::image);
+                    }
                 }
             }
         }

@@ -59,13 +59,14 @@ fixture plain(std::size_t rows, bool bounded) {
     add_stream(f, f.program.root, rows);
     return f;
 }
-fixture intervals(std::size_t rows, unsigned spacing, bool bounded_deltas = true, bool bounded_checkpoints = true) {
+fixture intervals(std::size_t rows, unsigned spacing, bool bounded_deltas = true, bool bounded_checkpoints = true,
+    fo::node_kind form = fo::node_kind::intervals_sizes) {
     fixture f;
     f.rows = rows;
     const auto delta = basic(f.program, bounded_deltas, fo::pack_preset::bulk_x86);
     const auto checkpoints = basic(f.program, bounded_checkpoints, fo::pack_preset::bulk_arm);
     f.program.root = static_cast<std::uint16_t>(f.program.nodes.size());
-    f.program.nodes.push_back({fo::node_kind::intervals_sizes, static_cast<std::uint16_t>(spacing), 0,
+    f.program.nodes.push_back({form, static_cast<std::uint16_t>(spacing), 0,
                               {{delta, fo::coordinate::identity}, {checkpoints, fo::coordinate::checkpoints}}});
     add_stream(f, f.program.root, rows);
     add_stream(f, checkpoints, rows / spacing + (rows % spacing != 0));
@@ -84,7 +85,7 @@ std::vector<fo::section_key> direct_rows(const fixture &f, std::span<const fo::r
         for (std::size_t i = 0; i < range.count; ++i) {
             const auto row = range.first + i;
             wanted.emplace(f.program.root, row / 4096);
-            if (root.kind == fo::node_kind::intervals_sizes)
+            if (root.kind == fo::node_kind::intervals_sizes || root.kind == fo::node_kind::intervals_relative_ends)
                 wanted.emplace(root.children[1].child, (row / root.parameter) / 4096);
         }
     std::vector<fo::section_key> result;
@@ -101,9 +102,9 @@ void copack(fixture &f) {
         }
     f.parts = {cursor};
 }
-void geometry() {
+void geometry(fo::node_kind form) {
     for (unsigned spacing : {16u, 64u}) {
-        auto f = intervals(4367, spacing);
+        auto f = intervals(4367, spacing, true, true, form);
         check(bool(validate(f)), "nonzero-group partial-tail manifest validates");
         check(f.program.root == 4 && f.streams[1].root_node == 3,
             "fixture's hand-authored root/checkpoint identities changed");
@@ -128,21 +129,21 @@ void geometry() {
     }
     for (bool bounded_deltas : {false, true})
         for (bool bounded_checkpoints : {false, true}) {
-            auto f = intervals(8193, 64, bounded_deltas, bounded_checkpoints);
+            auto f = intervals(8193, 64, bounded_deltas, bounded_checkpoints, form);
             check(bool(validate(f)), "all basic child recipe combinations validate");
             const std::array ranges{fo::row_range{8192, 1}, fo::row_range{4000, 300}, fo::row_range{0, 2}};
             check(take(required(f, ranges)) == direct_rows(f, ranges), "closure matches independent original-row enumeration");
         }
     // The description permits other legal G values too; exercise a checkpoint
     // stream with several own groups, not only the G16/G64 one-group case.
-    auto small_g = intervals(65536, 2);
+    auto small_g = intervals(65536, 2, true, true, form);
     check(bool(validate(small_g)), "larger checkpoint domain has its own group count");
     const std::array last{fo::row_range{65535, 1}};
     check(take(required(small_g, last)) == std::vector<fo::section_key>{{3, 7}, {4, 15}},
         "checkpoint group index follows its row domain");
     for (unsigned spacing : {2u, 16u, 64u, 256u})
         for (std::size_t rows : {std::size_t{1}, std::size_t{4095}, std::size_t{4096}, std::size_t{4097}, std::size_t{65536}}) {
-            auto f = intervals(rows, spacing);
+            auto f = intervals(rows, spacing, true, true, form);
             const std::array all{fo::row_range{0, rows}, fo::row_range{rows, 0}};
             check(bool(validate(f)) && take(required(f, all)) == direct_rows(f, all),
                 "full-domain closure matches independent enumerated checkpoints");
@@ -154,8 +155,8 @@ void geometry() {
             "pack and bound-pack single-stream closures validate");
     }
 }
-void unavailable() {
-    auto f = intervals(4367, 64);
+void unavailable(fo::node_kind form) {
+    auto f = intervals(4367, 64, true, true, form);
     copack(f);
     check(bool(validate(f)), "co-packed availability fixture validates");
     const std::array ranges{fo::row_range{4096, 271}};
@@ -173,8 +174,8 @@ void unavailable() {
     check(bool(fo::admit_sections(keys, keys)), "complete dependency availability admits");
     check(bool(fo::admit_sections({}, {})), "empty demand needs no payload availability");
 }
-void refusals() {
-    const auto original = intervals(4367, 64);
+void refusals(fo::node_kind form) {
+    const auto original = intervals(4367, 64, true, true, form);
     auto f = original;
     f.streams.pop_back();
     refused(validate(f), fo::manifest_error::streams, "missing checkpoint stream refuses");
@@ -237,35 +238,39 @@ void refusals() {
     f.program.nodes.back().parameter = 3;
     refused(validate(f), fo::manifest_error::description, "malformed coordinate law refuses before manifest use");
 }
-void unsupported() {
-    auto f = intervals(4367, 64);
-    f.program.nodes.back().kind = fo::node_kind::intervals_relative_ends;
-    check(bool(fo::validate(f.program)), "relative-ends placeholder is valid syntax");
-    refused(validate(f), fo::manifest_error::unsupported, "relative ends has no admitted image recipe yet");
-    f = intervals(4367, 64);
+void unsupported(fo::node_kind form) {
+    auto f = intervals(4367, 64, true, true, form);
     f.program.nodes.push_back({fo::node_kind::bound, 0, 0, {{f.program.root, fo::coordinate::identity}}});
     ++f.program.root;
     check(bool(fo::validate(f.program)), "wrapper around intervals is valid syntax");
     refused(validate(f), fo::manifest_error::unsupported, "unimplemented nested stream propagation refuses");
-    f = intervals(4367, 64);
+    f = intervals(4367, 64, true, true, form);
     const auto nested = f.program.root;
     const auto delta = basic(f.program, false);
     f.program.root = static_cast<std::uint16_t>(f.program.nodes.size());
-    f.program.nodes.push_back({fo::node_kind::intervals_sizes, 16, 0,
+    const auto outer_form = form == fo::node_kind::intervals_sizes ? fo::node_kind::intervals_relative_ends :
+        fo::node_kind::intervals_sizes;
+    f.program.nodes.push_back({outer_form, 16, 0,
                               {{delta, fo::coordinate::identity}, {nested, fo::coordinate::checkpoints}}});
     check(bool(fo::validate(f.program)), "intervals under checkpoints is valid syntax");
     refused(validate(f), fo::manifest_error::unsupported, "nested checkpoint stream recipe refuses");
     f.program.nodes = {{fo::node_kind::pack, 0, 0, {}},
                        {fo::node_kind::bound, 0, 0, {{0, fo::coordinate::identity}}},
                        {fo::node_kind::bound, 0, 0, {{0, fo::coordinate::identity}}},
-                       {fo::node_kind::intervals_sizes, 64, 0,
+                       {form, 64, 0,
                         {{1, fo::coordinate::identity}, {2, fo::coordinate::checkpoints}}}};
     f.program.root = 3;
     check(bool(fo::validate(f.program)), "shared leaf has valid DAG syntax");
     refused(validate(f), fo::manifest_error::unsupported, "one pack cannot own distinct root/checkpoint row domains");
+    f = intervals(4367, 64, true, true, form);
+    f.program.nodes.back().kind = fo::node_kind::split;
+    f.program.nodes.back().parameter = 16;
+    f.program.nodes.back().children[1].mapping = fo::coordinate::identity;
+    check(bool(fo::validate(f.program)), "split placeholder is valid syntax");
+    refused(validate(f), fo::manifest_error::unsupported, "admitting both interval forms did not admit arbitrary two-child roots");
 }
-void empty() {
-    for (auto f : {plain(0, false), plain(0, true), intervals(0, 16), intervals(0, 64)}) {
+void empty(fo::node_kind form) {
+    for (auto f : {plain(0, false), plain(0, true), intervals(0, 16, true, true, form), intervals(0, 64, true, true, form)}) {
         check(bool(validate(f)) && f.parts.empty(), "empty image has no group locations or owner Parts");
         const std::array none{fo::row_range{0, 0}};
         check(take(required(f, none)).empty(), "empty range on empty image requires no payload");
@@ -276,10 +281,12 @@ void empty() {
 } // namespace
 
 int main() {
-    geometry();
-    unavailable();
-    refusals();
-    unsupported();
-    empty();
+    for (auto form : {fo::node_kind::intervals_sizes, fo::node_kind::intervals_relative_ends}) {
+        geometry(form);
+        unavailable(form);
+        refusals(form);
+        unsupported(form);
+        empty(form);
+    }
     std::printf("manifest_check: %u checks, no payload/address access\n", checks);
 }

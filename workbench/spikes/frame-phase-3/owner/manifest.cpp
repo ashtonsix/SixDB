@@ -25,7 +25,7 @@ std::expected<program_shape, manifest_error> analyze(const description &d, std::
     if (rows > maximum_rows) return std::unexpected(manifest_error::range);
     program_shape shape{{d.root, 0}, {rows, 0}};
     const node &root = d.nodes[d.root];
-    if (root.kind != node_kind::intervals_sizes) {
+    if (!is_intervals(root.kind)) {
         if (!binding_recipe(d)) return std::unexpected(manifest_error::unsupported);
         return shape;
     }

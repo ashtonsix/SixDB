@@ -1,4 +1,4 @@
-// Real separated interval/checkpoint streams through the public material seam.
+// Real separated size/relative-end interval/checkpoint streams through the public material seam.
 // Updates here rebuild shared Frame stages for correctness, not a fast writer.
 #include "material.h"
 #include "stream_binding.h"
@@ -55,14 +55,14 @@ struct image {
     std::array<Bytes, 3> parts;  // root groups0/1 and checkpoint group0
     std::vector<fo::stream_manifest> streams;
 };
-image build(unsigned G, std::span<const u64> values) {
+image build(unsigned G, fo::node_kind interval_kind, std::span<const u64> values) {
     image out;
     out.program.nodes = {
         {fo::node_kind::pack, static_cast<std::uint16_t>(fo::pack_preset::compact), 0, {}},
         {fo::node_kind::bound, 0, 0, {{0, fo::coordinate::identity}}},
         {fo::node_kind::pack, static_cast<std::uint16_t>(fo::pack_preset::compact), 0, {}},
         {fo::node_kind::bound, 0, 0, {{2, fo::coordinate::identity}}},
-        {fo::node_kind::intervals_sizes, static_cast<std::uint16_t>(G), 0,
+        {interval_kind, static_cast<std::uint16_t>(G), 0,
             {{1, fo::coordinate::identity}, {3, fo::coordinate::checkpoints}}}};
     out.program.root = 4;
     frame3::column encoded(take(fo::make_tree(out.program)), values);
@@ -182,23 +182,25 @@ void missing_checkpoint(fo::Selection selected) {
     }
     check(::munmap(unreadable, bytes) == 0, "checkpoint guard cleanup failed");
 }
-void history(unsigned G) {
+void history(unsigned G, fo::node_kind interval_kind) {
     Memory memory;
     std::array<Lifetime, 3> original_lifetime, updated_lifetime;
     std::vector<u64> original(rows);
     for (unsigned r = 0; r < rows; ++r) original[r] = 1000000 + u64{17} * r + r % 7;
     auto updated = original;
-    updated[4096] += 5;  // A checkpoint row: both checkpoint and following delta change.
+    // A checkpoint row: repair its checkpoint and dependent size/relative-end fields.
+    updated[4096] += 5;
     const u64 threshold = original[4096] + 2;
     const auto old_answer = oracle(original, threshold), new_answer = oracle(updated, threshold);
     check(new_answer.sum - old_answer.sum == 5 && new_answer.count == old_answer.count + 1,
         "forcing mutation did not change the expected answers");
-    const orbital::ObjectId object{0x53545245414d, G};
+    const orbital::ObjectId object{0x53545245414d,
+        (u64{G} << 8) | static_cast<u64>(interval_kind)};
     {
         fo::Store store(memory);
         {
             fo::Store::Scope absent(store);
-            const auto initial = capture(store, memory, object, build(G, original), original_lifetime);
+            const auto initial = capture(store, memory, object, build(G, interval_kind, original), original_lifetime);
             publish(store, absent, object, initial);
         }
         fo::Store::Scope old(store);
@@ -208,7 +210,7 @@ void history(unsigned G) {
         check(previous.control().meaning().streams[1].rows == (rows + G - 1) / G,
             "material lost checkpoint-stream cardinality");
         {
-            const auto next = capture(store, memory, object, build(G, updated), updated_lifetime, previous);
+            const auto next = capture(store, memory, object, build(G, interval_kind, updated), updated_lifetime, previous);
             verify(*old_binding, original, threshold); // Preparing both new sections does not publish either.
             publish(store, old, object, next);
         }
@@ -230,6 +232,73 @@ void history(unsigned G) {
     for (const auto &lifetime : original_lifetime) check(lifetime.expired(), "old physical stream leaked");
     for (const auto &lifetime : updated_lifetime) check(lifetime.expired(), "new physical stream leaked");
     check(memory.live == 0, "stream interpretation/catalog PMR storage leaked");
+}
+
+void conversion_history(unsigned G, fo::node_kind source_kind, fo::node_kind target_kind) {
+    Memory memory;
+    std::array<Lifetime, 3> source_lifetime, target_lifetime;
+    std::vector<u64> values(rows);
+    for (unsigned r = 0; r < rows; ++r) values[r] = 1000000 + u64{17} * r + r % 7;
+    const auto threshold = values[4096];
+    const orbital::ObjectId object{0x434f4e56535452,
+        (u64{G} << 16) | (static_cast<u64>(source_kind) << 8) | static_cast<u64>(target_kind)};
+    {
+        fo::Store store(memory);
+        {
+            fo::Store::Scope absent(store);
+            const auto initial = capture(store, memory, object, build(G, source_kind, values), source_lifetime);
+            publish(store, absent, object, initial);
+        } // Source builders, description and metadata owner have all died.
+        fo::Store::Scope old(store);
+        const auto previous = old.bind(object);
+        const auto old_pipeline = previous.control().meaning().pipeline;
+        const auto old_reader = attach(previous);
+        verify(*old_reader, values, threshold);
+        {
+            auto target = take(store.conversion(old, object));
+            check(fo::same_material(target.source(), previous), "conversion target lost its exact source material");
+            // Full shared-stage rebuild, not byte reinterpretation or an optimized converter.
+            const auto converted = capture(store, memory, object, build(G, target_kind, values), target_lifetime);
+            const auto candidate_reader = attach(converted.selection());
+            verify(*candidate_reader, values, threshold); // Equivalence is independently proved before adoption.
+            const auto blocks = frame3::first_n((rows + 255) / 256);
+            const __int128 logical_contribution = static_cast<__int128>(take(candidate_reader->sum(blocks))) -
+                static_cast<__int128>(take(old_reader->sum(blocks)));
+            check(logical_contribution == 0, "pure conversion changed the logical SUM contribution");
+            check(bool(store.adopt(target, converted)), "equivalent interval-form conversion refused");
+            check(store.borrow().cut == old.cut(), "pure interval-form conversion advanced logical time");
+        } // Target, builder, description, capture sources and replacement Owner have all died.
+
+        const auto alternative = take(old.bind_alternative(object));
+        const auto &meaning = alternative.control().meaning();
+        const auto d = take(fo::decode(meaning.pipeline));
+        check(d.nodes[d.root].kind == target_kind && d.nodes[d.root].parameter == G &&
+            take(fo::encode(d)) == meaning.pipeline && meaning.pipeline != old_pipeline,
+            "converted material lost its target-kind canonical description");
+        check(meaning.rows == rows && meaning.streams.size() == 2 &&
+            meaning.streams[0].root_node == 4 && meaning.streams[0].rows == rows && meaning.streams[0].groups.size() == 2 &&
+            meaning.streams[1].root_node == 3 && meaning.streams[1].rows == (rows + G - 1) / G &&
+            meaning.streams[1].groups.size() == 1 &&
+            bool(fo::validate_manifest(d, meaning.rows, meaning.part_extents, meaning.streams)),
+            "converted root/checkpoint manifests lost their coherent logical domains");
+        verify(*attach(alternative), values, threshold);
+        missing_checkpoint(alternative);
+        check(previous.control().meaning().pipeline == old_pipeline &&
+            take(fo::decode(old_pipeline)).nodes[4].kind == source_kind &&
+            old.bind(object).control().meaning().pipeline == old_pipeline,
+            "same-version conversion rewrote the old source interpretation");
+        verify(*old_reader, values, threshold);
+        verify(*attach(old.bind(object)), values, threshold);
+        fo::Store::Scope current(store);
+        check(current.cut() == old.cut() && old.cut() == 1, "conversion made a logical publication");
+        check(fo::same_material(take(current.bind_alternative(object)), alternative),
+            "same-cut alternative lookup lost the converted material");
+        for (const auto &lifetime : source_lifetime) check(!lifetime.expired(), "old conversion reader lost source payload");
+        for (const auto &lifetime : target_lifetime) check(!lifetime.expired(), "adopted conversion lost target payload");
+    }
+    for (const auto &lifetime : source_lifetime) check(lifetime.expired(), "source conversion stream leaked");
+    for (const auto &lifetime : target_lifetime) check(lifetime.expired(), "target conversion stream leaked");
+    check(memory.live == 0, "same-version interval conversion leaked material/catalog PMR storage");
 }
 
 void metadata_remap() {
@@ -296,8 +365,14 @@ void metadata_remap() {
 } // namespace
 
 int main() {
-    history(16);
-    history(64);
+    for (const auto kind : {fo::node_kind::intervals_sizes, fo::node_kind::intervals_relative_ends}) {
+        history(16, kind);
+        history(64, kind);
+        const auto other = kind == fo::node_kind::intervals_sizes ?
+            fo::node_kind::intervals_relative_ends : fo::node_kind::intervals_sizes;
+        conversion_history(16, kind, other);
+        conversion_history(64, kind, other);
+    }
     metadata_remap();
-    std::printf("Frame stream history: %zu checks pass; real G16/G64, atomic two-section replacement, retained old readers and valid metadata-remap revalidation; full-rebuild correctness only\n", checks);
+    std::printf("Frame stream history: %zu checks pass; real G16/G64 sizes/relative_ends, atomic two-section replacement, same-version bidirectional form conversion, retained old readers and valid metadata-remap revalidation; full-rebuild correctness only\n", checks);
 }

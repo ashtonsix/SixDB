@@ -52,6 +52,9 @@ enum class node_kind : std::uint8_t {
     tuple_field = 8,
     split = 9,
 };
+constexpr bool is_intervals(node_kind kind) noexcept {
+    return kind == node_kind::intervals_sizes || kind == node_kind::intervals_relative_ends;
+}
 enum class coordinate : std::uint8_t {
     identity = 0,
     checkpoints = 1,
