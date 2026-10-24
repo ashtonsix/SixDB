@@ -1,0 +1,12 @@
+== ikea_intervals_cuts_check
+== ikea_intervals_seams_check
+Directory ordered domains, Frame runs, StreamPack striding/start/filter, protected tails and 4536 checked edit operations passed.
+== ikea_streampack_boundaries_check
+StreamPack exact tails, maximal widths, byte limits, refusal and control effects passed
+== ikea_intervals_sparse_check
+1920 fixture cases passed for both sparse Sizes and Relative Ends: exact endpoints, inverse, carried/selected ranges, overlap and ordered replacements. No timing or publication claim.
+== ikea_intervals_search_check
+== ikea_streampack_check
+StreamPack histories, reverse byte owners, transfer, effects and omitted facts passed
+== engine_directory_check
+PASS: 40 directory layer cases against an ordered oracle, with late readers and no-op publication; suffix-only fences at four key widths

@@ -35,6 +35,7 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | [Layout analyser](layout-analyser/README.md) | Connected objectives, metadata/plane/placement alternatives, shortlists and worked consumer investigations. |
 | [StreamPack](streampack/README.md) | Variable-byte geometry and sidecars; comparative evidence plus production Ikea/Loom/Orbital consumers. |
 | [Intervals](intervals/README.md) | Maintained Intervals graduation across StreamPack, Directory and Frame; external filters, sparse checkpoints and complete consumer qualification. |
+| [Intervals search](intervals-search/README.md) | The shared native search step: 64-byte span count, exact short arrays, readable-window grant; varying-count mispredicts; group run buffers and run-start bitmap against per-block search. |
 | [Boundlist](boundlist/README.md) | Retired implementation; historical geometry/ISA portfolio and exact recovery. Maintained geometry is Intervals; compact ownership is StreamPack. |
 | [Bec256 composition](bec256-composition/README.md) | Complete analysis/encoding consumers, prepared windows and alternatives to isolated refill comparisons. |
 | [NEON Local transpose](neon-local-transpose/README.md) | Promoted select-form and four-tile Local residual transposes: 1.5–2.9× NEON pure-tail reads, 1.1–1.8× writes; four-tile mixed reads 1.1–1.7× (k9–16); `bulk_arm` re-measured and kept. |

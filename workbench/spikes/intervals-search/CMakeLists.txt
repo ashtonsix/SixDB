@@ -1,0 +1,7 @@
+add_executable(intervals_search_bench bench.cpp)
+sixdb_target(intervals_search_bench)
+target_link_libraries(intervals_search_bench PRIVATE ikea::intervals)
+add_test(NAME intervals_search_check COMMAND $<TARGET_FILE:intervals_search_bench> check)
+add_executable(intervals_search_groups groups.cpp)
+sixdb_target(intervals_search_groups)
+target_link_libraries(intervals_search_groups PRIVATE ikea::intervals)
