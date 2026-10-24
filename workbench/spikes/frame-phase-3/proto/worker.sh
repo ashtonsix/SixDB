@@ -16,16 +16,17 @@ case "$(uname -m)" in
   *) isas="${ISAS:-native}" ;;
 esac
 columns="${COLUMNS:-OS RegionID ResolutionWidth ClientIP UserID EventTime URLHash WatchID CounterID gen_ts gen_walk}"
+for leaf in ${LEAVES:-typed}; do
 for isa in $isas; do
   case "$isa" in
     avx2) flags="-DSIXDB_MARCH=x86-64-v3 -DSIXDB_TUNE=zen5" ;;
     avx512) flags="-DSIXDB_MARCH=znver5 -DSIXDB_TUNE=zen5" ;;
     *) flags="-DSIXDB_MARCH=armv8-a+simd -DSIXDB_TUNE=neoverse-v2" ;;
   esac
-  build="build/clang/frame3-$isa"
-  out="$SIXDB_RESULTS/$isa"
+  build="build/clang/frame3-$isa-$leaf"
+  out="$SIXDB_RESULTS/$isa-$leaf"
   mkdir -p "$out"
-  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release "-DSIXDB_SPIKES=frame-phase-1;frame-phase-2;frame-phase-3" $flags > "$out/configure.txt" 2>&1
+  cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release "-DSIXDB_SPIKES=frame-phase-1;frame-phase-2;frame-phase-3" $flags -DFRAME3_LEAF=$leaf > "$out/configure.txt" 2>&1
   /usr/bin/time -v cmake --build "$build" --target frame3_check frame3_measure frame3_writes frame3_calibrate frame3_e2e frame3_seams -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-3/proto"
   # Ikea LEAD's owner and control checks share this build (OWNER_TARGETS=1).
@@ -46,11 +47,12 @@ for isa in $isas; do
   [ -n "${SEAMS_ONLY:-}" ] && continue
   for repeat in 1 2 3; do
     taskset -c "$SIXDB_CPU" "$bin/frame3_measure" "$cols" 2999808 "${ROUNDS:-7}" $columns \
-      | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/measure.jsonl"
+      | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa-$leaf\",/" >> "$out/measure.jsonl"
   done
   [ "$isa" = "${isas%% *}" ] && taskset -c "$SIXDB_CPU" "$bin/frame3_writes" "$cols" 524288 5 ${WRITE_COLUMNS:-OS UserID ClientIP EventTime gen_narrow gen_mixed} \
     > "$out/writes.jsonl" 2> "$out/writes.err" || true
   [ "$isa" = "${isas%% *}" ] && { taskset -c "$SIXDB_CPU" "$bin/frame3_calibrate" "$cols" 2999808 5 ${CALIBRATE_COLUMNS:-OS RegionID ResolutionWidth ClientIP UserID EventTime URLHash CounterID} \
     > "$out/calibrate.jsonl" 2> "$out/calibrate.err" || true; }
+done
 done
 true

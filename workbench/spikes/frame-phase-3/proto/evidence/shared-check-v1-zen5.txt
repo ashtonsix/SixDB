@@ -1,0 +1,12 @@
+frame3 check: all trees exact on 9 columns
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-ctest.txt:1/4 Test #126: frame3_owner_description .........   Passed    0.00 sec
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-ctest.txt:2/4 Test #127: frame3_owner_material ............   Passed    0.00 sec
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-ctest.txt:3/4 Test #128: frame3_owner_image ...............   Passed    0.01 sec
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-ctest.txt:4/4 Test #129: frame3_owner_history .............   Passed    0.00 sec
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-ctest.txt:100% tests passed, 0 tests failed out of 4
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-build.txt:Frame owner material: public two-TU capture, interpretation/Part lifetime, identity, append/adopt and refusal checks pass
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-build.txt:Frame group images: 1953 valid, 991 guarded truncated prefixes, 26 malformed/invalid cases pass; Ikea-initialized leaves, all widths/presets
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-build.txt:Frame owner history: 770 checks; successful_private_source_copy_bytes=3680 emitted_group_bytes=7602 published_fresh_image_bytes=12638 reused_image_bytes=4073 old_scope_extra_capacity_bytes=2134
+build/workers/20261024T213219Z-447f2789/results/avx512/owner-build.txt:Frame owner history complete: 804 checks
+{"checks":8469,"refusals":7,"protected_cases":5,"pass":true}
+exit 0
