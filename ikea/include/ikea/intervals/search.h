@@ -8,7 +8,10 @@
 namespace ikea::intervals {
 /// Borrowed, ordered endpoints. The owner admits ordering, initialized elements
 /// and lifetime. Native unsigned loads may be unaligned; other T are real objects.
-template <class T> struct direct_source {
+/// ReadableBytes is a compile-time read grant: a nonempty source admits
+/// max(count*sizeof(T), ReadableBytes) initialized, readable, read-isolated bytes
+/// from data. It changes no rank; inactive lanes never influence a result.
+template <class T, unsigned ReadableBytes = 0> struct direct_source {
     const T *data;
     unsigned count;
     unsigned size() const noexcept { return count; }
@@ -18,7 +21,7 @@ template <class T> struct direct_source {
             const detail::prepared_query<T, Q> q(point);
             if (q.relation)
                 return q.relation < 0 ? 0 : count;
-            return detail::hybrid_array<E, true>(data, count, q.value);
+            return detail::hybrid_array<E, true, ReadableBytes>(data, count, q.value);
         } else {
             unsigned lo = 0, hi = count;
             while (lo < hi) {

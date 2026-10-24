@@ -197,6 +197,54 @@ template <class T> void tails() {
     assert(!munmap(raw, page * 2));
 }
 
+// Exact sources read only their elements: arrays flush against a protected page
+// before them, and arrays whose admitted readable window ends at one.
+template <class T> void windows() {
+    const auto page = std::size_t(sysconf(_SC_PAGESIZE));
+    auto *raw = static_cast<std::byte *>(
+        mmap(nullptr, page * 3, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+    assert(raw != MAP_FAILED && !mprotect(raw, page, PROT_NONE) &&
+           !mprotect(raw + 2 * page, page, PROT_NONE));
+    for (unsigned n = 0; n <= 140; ++n) {
+        auto fill = [&](std::byte *at) {
+            for (unsigned r = 0; r < n; ++r) {
+                const T v = T(r / 2 + (r > 70 ? 300 : 0));
+                std::memcpy(at + r * sizeof(T), &v, sizeof(v));
+            }
+            return reinterpret_cast<const T *>(at);
+        };
+        const bl::direct_source<T> front{fill(raw + page), n};
+        const auto window = std::max<std::size_t>(n * sizeof(T), 32);
+        // Arbitrary bytes inside the window, past the elements.
+        std::memset(raw + 2 * page - window, 0x5a, window);
+        const auto padded = bl::author::with_readable_window<32>(
+            bl::direct_source<T>{fill(raw + 2 * page - window), n});
+        const auto bound = bl::author::bind_search(padded);
+        for (int q = -1; q < 360; q += n < 20 ? 1 : 7) {
+            check(front, q);
+            check(padded, q);
+            if constexpr (sizeof(T) > 1)
+                check(bound, q);
+        }
+        const std::array<std::remove_cv_t<decltype(padded)>, 3> lanes{padded, padded, padded};
+        const std::array<int, 3> points{-1, 300, 10};
+        const auto lows = bl::author::lower_bounds(lanes, points),
+                   highs = bl::author::upper_bounds(lanes, points);
+        for (unsigned i = 0; i < 3; ++i)
+            assert(lows[i] == bl::lower_bound(padded, points[i]) &&
+                   highs[i] == bl::upper_bound(padded, points[i]));
+    }
+    assert(!munmap(raw, page * 3));
+}
+// Resolved and out-of-domain batch lanes need no read (Ikea LEAD's witness).
+void resolved_batches() {
+    const std::uint8_t a[] = {0, 10, 20};
+    const std::array<bl::direct_source<std::uint8_t>, 3> s{{{a, 3}, {a, 3}, {a, 3}}};
+    const std::array<int, 3> q{-1, 300, 10};
+    assert((bl::author::lower_bounds(s, q) == std::array<unsigned, 3>{0, 3, 1}));
+    assert((bl::author::upper_bounds(s, q) == std::array<unsigned, 3>{0, 3, 2}));
+}
+
 template <class T> void prepared_sources() {
     for (unsigned n : {4096u, 4103u, 16384u})
         for (unsigned shape = 0; shape < 6; ++shape) {
@@ -328,4 +376,9 @@ int main() {
     tails<std::uint16_t>();
     tails<std::uint32_t>();
     tails<std::uint64_t>();
+    windows<std::uint8_t>();
+    windows<std::uint16_t>();
+    windows<std::uint32_t>();
+    windows<std::uint64_t>();
+    resolved_batches();
 }

@@ -30,7 +30,7 @@ template <edge E, class T>
     return {proposed.first + 1, proposed.limit - 1};
 }
 
-template <class T, edge E> struct numeric_search {
+template <class T, edge E, unsigned Readable = 0> struct numeric_search {
     const T* data;
     T point;
     unsigned count, first, limit;
@@ -53,12 +53,12 @@ template <class T, edge E> struct numeric_search {
     }
     [[gnu::always_inline]] unsigned finish() const noexcept {
         const auto r = corrected_interval();
-        return hybrid_window<E, true>(data, count, r.first, r.limit, point);
+        return hybrid_window<E, true, Readable>(data, count, r.first, r.limit, point);
     }
 };
 
-template <class T> class numeric_binding {
-    direct_source<T> source_;
+template <class T, unsigned Readable = 0> class numeric_binding {
+    direct_source<T, Readable> source_;
     prediction_model<T> model_;
 
     // One classification/model law, with immediate and suspended consumers.
@@ -89,7 +89,7 @@ template <class T> class numeric_binding {
     }
 
   public:
-    explicit numeric_binding(direct_source<T> source) : source_(source) {
+    explicit numeric_binding(direct_source<T, Readable> source) : source_(source) {
         if (source.count < 4096)
             return;
         const auto p = prepare_numeric(source.data, source.count, sizeof(T));
@@ -107,12 +107,12 @@ template <class T> class numeric_binding {
         else {
             const auto n = size();
             auto ready = [&](unsigned rank) __attribute__((always_inline)) {
-                return numeric_search<T, E>{nullptr, T{}, n, rank, rank, false};
+                return numeric_search<T, E, Readable>{nullptr, T{}, n, rank, rank, false};
             };
             return choose<E>(
                 point, ready,
                 [&](T q, rank_window r, bool predicted) __attribute__((always_inline)) {
-                    return numeric_search<T, E>{source_.data, q, n, r.first, r.limit, predicted};
+                    return numeric_search<T, E, Readable>{source_.data, q, n, r.first, r.limit, predicted};
                 });
         }
     }
@@ -125,7 +125,8 @@ template <class T> class numeric_binding {
                 [&](T q, rank_window r, bool predicted) __attribute__((always_inline)) {
                     if (predicted)
                         r = checked_bracket<E>(source_.data, size(), q, r);
-                    return hybrid_window<E, true>(source_.data, size(), r.first, r.limit, q);
+                    return hybrid_window<E, true, Readable>(source_.data, size(), r.first, r.limit,
+                                                            q);
                 });
     }
 };

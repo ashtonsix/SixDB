@@ -42,6 +42,7 @@ origin/count/placement. Retained work has the additional lifetime rules below.
 | Adapter | Interpretation |
 | --- | --- |
 | `direct_source<T>{data,count}` | Ordered endpoint array. Native unsigned loads can be unaligned; other T elements are actual live objects. |
+| `author::with_readable_window<B>(source)` | The same unsigned array with a compile-time readable-window grant (`direct_source<T,B>`); see the grant table below. Carried through `bind_search`, prepared phases and batches. |
 | `from_ends(ends,origin)` | Copies an endpoint projection and adds the initial cut. Origin has its endpoint type. |
 | `from_cuts(span)` | Requires at least one cut, even for empty geometry; copies origin/count and borrows the remaining ends. |
 | Custom source | Projects the required members directly, including arbitrary-width logical keys or decoder output. |
@@ -142,6 +143,7 @@ final end (or first for empty geometry).
 | Storage | Required grant |
 | --- | --- |
 | Direct endpoint array | n initialized elements; exact partial tails are supported. |
+| Direct array with a readable window | `max(n*sizeof(T), ReadableBytes)` initialized, readable, read-isolated bytes from `data` for a nonempty source, held for every immediate or prepared borrow. Bytes past the n elements are arbitrary and never ranked. |
 | G16 widths or relative ends | 16 initialized/readable fields per assigned native group, including a partial final group. Unassigned local tail fields are zero. |
 | Sparse sizes | `ceil(n/16)` initialized/readable native windows; unassigned final size lanes zero. `stride >= 16` in W elements separates native windows and may cross sibling fields. |
 | Sparse relative ends | Contiguous initialized/readable local ends through the final native window, with zero inactive tail. |
@@ -292,6 +294,17 @@ controls are tested under StreamPack, not exposed as another public geometry
 owner. The old Boundlist public headers, target and examples are removed.
 Historical research and source recovery remain in the
 [earlier study](../../../workbench/spikes/boundlist/README.md).
+
+Native unsigned search bisects branchlessly until the unresolved window fits
+one 64-byte span, then counts the span's elements below the query at a base
+clamped inside the array; that count is the rank. The span is element-aligned, so
+it can touch two cache lines. Arrays shorter than the span count themselves:
+AVX-512 with one fault-suppressing masked load, AVX2/NEON with overlapping 32-byte
+spans and, below 32 bytes, overlapping 16/8/4-byte pieces and scalar compares for
+one to three elements or, under a readable window of at least 32 bytes, one
+32-byte load. Control flow depends on n only through the bisection steps and, on
+AVX2/NEON without a window, the piece size below 32 bytes. The [search study](../../../workbench/spikes/intervals-search/README.md)
+measures these choices.
 
 Explicit native kernels are selected for AArch64 NEON and x86 AVX2/AVX-512 by the
 build profile. Generic ordered sources remain valid without those routes. Use

@@ -222,6 +222,15 @@ interleave independent native queries. Preparation, exact repair for duplicates 
 skew, complete child/value consumption and reuse count determine whether they pay.
 Logical key domains do not need a numeric model.
 
+An owner that can admit initialized, read-isolated bytes beyond a short array can
+say so with `author::with_readable_window<32>(source)`: a nonempty source then
+grants `max(count*sizeof(T), 32)` readable bytes from `data`. On AVX2 and NEON,
+arrays under 32 bytes then count with one load instead of overlapping pieces whose
+size depends on the count, which matters when counts vary from request to request.
+Allocator capacity or page locality alone is not this grant, and a mutable or
+protected neighbour must stay outside it. AVX-512 already reads short arrays
+exactly with masked loads.
+
 ## Edit borrowed sizes without adopting a storage owner
 
 `size_editor<G,W,P>` borrows disjoint mutable size/checkpoint spans and named

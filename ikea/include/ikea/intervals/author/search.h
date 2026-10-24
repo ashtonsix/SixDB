@@ -285,9 +285,9 @@ template <class T> struct scan_source : direct_source<T> {
     }
 };
 namespace detail {
-template <edge E, class T, std::size_t N>
+template <edge E, class T, unsigned R, std::size_t N>
 [[gnu::always_inline]] std::array<unsigned, N>
-finish_many(const std::array<direct_source<T>, N> &routing, const std::array<T, N> &points,
+finish_many(const std::array<direct_source<T, R>, N> &routing, const std::array<T, N> &points,
             std::array<unsigned, N> &lo, std::array<unsigned, N> &remaining) {
     std::array<unsigned, N> result{};
     bool pending;
@@ -305,28 +305,38 @@ finish_many(const std::array<direct_source<T>, N> &routing, const std::array<T, 
     } while (pending);
 #pragma clang loop unroll(full)
     for (unsigned i = 0; i < N; ++i)
-        result[i] = intervals::detail::transition_window<E>(routing[i].data, routing[i].count,
+        result[i] = intervals::detail::transition_window<E, R>(routing[i].data, routing[i].count,
                                                             lo[i], lo[i] + remaining[i], points[i]);
     return result;
 }
 } // namespace detail
 
+/// Admit a readable window: for a nonempty source, max(count*sizeof(T), Bytes)
+/// initialized, readable and read-isolated bytes from data, throughout every
+/// immediate or prepared borrow. Allocator capacity or page locality alone is
+/// not this grant. Arrays shorter than Bytes may then load it whole; ranks and
+/// counts are unchanged, and lanes past count never influence a result.
+template <unsigned Bytes, class T> direct_source<T, Bytes> with_readable_window(direct_source<T> source) {
+    static_assert(std::unsigned_integral<T>, "the window serves native unsigned searches");
+    return {source.data, source.count};
+}
+
 /// Prepare a native source once for repeated searches of one coherent snapshot.
 /// Derived extrema/model become stale after any endpoint/count/placement change.
 /// No encoded bytes, allocation or algorithm argument are added. Other domains
 /// retain their source's ordinary ordered comparison path.
-template <class T> auto bind_search(direct_source<T> source) {
+template <class T, unsigned R> auto bind_search(direct_source<T, R> source) {
     if constexpr (std::unsigned_integral<T> && (sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8))
-        return intervals::detail::numeric_binding<T>(source);
+        return intervals::detail::numeric_binding<T, R>(source);
     else
         return source;
 }
 
 /// Real interleaved searches, with domain preparation included. Sources may name
 /// the same or different lists. Query order and duplicates are preserved.
-template <edge E, class T, class Q, std::size_t N>
+template <edge E, class T, unsigned R, class Q, std::size_t N>
 [[gnu::always_inline]] std::array<unsigned, N>
-boundaries(const std::array<direct_source<T>, N> &sources, const std::array<Q, N> &queries) {
+boundaries(const std::array<direct_source<T, R>, N> &sources, const std::array<Q, N> &queries) {
     static_assert(std::unsigned_integral<T> && std::integral<Q>);
     std::array<unsigned, N> lo{}, remaining{};
     std::array<T, N> points{};
@@ -341,23 +351,23 @@ boundaries(const std::array<direct_source<T>, N> &sources, const std::array<Q, N
     }
     return detail::finish_many<E>(sources, points, lo, remaining);
 }
-template <class T, class Q, std::size_t N>
-[[gnu::always_inline]] auto lower_bounds(const std::array<direct_source<T>, N> &sources,
+template <class T, unsigned R, class Q, std::size_t N>
+[[gnu::always_inline]] auto lower_bounds(const std::array<direct_source<T, R>, N> &sources,
                                          const std::array<Q, N> &queries) {
     return boundaries<edge::at_or_after>(sources, queries);
 }
-template <class T, class Q, std::size_t N>
-[[gnu::always_inline]] auto upper_bounds(const std::array<direct_source<T>, N> &sources,
+template <class T, unsigned R, class Q, std::size_t N>
+[[gnu::always_inline]] auto upper_bounds(const std::array<direct_source<T, R>, N> &sources,
                                          const std::array<Q, N> &queries) {
     return boundaries<edge::after>(sources, queries);
 }
 
-template <edge E, class T, class Q, std::size_t N>
+template <edge E, class T, unsigned R, class Q, std::size_t N>
 [[gnu::always_inline]] std::array<unsigned, N>
-boundaries(const std::array<intervals::detail::numeric_binding<T>, N> &sources,
+boundaries(const std::array<intervals::detail::numeric_binding<T, R>, N> &sources,
            const std::array<Q, N> &queries) {
     static_assert(std::integral<Q>);
-    std::array<direct_source<T>, N> routing;
+    std::array<direct_source<T, R>, N> routing;
     std::array<T, N> points;
     std::array<unsigned, N> lo{}, remaining{};
 #pragma clang loop unroll(full)
@@ -371,15 +381,15 @@ boundaries(const std::array<intervals::detail::numeric_binding<T>, N> &sources,
     }
     return detail::finish_many<E>(routing, points, lo, remaining);
 }
-template <class T, class Q, std::size_t N>
+template <class T, unsigned R, class Q, std::size_t N>
 [[gnu::always_inline]] auto
-lower_bounds(const std::array<intervals::detail::numeric_binding<T>, N> &sources,
+lower_bounds(const std::array<intervals::detail::numeric_binding<T, R>, N> &sources,
              const std::array<Q, N> &queries) {
     return boundaries<edge::at_or_after>(sources, queries);
 }
-template <class T, class Q, std::size_t N>
+template <class T, unsigned R, class Q, std::size_t N>
 [[gnu::always_inline]] auto
-upper_bounds(const std::array<intervals::detail::numeric_binding<T>, N> &sources,
+upper_bounds(const std::array<intervals::detail::numeric_binding<T, R>, N> &sources,
              const std::array<Q, N> &queries) {
     return boundaries<edge::after>(sources, queries);
 }
