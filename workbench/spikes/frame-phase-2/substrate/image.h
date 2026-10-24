@@ -39,6 +39,8 @@ using bodies::u8;
 
 enum kind : u8 { constant, runs, plane, wide };
 enum class placement : u8 { address, by_kind };
+// Body choice: the smaller of runs and packed, or packed only (no runs).
+enum class policy : u8 { bytes, packed_only };
 
 struct image {
     std::size_t blocks = 0;
@@ -53,7 +55,7 @@ struct image {
 
 inline unsigned width_of(u64 span) { return span ? 64 - static_cast<unsigned>(std::countl_zero(span)) : 0; }
 
-inline image build(std::span<const u64> v, placement where = placement::address) {
+inline image build(std::span<const u64> v, placement where = placement::address, policy choose = policy::bytes) {
     image f;
     f.blocks = v.size() / block_rows;
     f.kind_of.resize(f.blocks), f.width.resize(f.blocks), f.base.resize(f.blocks);
@@ -74,7 +76,7 @@ inline image build(std::span<const u64> v, placement where = placement::address)
             continue;
         }
         const std::size_t packed_bytes = k > 32 ? 8 * block_rows : 32 * k, run_bytes = bodies::runs_bytes(runs_n, k);
-        if (run_bytes < packed_bytes) {
+        if (choose == policy::bytes && run_bytes < packed_bytes) {
             f.kind_of[b] = runs, f.width[b] = static_cast<u8>(k), f.n[b] = static_cast<u16>(runs_n);
             out.resize(run_bytes);
             bodies::encode_runs(r.data(), k, out.data());
@@ -386,10 +388,15 @@ inline u128 block_masked_sum(const image &f, std::size_t b, const u64 *sel) {
     return s;
 }
 
+template <bool UseIntervals> u64 point_with(const image &f, std::size_t row);
+
 // SUM over the rows selected by per-block masks (four words per block),
 // hoisted per address segment of B; empty masks skip the block before its
-// body is addressed, full masks take the block SUM leaf.
-inline u128 masked_sum(const image &f, const u64 *masks) {
+// body is addressed, full masks take the block SUM leaf, and blocks with at
+// most `sparse` selected rows read those rows as points (the fourth route the
+// geometry probe asked for: a masked leaf costs about a full block however
+// few rows it keeps).
+inline u128 masked_sum(const image &f, const u64 *masks, unsigned sparse = 0) {
     u128 total = 0;
     const u8 *img = f.bytes.data();
     segments(f, 0, f.blocks, [&](u8 k, unsigned w, std::size_t s0, std::size_t s1) {
@@ -401,6 +408,14 @@ inline u128 masked_sum(const image &f, const u64 *masks) {
                 const unsigned cnt = std::popcount(m[0]) + std::popcount(m[1]) + std::popcount(m[2]) + std::popcount(m[3]);
                 total += static_cast<u128>(f.base[b]) * cnt;
                 const u8 *p = img + f.offset[b];
+                if (cnt <= sparse && k != constant) {
+                    u128 t = 0;
+                    for (unsigned q = 0; q < 4; ++q)
+                        for (u64 x = m[q]; x; x &= x - 1)
+                            t += point_with<false>(f, b * block_rows + 64 * q + static_cast<unsigned>(std::countr_zero(x))) - f.base[b];
+                    total += t;
+                    continue;
+                }
                 total += cnt == block_rows ? full(p, b) : part(p, b, m);
             }
         };
@@ -430,6 +445,14 @@ inline u128 masked_sum(const image &f, const u64 *masks) {
 // readable window (covered by the image's whole-image read grant; SEAMS.md);
 // otherwise front C's in-leaf count. One inlined body for both, so the
 // comparison measures the search rather than call shape.
+// The run holding row i of a run block, through ikea::intervals. Out of line
+// so the point dispatcher stays small for the other kinds (the Intervals
+// thread traced the Graviton 4 point loss to dispatcher code shape).
+[[gnu::noinline]] inline unsigned run_rank(const u8 *ends, unsigned n, unsigned i) {
+    namespace iv = ikea::intervals;
+    return iv::lower_bound(iv::author::with_readable_window<32>(iv::direct_source<std::uint8_t>{ends, n}), i);
+}
+
 template <bool UseIntervals> [[gnu::always_inline]] inline u64 point_with(const image &f, std::size_t row) {
     const std::size_t b = row / block_rows;
     const unsigned i = static_cast<unsigned>(row % block_rows);
@@ -439,11 +462,8 @@ template <bool UseIntervals> [[gnu::always_inline]] inline u64 point_with(const 
     case constant: break;
     case runs:
         if constexpr (UseIntervals) {
-            namespace iv = ikea::intervals;
             const unsigned n = f.n[b];
-            const auto ends = iv::author::with_readable_window<32>(iv::direct_source<std::uint8_t>{p, n});
-            const unsigned r = iv::lower_bound(ends, i);
-            std::memcpy(&v, p + n + std::size_t{r} * bodies::run_lane(f.width[b]), bodies::run_lane(f.width[b]));
+            std::memcpy(&v, p + n + std::size_t{run_rank(p, n, i)} * bodies::run_lane(f.width[b]), bodies::run_lane(f.width[b]));
         } else {
             with_runs(f.width[b], [&](auto rr) { v = decltype(rr)::point(p, f.n[b], i); });
         }

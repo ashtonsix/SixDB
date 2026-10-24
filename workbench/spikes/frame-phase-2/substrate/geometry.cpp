@@ -142,6 +142,18 @@ int main(int argc, char **argv) {
                              flush(img.base.data(), 8 * blocks), flush(img.offset.data(), 4 * blocks);
                              flush(img.n.data(), 2 * blocks), flush(img.kind_of.data(), blocks), flush(img.width.data(), blocks);
                          }},
+                        {"frame_routed_sparse16", [&] { return fi::masked_sum(img, masks.data(), 16); },
+                         [&] {
+                             flush(img.bytes.data(), img.bytes.size());
+                             flush(img.base.data(), 8 * blocks), flush(img.offset.data(), 4 * blocks);
+                             flush(img.n.data(), 2 * blocks), flush(img.kind_of.data(), blocks), flush(img.width.data(), blocks);
+                         }},
+                        {"frame_routed_sparse64", [&] { return fi::masked_sum(img, masks.data(), 64); },
+                         [&] {
+                             flush(img.bytes.data(), img.bytes.size());
+                             flush(img.base.data(), 8 * blocks), flush(img.offset.data(), 4 * blocks);
+                             flush(img.n.data(), 2 * blocks), flush(img.kind_of.data(), blocks), flush(img.width.data(), blocks);
+                         }},
                         {"native_gather", [&] {
                              u64 lo = 0, hi = 0, c = 0;
                              for (std::size_t w = 0; w < n / 64; ++w)
