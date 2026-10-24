@@ -25,12 +25,19 @@ for isa in $isas; do
   mkdir -p "$out"
   cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release '-DSIXDB_SPIKES=frame-phase-1;frame-phase-2' $flags \
     > "$out/configure.txt" 2>&1
-  cmake --build "$build" --target frame_substrate_measure frame_substrate_select frame_substrate_points frame_substrate_masks frame_substrate_image frame_substrate_dict frame_substrate_relocate frame_substrate_geometry -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
+  cmake --build "$build" --target frame_substrate_measure frame_substrate_select frame_substrate_points frame_substrate_masks frame_substrate_image frame_substrate_dict frame_substrate_relocate frame_substrate_geometry frame_substrate_programs -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   bin="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_measure"
   sel="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_select"
   pts="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_points"
   msk="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_masks"
   for repeat in 1 2 3; do
+    if [ -n "${PROGRAMS_ONLY:-}" ]; then
+      prg="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_programs"
+      taskset -c "$SIXDB_CPU" "$prg" "$cols" 2999808 "${ROUNDS:-21}" \
+        OS:RegionID ResolutionWidth:OS RegionID:ClientIP EventTime:UserID UserID:OS URLHash:UserID WatchID:EventTime \
+        | sed "s/^{/{\"repeat\":$repeat,\"isa\":\"$isa\",/" >> "$out/programs.jsonl"
+      continue
+    fi
     if [ -n "${GEOMETRY_ONLY:-}" ]; then
       geo="$build/workbench/spikes/frame-phase-2/substrate/frame_substrate_geometry"
       taskset -c "$SIXDB_CPU" "$geo" "$cols" 2999808 "${ROUNDS:-21}" OS UserID URLHash \

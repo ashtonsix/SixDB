@@ -108,7 +108,7 @@ u128 coded_block_sum(const coded &c, std::size_t b) {
     default: break;
     }
     // Wider codes: unpack and gather.
-    alignas(64) u32 x[fi::block_rows];
+    alignas(64) u32 x[fi::block_rows + 32];  // run unpack writes up to 32 rows past 256 (bodies/README.md, write envelopes)
     if (f.kind_of[b] == fi::runs)
         fi::with_runs(w, [&](auto r) { decltype(r)::unpack(p, f.n[b], x); });
     else if (f.kind_of[b] == fi::plane)

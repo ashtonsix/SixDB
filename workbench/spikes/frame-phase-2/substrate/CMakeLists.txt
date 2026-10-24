@@ -28,3 +28,6 @@ target_link_libraries(frame_substrate_relocate PRIVATE frame_bodies ikea::interv
 add_executable(frame_substrate_geometry geometry.cpp)
 sixdb_target(frame_substrate_geometry)
 target_link_libraries(frame_substrate_geometry PRIVATE frame_bodies ikea::intervals)
+add_executable(frame_substrate_programs programs.cpp)
+sixdb_target(frame_substrate_programs)
+target_link_libraries(frame_substrate_programs PRIVATE frame_bodies frame_cells_controls ikea::intervals)
