@@ -392,6 +392,60 @@ pulling on Zen 5, Frame's compressed scans win 6.2× (UserID), 2.4×
 Graviton 4's 8-core guest shows smaller ratios because its native array
 barely slows.
 
+## Selection geometry at fixed selectivity
+
+Ikea LEAD's question: does the number of touched blocks, not the selected
+fraction, choose the algorithm? [`geometry.cpp`](geometry.cpp) selects a
+sixteenth of a column's rows and spreads them over 1, 2, 4, 8 or 16 times
+the minimum number of blocks, clustered or scattered, contiguous or random
+inside each block. Frame routes each block (skip, unmasked leaf, masked leaf);
+native controls gather set bits or make one branch-free pass. Supplied masks
+only (`9f09b3f6`, jobs `20261024T010434Z-994878f0` and
+`20261024T010509Z-3bbe8846`; medians
+[evidence/geometry-v1-summary.txt](evidence/geometry-v1-summary.txt)).
+
+| Zen 5 AVX-512, flushed, ns per selected row, scattered blocks | Spread 1 | 2 | 4 | 8 | 16 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| UserID: Frame / native gather / native full pass | 0.83 / 1.78 / 3.10 | 2.02 / 2.79 / 3.08 | 3.52 / 3.85 / 3.08 | 4.75 / 5.73 / 3.10 | 5.02 / 8.79 / 3.11 |
+| URLHash: Frame / native gather / native full pass | 0.74 / 2.09 / 3.08 | 2.01 / 3.02 / 3.09 | 3.62 / 4.01 / 3.08 | 6.30 / 5.60 / 3.04 | 9.06 / 8.67 / 3.09 |
+| OS: Frame / native gather / native full pass | 0.56 / 1.18 / 1.84 | 0.71 / 1.86 / 1.85 | 0.76 / 2.98 / 1.85 | 0.77 / 4.75 / 1.86 | 0.67 / 1.30 / 1.85 |
+
+1. **Touched blocks decide it.** At the same selectivity Frame's time grows
+   almost linearly with touched blocks, because a masked leaf costs about a
+   full block however few rows it keeps. Frame wins 2–3× while selected rows
+   fill their blocks, and loses to one native full pass once the selection
+   spreads over 4–8× more blocks on wide columns. OS's small run bodies keep
+   Frame ahead at every spread.
+2. **The crossover moves with residence.** Warm, native gather overtakes Frame
+   from spread 2–4 on UserID and URLHash; flushed, Frame holds to spread 4.
+3. **A fourth route helps but does not close it.** Reading a block's few
+   selected rows as points instead of running the masked leaf (`e8d81a93`,
+   threshold 16 rows) cuts URLHash's spread-16 cost 1.3–1.6× locally; the
+   worker run is pending.
+
+## Staged pairs and the remaining pair gap
+
+Masking A over every block and then summing B per address segment
+(`66d136d1`; [evidence/image-v5-summary.txt](evidence/image-v5-summary.txt))
+beats per-block fusion where B is wide: on Zen 5 URLHash over UserID's top
+50% drops from 67.6 to 21.0 ns per block (native 151.8), WatchID over
+EventTime's top 10% from 87.1 to 41.4 (native 120.4). Where A's predicate
+spreads over most blocks (UserID over OS, RegionID over ClientIP) Frame
+still loses 1.3–3× to front A's native fused pass on both hosts; those cells
+are the selection-geometry crossover above.
+
+## Compaction cost
+
+Copying live bodies back into placement order (`2a38e990`, jobs
+`20261024T005500Z-84e5acf8` and `20261024T005534Z-11a05e02`;
+[evidence/relocate-v2-summary.txt](evidence/relocate-v2-summary.txt)) costs
+13–16 ns per block on Zen 5 into address order and 39–55 ns into grouped
+order for run- and packed-heavy columns, 100–125 ns for wide URLHash, and
+2–3× that on Graviton 4. With UserID's cold-scan saving of about 19 ns per
+block at 10% relocated, grouped compaction (53 ns per block) repays after
+about three scans. These are inputs to front A's edit-policy comparison, not
+a policy.
+
 ## Independent point reads
 
 [`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
