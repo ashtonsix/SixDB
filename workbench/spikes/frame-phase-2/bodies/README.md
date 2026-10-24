@@ -126,9 +126,9 @@ Evidence (medians): Zen 5 job `20261023T233103Z-ab8ecf15`,
 [packed](evidence/zen5-v4-packed.txt), [runs](evidence/zen5-v4-runs.txt),
 [patched](evidence/zen5-v4-patched.txt), [peers](evidence/zen5-v4-peers.txt),
 [columns](evidence/zen5-v4-columns.txt). Graviton 4 job
-`20261023T231450Z-d34498df`, [packed](evidence/g4-v3-packed.txt),
-[runs](evidence/g4-v3-runs.txt), [patched](evidence/g4-v3-patched.txt),
-[peers](evidence/g4-v3-peers.txt), [columns](evidence/g4-v3-columns.txt).
+`20261023T234028Z-176a448e`, [packed](evidence/g4-v4-packed.txt),
+[runs](evidence/g4-v4-runs.txt), [patched](evidence/g4-v4-patched.txt),
+[peers](evidence/g4-v4-peers.txt), [columns](evidence/g4-v4-columns.txt).
 The earlier Zen 5 v2 files show the before state of each fix below.
 
 ### Packed bodies, Zen 5 AVX-512
@@ -312,15 +312,30 @@ needs 32 bits (`native` is then a u32 lane).
     (14–17 vs 10 ns), where the multiply-gather of plane bits and the separate
     body-byte loads cost more. Unattributed.
 
+### Graviton 4 (NEON, SVE2 bit permutes)
+
+21. **The same laws hold with NEON's costs.** plane256 SUM at L2 is 1.73 /
+    3.52 / 7.44 / 10.9 ns at K = 2 / 4 / 12 / 20, against native 4.18 / 4.18 /
+    7.36 / 21.9 (byte-count popcounts; u64 popcounts had cost 4.53 at K = 4).
+    Compares lose from K = 8, because NEON has no movemask: each byte-compare
+    to row bits costs an AND and three pairwise adds.
+22. **SVE2 BDEP makes run masks constant-cost on ARM too.** 15.8 ns per block
+    at any run count (ends-only: 25–59), against native u8 12.3. On real
+    columns RegionID masks run 1.9× native and ClientIP 1.6×; OS stays 0.7×.
+    The bit permutes run behind a HWCAP check through non-inlined SVE
+    functions; a whole-SVE leaf is the next step.
+23. **NEON prefix masked SUM** runs 15.4 ns at 24 runs, against native 11.3 and
+    the per-run loop's 28.8.
+
 ## Still open
 
-- Graviton 4 with the latest code (NEON byte-count plane SUM, the PDEP stall
-  fix, the masked-store compaction) is running.
-- Compaction's remaining gap to native narrow; MIN/MAX and first match past L2
+- Compaction's remaining gap to native narrow (the masked-store slice copy is
+  committed but not yet measured on Zen 5); MIN/MAX and first match past L2
   from K = 8.
-- K > 32 packing (only 64-bit hashes need it here); Striped layouts for decode
-  on NEON.
+- NEON: compares from K = 8 (movemask emulation), decode (vertical or striped
+  layouts), SVE-vector leaves for run masks and points.
+- K > 32 packing (only 64-bit hashes need it here).
 - The saturated DRAM tier and front A's corrected native controls.
 - The exact boundary route, `with_exact_body` in [body.h](body.h): leaves with
   a halo read a zero-tailed copy of their body when the image cannot admit the
-  halo.
+  halo. It is unmeasured.
