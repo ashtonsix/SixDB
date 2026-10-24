@@ -64,6 +64,9 @@ struct width_array {
 // widths_*.cpp (widths.h), never in the TUs that compose stages.
 template <sp::preset P> std::unique_ptr<width_array> make_width_array(unsigned K, const std::vector<u64> &values);
 template <sp::preset P> std::size_t width_body_bytes(unsigned K);
+/// Whether this build instantiated preset P's width arrays (FRAME3_PRESETS);
+/// a checked factory refuses an omitted preset instead of reaching abort.
+bool width_preset_available(sp::preset p) noexcept;
 template <sp::preset P>
 std::unique_ptr<width_array> place_width_array(unsigned K, std::span<const ikea::byte> bytes, std::size_t rows, std::span<ikea::byte> writable);
 

@@ -15,6 +15,14 @@ template <sp::preset P> constexpr bool built() {
     else
         return FRAME3_HAS_BULK_ARM;
 }
+bool width_preset_available(sp::preset p) noexcept {
+    switch (p) {
+    case sp::preset::compact: return built<sp::preset::compact>();
+    case sp::preset::bulk_x86: return built<sp::preset::bulk_x86>();
+    case sp::preset::bulk_arm: return built<sp::preset::bulk_arm>();
+    }
+    return false;
+}
 template <sp::preset P> std::unique_ptr<width_array> make_width_array(unsigned K, const std::vector<u64> &values) {
     if constexpr (!built<P>())
         std::abort();
