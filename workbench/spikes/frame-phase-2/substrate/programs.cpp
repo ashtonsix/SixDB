@@ -6,7 +6,8 @@
 // index), packed only (no runs), and sorted part dictionaries over the
 // integer image. Each reports natural bytes, construction time and the cost
 // of SUM, COUNT(x >= median), SUM(B) WHERE A >= its 90th percentile, and
-// random points, warm and flushed. Mixes and the oracle gap are computed
+// random points, warm and flushed, plus two images under a fixed routing
+// rule. Mixes and the oracle gap are computed
 // from these rows by summarise_programs.py. Every answer is checked.
 //
 // usage: frame_substrate_programs COLS_DIR ROWS ROUNDS B:A...
@@ -195,6 +196,31 @@ struct dict_program final : program {
     }
 };
 
+// Two stored images of one column under a routing rule fixed before any
+// timing (Ikea LEAD's two-images arm): full scans go to the integer image,
+// points to native, and selective pairs to native's fused pair when A is
+// stored the same way (or, in the second variant, to the image's staged pair). Charged for both images' bytes and both constructions;
+// update synchronisation is the lifecycle driver's concern, not this probe's.
+struct two_images final : program {
+    image_program img;
+    native_program nat;
+    bool pairs_on_image;
+    two_images(const std::vector<u64> &v, bool pi) : img(v, fi::policy::bytes), nat(v), pairs_on_image(pi) {}
+    std::size_t bytes() const override { return img.bytes() + nat.bytes(); }
+    u128 sum() const override { return img.sum(); }
+    u64 count_ge(u64 t) const override { return img.count_ge(t); }
+    u64 mask_ge(u64 t, u64 *masks) const override { return pairs_on_image ? img.mask_ge(t, masks) : nat.mask_ge(t, masks); }
+    u128 masked_sum(const u64 *masks) const override { return pairs_on_image ? img.masked_sum(masks) : nat.masked_sum(masks); }
+    u64 point(std::size_t row) const override { return nat.point(row); }
+    void evict() const override { img.evict(), nat.evict(); }
+    u128 pair_sum(const program &a, u64 t, u64 *masks) const override {
+        const auto *ta = dynamic_cast<const two_images *>(&a);
+        if (ta && !pairs_on_image)
+            return nat.pair_sum(ta->nat, t, masks);
+        return program::pair_sum(a, t, masks);
+    }
+};
+
 using maker = std::function<std::unique_ptr<program>(const std::vector<u64> &)>;
 }  // namespace
 
@@ -211,6 +237,8 @@ int main(int argc, char **argv) {
         {"integer", [](const std::vector<u64> &v) { return std::unique_ptr<program>(new image_program(v, fi::policy::bytes)); }},
         {"packed_only", [](const std::vector<u64> &v) { return std::unique_ptr<program>(new image_program(v, fi::policy::packed_only)); }},
         {"dictionary", [](const std::vector<u64> &v) { return std::unique_ptr<program>(new dict_program(v)); }},
+        {"two_images", [](const std::vector<u64> &v) { return std::unique_ptr<program>(new two_images(v, false)); }},
+        {"two_images_pairs_on_image", [](const std::vector<u64> &v) { return std::unique_ptr<program>(new two_images(v, true)); }},
     };
     for (int arg = 4; arg < argc; ++arg) {
         const std::string spec = argv[arg];

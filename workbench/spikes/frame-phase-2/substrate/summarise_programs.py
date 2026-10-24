@@ -2,7 +2,9 @@
 # the mix totals add isolated per-operation timings; they are not executed
 # interleaved traces (front A's history driver supplies those). For each column,
 # ISA and condition: per-op medians, then named mixes (operation counts per
-# workload unit), the best single program per mix and the per-op oracle.
+# workload unit), the best single program per mix, the two-images program
+# (fixed routing, charged both images) and the per-op oracle over single
+# programs. The oracle may switch representation per call; nothing may pay.
 import json, sys, statistics as st, collections
 MIXES = {  # ops per workload unit: full SUMs, COUNTs, selective pairs, point batches of 65,536
     'scan': {'sum': 6, 'count_ge': 3, 'pair_sum_10pct': 1, 'points': 0},
@@ -18,13 +20,17 @@ for f in sys.argv[1:]:
         meta[(r['isa'], r['column'], r['program'])] = (r['bytes'], r['build_ns_per_block'])
 keys = sorted({k[:3] for k in d})
 print('COMPONENT ESTIMATES (sums of isolated timings, not executed traces)')
-print('isa column condition mix | best program (us per unit) | oracle (us) | gap | natural MB per program')
+print('isa column condition mix | best single program (us per unit) | oracle (us) | gap | best two-images variant us, gap | natural MB per program')
 for k in keys:
-    progs = sorted({p for (*kk, p, op) in d if tuple(kk) == k})
-    cost = {p: {op: st.median(d[k + (p, op)]) / 1e3 for op in MIXES['scan']} for p in progs}
+    every = sorted({p for (*kk, p, op) in d if tuple(kk) == k})
+    progs = [p for p in every if not p.startswith('two_images')]
+    cost = {p: {op: st.median(d[k + (p, op)]) / 1e3 for op in MIXES['scan']} for p in every}
     for mix, w in MIXES.items():
         totals = {p: sum(w[op] * cost[p][op] for op in w) for p in progs}
         best = min(totals, key=totals.get)
         oracle = sum(w[op] * min(cost[p][op] for p in progs) for op in w)
-        mb = ' '.join(f"{p}={meta[(k[0], k[1], p)][0] / 1e6:.1f}" for p in progs)
-        print(f"{k[0]:6} {k[1]:18} {k[2]:7} {mix:9} | {best:11} {totals[best]:9.1f} | {oracle:9.1f} | {totals[best] / oracle:5.2f} | {mb}")
+        mb = ' '.join(f"{p}={meta[(k[0], k[1], p)][0] / 1e6:.1f}" for p in every)
+        twos = {p: sum(w[op] * cost[p][op] for op in w) for p in every if p.startswith('two_images')}
+        two = min(twos.values()) if twos else float('nan')
+        which = min(twos, key=twos.get).replace('two_images', '2i') if twos else '-'
+        print(f"{k[0]:6} {k[1]:18} {k[2]:7} {mix:9} | {best:11} {totals[best]:9.1f} | {oracle:9.1f} | {totals[best] / oracle:5.2f} | {which:20} {two:9.1f} {two / oracle:5.2f} | {mb}")
