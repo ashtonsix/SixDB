@@ -1,6 +1,9 @@
 // Runtime width dispatch for the pack stage: forwards to the TU holding the
 // width's instantiation (widths_*.cpp); layout constants need no kernels.
 #include "stages.h"
+#if FRAME3_RUNTIME_LEAF
+#include "runtime_width.h"
+#endif
 
 namespace frame3 {
 template <sp::preset P, unsigned First, unsigned Last> std::unique_ptr<width_array> make_width_range(unsigned, const std::vector<u64> &);
@@ -16,6 +19,8 @@ template <sp::preset P> constexpr bool built() {
         return FRAME3_HAS_BULK_ARM;
 }
 bool width_preset_available(sp::preset p) noexcept {
+    if (FRAME3_RUNTIME_LEAF)
+        return true;
     switch (p) {
     case sp::preset::compact: return built<sp::preset::compact>();
     case sp::preset::bulk_x86: return built<sp::preset::bulk_x86>();
@@ -24,6 +29,9 @@ bool width_preset_available(sp::preset p) noexcept {
     return false;
 }
 template <sp::preset P> std::unique_ptr<width_array> make_width_array(unsigned K, const std::vector<u64> &values) {
+#if FRAME3_RUNTIME_LEAF
+    return std::make_unique<runtime_width_array>(K, sp::resolve(P, K), values);
+#endif
     if constexpr (!built<P>())
         std::abort();
     else if (K <= 16)
@@ -38,6 +46,9 @@ template <sp::preset P, unsigned First, unsigned Last>
 std::unique_ptr<width_array> place_width_range(unsigned, std::span<const ikea::byte>, std::size_t, std::span<ikea::byte>);
 template <sp::preset P>
 std::unique_ptr<width_array> place_width_array(unsigned K, std::span<const ikea::byte> bytes, std::size_t rows, std::span<ikea::byte> writable) {
+#if FRAME3_RUNTIME_LEAF
+    return std::make_unique<runtime_width_array>(K, sp::resolve(P, K), bytes, rows, writable);
+#endif
     if constexpr (!built<P>())
         std::abort();
     else if (K <= 16)

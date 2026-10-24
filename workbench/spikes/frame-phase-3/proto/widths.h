@@ -70,8 +70,8 @@ template <unsigned K, sp::preset P> class width_array_at final : public width_ar
         }
     }
     // The width's point kernel over its dense bytes, for fused point paths.
-    static u64 point_at(const ikea::byte *data, std::size_t row) { return sp::detail::dense_point<L, u64>(data, row); }
-    point_kernel point() const override { return {&point_at, bytes_.data(), L::tile_rows, L::tile_bytes}; }
+    static u64 point_at(const void *data, std::size_t row) { return sp::detail::dense_point<L, u64>(data, row); }
+    point_kernel point() const override { return {&point_at, bytes_.data(), bytes_.data(), L::tile_rows, L::tile_bytes}; }
     static std::size_t bytes_for(std::size_t rows) { return (rows + L::tile_rows - 1) / L::tile_rows * L::tile_bytes; }
     std::span<const ikea::byte> image() const override { return bytes_; }
     std::size_t rows() const override { return view_->size(); }

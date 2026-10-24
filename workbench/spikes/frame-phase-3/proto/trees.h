@@ -80,7 +80,7 @@ class point_plan {
     u64 get(std::size_t row) const {
         const auto &e = entries_[row / block_rows];
         const unsigned r = row % block_rows;
-        const u64 f = e.kernel.get ? e.kernel.get(e.kernel.data, e.base + r) : 0;
+        const u64 f = e.kernel.get ? e.kernel.get(e.kernel.resource, e.base + r) : 0;
         if (f == 0)
             for (unsigned i = 0; i < e.count; ++i)
                 if (e.pos[i] == r)

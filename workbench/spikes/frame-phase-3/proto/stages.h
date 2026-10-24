@@ -33,8 +33,9 @@ using frame_bounds::mask;
 
 /// A width's point kernel and its array's bytes: a direct call, no object.
 struct point_kernel {
-    u64 (*get)(const ikea::byte *, std::size_t);
-    const ikea::byte *data;
+    u64 (*get)(const void *, std::size_t);
+    const void *resource;    // what get takes
+    const ikea::byte *data;  // the array's bytes, for prefetch
     unsigned tile_rows = 8, tile_bytes = 0;  // for prefetching a row's tile
 };
 // One SeriesPack array of a part's width-K blocks, slot order = block order.
