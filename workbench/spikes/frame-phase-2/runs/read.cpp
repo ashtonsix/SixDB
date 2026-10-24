@@ -132,13 +132,15 @@ struct packed_widths {
         return n;
     }
     // Returns the offset of the appended fields within their width's array.
-    u32 append(unsigned K, const std::vector<unsigned> &f, const bounded &bd) {
+    // Fields start at a multiple of `align` rows: 8 (Local's tile) is
+    // tight; 16 lets every read take SeriesPack's native 16-row groups.
+    unsigned align = 8;
+    u32 append(unsigned K, const std::vector<unsigned> &f) {
         auto &s = by_width[K].staged;
         const u32 at = static_cast<u32>(s.size());
         for (std::size_t i = 0; i < f.size(); ++i)
             s.push_back(f[i] >> K ? 0 : f[i]);
-        s.resize((s.size() + 7) / 8 * 8, 0);
-        (void)bd;
+        s.resize((s.size() + align - 1) / align * align, 0);
         return at;
     }
     void seal() {
@@ -180,13 +182,14 @@ struct composed {
             ex_blocks += ex_first[b + 1] != ex_first[b];
         return widths.bytes() + (checkpoints.size() - width.size()) + ex_blocks + 2 * exceptions.size();
     }
-    composed(const std::vector<run_block> &blocks, unsigned g, bool with_exceptions) : G(g) {
+    composed(const std::vector<run_block> &blocks, unsigned g, bool with_exceptions, unsigned align) : G(g) {
+        widths.align = align;
         for (const auto &r : blocks) {
             const auto bnd = to_sizes(r, G);
             const auto bd = choose_bounds(bnd.sizes_minus_one, with_exceptions);
             width.push_back(static_cast<u8>(bd.width));
             count.push_back(static_cast<u8>(r.ends.size()));
-            offset.push_back(widths.append(bd.width, bnd.sizes_minus_one, bd));
+            offset.push_back(widths.append(bd.width, bnd.sizes_minus_one));
             cp_first.push_back(static_cast<u32>(checkpoints.size()));
             checkpoints.insert(checkpoints.end(), bnd.checkpoints.begin(), bnd.checkpoints.end());
             ex_first.push_back(static_cast<u32>(exceptions.size()));
@@ -199,7 +202,9 @@ struct composed {
     // Stage: read. Decode a block's sizes into a zero-padded native window.
     unsigned decode(std::size_t b, u8 *sizes) const {
         const unsigned n = count[b];
-        widths.by_width[width[b]].reader->read_unchecked(offset[b], n, sizes);
+        // With 16-row placement the padded groups are ours to read whole.
+        const unsigned take = widths.align == 16 ? (n + 15) / 16 * 16 : n;
+        widths.by_width[width[b]].reader->read_unchecked(offset[b], take, sizes);
         for (unsigned i = 0; i < n; ++i)
             sizes[i] += 1;
         for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
@@ -225,7 +230,7 @@ struct composed {
         const unsigned g = in::upper_bound(in::direct_source<u16>{cp, regions}, row) - 1;
         const unsigned first = g * G, m = std::min(G, n - first);
         alignas(64) u8 w[64 + 16];
-        widths.by_width[width[b]].reader->read_unchecked(offset[b] + first, m, w);
+        widths.by_width[width[b]].reader->read_unchecked(offset[b] + first, widths.align == 16 ? (m + 15) / 16 * 16 : m, w);
         for (unsigned i = 0; i < m; ++i)
             w[i] += 1;
         for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
@@ -319,9 +324,11 @@ int main(int argc, char **argv) {
                             return s;
                         }});
         std::vector<std::unique_ptr<composed>> keep;
-        for (auto [label, G, ex] : {std::tuple{"sizes_g16", 16u, false}, std::tuple{"sizes_g16_bounds", 16u, true},
-                                    std::tuple{"sizes_g64", 64u, false}, std::tuple{"sizes_g64_bounds", 64u, true}}) {
-            keep.push_back(std::make_unique<composed>(blocks, G, ex));
+        for (auto [label, G, ex, align] : {std::tuple{"sizes_g16", 16u, false, 8u}, std::tuple{"sizes_g16_bounds", 16u, true, 8u},
+                                           std::tuple{"sizes_g64", 64u, false, 8u}, std::tuple{"sizes_g64_bounds", 64u, true, 8u},
+                                           std::tuple{"sizes_g16_align16", 16u, false, 16u}, std::tuple{"sizes_g16_bounds_align16", 16u, true, 16u},
+                                           std::tuple{"sizes_g64_bounds_align16", 64u, true, 16u}}) {
+            keep.push_back(std::make_unique<composed>(blocks, G, ex, align));
             const composed *c = keep.back().get();
             arms.push_back({std::string(label) + "_routed", c->bytes(),
                             [&queries, c] {
