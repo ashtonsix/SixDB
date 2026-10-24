@@ -321,6 +321,51 @@ and runs, otherwise unpacks codes and gathers dictionary values.
    `count_ge` path through those leaves; locally it takes OS COUNT from 63 to
    9.6 ns per block, coded and integer alike.
 
+## Placement under relocating writes
+
+A rewrite that changes a block's size cannot stay in place; the cheapest
+home for the new body is the image end, with its descriptor repointed.
+[`relocate_measure.cpp`](relocate_measure.cpp) relocates a random 0–50% of
+blocks that way (answers unchanged) under both placements (`5f9722bb`, jobs
+`20261024T003354Z-afcc8ad7` and `20261024T003427Z-8d3f22e4`; medians
+[evidence/relocate-v1-summary.txt](evidence/relocate-v1-summary.txt)).
+
+| Zen 5 AVX-512, flushed, ns per block | 0% | 1% | 10% | 50% relocated |
+| --- | ---: | ---: | ---: | ---: |
+| OS SUM, grouped, kind index | 6.9 | 7.3 | 11.0 | 20.5 |
+| UserID SUM, grouped, kind index | 15.3 | 18.4 | 34.0 | 51.1 |
+| UserID SUM, address, segments | 16.6 | 20.1 | 37.7 | 61.3 |
+| UserID SUM, address, kind index | 41.4 | 42.0 | 46.0 | 54.2 |
+| URLHash SUM, grouped, kind index | 48.5 | 50.9 | 67.5 | 107.0 |
+| UserID random staged visits | 31.3 | 31.6 | 32.0 | 32.5 |
+| UserID points | 38.9 | 39.0 | 39.2 | 39.6 |
+
+1. **Cold scans pay for relocation quickly; points and staged visits do
+   not.** 1% relocated costs scans 5–20%, 10% costs 1.3–2.2×, 50% costs
+   2–3×. Random staged visits and points move by at most 4%, since they never
+   relied on order. Warm scans barely move.
+2. **A kind index needs grouped placement when cold.** Over address-placed
+   bodies, UserID's kind index reads blocks out of address order and runs
+   2.5× slower than address segments (41.4 vs 16.6); over grouped bodies it is
+   the fastest arm (15.3).
+3. **So compaction has a scan-driven cadence.** Keeping a group's relocated
+   share near 1% holds scans within about 10%; a part that serves mostly
+   points and random selections can let relocation accumulate. This is a
+   per-group, workload-dependent policy (Engine's), with the relocated share
+   as the cheap trigger statistic.
+
+## Points through ikea::intervals
+
+`point_intervals` finds a run block's run with ikea::intervals'
+`direct_source<u8>` and a 32-byte readable window (`d405cdf5`, jobs
+`20261024T003627Z-67ecf355` and `20261024T003710Z-a0af09d4`; medians
+[evidence/image-v4-summary.txt](evidence/image-v4-summary.txt)). On Zen 5
+warm it beats front C's in-leaf count: OS 12.4 → 6.4 ns, UserID 14.9 → 9.6,
+URLHash 14.9 → 6.8 (AVX-512; AVX2 similar); cold the two are level. On
+Graviton 4 it loses: OS 15.2 → 17.6 ns warm, URLHash 20.3 → 32.5, and up to
+2.9× cold (URLHash 27.5 → 78.6). So the choice is per ISA for now: Intervals
+on x86, the leaf count on NEON, until the Intervals NEON path is examined.
+
 ## Independent point reads
 
 [`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
