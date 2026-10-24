@@ -30,7 +30,10 @@ thread-local.
   of a slice or next to a protected or mutable neighbour.
 - **Per-code weights for coded SUM** (C with B): the dictionary test below
   shows the leaf ABI carries coded COUNT unchanged but has no leaf for
-  Σ D[code]; SUM falls back to histograms or unpack-and-gather.
+  Σ D[code]; SUM falls back to histograms or unpack-and-gather. Front C has
+  taken it: `weighted_sum(body, const u64 *D)` and
+  `masked_weighted_sum(body, sel, D)` returning u128 (runs: one gather per
+  run; K ≤ 8: histogram dot D; K 9–16: decode to u16 lanes, then gather).
 - **Substrate controls** (B): the substrate probes still use their own native
   controls; they move to front A's.
 - **A second body family through the same ABI** (B): sorted part
