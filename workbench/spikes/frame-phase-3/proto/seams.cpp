@@ -177,6 +177,27 @@ void pair_case(const std::string &an, const std::vector<u64> &a, const std::stri
              return r;
          }},
         {"fused_per_part_sum_max", [&] { return fused(true); }},
+        {"fused_per_part_one_pass_sum_max",
+         [&] {
+             result r;
+             block_args rhs;
+             rhs.fill(t);
+             block_rows_set rows;
+             stage::summary acc;
+             for (unsigned p = 0; p < ca.parts(); ++p) {
+                 const bitset256 all = ca.blocks(p);
+                 ca.root().filter(comparison::greater_equal, p, all, rhs, rows);
+                 bitset256 hit;
+                 each(all, [&](unsigned blk) {
+                     if (!rows[blk].empty())
+                         hit.set(blk);
+                 });
+                 if (!hit.empty())
+                     cb.root().summarise_selected(p, hit, rows, acc);
+             }
+             r.sum = acc.sum, r.max = acc.max, r.count = acc.count;
+             return r;
+         }},
         {"native_fused_pair_sum",
          [&] {
              const auto ans = frame_cells::native_pair_once(na, nb, t, mask);
@@ -247,6 +268,10 @@ void points_case(const std::string &name, const std::vector<u64> &base, int roun
     std::vector<std::size_t> request_rows(rows.begin(), rows.end());
     const auto requests = frame_cells::point_requests::bind(request_rows, v.size());
     frame_cells::validate_native_points(narrow, all_mask, requests);
+    frame_cells::validate_native_gather(narrow, all_mask, requests, out);
+    std::vector<u64> want_values(rows.size());
+    for (std::size_t i = 0; i < rows.size(); ++i)
+        want_values[i] = v[rows[i]];
 
     loom::HardwareOptions options;
     options.limits = {2 * 1024 * 1024, 3 * 1024 * 1024, std::chrono::milliseconds(100)};
@@ -288,9 +313,11 @@ void points_case(const std::string &name, const std::vector<u64> &base, int roun
          }},
         {"plan_pipelined16", [&] { plan.get_many<16>(rows.data(), rows.size(), out.data()); }},
         {"plan_pipelined32", [&] { plan.get_many<32>(rows.data(), rows.size(), out.data()); }},
-        {"native_narrow_points", [&] {
-             // Front A's narrow native gather; its answer is the sum, so out
-             // carries it in slot 0.
+        // Front A's narrow native gather: every requested value materialised.
+        {"native_narrow_gather", [&] { frame_cells::native_gather_once(narrow, all_mask, requests, out); }},
+        // Front A's consumed points (SUM of the values only): a different
+        // operation, checked by its sum, not comparable to materialisation.
+        {"native_narrow_points_sum", [&] {
              const auto ans = frame_cells::native_points_once(narrow, all_mask, requests);
              std::fill(out.begin(), out.end(), 0);
              out[0] = static_cast<u64>(ans.sum);
@@ -312,10 +339,11 @@ void points_case(const std::string &name, const std::vector<u64> &base, int roun
                     flush();
                 std::fill(out.begin(), out.end(), 0);
                 ts[i].push_back(time_ns(arms[i].second));
-                u64 got = 0;
-                for (u64 x : out)
-                    got += x;
-                if (got != want)
+                // Every output, except the consumed-sum control's checksum.
+                if (arms[i].first == "native_narrow_points_sum") {
+                    if (out[0] != want)
+                        fail(arms[i].first.c_str());
+                } else if (out != want_values)
                     fail(arms[i].first.c_str());
             }
         for (std::size_t i = 0; i < arms.size(); ++i)

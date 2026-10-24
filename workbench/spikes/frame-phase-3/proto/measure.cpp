@@ -319,6 +319,7 @@ int main(int argc, char **argv) {
         }
         add_frame("bound_pack_compact_groups", std::make_unique<bound>(std::make_unique<pack<sp::preset::compact>>(group_blocks)));
         add_frame("intervals16_bound_pack_compact", delta_bound_pack<sp::preset::compact>(16));
+        add_frame("relative16_bound_pack_compact", delta_bound_pack<sp::preset::compact>(16, 0, interval_form::relative_ends));
         arms.push_back({"native_u64", n * 8,
                         [&v] {
                             u128 s = 0;

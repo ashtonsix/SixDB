@@ -3,6 +3,7 @@
 #pragma once
 #include "placeholders.h"
 
+#include <algorithm>
 #include <functional>
 #include <optional>
 #include <string>
@@ -17,8 +18,8 @@ template <sp::preset P> inline std::unique_ptr<stage> bound_pack(unsigned penalt
     return std::make_unique<bound>(std::make_unique<pack<P>>(), penalty);
 }
 // Deltas through bound -> pack, checkpoints through bound -> pack of their own.
-template <sp::preset P> inline std::unique_ptr<stage> delta_bound_pack(unsigned G, unsigned penalty = 0) {
-    return std::make_unique<intervals>(bound_pack<P>(penalty), bound_pack<P>(), G);
+template <sp::preset P> inline std::unique_ptr<stage> delta_bound_pack(unsigned G, unsigned penalty = 0, interval_form form = interval_form::sizes) {
+    return std::make_unique<intervals>(bound_pack<P>(penalty), bound_pack<P>(), G, form);
 }
 
 inline std::vector<tree> trees() {
@@ -31,13 +32,28 @@ inline std::vector<tree> trees() {
         {"intervals16_bound_pack_compact", [] { return delta_bound_pack<sp::preset::compact>(16); }},
         {"intervals64_bound_pack_compact", [] { return delta_bound_pack<sp::preset::compact>(64); }},
         {"intervals256_bound_pack_compact", [] { return delta_bound_pack<sp::preset::compact>(256); }},
+        {"relative16_bound_pack_compact", [] { return delta_bound_pack<sp::preset::compact>(16, 0, interval_form::relative_ends); }},
+        {"relative64_bound_pack_compact", [] { return delta_bound_pack<sp::preset::compact>(64, 0, interval_form::relative_ends); }},
     };
 }
 /// A hand-fused point path for the bound -> pack shape: one flat entry per
 /// block built at bind time, so a point is one entry load, one leaf call and
 /// a field-first exception check, instead of a virtual call per stage.
 class point_plan {
-    std::vector<bound::point_entry> entries_;
+    // One 24-byte entry per block (64 bytes before), so more of the
+    // descriptors stay resident: each leaf kernel is stored once per width
+    // array, and the exceptions are copied into the plan's own columns.
+    struct entry {
+        u64 lo;
+        u32 base;  // the block's first row in its leaf array
+        u32 exc;   // the block's first exception in pos_/val_
+        u16 leaf;  // index into leaves_
+        u8 count;
+    };
+    std::vector<entry> entries_;
+    std::vector<point_kernel> leaves_;
+    std::vector<u8> pos_;
+    std::vector<u64> val_;
 
   public:
     static std::optional<point_plan> make(const column &c) {
@@ -45,22 +61,41 @@ class point_plan {
         if (!root)
             return std::nullopt;
         point_plan plan;
+        plan.leaves_.push_back({});  // leaf 0: width 0, no body
+        std::vector<std::pair<const void *, u16>> seen;
         for (unsigned p = 0; p < c.parts(); ++p)
-            for (unsigned b = 0; b < c.root().blocks_in(p); ++b)
-                if (!root->entry(p, b, plan.entries_.emplace_back()))
+            for (unsigned b = 0; b < c.root().blocks_in(p); ++b) {
+                bound::point_entry e;
+                if (!root->entry(p, b, e) || e.count > 255 || e.base > ~u32{0})
                     return std::nullopt;
+                u16 leaf = 0;
+                if (e.kernel.get) {
+                    auto it = std::find_if(seen.begin(), seen.end(), [&](auto &x) { return x.first == e.kernel.resource; });
+                    if (it == seen.end()) {
+                        seen.emplace_back(e.kernel.resource, static_cast<u16>(plan.leaves_.size()));
+                        plan.leaves_.push_back(e.kernel);
+                        it = seen.end() - 1;
+                    }
+                    leaf = it->second;
+                }
+                plan.entries_.push_back({e.lo, static_cast<u32>(e.base), static_cast<u32>(plan.pos_.size()), leaf, static_cast<u8>(e.count)});
+                plan.pos_.insert(plan.pos_.end(), e.pos, e.pos + e.count);
+                plan.val_.insert(plan.val_.end(), e.val, e.val + e.count);
+            }
         return plan;
     }
+    std::size_t bytes() const { return entries_.size() * sizeof(entry) + pos_.size() + val_.size() * 8; }
     // Staging hooks: the entry, then (with the entry cached) the row's leaf
     // tile and the block's exception positions.
     const void *entry_address(std::size_t row) const { return &entries_[row / block_rows]; }
     void prefetch_entry(std::size_t row) const { __builtin_prefetch(entry_address(row)); }
     void prefetch_body(std::size_t row) const {
         const auto &e = entries_[row / block_rows];
-        if (e.kernel.data)
-            __builtin_prefetch(e.kernel.data + (e.base + row % block_rows) / e.kernel.tile_rows * e.kernel.tile_bytes);
+        const auto &k = leaves_[e.leaf];
+        if (k.data)
+            __builtin_prefetch(k.data + (e.base + row % block_rows) / k.tile_rows * k.tile_bytes);
         if (e.count)
-            __builtin_prefetch(e.pos);
+            __builtin_prefetch(pos_.data() + e.exc);
     }
     // A software pipeline over independent points: the entry D ahead of the
     // body, the body D ahead of the compute, so 2D points are in flight.
@@ -80,11 +115,12 @@ class point_plan {
     u64 get(std::size_t row) const {
         const auto &e = entries_[row / block_rows];
         const unsigned r = row % block_rows;
-        const u64 f = e.kernel.get ? e.kernel.get(e.kernel.resource, e.base + r) : 0;
+        const auto &k = leaves_[e.leaf];
+        const u64 f = k.get ? k.get(k.resource, e.base + r) : 0;
         if (f == 0)
             for (unsigned i = 0; i < e.count; ++i)
-                if (e.pos[i] == r)
-                    return e.val[i];
+                if (pos_[e.exc + i] == r)
+                    return val_[e.exc + i];
         return e.lo + f;
     }
 };

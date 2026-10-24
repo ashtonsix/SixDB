@@ -230,6 +230,22 @@ class stage {
 
     // Laws. The defaults are the reference definitions over decode.
     virtual u128 sum(unsigned part, const bitset256 &blocks) const;
+    // Several results over one selection in one traversal (CHECKLIST B6):
+    // each selected block decodes once and feeds SUM, COUNT, MIN and MAX.
+    struct summary {
+        u128 sum = 0;
+        u64 count = 0, min = ~u64{0}, max = 0;
+    };
+    virtual void summarise_selected(unsigned part, const bitset256 &blocks, const block_rows_set &rows, summary &out) const {
+        alignas(64) u64 x[block_rows];
+        each(blocks, [&](unsigned b) {
+            decode(part, b, x);
+            each(rows[b] & first_n(rows_in(part, b)), [&](unsigned r) {
+                out.sum += x[r], ++out.count;
+                out.min = std::min(out.min, x[r]), out.max = std::max(out.max, x[r]);
+            });
+        });
+    }
     // SUM over the selected rows of the selected blocks (SUM ... WHERE).
     virtual u128 sum_selected(unsigned part, const bitset256 &blocks, const block_rows_set &rows) const;
     // The same with one row pattern for every block (a parent's fixed law,

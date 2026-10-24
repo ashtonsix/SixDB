@@ -107,10 +107,11 @@ int main() {
     // from them alone, and check it (root and checkpoint streams, G16 and G64,
     // a nonzero root group and a partial final block).
     for (const auto &[name, v] : columns())
-        for (unsigned G : {16u, 64u}) {
-            auto make = [G] {
+        for (unsigned G : {16u, 64u})
+            for (const auto form : {interval_form::sizes, interval_form::relative_ends}) {
+            auto make = [G, form] {
                 return std::make_unique<intervals>(std::make_unique<bound>(std::make_unique<pack<sp::preset::compact>>(group_blocks)),
-                                                   std::make_unique<bound>(std::make_unique<pack<sp::preset::compact>>(group_blocks)), G);
+                                                   std::make_unique<bound>(std::make_unique<pack<sp::preset::compact>>(group_blocks)), G, form);
             };
             const column built(make(), v);
             std::map<std::string, column::stream_images> placed;
@@ -129,7 +130,7 @@ int main() {
             }
             expect(placed.size() == 2 && placed.contains("checkpoints"), name + " intervals streams");
             const column attached(make(), placed);
-            check_column(name + " / attached intervals G" + std::to_string(G), attached, v);
+            check_column(name + " / attached intervals G" + std::to_string(G) + (form == interval_form::relative_ends ? " relative" : " sizes"), attached, v);
         }
     // Two columns sharing one TuplePack record leaf.
     {

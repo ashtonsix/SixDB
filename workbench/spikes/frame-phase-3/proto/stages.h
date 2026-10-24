@@ -821,16 +821,23 @@ class bound final : public stage {
     }
 };
 
+/// Intervals' two forms over a value series: sizes (each row's difference
+/// from the previous row) or relative ends (each row's difference from its
+/// region's checkpoint). Both keep a checkpoint every G rows.
+enum class interval_form : u8 { sizes, relative_ends };
+
 class intervals final : public stage {
     static constexpr u64 bias = u64{1} << 63;  // offset binary for signed deltas
     // Children: the deltas, and the checkpoints (the value at every G-th row)
     // as a series of their own, so they are framed like any other values.
     std::unique_ptr<stage> children_[2];
     unsigned G_;
+    interval_form form_;
+    bool relative() const { return form_ == interval_form::relative_ends; }
     struct part {
         std::vector<u64> last;     // each block's last value (evidence for the monotone law)
         std::vector<u8> monotone;  // per block: non-decreasing
-        std::vector<u8> exact;     // per block: every delta fits int64, so prefix sums are exact integers
+        std::vector<u8> exact;     // per block: every delta fits int64, so sums of them are exact integers
     };
     std::vector<part> parts_;
     // The checkpoints of block b.
@@ -842,8 +849,8 @@ class intervals final : public stage {
 
   public:
     bool masked_sum_law = false;
-    intervals(std::unique_ptr<stage> deltas, std::unique_ptr<stage> checkpoints, unsigned G = 16)
-        : children_{std::move(deltas), std::move(checkpoints)}, G_(G) {
+    intervals(std::unique_ptr<stage> deltas, std::unique_ptr<stage> checkpoints, unsigned G = 16, interval_form form = interval_form::sizes)
+        : children_{std::move(deltas), std::move(checkpoints)}, G_(G), form_(form) {
         assert(G >= 2 && block_rows % G == 0);
     }
     const char *name() const override { return "intervals"; }
@@ -886,7 +893,7 @@ class intervals final : public stage {
             if (r % G_ == 0)
                 cp.push_back(in.values[r]), d[r] = bias;
             else
-                d[r] = (in.values[r] - in.values[r - 1]) ^ bias;
+                d[r] = (in.values[r] - (relative() ? cp.back() : in.values[r - 1])) ^ bias;
         }
         for (unsigned b = 0; b < blocks_in(p); ++b) {
             const u64 *x = in.values.data() + std::size_t{b} * block_rows;
@@ -894,8 +901,10 @@ class intervals final : public stage {
             s.last.push_back(x[m - 1]);
             s.monotone.push_back(std::is_sorted(x, x + m));
             bool fits = true;
-            for (unsigned r = 1; r < m; ++r)
-                fits &= x[r] >= x[r - 1] ? x[r] - x[r - 1] < bias : x[r - 1] - x[r] <= bias;
+            for (unsigned r = 1; r < m; ++r) {
+                const u64 ref = relative() ? x[r - r % G_] : x[r - 1];
+                fits &= x[r] >= ref ? x[r] - ref < bias : ref - x[r] <= bias;
+            }
             s.exact.push_back(fits);
         }
         children_[0]->build(p, {d});
@@ -921,10 +930,12 @@ class intervals final : public stage {
         for (unsigned r0 = 0, g = 0; r0 < m; r0 += G_, ++g) {
             u64 acc = out[r0] = cp[g];
             for (unsigned r = r0 + 1; r < std::min(m, r0 + G_); ++r)
-                out[r] = acc += out[r] ^ bias;
+                out[r] = relative() ? cp[g] + (out[r] ^ bias) : (acc += out[r] ^ bias);
         }
     }
     u64 get(unsigned p, unsigned row) const override {
+        if (relative())  // no prefix: the checkpoint plus one field
+            return children_[1]->get(p, row / G_) + (row % G_ ? children_[0]->get(p, row) ^ bias : 0);
         u64 acc = children_[1]->get(p, row / G_);
         if (const unsigned k = row % G_) {
             alignas(64) u64 w[block_rows];
@@ -941,6 +952,8 @@ class intervals final : public stage {
     // offset binary: delta = d - 2^63 exactly. Partial blocks, and blocks
     // whose deltas wrap (their prefixes are exact only modulo 2^64), decode.
     u128 sum(unsigned p, const bitset256 &blocks) const override {
+        if (relative())
+            return relative_sum(p, blocks);
         // Measured 1.3-2.6x slower than decoding on Zen 5 (SeriesPack's
         // prefiltered sum costs several times its range sum), so off.
         if (!masked_sum_law)
@@ -974,6 +987,25 @@ class intervals final : public stage {
         }
         return static_cast<u128>(t);
     }
+    // Relative ends: sum x = sum over regions of G c + sum of the offsets, and
+    // checkpoint rows hold offset 0, so one plain SUM of the child covers
+    // every offset: no prefix, no masks. Offsets are d - 2^63 exactly on
+    // blocks whose offsets fit int64; others, and partial blocks, decode.
+    u128 relative_sum(unsigned p, const bitset256 &blocks) const {
+        bitset256 full, partial;
+        each(blocks, [&](unsigned b) { (rows_in(p, b) == block_rows && parts_[p].exact[b] ? full : partial).set(b); });
+        __int128 t = partial.empty() ? 0 : static_cast<__int128>(stage::sum(p, partial));
+        if (full.empty())
+            return static_cast<u128>(t);
+        each(full, [&](unsigned b) {
+            alignas(64) u64 cp[block_rows];
+            const unsigned n = checkpoints(p, b, cp);
+            for (unsigned g = 0; g < n; ++g)
+                t += static_cast<__int128>(G_) * cp[g];
+        });
+        t += static_cast<__int128>(children_[0]->sum(p, full)) - static_cast<__int128>(full.count()) * block_rows * static_cast<__int128>(bias);
+        return static_cast<u128>(t);
+    }
     // Monotone blocks: settle by the first and last values, else search the
     // checkpoints and read one G-row region. Other blocks decode.
     u64 count(comparison op, unsigned p, const bitset256 &blocks, const block_args &rhs) const override {
@@ -1000,7 +1032,7 @@ class intervals final : public stage {
                 u64 acc = cp[g];
                 unsigned below = 1;
                 for (unsigned i = 0; i < k; ++i)
-                    acc += w[i] ^ bias, below += acc < t;
+                    acc = relative() ? cp[g] + (w[i] ^ bias) : acc + (w[i] ^ bias), below += acc < t;
                 c += m - g * G_ - below;
             }
         });
