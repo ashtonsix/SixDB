@@ -369,6 +369,29 @@ Graviton 4 it loses: OS 15.2 → 17.6 ns warm, URLHash 20.3 → 32.5, and up to
 2.9× cold (URLHash 27.5 → 78.6). So the choice is per ISA for now: Intervals
 on x86, the leaf count on NEON, until the Intervals NEON path is examined.
 
+### Concurrent streams on the shared image
+
+The same scaling run on the shared image, with front A's qualified native
+control beside mine (`c07f25b4`, jobs `20261024T005214Z-5e54a12e` on
+c8a.2xlarge and `20261024T005318Z-69879699` on c8g.2xlarge; medians
+[evidence/iscale-v1-summary.txt](evidence/iscale-v1-summary.txt)).
+
+| SUM, ns per block per stream, warm | 1 stream: Frame / native | 8 streams: Frame / native |
+| --- | --- | --- |
+| UserID, Zen 5 AVX-512 | 7.7 / 42.4 | 46.8 / 291.6 |
+| EventTime, Zen 5 AVX-512 | 7.5 / 14.6 | 55.0 / 131.2 |
+| OS, Zen 5 AVX-512 | 3.1 / 2.5 | 3.4 / 10.9 |
+| WatchID, Zen 5 AVX-512 | 42.6 / 44.5 | 294.2 / 283.2 |
+| UserID, Graviton 4 | 31.2 / 72.6 | 37.5 / 93.9 |
+| EventTime, Graviton 4 | 15.1 / 30.8 | 26.1 / 49.5 |
+
+Frame is the kind index over grouped placement; native is front A's
+`native_sum_once` (my own control agrees within 3%). With eight cores
+pulling on Zen 5, Frame's compressed scans win 6.2× (UserID), 2.4×
+(EventTime) and 3.2× on OS, which loses alone; incompressible WatchID ties.
+Graviton 4's 8-core guest shows smaller ratios because its native array
+barely slows.
+
 ## Independent point reads
 
 [`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
