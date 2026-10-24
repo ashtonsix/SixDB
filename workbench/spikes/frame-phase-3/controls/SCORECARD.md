@@ -1,121 +1,188 @@
 # Frame 3: qualified comparisons and remaining cells
 
-24 October 2026. B12 account of the retained phase-3 prototypes, not a
-graduation score or a combination of phase-1/phase-2 performance ratios.
-The new [native controls](README.md) are functionally qualified locally;
-their current-source native performance has not been measured.
+25 October 2026 audit of the 24 October native captures. This is the B12
+comparison account, not a graduation score. The qualified native COUNT and
+materialized gather now have matching timed rows; narrow native whole SUM,
+supplied-mask controls and native system-query comparisons still have gaps.
+The six local VM cells now include actual DuckDB, Polars, Frame and narrow
+native execution; their separate scope is recorded below.
 
 ## What can currently be compared
 
-| Useful work | Zen 5 AVX-512 | Graviton 4 NEON | Missing before a strong comparison |
+| Useful work | Zen 5 AVX-512 | Graviton 4 NEON | Remaining comparison limit |
 | --- | --- | --- | --- |
-| Whole exact SUM / predicate COUNT | Repeated complete columns, `measure-v4` | Same | Rerun narrow native SUM and genuine standalone COUNT; the old plain-u64 endpoint remains useful but is insufficient. |
-| A predicate → exact SUM(B) | Repeated, qualified narrow native pair in `seams-v1` | Same | Preserve the real pair control and losing cases; repeat at declared residence and smaller/larger populations. |
-| Supplied fine-mask exact SUM | Repeated, own scalar-u64 control in `measure-v4` | Same | Rerun both new sparse and dense supplied-mask controls. Predicate production is a separate operation. |
-| Independent points | Materialized results, repeated and eviction-sweep states in `seams-v1` | Same | Rerun the qualified narrow FOR gather at the same materialized-output boundary, or exact consumed reduction shared by all arms; actual target-buffer conditioning remains separate. |
-| Changes and owner history | Write-core policies plus separate embedded Orbital witness | Same | Adaptive native owner at the same grain and history; include preparation/copy/emit/publication and retained memory. |
-| Actual Polars / DuckDB query | No current phase-3 timed comparison | No current phase-3 timed comparison | Existing native checks establish semantics, not speed. The finite system cells below precede any native claim. |
+| Whole exact SUM | Repeated complete columns, `measure-v5` | Same | Control remains own plain u64, not qualified narrow native SUM. |
+| Predicate COUNT | Genuine narrow native COUNT, `seams-v3`, four columns | Same | One process, seven rotated rounds; URLHash and matching system-prefix cells remain. |
+| A predicate → exact SUM(B) | Qualified narrow native pair, `seams-v3` | Same | Clustered wins and dispersed losses; no proved cold/residence panel. |
+| Supplied fine-mask exact SUM | Own scalar-u64 control, `measure-v5` | Same | Qualified sparse/dense native routes are not yet timed in these captures. |
+| Independent materialized points | Real native gather, `seams-v3`, repeated/eviction-sweep states | Same | Large losses remain; neither state proves a cache tier or DRAM. |
+| Changes and owner history | Prior write-core timings; captured sizes-owner correctness | Same | No strong adaptive-native owner comparison; new relative-owner proof is separate. |
+| Actual Polars / DuckDB query | Native comparison pending | Native comparison pending | Six checked cells complete locally with Frame/native; local VM results below do not fill these CPU cells. |
 
-AVX2 exists in earlier phase-3 cohorts; no matching latest `measure-v4` or
-`seams-v1` AVX2 export is retained here. Do not silently put an older AVX2
-number beside the latest kernels. There is no bandwidth-bound current-Frame
-panel. Repetition, an eviction sweep and demonstrated cache residence are
-different conditions.
+No matching AVX2 capture accompanies this cohort. Repeated execution, an
+eviction sweep and demonstrated cache residence are different conditions.
 
-## Retained phase-3 numbers
+## Source and qualification scope
 
-`measure-v4` runs 2,999,808 original ClickBench rows (11,718 complete blocks),
-single core, with rotated treatments and three process repeats. The recorded
-source baseline pins Ikea/bounds to `9e0cf2a8`; later erased-leaf and new control
-changes are not measured. These are the retained summaries from jobs
-`20261024T190557Z-904b94ed` and `20261024T190629Z-91076505`:
-[Zen 5](../proto/evidence/measure-v4-zen5.txt),
-[Graviton 4](../proto/evidence/measure-v4-graviton4.txt).
+Shared jobs `20261024T223705Z-dec974e4` (Zen 5) and
+`20261024T223751Z-8ddba6a7` (Graviton 4) use Clang 21.1.8 and the runtime
+leaf. The actual captured manifests match the shared timed/check sources at
+`a74e1c44`: `frame.h`, `stages.h`, `trees.h`, `placeholders.h`, `runtime_width.h`,
+`widths.cpp`, measure/seams/check and their CMake file. The four native-control
+source/build/check files match too, including genuine COUNT and gather.
+The 26 SeriesPack batch files match `0d44d527`; the worker script matches
+`17191b6f`. The job's `source_commit=17191b6f` alone would miss the captured
+working-tree additions. Source-manifest comparison, rather than that label,
+establishes the relevant source identity.
 
-Whole operations, ns per 256 rows. Frame is `frame_bound_pack_compact`.
-The plain endpoint stores 64-bit values and uses a carry-chain wide SUM;
-it is **not the qualified narrow native FOR control**. Raw timings are kept
-without a claim that beating this endpoint establishes the 2× system bar.
+Both native control checks pass **692,915 checks, 16 refusals and 5 protected
+cases**. The source-qualified suite independently covers all residual widths,
+u64 extremes, masks, duplicate/order-preserving output and refused overlaps.
+These are optimized native checks, not native sanitizer results. Actual build
+logs, complete output cohorts and empty seam error logs were inspected: the
+worker deliberately tolerates some command failures, so its final exit zero
+alone is insufficient evidence. Seams output is byte-identical to the retained
+`seams-v3` files; raw round samples and linked-binary hashes are not retained
+in this lean collection. An ignored audit receipt is at
+`build/frame-helper/native-controls-v1/shared-native-b12.json`.
+
+**Owner qualification is earlier than the shared relative experiment.** All
+23 captured owner files match `e90542d9`; all ten changed by `d4ad21a4` differ.
+The captured owner passes seven tests with 142 manifest, 2,700 binding and
+87,718 stream-history checks, for **sizes form only**. Shared `a74e1c44` stage
+checks exercise both sizes and relative ends, including their stream round
+trips, but are not the checked relative-owner admission/history proof. Do not
+attribute the later 284/5,885/350,630 coverage to these jobs.
+[Captured checks](../proto/evidence/check-v4-zen5.txt),
+[Graviton checks](../proto/evidence/check-v4-graviton4.txt);
+[owner evidence](../owner/EVIDENCE.md) owns the separate newer qualification.
+
+## Whole operations: preserve the weak-control label
+
+`measure-v5` uses 2,999,808 original rows, 11,718 complete 256-row blocks,
+rotated treatments and three process repeats. These are ns per block for
+`frame_bound_pack_compact`, from the
+[Zen summary](../proto/evidence/measure-v5-zen5.txt) and
+[Graviton summary](../proto/evidence/measure-v5-graviton4.txt).
+The own plain-u64 endpoint uses a carry-chain wide SUM; beating it does not
+establish a lead over qualified narrow native or either actual system.
 
 | CPU / ISA | Column | Frame SUM | Plain-u64 SUM | Frame COUNT ≥ median | Plain-u64 COUNT |
 | --- | --- | ---: | ---: | ---: | ---: |
-| Zen 5 / AVX-512 | OS | 32.89 | 63.94 | 20.73 | 34.24 |
-| Zen 5 / AVX-512 | UserID | 71.17 | 63.63 | 4.85 | 32.43 |
-| Zen 5 / AVX-512 | URLHash | 164.16 | 61.88 | 42.81 | 29.16 |
-| Graviton 4 / NEON | OS | 30.34 | 128.02 | 44.03 | 62.18 |
-| Graviton 4 / NEON | UserID | 110.18 | 128.29 | 6.99 | 61.72 |
-| Graviton 4 / NEON | URLHash | 124.71 | 127.80 | 97.87 | 60.22 |
+| Zen 5 / AVX-512 | OS | 34.66 | 64.92 | 11.05 | 36.12 |
+| Zen 5 / AVX-512 | UserID | 72.72 | 63.55 | 2.84 | 34.67 |
+| Zen 5 / AVX-512 | URLHash | 173.03 | 63.91 | 47.30 | 34.21 |
+| Graviton 4 / NEON | OS | 33.60 | 134.46 | 42.98 | 86.71 |
+| Graviton 4 / NEON | UserID | 128.50 | 135.12 | 8.05 | 86.07 |
+| Graviton 4 / NEON | URLHash | 135.91 | 135.59 | 115.89 | 87.96 |
 
-The later descriptor-pass experiment changes COUNT again: UserID per-block
-law → descriptor pass is 2.50 → 1.02 ns/block on Zen, but 3.77 → 4.25 on
-Graviton. CounterID is 0.94 → 0.48 and 1.85 → 2.64 respectively. This is a
-same-cohort Frame seam comparison. Its `native_narrow_pair_count` arm computes
-SUM as well as COUNT and discards the SUM: **exclude it from standalone COUNT
-rankings** and rerun `native_count_once`.
+Relative ends improve G16 sizes SUM, but do not displace plain bound/pack
+uniformly. For ClientIP, sizes → relative is 182.56 → 66.15 ns on Zen and
+312.04 → 103.69 on Graviton; plain bound/pack is 35.27 and 61.08. Storage
+rises from 21.17 to 32.37 bits/value. UserID rises from 28.65 to 48.14
+bits/value. These are a representation tradeoff on the shared stage source,
+not the later checked relative-owner result.
 
-The corresponding selected-SUM rows include random roughly 10% supplied row
-bits and a complete same-column FILTER-then-SUM. For URLHash, Frame is
-116.02 / 145.95 ns/block on Zen and 322.66 / 834.35 on Graviton, respectively.
-The own scalar-u64 control is 309.75 / 62.34 and 306.68 / 116.26. These algorithms
-are materially different; neither row is evidence of a lead over the new
-qualified supplied-mask controls. The second number includes predicate
-production; the first does not.
+Supplied-mask SUM remains incompletely controlled. For URLHash, `measure-v5`
+Frame supplied-mask / same-column FILTER-then-SUM is 409.75 / 909.20 ns on Zen
+and 376.76 / 966.50 on Graviton. The own scalar-u64 routes are 346.47 / 62.86
+and 307.49 / 124.70. The supplied-mask and predicate-producing operations have
+different work; both qualified native supplied-mask routes still need matching
+rows. No older, faster cohort substitutes for these current observations.
 
-### Cross-column operation: a real narrow native control
+## Predicate COUNT: the real count-only control
 
-The [Zen](../proto/evidence/seams-v1-zen5.jsonl) and
-[Graviton](../proto/evidence/seams-v1-graviton4.jsonl) seam exports use one
-process, seven rotated rounds, the same original rows and actual exact u128
-SUM answers. `native_fused_pair_sum` calls the compiled narrow typed/FOR
-`native_pair_once`, producing the A predicate within timing. Frame's per-part
-fusion skips blocks whose mask is empty. All numbers below are ns per original
-256-row block; B is ClientIP throughout.
+[Zen seams](../proto/evidence/seams-v3-zen5.jsonl) and
+[Graviton seams](../proto/evidence/seams-v3-graviton4.jsonl) use one process,
+seven rounds with arm order rotated, and an independent original-value
+`value >= median` oracle after each timer. `native_narrow_count` calls
+`native_count_once` directly; it performs no payload SUM. Fitting and binding
+are outside the timer. All values below are ns per original 256-row block;
+these seam timings should not be spliced into the different measure harness.
 
-| Predicate A | Selected rows / touched blocks | Zen Frame fused / retained mask / native | Graviton Frame fused / retained mask / native |
+| CPU | Column | Frame per-block law | Frame descriptor pass | Native narrow COUNT |
+| --- | --- | ---: | ---: | ---: |
+| Zen 5 | UserID | 4.03 | 1.07 | 26.14 |
+| Zen 5 | CounterID | 1.01 | 0.48 | 6.08 |
+| Zen 5 | OS | 17.31 | 8.96 | 5.98 |
+| Zen 5 | EventTime | 13.65 | 12.91 | 8.49 |
+| Graviton 4 | UserID | 6.29 | 6.02 | 85.56 |
+| Graviton 4 | CounterID | 1.90 | 2.72 | 57.37 |
+| Graviton 4 | OS | 46.57 | 39.66 | 58.78 |
+| Graviton 4 | EventTime | 36.57 | 36.00 | 54.19 |
+
+Descriptor COUNT wins substantially on UserID and CounterID. It loses to
+native on **OS and EventTime on Zen** (1.50× and 1.52× in this process).
+Graviton Frame beats this native control on all four columns; descriptor
+fusion itself is slower than the per-block law on CounterID. These exact raw
+rows take precedence over rounded prose or earlier cohorts. The old
+`native_narrow_pair_count` SUM-and-discard arm is not a COUNT control.
+
+## Cross-column SUM: topology decides the outcome
+
+This same `seams-v3` cohort consumes exact u128 SUM answers and includes the
+compiled narrow native `native_pair_once` control. B is ClientIP; thresholds
+are p90 of A. Values are ns per original block, including predicate production.
+
+| Predicate A | Selected / touched | Zen fused / retained mask / native | Graviton fused / retained mask / native |
 | --- | --- | --- | --- |
-| CounterID ≥ p90 | 30.7% / 30.7% | 6.79 / 12.17 / 79.25 | 16.70 / 24.14 / 47.90 |
-| EventTime ≥ p90 | 10.0% / 74.0% | 47.55 / 64.34 / 79.37 | 80.20 / 87.71 / 54.29 |
-| WatchID ≥ p90 | 10.0% / 100% | 113.75 / 138.10 / 93.24 | 272.70 / 279.71 / 89.91 |
+| CounterID ≥ p90 | 30.7% / 30.7% | 10.11 / 14.91 / 79.65 | 21.08 / 28.21 / 50.62 |
+| EventTime ≥ p90 | 10.0% / 74.0% | 62.86 / 82.50 / 84.65 | 112.71 / 120.21 / 62.55 |
+| WatchID ≥ p90 | 10.0% / 100% | 153.97 / 167.50 / 95.51 | 310.82 / 316.44 / 106.17 |
 
-There is a useful clustered win and a substantial dispersed loss, especially
-on Graviton. CounterID ties select 30.7%, not 10%; these three predicates are
-not a controlled relocation of one identical selection. No cold or 2×-system
-claim follows. SUM+MAX uses a different projection/materialization path and
-its scalar native control is not interchangeable with this table's SUM arm.
+The clustered win remains useful. WatchID Frame loses **1.61× on Zen and
+2.93× on Graviton**; partly clustered EventTime also loses 1.80× on Graviton.
+CounterID ties select 30.7%, so this is not a controlled relocation of one
+identical 10% selection. SUM+MAX is a distinct demanded result; its one-pass
+experiment does not repair these SUM-only losses or qualify standalone MAX.
 
-### Points: preserve the observed loss and the actual operation
+## Points: materialized values, significant losses
 
-`seams.cpp` replicates the column eight times, adding the copy index with
-wrapping u64 arithmetic: 23,998,464 rows. Each arm materializes the same 65,536
-requested values into an output vector, then checks a modulo-u64 checksum
-outside timing. This is neither dependent latency nor the new exact-u128
-consumed-point reduction. Selected examples, ns per materialized point:
+The compact plan now uses 24-byte entries. The same column is replicated
+eight times, adding the copy index with wrapping-u64 arithmetic: 23,998,464
+rows. Each materializing arm writes the same 65,536 independent requested
+values, with duplicates/order preserved. **Every output** is checked against
+original values after every timer. Gather admission and preparation are outside
+timing. The output is cleared before timing for every arm; output stores and
+Loom draining are inside it.
 
-| CPU / column | State | Plain u64 | Ready plan | Prefetch batch32 | Loom Ring32 |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Zen / ClientIP | repeated | 2.17 | 7.51 | 7.29 | 12.28 |
-| Zen / ClientIP | eviction sweep | 4.41 | 38.89 | 23.45 | 35.86 |
-| Zen / UserID | repeated | 2.42 | 16.48 | 60.24 | 21.42 |
-| Zen / UserID | eviction sweep | 4.43 | 54.90 | 33.02 | 50.57 |
-| Graviton / ClientIP | repeated | 4.45 | 33.37 | 11.10 | 18.79 |
-| Graviton / ClientIP | eviction sweep | 8.41 | 36.54 | 26.07 | 30.36 |
-| Graviton / UserID | repeated | 4.76 | 71.20 | 19.82 | 75.94 |
-| Graviton / UserID | eviction sweep | 8.41 | 53.69 | 34.80 | 42.15 |
+`native_narrow_gather` calls the qualified typed/FOR materializing control.
+The recorded `native_narrow_points_sum` is a different operation (reduction,
+truncated checksum and output filling); none of its timings enters this table.
+Ns per materialized request:
 
-The source's `flushed` label means visiting a separate vector of `256<<20`
-u64 elements, one per line: **a 2 GiB eviction sweep**, not cache maintenance
-on the queried allocations. Its efficacy/serving tier is unmeasured. The
-plain array is a valid materialized-output reference and wins substantially;
-new native narrow gather timings are still owed. `native_gather_once` now
-materializes every requested logical u64 in order, preserving duplicates and
-writing zero for coarse-excluded requests. It has independent per-output
-qualification. A subsequent `native_narrow_points` attempt that reduced SUM
-and filled the output with zero plus one checksum was rejected: matching a
-checksum does not make it the same operation as materialization. To compare
-the separate `native_points_once`, make every arm reduce the same request list
-to exact sum/count. Do not divide the timings of unlike results.
+| CPU / column | State | Plain u64 | Native gather | Ready plan | Batch32 | Pipeline16 / 32 | Loom32 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Zen / ClientIP | repeated | 2.49 | 3.20 | 8.21 | 7.38 | 7.21 / 7.54 | 58.64 |
+| Zen / ClientIP | eviction sweep | 4.62 | 6.02 | 37.57 | 23.32 | 22.63 / 22.68 | 31.35 |
+| Zen / UserID | repeated | 2.65 | 4.38 | 66.40 | 17.58 | 15.14 / 60.25 | 25.93 |
+| Zen / UserID | eviction sweep | 4.39 | 6.64 | 52.96 | 41.99 | 42.44 / 42.28 | 58.73 |
+| Zen / OS | repeated | 2.50 | 3.59 | 65.23 | 19.54 | 17.30 / 17.59 | 64.70 |
+| Zen / OS | eviction sweep | 4.55 | 5.08 | 56.36 | 34.86 | 31.95 / 32.10 | 43.50 |
+| Graviton / ClientIP | repeated | 9.05 | 8.52 | 69.17 | 26.86 | 21.25 / 20.83 | 48.92 |
+| Graviton / ClientIP | eviction sweep | 9.17 | 8.64 | 38.54 | 28.60 | 22.79 / 23.06 | 40.43 |
+| Graviton / UserID | repeated | 9.05 | 9.60 | 55.51 | 32.41 | 18.40 / 20.41 | 77.43 |
+| Graviton / UserID | eviction sweep | 9.08 | 9.43 | 62.17 | 38.02 | 24.38 / 24.87 | 44.71 |
+| Graviton / OS | repeated | 8.79 | 7.45 | 68.55 | 46.77 | 35.77 / 34.49 | 57.69 |
+| Graviton / OS | eviction sweep | 9.07 | 7.51 | 71.87 | 49.58 | 38.79 / 38.13 | 59.91 |
 
-### Writes: core cost and owner cost are different rows
+After the eviction sweep, Pipeline16 trails the real gather by **3.76–6.39×
+on Zen and 2.59–5.17× on Graviton**. Shrinking entries has not closed the
+point gap. Ready-plan and Loom costs are often worse. This is a strong reason
+to retain plain/narrow native alternatives when independent points dominate.
+
+The source's `flushed` label means visiting a separate **2 GiB buffer**, one
+u64 per line; it is not cache maintenance on the queried allocations, and the
+serving memory tier is unproved. `warm` means repeated execution, with no
+stable hot-residence demonstration: arms, oracle reads and other allocations
+can change one another's cache state. These are within-cohort observations,
+not a cross-run cold ranking. Independent ns/request is throughput, not line
+latency; neither line counts nor the plain arm's ~4.4 ns imply an irreducible
+2× floor. Descriptor placement, dependent acquisitions and scheduling remain
+hypotheses to test, not a demonstrated lower bound.
+
+## Writes: prior core cost and owner cost are different rows
+
 
 [writes-v2](../proto/evidence/writes-v2-zen5.txt) times mutable Frame policies
 over 524,288 rows. For OS, hot-row slack32/buffer64 cost 168.5/90.3 ns/write;
@@ -141,31 +208,30 @@ are not copied bytes, peak retained backing, traffic or RSS. The history checks
 matching old/new answers, reuse and contributions; it is not durable MVCC,
 concurrent publication or an Engine summary benchmark.
 
-## Finite next cells
+## Finite remaining comparison cells
 
-Keep the current arms and losing cases. Reuse the existing driver and the
-compiled controls rather than changing the representation for this comparison.
+Preserve the matched COUNT/gather controls and observed losses. The remaining
+measurement gaps are narrower than another complete matrix:
 
-1. OS and URLHash: whole SUM and median COUNT on one 65,536-row part, then
-   the existing larger population. Add `native_sum_once`/`native_count_once`;
-   keep plain u64 and hand glue as named diagnostics.
-2. EventTime and WatchID → ClientIP: exact SUM/count at the frozen p90, with
-   retained and per-part masks against `native_pair_once`. Add supplied-mask
-   SUM on those same masks against both named native mask routes; a random
-   roughly 10% mask stays a separate topology control.
-3. ClientIP and UserID independent requests: materialized values, duplicates
-   and order preserved, against `native_gather_once`, checking the whole output.
-   An exact SUM/count reduction is a separate operation against
-   `native_points_once` and requires every arm to consume that same result.
-4. One repeated-hot and one dispersed/outlier owner history at the same group
-   grain, through reserve exhaustion. Match an adaptive native owner and
-   demanded reads; report publication and outstanding/finalized debt separately.
+1. Match whole SUM and URLHash COUNT to the qualified narrow native entries,
+   first at the existing 65,536-row system prefixes and then the larger corpus.
+   Existing four-column count-only timings need no rerun merely to obtain the
+   already-qualified operation.
+2. On the existing EventTime/WatchID → ClientIP masks, time both named sparse
+   and dense native supplied-mask SUM routes. Keep predicate production as a
+   separate complete operation and retain the dispersed losing case.
+3. If point access is to be improved, carry forward the real gather and entire
+   output oracle. One targeted representation/access change should discriminate
+   the cause; an extra copy of the old staging matrix would not answer it.
+4. Match a repeated-hot and dispersed/outlier owner history to a strong native
+   owner at the same grain, charging preparation/copy/emit/publication, retained
+   bytes and finalization. New relative-owner native qualification is separate
+   from a timed writer comparison.
 
-Run the ready repeated path first on each actual CPU/ISA. Actual-buffer
-cache-maintenance or a declared large sequential population is a separately
-labelled addition, with its own allocation and access account. Never promote
-an eviction label to a DRAM claim. Balance treatments and retain raw samples;
-close one-process rankings need repetition before selecting a policy.
+Actual-buffer cache maintenance or a declared large sequential population must
+have its own allocation/access account. Actual Polars/DuckDB timing remains
+the other finite gap below; repeated local VM observations cannot fill native
+Zen/Graviton cells.
 
 ## Actual system cells
 
@@ -218,17 +284,56 @@ ClickBench SQL performance or full system superiority.
   source buffers and visible Polars payload separately instead of equating
   input bytes with total retained memory.
 
-Local system observations, once available, will qualify the executable cells
-and their costs on the local Linux ARM VM. They cannot supply a Zen/Graviton
-speedup or fill the native scorecard by substitution. Root owns the matched
-current-Frame/native measurements on these same snapshots.
+The [bounded system entry](systems/README.md) now retains executed raw UInt64
+and explicit external typed-FOR arms: both engines passed 108 synthetic
+checks and all 24 corpus records passed independent original-row oracles.
+The shared-stage Frame/native executable passed 90 synthetic answers and all
+12 matching corpus records. All use the same five 65,536-row snapshots,
+stored-domain arithmetic, thresholds and result law. On this prefix,
+median selects 40,054 OS and 33,055 URLHash rows; p90 EventTime selects 6,555
+rows touching 231/256 blocks, WatchID 6,554 touching all blocks. These counts
+are not the larger seam population. Compiler activity is an explicit timer
+admission rejection. Each cohort passed that gate and checked every timed
+answer. The complete receipts remain in the two small local control outputs;
+[compact retained evidence](systems/evidence/local-arm-six-cells.json)
+preserves inputs, sources, result boundaries and samples.
 
-The [bounded system entry](systems/README.md) now builds from the pinned local
-cache and passes 72 preflight cases per engine for both storage arms. Exact
-65,536-row prefixes and the source-artifact reference are retained with the
-prepared receipt. On this prefix the median selects 40,054 OS rows and 33,055
-URLHash rows; p90 EventTime selects 6,555 rows touching 231/256 blocks, and
-WatchID selects 6,554 touching all blocks. These differ from the larger seam
-population. Query timing remains deferred during concurrent template compilation;
-the runner now rejects an active compiler before starting timers and records
-that admission evidence. Preflight success fills no timing cell.
+Microseconds per complete query, nine samples, **local Linux AArch64 VM**:
+
+| Case | Frame G16 | Narrow native | DuckDB UInt64 / FOR | Polars UInt64 / FOR |
+| --- | ---: | ---: | ---: | ---: |
+| SUM(OS) | 4.083 | 2.000 | 278.314 / 134.552 | 176.056 / 9.667 |
+| COUNT(OS ≥ median) | 5.333 | 10.125 | 159.763 / 183.431 | 20.669 / 14.626 |
+| SUM(URLHash) | 30.793 | 8.000 | 294.731 / 299.732 | 176.222 / 180.764 |
+| COUNT(URLHash ≥ median) | 18.709 | 6.334 | 158.679 / 255.562 | 20.376 / 21.168 |
+| EventTime ≥ p90 → SUM(ClientIP), COUNT | 14.375 | 7.000 | 222.226 / 202.891 | 67.130 / 46.462 |
+| WatchID ≥ p90 → SUM(ClientIP), COUNT | 45.001 | 13.250 | 286.189 / 216.434 | 65.755 / 54.087 |
+
+Frame uses the shared bound/compact stages with **16-block placement**, the
+owner image grain. It executes built stage arrays, while actual group images
+are emitted separately for the format-size account; this is not a timing of
+the checked owner facade or attachment. The larger seam tables above use
+part-wide placement. The native floor uses the qualified typed/FOR SUM,
+count-only and fused pair entries. Matching SeriesPack `0d44d527` headers and
+archive are retained; the later partial READ patch is not substituted into
+this receipt. These query families use the unchanged compiled reduction and
+filter operations.
+
+Frame is ahead of both actual engines in these cells, but their query
+planning/result boundaries are larger. The computational gaps remain useful:
+Frame trails narrow native 2.0× for OS SUM, 3.85× for URLHash SUM, 2.95× for
+URLHash COUNT and 2.05×/3.40× for the two pairs. OS COUNT wins 1.90×. These
+observations support keeping a plain/narrow native choice for wide scans and
+dispersed selection; engine overhead does not make those Frame costs disappear.
+
+There is no compression win on incompressible URLHash here: Frame emits
+528,864 image bytes versus 524,288 native payload bytes. OS emits 74,721 versus
+65,536; the two pairs emit 407,151 / 776,209 versus 524,288 / 786,432. Images
+and typed payloads are different accounts from complete retained memory.
+Frame private capacities and engine-private memory remain unknown.
+
+The engine and Frame/native cohorts are separate invocations, with one corpus
+process each; Frame/native arm order rotates, engine order does not. Source
+qualification and result parity are complete, while a balanced repeated-process
+ranking, proven cache residence and native Zen/Graviton system comparison
+remain open. These local observations cannot fill those cells by substitution.

@@ -204,7 +204,7 @@ def main():
         (output / (label + '-preflight.stderr')).write_text(run.stderr)
         assert run.returncode == 0, (label, run.stderr)
         result = json.loads(run.stdout)
-        assert result == {'checks': 72, 'pass': True}
+        assert result == {'checks': 108, 'pass': True}
         receipt['preflight'].append(dict(engine=label, command=command, result=result))
     assert all(sha(ROOT / p) == digest for p, digest in source_sha256.items()), 'Source changed during preflight'
     assert all(sha(Path(v['path'])) == v['file_sha256'] for v in inputs.values()), 'Input snapshot changed during preflight'

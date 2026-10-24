@@ -185,6 +185,38 @@ void qualify() {
             query q(a, a, operation, t, typed_for);
             need(q.execute(a.size()) == expected(a, a, operation, t), "unsigned qualification answer");
         }
+    struct distinct_fixture {
+        std::vector<u64> a, b;
+        u64 interior;
+        unsigned a_bytes, b_bytes;
+    };
+    constexpr u64 a_base = (u64{1} << 63) + 65536, b_base = u64{1} << 62;
+    const std::vector<distinct_fixture> distinct{
+        {{a_base, a_base + 300, a_base + 65535, a_base + 1000, a_base + 40000},
+         {b_base + UINT32_MAX, b_base + (u64{1} << 31) + 17, b_base, b_base + 37, b_base + UINT32_MAX - 13},
+         a_base + 1000, 2, 4},
+        {{a_base + UINT32_MAX, a_base, a_base + 70000, a_base + 2100000000, a_base + 17},
+         {b_base, b_base + 65535, b_base + 700, b_base + 1, b_base + 40000},
+         a_base + 70000, 4, 2}};
+    for (const bool typed_for : {false, true}) for (const auto &f : distinct)
+        for (auto operation : {op::sum, op::count, op::pair})
+            for (auto t : {u64{0}, f.interior, ~u64{0}}) {
+                query q(f.a, f.b, operation, t, typed_for);
+                if (typed_for) {
+                    if (operation != op::sum) need(q.ac.bytes == f.a_bytes, "distinct predicate FOR width");
+                    if (operation != op::count) need(q.bc.bytes == f.b_bytes, "distinct payload FOR width");
+                    duckdb_result schema{};
+                    need(duckdb_query(q.connection, "SELECT * FROM values_ LIMIT 0", &schema) == DuckDBSuccess,
+                        "inspect actual typed fixture columns");
+                    const auto actual_a = f.a_bytes == 2 ? DUCKDB_TYPE_USMALLINT : DUCKDB_TYPE_UINTEGER;
+                    const auto actual_b = f.b_bytes == 2 ? DUCKDB_TYPE_USMALLINT : DUCKDB_TYPE_UINTEGER;
+                    need(duckdb_column_type(&schema, 0) == (operation == op::sum ? actual_b : actual_a) &&
+                        (operation != op::pair || duckdb_column_type(&schema, 1) == actual_b),
+                        "actual typed fixture column dtype");
+                    duckdb_destroy_result(&schema);
+                }
+                need(q.execute(f.a.size()) == expected(f.a, f.b, operation, t), "distinct-column qualification answer");
+            }
 }
 void measure(const char* label, const char* an, const char* bn, const std::map<std::string, std::vector<u64>>& cols,
              op operation, unsigned quantile_percent, unsigned rounds, bool typed_for) {
@@ -220,12 +252,12 @@ void measure(const char* label, const char* an, const char* bn, const std::map<s
 int main(int argc, char** argv) {
     try {
         if (argc == 2 && std::string(argv[1]) == "--check-only") {
-            qualify(); std::printf("{\"checks\":72,\"pass\":true}\n"); return 0;
+            qualify(); std::printf("{\"checks\":108,\"pass\":true}\n"); return 0;
         }
         need(argc == 4, "usage: frame3_duckdb_corpus COLS_DIR ROWS ROUNDS");
         const auto rows = std::stoull(argv[2]); const auto rounds = static_cast<unsigned>(std::stoul(argv[3]));
         need(rows && rows <= 65536 && rows % 256 == 0 && rounds && rounds <= 101, "bounded rows/rounds");
-        qualify(); std::fprintf(stderr, "unsigned/extrema/empty/all-none qualification: 72 cases passed\n");
+        qualify(); std::fprintf(stderr, "unsigned/extrema/empty/all-none/distinct-column qualification: 108 cases passed\n");
         std::map<std::string, std::vector<u64>> columns;
         for (const char* n : {"OS", "URLHash", "EventTime", "WatchID", "ClientIP"}) columns[n] = load(argv[1], n, rows);
         for (const bool typed_for : {false, true}) {

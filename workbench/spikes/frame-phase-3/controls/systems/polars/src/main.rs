@@ -123,7 +123,39 @@ fn qualify() -> PolarsResult<()> {
         let query = Query::new(a, a, op, threshold, typed_for)?;
         assert_eq!(query.execute()?, expected(&a, &a, op, threshold));
     }}}}
-    eprintln!("unsigned/extrema/empty/all-none qualification: 72 cases passed");
+    let a_base = (1u64 << 63) + 65536;
+    let b_base = 1u64 << 62;
+    let distinct = [
+        (vec![a_base, a_base + 300, a_base + 65535, a_base + 1000, a_base + 40000],
+         vec![b_base + u32::MAX as u64, b_base + (1u64 << 31) + 17, b_base, b_base + 37, b_base + u32::MAX as u64 - 13],
+         a_base + 1000, 2usize, 4usize),
+        (vec![a_base + u32::MAX as u64, a_base, a_base + 70000, a_base + 2100000000, a_base + 17],
+         vec![b_base, b_base + 65535, b_base + 700, b_base + 1, b_base + 40000],
+         a_base + 70000, 4usize, 2usize),
+    ];
+    for typed_for in [false, true] { for (a, b, interior, a_lane, b_lane) in &distinct {
+        for op in [Op::Sum, Op::Count, Op::Pair] { for threshold in [0, *interior, u64::MAX] {
+            let query = Query::new(a, b, op, threshold, typed_for)?;
+            if typed_for {
+                if op != Op::Sum { assert_eq!(query.a_lane, *a_lane); }
+                if op != Op::Count {
+                    assert_eq!(query.b_lane, *b_lane);
+                    if *b_lane == 4 {
+                        // Even the interior selected residual total exceeds UInt32.
+                        let chosen = expected(a, b, Op::Pair, *interior);
+                        assert!(chosen.sum - b_base as u128 * chosen.count as u128 > u32::MAX as u128);
+                        assert_eq!(query.sum_output, DataType::UInt64);
+                        assert_eq!(query.sum_route, "UInt64_query_cast");
+                    } else {
+                        assert_eq!(query.sum_output, DataType::Int64);
+                        assert_eq!(query.sum_route, "Int64_small_lane_natural");
+                    }
+                }
+            }
+            assert_eq!(query.execute()?, expected(a, b, op, threshold));
+        }}
+    }}
+    eprintln!("unsigned/extrema/empty/all-none/distinct-column qualification: 108 cases passed");
     Ok(())
 }
 fn measure(label: &str, an: &str, bn: &str, columns: &BTreeMap<&str, Vec<u64>>, op: Op, percent: usize, rounds: usize, typed_for: bool) -> PolarsResult<()> {
@@ -148,7 +180,7 @@ fn measure(label: &str, an: &str, bn: &str, columns: &BTreeMap<&str, Vec<u64>>, 
 fn main() -> PolarsResult<()> {
     let args: Vec<_> = std::env::args().collect();
     if args.len() == 2 && args[1] == "--check-only" {
-        qualify()?; println!("{{\"checks\":72,\"pass\":true}}"); return Ok(());
+        qualify()?; println!("{{\"checks\":108,\"pass\":true}}"); return Ok(());
     }
     assert_eq!(args.len(), 4, "usage: frame3-polars-corpus COLS_DIR ROWS ROUNDS");
     let rows = args[2].parse::<usize>().unwrap(); let rounds = args[3].parse::<usize>().unwrap();
