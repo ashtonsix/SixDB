@@ -209,7 +209,17 @@ struct composed {
             sizes[i] += 1;
         for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
             sizes[exceptions[e].first] = static_cast<u8>(exceptions[e].second + 1);
-        std::fill(sizes + n, sizes + (n + 15) / 16 * 16, u8{0});
+        if (widths.align != 16)  // 16-row placement already decoded zero padding
+            std::fill(sizes + n, sizes + (n + 15) / 16 * 16, u8{0});
+        return n;
+    }
+    // For SUM: sizes minus one, patched; the consumer adds the one inline.
+    unsigned decode_minus_one(std::size_t b, u8 *sizes) const {
+        const unsigned n = count[b];
+        const unsigned take = widths.align == 16 ? (n + 15) / 16 * 16 : n;
+        widths.by_width[width[b]].reader->read_unchecked(offset[b], take, sizes);
+        for (u32 e = ex_first[b]; e < ex_first[b + 1]; ++e)
+            sizes[exceptions[e].first] = exceptions[e].second;
         return n;
     }
     unsigned rank(std::size_t b, unsigned row) const {
@@ -342,9 +352,9 @@ int main(int argc, char **argv) {
                                 std::size_t k = 0;
                                 alignas(64) u8 sizes[max_runs + 16];
                                 for (std::size_t b = 0; b < nb; ++b) {
-                                    const unsigned n = c->decode(b, sizes);
+                                    const unsigned n = c->decode_minus_one(b, sizes);
                                     for (unsigned i = 0; i < n; ++i)
-                                        s += static_cast<unsigned __int128>(sizes[i]) * run_values[k + i];
+                                        s += static_cast<unsigned __int128>(sizes[i] + 1u) * run_values[k + i];
                                     k += n;
                                 }
                                 return s;
@@ -361,9 +371,9 @@ int main(int argc, char **argv) {
                                 std::size_t k = 0;
                                 alignas(64) u8 sizes[max_runs + 16];
                                 for (std::size_t b = 0; b < nb; ++b) {
-                                    const unsigned n = c->decode(b, sizes);
+                                    const unsigned n = c->decode_minus_one(b, sizes);
                                     for (unsigned i = 0; i < n; ++i)
-                                        s += static_cast<unsigned __int128>(sizes[i]) * run_values[k + i];
+                                        s += static_cast<unsigned __int128>(sizes[i] + 1u) * run_values[k + i];
                                     k += n;
                                 }
                                 return s;

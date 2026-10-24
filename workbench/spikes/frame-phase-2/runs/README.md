@@ -80,8 +80,9 @@ trade is still unmeasured.
 
 ## Next
 
-- Remove the glue: sum `s·v` plus `Σv` instead of adding one to each size,
-  and take a patch-free path for blocks without outliers.
+- Glue removed locally (SUM consumes sizes minus one, no re-padding under
+  16-row placement): SUM with outliers drops about 5%, points unchanged. What
+  remains is SeriesPack's short-range decode, which the SeriesPack thread owns.
 - Retime once SeriesPack's short reads are faster, and flushed, where the
   bytes saved should pay.
 - The same stages for the other boundary consumers: block body offsets
