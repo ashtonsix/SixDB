@@ -1,0 +1,39 @@
+{
+  "revision": "ac83c82b9a0c8d76bea92829e471ebc0d98b1978",
+  "archive_sha256": "227cb3217c0c14d1494d49e7b5856e60219856f3929931dac97665c8bacb9602",
+  "archive_bytes": 96144,
+  "files_sha256": {
+    "engine/include/engine/raw_farray_ops.h": "c7c7abd2bff54c04669554e65b41e852b81983fe3f60034d0057399747e37e11",
+    "engine/include/engine/typebound_farray.h": "7db778a0411b8a127ae83c82a7d42d1ab1e7bfa4e18c166e2fb4eebf1169828a",
+    "engine/test/test_raw_farray_ops.cpp": "215c92be1d9ef04fb495d3abe999420db79a8585d202c88f6b01a8ec8d1596b1",
+    "engine/test/test_typebound_farray.cpp": "01a3898512fa848c3fb071087ab3d759a3b96af696422cc41b2d2199bb76deb8",
+    "frame/REPORT.md": "80ef679dcdb1ed7952224285227098571a481be913cc13bf6984a70f354c8fd6",
+    "frame/SPEC.md": "af791751673ebbd72d11f8655dc9d432c108119421c0002f6c6facb21d1dbef4",
+    "frame/include/frame/aggregate.h": "f672988c0900f1ab2b7de0e733f00d8e1b0c040582afff216e21e9df5d090472",
+    "frame/include/frame/bitweave.h": "71494b95e959c8b8185b20f115064585967165f0ac909bacb35b48493ea783f0",
+    "frame/include/frame/bytepack.h": "504668aa3e3aeb128c2b7604c23cc2f1480e4837856280ea869881b5ee899ccf",
+    "frame/include/frame/byteplane.h": "4877edcaa334ad0125d5343daadfbbef25094a452e0825b0c0d69e3700b4fd15",
+    "frame/include/frame/fastlanes.h": "0e6a5f6381d0bab8a1b8279f2ea2df9a1f0e4ecb92d6ae1887ccc3639655b4da",
+    "frame/include/frame/horizontal.h": "bbd6c57b2ef97149f40683b1cc035d30ba39d1791cee3a95f23aff98225c58e5",
+    "frame/include/frame/lane256.h": "448b1c0de4b4f33dea60a5aaf3ae889f6b0870c1f9c88fcf4f5b6d1d8fcb3bc7",
+    "frame/include/frame/layout.h": "4771ff8b120be3e6785bd739b3a2f07b284ca262dbdfb85d2562f5f9fef9201a",
+    "frame/include/frame/locate.h": "0288a076f46c4bf857427defdd733698762c6a31d594321df10885cc00f0c0fa",
+    "frame/include/frame/mask.h": "f2b4d6e69591b7b5c49f265dee5facd722e081ffa7333668a0c6b76ed126592e",
+    "frame/include/frame/prepass.h": "2f150db0a457452712cd415d1213e12c54f1429c98e2c352bcccc3b61e25daea",
+    "frame/include/frame/raw.h": "8f9032bc1f2a983fc0b5adae888a41d164158023bacdb720da02c1ddec4c9a0f",
+    "frame/include/frame/scan.h": "67831cb9b6cb55d76f26f8ed764315df820f068dffd56c66844b4916ada63f02",
+    "frame/include/frame/scancmp.h": "50a4c2e49876131f4cd3bad29c0ce7fe1229618f5e6cdcaca2630f403178a935",
+    "frame/include/frame/types.h": "58a338ec6e34454c74d4fae91119bd51a2f62f2f0d6bb3aaeac244fe5a019e53",
+    "frame/test/test_aggregate.cpp": "472d335b2ef32a55e3b15dbb593a5fc92dfc677ab4e8ee517798a3af643ff461",
+    "frame/test/test_raw.cpp": "d41b4514c5ca815e84cddf3a4b32fb7c2c1b72af8c9b66531f813d0451001d6d",
+    "kmath/include/kmath/moments.h": "f939f2eb42b3db162fdfde5c69df2448dc2c117d584f416423afbf2bac25ce4b"
+  },
+  "selection": "Tracked quoted-include closure of actual RawCodec, Engine raw SUM/Type-bound container, aggregate and predicate entry points; owning findings/tests retained as source references only. No untracked experiments or old harness.",
+  "root_headers": [
+    "engine/include/engine/raw_farray_ops.h",
+    "engine/include/engine/typebound_farray.h",
+    "frame/include/frame/aggregate.h",
+    "frame/include/frame/bitweave.h",
+    "frame/include/frame/scancmp.h"
+  ]
+}

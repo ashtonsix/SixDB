@@ -1,0 +1,232 @@
+{
+  "format": 1,
+  "scope": "Native functional controls only; restricted range endpoints; no timings or worker execution",
+  "revision": "ac83c82b9a0c8d76bea92829e471ebc0d98b1978",
+  "source_archive_sha256": "227cb3217c0c14d1494d49e7b5856e60219856f3929931dac97665c8bacb9602",
+  "source_files": 24,
+  "inputs_sha256": {
+    "workbench/peers/frame-calico.cmake": "4afccb88da754847be5c3b7deeb66b7c16034ce1f74b1666b725964f218c442f",
+    "workbench/spikes/frame-phase-2/instruments/calico/CMakeLists.txt": "e8b6719101e271348009b62e2460d45aeaddd16372e413fb09b2596989440342",
+    "workbench/spikes/frame-phase-2/instruments/calico/control.h": "e4a011f1665b5b7290d8a07228b4a1322d079ea05e4bd5063333688553585093",
+    "workbench/spikes/frame-phase-2/instruments/calico/control.cpp": "e0b666ff58355e0759b4eadfc994b15cdb7d3aec2a84faccf5a370b52e4f16a4",
+    "workbench/spikes/frame-phase-2/instruments/calico/check.cpp": "281d0edef720d8443e6134d19004cac314fb905359e9b2a972834725217c0bfc",
+    "workbench/spikes/frame-phase-2/instruments/calico/run.py": "83a4628e91c0edaf0c0f96028f1ad271b7a902d8a7d9a1657b9a221efec7b6aa",
+    "workbench/spikes/frame-phase-2/instruments/calico/source.json": "5e596bf5d90b329e1368ccb0f491bb55639c88d8cd03814a0e417118ec63366d",
+    "workbench/spikes/frame-phase-2/instruments/calico/source-artifact.json": "c5187ce7fd67c47b8b2718471337dd53ce5d9f46a9664107af1301cd56c18269"
+  },
+  "compiler": "Ubuntu clang version 21.1.8 (++20251221033104+2078da43e25a-1~exp1~20251221153121.57)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/lib/llvm-21/bin\n",
+  "host": {
+    "system": "Linux",
+    "node": "ubuntu",
+    "release": "7.0.14-orbstack-00380-ga7e0a2dc9535",
+    "version": "#1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026",
+    "machine": "aarch64",
+    "processor": ""
+  },
+  "cpu": 8,
+  "jobs": 1,
+  "nonpassing": [
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "8",
+        "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/frame_calico_check",
+        "raw",
+        "404"
+      ],
+      "exit": 1,
+      "case": 404,
+      "fixture": "raw_lane256_k63_frames1_patch0",
+      "diagnostic": "prepass.h:168 res_window: signed INT64_MAX - INT64_MIN overflow",
+      "stderr_sha256": "626a899a06852ae5692ba6b29ce2629cf8ab229029fac98767f58b05d7b96fd7",
+      "upstream_unchanged": true
+    }
+  ],
+  "arithmetic": "Owner sums exact i128/u128 on bounded logical fixtures; separate leaf modulo2^64 with explicit wide counterexamples",
+  "range_limit": "Positive matrix omits extreme equal endpoints at K>=63 and u64 max lower bound at K64; omissions counted. Original methods have no hidden fallback.",
+  "readable_window": "No extra payload slack requested: separate exact-end protected-page fixtures for symbols/raw body/container body/dense leaf; copied patch allocations have capacity==size. Not a proof for every layout/grain/ISA.",
+  "timing_claim": false,
+  "profiles": [
+    {
+      "profile": "normal",
+      "binary_sha256": "a82e4de9debb92bcd1d68de6e2b61226cf10ace728c3d459d91ba517acbd2e6e",
+      "source_files_verified": 24,
+      "compiled_upstream_files": [
+        "engine/include/engine/raw_farray_ops.h",
+        "engine/include/engine/typebound_farray.h",
+        "frame/include/frame/aggregate.h",
+        "frame/include/frame/bytepack.h",
+        "frame/include/frame/byteplane.h",
+        "frame/include/frame/fastlanes.h",
+        "frame/include/frame/horizontal.h",
+        "frame/include/frame/lane256.h",
+        "frame/include/frame/layout.h",
+        "frame/include/frame/locate.h",
+        "frame/include/frame/mask.h",
+        "frame/include/frame/prepass.h",
+        "frame/include/frame/raw.h",
+        "frame/include/frame/scan.h",
+        "frame/include/frame/scancmp.h",
+        "frame/include/frame/types.h",
+        "kmath/include/kmath/moments.h"
+      ],
+      "compile_commands": [
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/frame_calico_controls.dir/control.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/control.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/control.cpp",
+          "output": "CMakeFiles/frame_calico_controls.dir/control.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -o CMakeFiles/frame_calico_check.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
+          "output": "CMakeFiles/frame_calico_check.dir/check.cpp.o"
+        }
+      ],
+      "functional": {
+        "argv": [
+          "taskset",
+          "-c",
+          "8",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/normal/frame_calico_check",
+          "all-safe-ranges"
+        ],
+        "exit": 0,
+        "witness": {
+          "surface": "all",
+          "cases": 1638,
+          "checks": 48901949,
+          "sum_calls": 6649,
+          "range_calls": 5538,
+          "raw_patch_values": 4346064,
+          "leaf_wide_counterexamples": 445,
+          "multisymbol_bits": 31,
+          "bounded_range_endpoints": true,
+          "bounded_range_omissions": 174,
+          "guarded_calls": 7858,
+          "refusals": 1042,
+          "pass": true,
+          "timing_claim": false
+        },
+        "stdout_sha256": "0c7640377592f04f2255263838006c6d3a4f0129e056518a5f0ed09a8d9babef",
+        "stderr_sha256": "28ce31d82f92303caa872e8c44fd732ad96d3cf5e641ec69d06e3c014fa79aa7"
+      }
+    },
+    {
+      "profile": "sanitize",
+      "binary_sha256": "7e105d3e1edb9057ac3913e2ca0fe15a0b2a56cafafefb648bbe760fcdff013c",
+      "source_files_verified": 24,
+      "compiled_upstream_files": [
+        "engine/include/engine/raw_farray_ops.h",
+        "engine/include/engine/typebound_farray.h",
+        "frame/include/frame/aggregate.h",
+        "frame/include/frame/bytepack.h",
+        "frame/include/frame/byteplane.h",
+        "frame/include/frame/fastlanes.h",
+        "frame/include/frame/horizontal.h",
+        "frame/include/frame/lane256.h",
+        "frame/include/frame/layout.h",
+        "frame/include/frame/locate.h",
+        "frame/include/frame/mask.h",
+        "frame/include/frame/prepass.h",
+        "frame/include/frame/raw.h",
+        "frame/include/frame/scan.h",
+        "frame/include/frame/scancmp.h",
+        "frame/include/frame/types.h",
+        "kmath/include/kmath/moments.h"
+      ],
+      "compile_commands": [
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/frame_calico_controls.dir/control.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/control.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/control.cpp",
+          "output": "CMakeFiles/frame_calico_controls.dir/control.cpp.o"
+        },
+        {
+          "directory": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize",
+          "command": "/usr/bin/clang++-21 -I/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/frame/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/engine/include -isystem /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/_deps/frame-calico-ac83c82b9a0c8d76bea92829e471ebc0d98b1978/calico/kmath/include -std=c++23 -O3 -gline-tables-only -fno-fast-math -ffp-contract=off -fdenormal-fp-math=ieee -march=armv8-a+simd -mtune=neoverse-v2 -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -o CMakeFiles/frame_calico_check.dir/check.cpp.o -c /Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
+          "file": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/workbench/spikes/frame-phase-2/instruments/calico/check.cpp",
+          "output": "CMakeFiles/frame_calico_check.dir/check.cpp.o"
+        }
+      ],
+      "functional": {
+        "argv": [
+          "taskset",
+          "-c",
+          "8",
+          "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/sixdb/build/frame-helper/calico/sanitize/frame_calico_check",
+          "all-safe-ranges"
+        ],
+        "exit": 0,
+        "witness": {
+          "surface": "all",
+          "cases": 1638,
+          "checks": 48901949,
+          "sum_calls": 6649,
+          "range_calls": 5538,
+          "raw_patch_values": 4346064,
+          "leaf_wide_counterexamples": 445,
+          "multisymbol_bits": 31,
+          "bounded_range_endpoints": true,
+          "bounded_range_omissions": 174,
+          "guarded_calls": 7858,
+          "refusals": 1042,
+          "pass": true,
+          "timing_claim": false
+        },
+        "stdout_sha256": "0c7640377592f04f2255263838006c6d3a4f0129e056518a5f0ed09a8d9babef",
+        "stderr_sha256": "28ce31d82f92303caa872e8c44fd732ad96d3cf5e641ec69d06e3c014fa79aa7"
+      }
+    }
+  ],
+  "linked_proof": {
+    "reduction_mnemonics": [
+      "addv",
+      "uadalp",
+      "uaddlp"
+    ],
+    "linked_libraries_sha256": "658ecaf0410de8469cfa5ba0a93583122ec59e0c6e5ca0f1f12a3bd3416bbb5c",
+    "scope": "Actual called wrappers link the bound SUM and native NEON residual branches; no dynamic instruction trace or timing claim.",
+    "symbols": {
+      "signed_wrapper": {
+        "symbol": "_ZNK14calico_control12signed_image3sumEjRn",
+        "address": 404592,
+        "bytes": 64,
+        "assembly": "signed_wrapper.asm",
+        "sha256": "0a1af70950f7662800c8e2b5c00d3631af7b07d215431ebfdc81e84d2efcb044"
+      },
+      "unsigned_wrapper": {
+        "symbol": "_ZNK14calico_control14unsigned_image3sumEjRo",
+        "address": 416128,
+        "bytes": 8,
+        "assembly": "unsigned_wrapper.asm",
+        "sha256": "3508257b22fe0d20d6cf8bc77f7c8620161270a6447b9da4d0cfe7d7ce1b5b65"
+      },
+      "container_sum": {
+        "symbol": "_ZNK6engine19typebound_leaf_view3sumEjRo",
+        "address": 418304,
+        "bytes": 2316,
+        "assembly": "container_sum.asm",
+        "sha256": "93bd9966cc0baeb2edbf3bb66ad73f642ea742784db8f610328f317338bca5f6"
+      },
+      "bound_raw_sum": {
+        "symbol": "_ZN6engine22raw_farray_sum_trustedERKNS_19raw_farray_sum_planERKN5frame9RawStreamERn",
+        "address": 417696,
+        "bytes": 468,
+        "assembly": "bound_raw_sum.asm",
+        "sha256": "55d03529f2bb583687ac1ddbf03835593e3880119df9a53f844fc0acb71c167b"
+      },
+      "residual_sum": {
+        "symbol": "_ZN6engine23raw_farray_residual_sumEN5frame8LayoutIdEPKhjjPmRo",
+        "address": 104096,
+        "bytes": 7860,
+        "assembly": "residual_sum.asm",
+        "sha256": "377ca8f7f5a56e104fc63615dc3f17dbfa0ac4be44db13de5c91ae638c107a52"
+      }
+    }
+  },
+  "full_receipt_sha256": "d7240c1538c6994abc2e1edbff3629a3f286e15d415e89001064699c3199cb39",
+  "selection": "Retains both native functional outcomes, actual compile commands, source/input/binary identities, called SUM/NEON symbols and upstream range negative. Full qualification/case logs/linked assembly are recoverable through evidence-artifact.json; routine compiler outputs remain ignored."
+}
