@@ -16,8 +16,8 @@
 //            are smaller, else the block falls through to no RLE.
 //
 // Work over the whole column: SUM, COUNT(x >= median), and 65,536 random
-// points. SeriesPack's own operations serve the packed blocks (typed sum for
-// widths <= 48, read-then-sum above; filter in 64-row windows; get); run
+// points. SeriesPack's own operations serve the packed blocks (range sum for
+// widths <= 55, read-then-sum above; range count; get); run
 // blocks decode sizes and values and weight them. Every answer is checked
 // against the raw column. Warm.
 //
@@ -101,8 +101,8 @@ template <unsigned K, sp::preset P> struct packed_width_at final : packed_width 
     }
     u128 sum(std::size_t block) const override {
         const std::size_t first = block * block_rows;
-        if constexpr (K <= 48) {
-            return reader->sum_unchecked(first, block_rows, ~u64{0}, [](std::size_t) { return u16{0xffff}; });
+        if constexpr (K <= 55) {  // 256 rows below 2^56 cannot wrap the modulo-2^64 range sum
+            return reader->sum_unchecked(first, block_rows);
         } else {
             alignas(64) u64 x[block_rows];
             reader->read_unchecked(first, block_rows, x);
@@ -114,10 +114,7 @@ template <unsigned K, sp::preset P> struct packed_width_at final : packed_width 
     }
     unsigned count_ge(std::size_t block, u64 rhs) const override {
         const std::size_t first = block * block_rows;
-        unsigned c = 0;
-        for (unsigned w = 0; w < 4; ++w)
-            c += std::popcount(reader->template filter_unchecked<ikea::comparison::greater_equal>(first + 64 * w, 64, rhs));
-        return c;
+        return static_cast<unsigned>(reader->template count_unchecked<ikea::comparison::greater_equal>(first, block_rows, rhs));
     }
     u64 get(std::size_t row) const override { return reader->get_unchecked(row); }
     std::size_t bytes() const override { return storage.size(); }
