@@ -3,7 +3,8 @@
 Opened 2026-10-24. Phase 3 decides what `ikea::frame` lands as its first
 implementation, and how that implementation grows. This page is a **proposal
 for Ashton to react to**, not a settled design. The prototypes listed at the
-end test it; their findings will be added here.
+end test it; [FINDINGS.md](FINDINGS.md) has their results, and the sections
+below are revised where those results changed the proposal.
 
 ## The brief
 
@@ -163,14 +164,16 @@ is a checkpoint search.
   definition.
 - A law is added, measured and kept or removed without touching other cells.
 
-Execution resolves laws down the tree to runs of blocks that share a leaf
-specialisation, calls SeriesPack's range kernels once per run (one decode feeds
-several consumers through `author::scan_regions`), and applies block-grain
-fixups from descriptor columns. Only laws that must enter the inner loop (the
-delta prefix, a head-first filter) are hand-fused; that is Ashton's "only
-critical paths hand-fused". The open question is whether laws compose at block
-grain through runtime dispatch, avoiding a template instantiation per stage
-tree, and still match phase 2's hand glue. That is prototype 1.
+Execution has two levels. Laws compose at block grain through runtime
+dispatch (one call per part and stage), so no stage tree is instantiated as a
+template. They resolve down to runs of blocks that share a leaf
+specialisation, call SeriesPack's range kernels once per run, and apply
+block-grain fixups from descriptor columns. Leaf kernels are compiled once in
+Ikea. Critical paths get a **plan** built at bind time from the same tree:
+points first, then the delta prefix and head-first filters. That is Ashton's
+"only critical paths hand-fused". Prototype 1 found SUM at 0.71–1.38× phase
+2's hand glue, COUNT at 1.03–1.88×, and points faster than the glue with a
+point plan on Graviton 4 ([findings §1](FINDINGS.md#1-runtime-composed-laws-against-phase-2s-hand-glue)).
 
 ### 3. Block: part, group and block, with headless descriptors
 
@@ -180,7 +183,10 @@ tree, and still match phase 2's hand glue. That is prototype 1.
   ([interfaces](../../../ikea/docs/interfaces.md#keep-data-headless-and-frame-shared-descriptions)).
 - **Group**: 16 blocks, the unit of placement, slack, compaction and
   copy-on-write. Bodies of equal width sit together inside a group, so one
-  SeriesPack call covers each width run.
+  SeriesPack call covers each width run. A group's headless **image** (its
+  descriptors, exception area and arrays) is one Orbital Part; readers attach
+  a tree to the Parts their Scope selects, borrowing the arrays in place
+  ([findings §6](FINDINGS.md#6-end-to-end-through-orbital)).
 - **Block**: 256 rows, the unit of fitting. Every per-block parameter lives in
   a descriptor column owned by its stage (bound's lo and exception offset,
   pack's width, intervals' checkpoints). Descriptor columns are ordinary
@@ -209,10 +215,18 @@ conversion: same logical version, new physical alternative, Orbital `adopt`.
 Fitting is deterministic in (values, admitted set, prior), so replay of
 admitted input reproduces a logically identical group.
 
-Where write-time outliers live is the main open choice: residual-domain
-patches sharing bound's exception slots with slack (Ashton's original model),
-a group delta buffer marking non-pristine blocks (Ashton's leaning), or
-immediate group re-encode. Prototype 4 compares them at equal write counts.
+Writes have a fallback like reads: a stage without a write law refuses, and
+the owner re-encodes the group, so every stage supports writes before it has
+a write law.
+
+Where write-time outliers live was the main open choice. Prototype 4 compared
+residual-domain patches in bound's exception areas with per-group slack
+(Ashton's original model), a group delta buffer marking non-pristine blocks
+(Ashton's leaning) and immediate group re-encode. Slack costs a seventh of the
+buffer's bytes and less read tax at the same outlier write cost; the buffer
+only wins hot-row rewrites. **Proposed for the first landing: slack, with
+group re-encode when it runs out**; the buffer stays in research
+([findings §4](FINDINGS.md#4-writes-exception-slack-delta-buffer-or-re-encode)).
 
 ### 5. Description: what Engine sees
 
@@ -251,7 +265,7 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 | Area | First landing |
 | --- | --- |
 | Module | `ikea::frame` (`include/ikea/frame/`), following Ikea's lifecycle: `layout` (the stage tree), `view::attach` over a part's planes, `validate`, `bind_reader`, `bind_writer`, then commands |
-| Stages | `intervals` (none, sizes, relative ends; G16 and G64), `bound`, `pack` (SeriesPack Local and Bulk presets; width 0 for constants) |
+| Stages | `intervals` (none, sizes, relative ends; G16 and G64) with its SUM law, fused checkpoint-plus-prefix point read and framed checkpoints; `bound`; `pack` (SeriesPack Local and Bulk presets; width 0 for constants) |
 | Reads | `get`, `read`, `select`, `filter`, `count`, `sum`, `min`, `max`, with laws where measured and decode elsewhere |
 | Writes | `set`, `replace`, `append` to a plain tail, `seal` and `compact` as group re-encode; declare, journal, contribution |
 | Description | Schema encode/decode, capabilities, fit statistics, cost tables, two or three presets |
@@ -262,7 +276,9 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 
 1. **Contract and fallback.** Stage concept, operation reference semantics,
    decode-fallback driver, schema description; checked against an oracle on
-   ClickBench and generated columns.
+   ClickBench and generated columns. In parallel, ask the SeriesPack owner for
+   erased range operations compiled once in Ikea, so Frame instantiates no
+   width-specialised kernels ([findings §3](FINDINGS.md#3-adding-a-stage-or-operation-and-the-compile-bill)).
 2. **Laws for the three stages**, measured against phase 2's hand glue and
    native controls, then against Polars and DuckDB on the workers at the
    residence tiers. A law stays only where it wins.
@@ -274,16 +290,16 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 Each step lands in Ikea in reviewed batches through Ikea LEAD, as the
 SeriesPack work did.
 
-## Prototypes that could break this
+## Prototypes
 
-| # | Question | How it is tested |
+| # | Question | Result so far ([FINDINGS.md](FINDINGS.md)) |
 | --- | --- | --- |
-| 1 | Do block-grain laws composed at runtime match hand glue? | A generic `bound → pack` and `intervals → bound → pack` driver against [pipelines.cpp](../frame-phase-2/runs/pipelines.cpp)'s no-RLE path: SUM, COUNT ≥ t, points, filter, select; same columns, Zen 5 and Graviton 4 |
-| 2 | Does the stage contract admit every placeholder shape? | Fit, emit and decode for `runs`, `split` and a TuplePack leaf through the unchanged contract; record every contract change it forces |
-| 3 | What does a new stage or operation cost to add? | Count files and cells touched when `runs` and `max` are added; compile time and instantiation count per preset |
-| 4 | Where should write-time outliers live? | Exception slack against a group delta buffer against re-encode, at equal write counts for a few hot rows and one edit per block; pristine-read tax, contribution, envelope size |
-| 5 | Can fit statistics rank presets? | Predict the cheapest preset per column and operation mix from statistics and cost tables; compare with measured |
-| 6 | Group placement and Orbital Parts | Groups in one part allocation with part-wide descriptors against per-group allocations, flushed; group re-encode as a Part replacement |
+| 1 | Do block-grain laws composed at runtime match hand glue? | SUM yes; COUNT pays 3–8 ns per block of bookkeeping; points need a plan, which beats the glue on Graviton 4. Delta on the fallback is 5–6× slower than `bound → pack`, so it needs its laws |
+| 2 | Does the stage contract admit every placeholder shape? | Yes for `runs`, `split` and a shared TuplePack record, after seven contract changes (own geometry per series, row-range children, combined child selections, deposit-and-seal leaves, admitted widths, priors from descriptors, capabilities before change) |
+| 3 | What does a new stage or operation cost to add? | 60–150 lines in one file each; the compile bill is SeriesPack's width-specialised kernels (4–7 GB per 16-width TU) |
+| 4 | Where should write-time outliers live? | Exception slack; every store declared before payload, contributions exact, replay byte-identical |
+| 5 | Can fit statistics rank presets? | Ranking right in 18–21 of 24 cells, but on an easy test; absolute costs off by a median 34–83% without residence tiers |
+| 6 | Group images as Orbital Parts | Works end to end: older Scopes keep their versions, a write publishes one Part and reuses fifteen, in about 1 µs of publication |
 
 ## Coordination
 
