@@ -11,6 +11,7 @@
 // arguments. Leaves batch blocks of one specialisation into one kernel call.
 #pragma once
 #include <ikea/bitset256.h>
+#include <optional>
 #include <ikea/comparison.h>
 #include <ikea/effects.h>
 
@@ -246,6 +247,21 @@ class stage {
             });
         });
     }
+    // MAX over the selected rows of the selected blocks; false if none. Raises
+    // m only (m is a running maximum across parts).
+    virtual bool max_selected(unsigned part, const bitset256 &blocks, const block_rows_set &rows, u64 &m) const {
+        alignas(64) u64 x[block_rows];
+        bool any = false;
+        each(blocks, [&](unsigned b) {
+            const bitset256 r = rows[b] & first_n(rows_in(part, b));
+            if (r.empty())
+                return;
+            decode(part, b, x);
+            each(r, [&](unsigned i) { m = std::max(m, x[i]); });
+            any = true;
+        });
+        return any;
+    }
     // SUM over the selected rows of the selected blocks (SUM ... WHERE).
     virtual u128 sum_selected(unsigned part, const bitset256 &blocks, const block_rows_set &rows) const;
     // The same with one row pattern for every block (a parent's fixed law,
@@ -452,6 +468,25 @@ class column {
                 s += root_->sum_selected(p, bl, rows);
         }
         return s;
+    }
+    // MAX of the selected rows; nullopt if none is selected.
+    std::optional<u64> max(const u64 *words) const {
+        block_rows_set rows;
+        u64 m = 0;
+        bool any = false;
+        for (unsigned p = 0; p < parts_; ++p) {
+            bitset256 bl;
+            each(blocks(p), [&](unsigned b) {
+                const u64 *w = words + (p * part_rows + b * block_rows) / 64;
+                rows[b] = {};
+                std::copy_n(w, (root_->rows_in(p, b) + 63) / 64, rows[b].words.data());
+                if (!rows[b].empty())
+                    bl.set(b);
+            });
+            if (!bl.empty())
+                any |= root_->max_selected(p, bl, rows, m);
+        }
+        return any ? std::optional<u64>(m) : std::nullopt;
     }
     u64 count(comparison op, u64 t) const {
         u64 c = 0;

@@ -39,6 +39,9 @@ inline std::vector<tree> trees() {
 /// A hand-fused point path for the bound -> pack shape: one flat entry per
 /// block built at bind time, so a point is one entry load, one leaf call and
 /// a field-first exception check, instead of a virtual call per stage.
+/// The plan copies lo, bases and exceptions but borrows the leaf bodies: the
+/// column's images must stay unchanged while it is used, and any mutation or
+/// rebuild needs a new plan.
 class point_plan {
     // One 24-byte entry per block (64 bytes before), so more of the
     // descriptors stay resident: each leaf kernel is stored once per width
@@ -56,6 +59,11 @@ class point_plan {
     std::vector<u64> val_;
 
   public:
+    // Entries narrow leaf indexes to u16 and exception offsets to u32; a
+    // column past either limit is refused rather than aliased.
+    static bool admits(std::size_t leaves, std::size_t exceptions) noexcept {
+        return leaves <= std::size_t{1} << 16 && exceptions <= ~u32{0};
+    }
     static std::optional<point_plan> make(const column &c) {
         const auto *root = dynamic_cast<const bound *>(&c.root());
         if (!root)
@@ -72,12 +80,16 @@ class point_plan {
                 if (e.kernel.get) {
                     auto it = std::find_if(seen.begin(), seen.end(), [&](auto &x) { return x.first == e.kernel.resource; });
                     if (it == seen.end()) {
+                        if (!admits(plan.leaves_.size() + 1, plan.pos_.size()))
+                            return std::nullopt;
                         seen.emplace_back(e.kernel.resource, static_cast<u16>(plan.leaves_.size()));
                         plan.leaves_.push_back(e.kernel);
                         it = seen.end() - 1;
                     }
                     leaf = it->second;
                 }
+                if (!admits(plan.leaves_.size(), plan.pos_.size() + e.count))
+                    return std::nullopt;
                 plan.entries_.push_back({e.lo, static_cast<u32>(e.base), static_cast<u32>(plan.pos_.size()), leaf, static_cast<u8>(e.count)});
                 plan.pos_.insert(plan.pos_.end(), e.pos, e.pos + e.count);
                 plan.val_.insert(plan.val_.end(), e.val, e.val + e.count);

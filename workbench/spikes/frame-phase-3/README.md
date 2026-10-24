@@ -1,10 +1,11 @@
 # Ikea Frame, phase 3
 
 Opened 2026-10-24. Phase 3 decides what `ikea::frame` lands as its first
-implementation, and how that implementation grows. This page is a **proposal
-for Ashton to react to**, not a settled design. The prototypes listed at the
-end test it; [FINDINGS.md](FINDINGS.md) has their results, and the sections
-below are revised where those results changed the proposal.
+implementation, and how that implementation grows. This page is the
+proposal, revised where the prototypes changed it, and since 25 October the
+stage side's consolidation plan ([landing plan](#landing-plan)).
+[FINDINGS.md](FINDINGS.md) has the results and [CHECKLIST.md](CHECKLIST.md)
+what is decided, evidenced and open.
 
 ## The brief
 
@@ -319,32 +320,76 @@ change plus statistics precision.
 
 ## Landing plan
 
-1. **Contract and fallback.** Stage concept, operation reference semantics,
-   decode-fallback driver, schema description; checked against an oracle on
-   ClickBench and generated columns. In parallel, ask the SeriesPack owner for
-   erased range operations compiled once in Ikea, so Frame instantiates no
-   width-specialised kernels ([findings §3](FINDINGS.md#3-adding-a-stage-or-operation-and-the-compile-bill)).
-2. **Laws for the three stages**, measured against phase 2's hand glue and
-   native controls, then against Polars and DuckDB on the workers at the
-   residence tiers. A law stays only where it wins.
-3. **Change path**, with the delta buffer comparison settled by prototype 4.
-4. **Description and presets**, with a small analysis that ranks presets from
-   fit statistics, checked against measured costs.
-5. **Integration**: Orbital material, Loom staging, the end-to-end check.
+Ashton asked on 24 October to finish the investigations in flight and move
+towards consolidation. This is the stage side's account; Ikea LEAD owns the
+description, binding and owner side (CHECKLIST's division of work) and the
+module lands in reviewed batches through Ikea LEAD, as SeriesPack did.
 
-Each step lands in Ikea in reviewed batches through Ikea LEAD, as the
-SeriesPack work did.
+**What the stage side lands, from the prototype**
+([findings](FINDINGS.md)):
+
+- The three stages with their measured laws: `pack` over SeriesPack's
+  compiled-once runtime operations (no width TUs in Frame); `bound` with
+  per-group exception areas and slack, the one-pass COUNT descriptor law
+  selected per ISA, selected SUM and `summarise_selected` (SUM, COUNT, MIN,
+  MAX in one pass); `intervals` in both forms with framed checkpoints, the
+  relative-ends SUM law and the monotone COUNT law.
+- The decode fallback for every other stage × operation cell, and the write
+  fallback (refuse, then group re-encode).
+- Execution as measured: block-grain laws composed at runtime, fused per
+  part (never a retained column-wide mask), and one bind-time plan, the
+  pipelined point plan, with its admission limits.
+- Fit choosing among trees per column, including the intervals form. Where
+  no tree repays (URLHash), Engine keeps a native plain or narrow column:
+  `pack` alone still trails typed native on wide scans and dispersed pairs,
+  so it is not that choice.
+
+**Changes from the proposal above.** These are deliberate and Ashton should
+know them:
+
+- Delta lands without a SUM law for the sizes form. The masked-sum law lost
+  to decoding and stays off; a weighted SUM needs SeriesPack work. Relative
+  ends carries delta's fast SUM and points, at a byte cost on some columns,
+  so fit picks the form per column.
+- Points land 2.6–6.4× behind front A's narrow gather. Smaller entries did
+  not help; entries co-located with bodies is the next representation
+  experiment, and the plan is reversible (part C of the checklist).
+- Loom staging for points is not used: a plain software pipeline in the
+  plan beat a 32-slot Ring on both machines.
+- Placeholders not yet tried (map, presence, route, domain) land as
+  canonical shapes only, through Ikea LEAD's descriptions, with no fit,
+  decode or law.
+
+**Witnesses on existing programs, with no new experiment matrix.**
+Cross-column selected movement (B7) is closed by an exact fixture in
+[check.cpp](proto/check.cpp). The Engine choice judged by regret (B11) is the
+one witness left: one trace with a held-out workload reversal and a real
+native candidate. B10 (scans across groups) stays
+reversible after landing. A MAX law that skips blocks from their bounds
+(B6) is built and oracle-checked but not timed, and adds no public MAX
+binding yet.
+
+**Shape of the first Ikea batch** (Ikea LEAD's side,
+`build/frame-collab/phase3/CODEX-CONSOLIDATION-REPLY.md`): the public
+description, image validation and immutable checked binding for non-null
+u64; the stages behind it as an internal execution layer, not the
+prototype's virtual `stage`/`column` driver; placeholders described and
+refused, never silently executed; group private-afterimage preparation as
+the change route; Orbital material and history as a maintained integration
+example and conformance test, so Ikea does not depend on Orbital. Extraction
+reuses one implementation rather than copying prototype algorithms.
 
 ## Prototypes
 
 | # | Question | Result so far ([FINDINGS.md](FINDINGS.md)) |
 | --- | --- | --- |
-| 1 | Do block-grain laws composed at runtime match hand glue? | SUM yes; COUNT pays 3–8 ns per block of bookkeeping; points need a plan, which beats the glue on Graviton 4. Delta on the fallback is 5–6× slower than `bound → pack`, so it needs its laws |
+| 1 | Do block-grain laws composed at runtime match hand glue? | SUM yes; COUNT pays 3–8 ns per block of bookkeeping; points need a plan. Delta's relative-ends form makes SUM 1.1–8× and points 1.4–3.4× faster than the sizes form, at a byte cost on four of eleven columns |
 | 2 | Does the stage contract admit every placeholder shape? | Yes for `runs`, `split` and a shared TuplePack record, after seven contract changes (own geometry per series, row-range children, combined child selections, deposit-and-seal leaves, admitted widths, priors from descriptors, capabilities before change) |
-| 3 | What does a new stage or operation cost to add? | 60–150 lines in one file each; the compile bill is SeriesPack's width-specialised kernels (4–7 GB per 16-width TU) |
+| 3 | What does a new stage or operation cost to add? | 60–150 lines in one file each; SeriesPack's compiled-once operations removed Frame's width-specialised kernels at timing parity |
 | 4 | Where should write-time outliers live? | Exception slack; every store declared before payload, contributions exact, replay byte-identical |
 | 5 | Can fit statistics rank presets? | Ranking right in 18–21 of 24 cells, but on an easy test; absolute costs off by a median 34–83% without residence tiers |
 | 6 | Group images as Orbital Parts | Works end to end: older Scopes keep their versions, a write publishes one Part and reuses fifteen, in about 1 µs of publication |
+| 7 | Seams against front A's qualified controls | Fusing per part beats a retained mask; clustered predicates beat the native pair 1.9–8.5×, dispersed ones lose up to 3.4×; descriptor COUNT loses 1.5× on two columns on Zen 5; points stay 2.6–6.4× behind the narrow gather |
 
 ## Coordination
 

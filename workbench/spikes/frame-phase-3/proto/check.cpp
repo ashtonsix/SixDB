@@ -78,12 +78,14 @@ void check_column(const std::string &what, const column &c, const std::vector<u6
     std::vector<u64> all(n);
     c.read(all.data());
     expect(all == v, what + " read");
-    for (unsigned density : {1u, 30u, 200u}) {
+    for (unsigned density : {1u, 30u, 200u, 256u}) {
         std::fill(words.begin(), words.end(), 0);
         std::vector<u64> want;
         for (std::size_t i = 0; i < n; ++i)
             if (rng() % 256 < density)
                 words[i / 64] |= u64{1} << (i % 64), want.push_back(v[i]);
+        const auto mx = c.max(words.data());
+        expect(want.empty() ? !mx : mx && *mx == *std::max_element(want.begin(), want.end()), what + " max density " + std::to_string(density));
         std::vector<u64> got(want.size() + 1);
         const std::size_t k = c.select(words.data(), got.data());
         got.resize(k);
@@ -141,6 +143,43 @@ int main() {
         column cb(std::make_unique<bound>(std::make_unique<record_field>(shared, 1)), b);
         check_column("narrow / bound_record0", ca, a);
         check_column("low_outliers / bound_record1", cb, b);
+    }
+    // Cross-column selected movement (B7): A's filter selects B's rows over the
+    // same original-row domain, under different trees, with clustered and
+    // dispersed predicates and a partial final part; B's answers in row order.
+    {
+        const auto cols = columns();
+        const auto &a = cols[6].second, &bv = cols[2].second;  // monotone (clustered), low_outliers
+        const auto &d = cols[5].second;                        // wide (dispersed)
+        const column cb(delta_bound_pack<sp::preset::compact>(16, 0, interval_form::relative_ends), bv);
+        for (const auto *av : {&a, &d}) {
+            const column ca(bound_pack<sp::preset::compact>(), *av);
+            const u64 t = (*av)[av->size() * 9 / 10];
+            std::vector<u64> words((bv.size() + 63) / 64), want;
+            u128 sum = 0;
+            ca.filter(comparison::greater_equal, t, words.data());
+            for (std::size_t i = 0; i < bv.size(); ++i)
+                if ((*av)[i] >= t)
+                    want.push_back(bv[i]), sum += bv[i];
+            std::vector<u64> got(want.size() + 1);
+            got.resize(cb.select(words.data(), got.data()));
+            const std::string what = av == &a ? "B7 clustered" : "B7 dispersed";
+            expect(!want.empty() && got == want, what + " select");
+            expect(cb.sum(words.data()) == sum, what + " sum");
+            expect(cb.max(words.data()) == *std::max_element(want.begin(), want.end()), what + " max");
+        }
+    }
+    // Point plan admission: leaf indexes are u16 (leaf 0 reserved), exception
+    // offsets u32. The 65,537th leaf would alias leaf 0.
+    expect(point_plan::admits(65536, 0) && !point_plan::admits(65537, 0), "point plan leaf limit");
+    expect(point_plan::admits(1, ~u32{0}) && !point_plan::admits(1, std::size_t{~u32{0}} + 1), "point plan exception limit");
+    for (const auto &[name, v] : columns()) {
+        const column c(bound_pack<sp::preset::compact>(), v);
+        const auto plan = point_plan::make(c);
+        bool ok = plan.has_value();
+        for (std::size_t i = 0; ok && i < v.size(); ++i)
+            ok = plan->get(i) == v[i];
+        expect(ok, name + " point plan");
     }
     if (failures) {
         std::fprintf(stderr, "%d failures\n", failures);

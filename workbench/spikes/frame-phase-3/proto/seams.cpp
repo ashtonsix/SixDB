@@ -198,6 +198,28 @@ void pair_case(const std::string &an, const std::vector<u64> &a, const std::stri
              r.sum = acc.sum, r.max = acc.max, r.count = acc.count;
              return r;
          }},
+        // SUM law then the MAX law (block bounds) on the same selection.
+        {"fused_per_part_sum_max_law",
+         [&] {
+             result r;
+             block_args rhs;
+             rhs.fill(t);
+             block_rows_set rows;
+             for (unsigned p = 0; p < ca.parts(); ++p) {
+                 const bitset256 all = ca.blocks(p);
+                 ca.root().filter(comparison::greater_equal, p, all, rhs, rows);
+                 bitset256 hit;
+                 each(all, [&](unsigned blk) {
+                     if (!rows[blk].empty())
+                         hit.set(blk), r.count += rows[blk].count();
+                 });
+                 if (!hit.empty()) {
+                     r.sum += cb.root().sum_selected(p, hit, rows);
+                     cb.root().max_selected(p, hit, rows, r.max);
+                 }
+             }
+             return r;
+         }},
         {"native_fused_pair_sum",
          [&] {
              const auto ans = frame_cells::native_pair_once(na, nb, t, mask);

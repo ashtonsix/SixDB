@@ -535,6 +535,44 @@ class bound final : public stage {
         });
         return t;
     }
+    // MAX over selected rows from block bounds: a block's selected inliers lie
+    // in [lo, lo + 2^width), its selected exceptions are known. A block whose
+    // largest selected exception reaches its inlier bound settles without
+    // decoding; the rest decode in descending bound order until the next bound
+    // cannot beat the running maximum.
+    bool max_selected(unsigned p, const bitset256 &blocks, const block_rows_set &rows, u64 &m) const override {
+        const part &s = parts_[p];
+        std::array<std::pair<u64, u16>, part_blocks> open;
+        unsigned n = 0;
+        bool any = false;
+        each(blocks, [&](unsigned b) {
+            const bitset256 r = rows[b] & first_n(rows_in(p, b));
+            if (r.empty())
+                return;
+            any = true;
+            unsigned inliers = r.count();
+            bool exc = false;
+            u64 em = 0;
+            each_exception(s, b, [&](u8 pos, u64 v) {
+                if (r.contains(pos))
+                    exc = true, em = std::max(em, v), --inliers;
+            });
+            const u64 k = mask(s.width[b]), bound = k > ~u64{0} - s.lo[b] ? ~u64{0} : s.lo[b] + k;
+            if (exc && (!inliers || em >= bound))
+                m = std::max(m, em);
+            else
+                open[n++] = {exc ? std::max(bound, em) : bound, static_cast<u16>(b)};
+        });
+        std::sort(open.begin(), open.begin() + n, [](auto &x, auto &y) { return x.first > y.first; });
+        // Values are at least 0, so a bound at or below m cannot change it.
+        alignas(64) u64 x[block_rows];
+        for (unsigned i = 0; i < n && open[i].first > m; ++i) {
+            const unsigned b = open[i].second;
+            decode(p, b, x);
+            each(rows[b] & first_n(rows_in(p, b)), [&](unsigned r) { m = std::max(m, x[r]); });
+        }
+        return any;
+    }
     // SUM over selected rows: the child's fields, lo for every selected
     // non-exception row, and each selected exception's own value.
     u128 sum_selected(unsigned p, const bitset256 &blocks, const block_rows_set &rows) const override {
