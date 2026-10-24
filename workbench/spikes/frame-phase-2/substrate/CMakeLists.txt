@@ -37,3 +37,9 @@ target_link_libraries(frame_substrate_corrections_check PRIVATE frame_bodies ike
 add_executable(frame_substrate_grain grain.cpp)
 sixdb_target(frame_substrate_grain)
 target_link_libraries(frame_substrate_grain PRIVATE frame_bodies ikea::intervals)
+# Front A's original-row histories drive the corrections witness.
+if(TARGET frame_history_oracles OR EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../instruments/histories/history.h)
+    add_executable(frame_substrate_corrections_trace corrections_trace.cpp)
+    sixdb_target(frame_substrate_corrections_trace)
+    target_link_libraries(frame_substrate_corrections_trace PRIVATE frame_bodies frame_history_oracles ikea::intervals)
+endif()
