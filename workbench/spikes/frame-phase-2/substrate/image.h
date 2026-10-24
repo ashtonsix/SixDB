@@ -277,6 +277,43 @@ inline u64 mask_ge(const image &f, u64 t, std::size_t first, std::size_t limit, 
     return total;
 }
 
+// COUNT(x >= t) through the count leaves (no mask stores), with bounds
+// deciding whole blocks.
+inline u64 count_ge(const image &f, u64 t, std::size_t first, std::size_t limit) {
+    u64 total = 0;
+    segments(f, first, limit, [&](u8 k, unsigned w, std::size_t s0, std::size_t s1) {
+        const u8 *img = f.bytes.data();
+        const u64 top = w >= 64 ? ~u64{0} : (u64{1} << w) - 1;
+        auto bounds = [&](std::size_t b, u64 &c) {
+            const u64 base = f.base[b];
+            if (t <= base) {
+                total += block_rows;
+                return false;
+            }
+            c = t - base;
+            return k != constant && c <= top;
+        };
+        u64 c = 0;
+        if (k == runs)
+            with_runs(w, [&](auto r) {
+                for (std::size_t b = s0; b < s1; ++b)
+                    if (bounds(b, c))
+                        total += decltype(r)::count_ge(img + f.offset[b], f.n[b], c);
+            });
+        else if (k == plane)
+            with_plane(w, [&](auto K) {
+                for (std::size_t b = s0; b < s1; ++b)
+                    if (bounds(b, c))
+                        total += P<K>::count_ge(img + f.offset[b], c);
+            });
+        else
+            for (std::size_t b = s0; b < s1; ++b)
+                if (bounds(b, c))
+                    total += k == wide ? bodies::lanes<u64>::template count<false>(img + f.offset[b], c) : 0;
+    });
+    return total;
+}
+
 // Exact SUM over selected rows of one block.
 inline u128 block_masked_sum(const image &f, std::size_t b, const u64 *sel) {
     const unsigned cnt = std::popcount(sel[0]) + std::popcount(sel[1]) + std::popcount(sel[2]) + std::popcount(sel[3]);

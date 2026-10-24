@@ -127,13 +127,13 @@ u128 coded_block_sum(const coded &c, std::size_t b) {
     return static_cast<u128>(lo) + (static_cast<u128>(hi) << 32);
 }
 
-u64 coded_count_ge(const coded &c, u64 t, std::vector<u64> &masks) {
+u64 coded_count_ge(const coded &c, u64 t) {
     u64 n = 0;
     const std::size_t blocks = c.codes.blocks;
     for (std::size_t first = 0, part = 0; first < blocks; first += part_blocks, ++part) {
         const auto &d = c.dict[part];
         const u64 ct = std::lower_bound(d.begin(), d.end(), t) - d.begin();
-        n += fi::mask_ge(c.codes, ct, first, std::min(blocks, first + part_blocks), masks.data());
+        n += fi::count_ge(c.codes, ct, first, std::min(blocks, first + part_blocks));
     }
     return n;
 }
@@ -159,7 +159,6 @@ int main(int argc, char **argv) {
         const coded c = build(v);
         const fi::image plain = fi::build(v, fi::placement::by_kind);
         const fi::kind_index index = fi::index_by_kind(plain);
-        std::vector<u64> masks(4 * blocks);
         std::vector<u64> sorted = v;
         std::nth_element(sorted.begin(), sorted.begin() + n / 2, sorted.end());
         const u64 t = sorted[n / 2];
@@ -175,8 +174,8 @@ int main(int argc, char **argv) {
                  return s;
              }},
             {"sum", "integer", [&] { return fi::sum_indexed(plain, index); }},
-            {"count_ge", "dict", [&] { return u128{coded_count_ge(c, t, masks)}; }},
-            {"count_ge", "integer", [&] { return u128{fi::mask_ge(plain, t, 0, blocks, masks.data())}; }},
+            {"count_ge", "dict", [&] { return u128{coded_count_ge(c, t)}; }},
+            {"count_ge", "integer", [&] { return u128{fi::count_ge(plain, t, 0, blocks)}; }},
         };
         constexpr std::size_t narms = sizeof arms / sizeof arms[0];
         const u128 expect[narms] = {sum_oracle, sum_oracle, count_oracle, count_oracle};

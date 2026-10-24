@@ -37,5 +37,8 @@ thread-local.
   dictionaries over the unchanged shared image
   ([dict_measure.cpp](substrate/dict_measure.cpp)). COUNT translates the
   threshold to a code per part and calls the ordinary mask leaves, with no ABI
-  change. SUM is the gap above: locally it runs 10–60× slower than the integer
-  image (OS 83 vs 7.7 ns per block). Worker numbers pending.
+  change, and matches the integer image (URLHash 2.5× faster coded). SUM is
+  the gap above: 6–25× slower than the integer image on Zen 5 (OS 50.1 vs
+  4.0 ns per block, RegionID 108 vs 5.5). Coded SUM needs a per-code weight
+  leaf, or block summaries, before a dictionary front opens.
+  ([dictionary results](substrate/README.md#a-second-body-family-sorted-part-dictionaries))

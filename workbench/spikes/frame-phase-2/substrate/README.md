@@ -287,6 +287,34 @@ The leaf boundary held: the substrate calls front C's header leaves with
 kind index is the working default; writes and appends, which move bodies,
 are the cost not yet priced. The shared contracts are in [SEAMS.md](../SEAMS.md).
 
+## A second body family: sorted part dictionaries
+
+[`dict_measure.cpp`](dict_measure.cpp) gives each 65,536-row part a sorted
+dictionary and stores the codes through the unchanged shared image (`11923f2b`,
+jobs `20261024T000709Z-176e2cc9` and `20261024T000738Z-8d55262f`; medians
+[evidence/dict-v1-summary.txt](evidence/dict-v1-summary.txt)). COUNT(x ≥
+median) translates the threshold to a code per part and calls the ordinary
+mask leaves. SUM uses front C's histogram leaves for codes of at most 8 bits
+and runs, otherwise unpacks codes and gathers dictionary values.
+
+| Zen 5 AVX-512, ns per block | Coded COUNT / integer COUNT | Coded SUM / integer SUM | Mean distinct per part |
+| --- | --- | --- | ---: |
+| OS | 63.4 / 66.9 | 50.1 / 4.0 | 40 |
+| RegionID | 59.5 / 68.7 | 108.2 / 5.5 | 550 |
+| UserID | 3.1 / 3.3 | 61.7 / 8.4 | 14,051 |
+| URLHash | 25.1 / 61.7 | 242.5 / 40.6 | 37,258 |
+
+1. **Coded selection needs no new seam.** Threshold translation plus the
+   existing mask leaves match the integer image and beat it 2.5× on URLHash.
+2. **Coded SUM does.** It is 6–25× slower than the integer image because the
+   leaf ABI has no Σ D[code] leaf: histograms cover only codes of 8 bits or
+   fewer, and wider codes gather per row. A per-code weight leaf (or block
+   sums kept as summaries) is the missing piece.
+3. **COUNT here went through `mask_ge`**, which writes masks, so both arms
+   were far slower than front C's `count_ge` leaves. The image now has a
+   `count_ge` path through those leaves; locally it takes OS COUNT from 63 to
+   9.6 ns per block, coded and integer alike.
+
 ## Independent point reads
 
 [`points.cpp`](points.cpp) reads 65,536 random rows through phase 1's getter,
