@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-25",
+  "request": "Relieve recurring exhaustion and replace the broken storage workflow with an adversarially tested candidate",
+  "physical_result": {
+    "measurement": "df -k /System/Volumes/Data",
+    "initial_available_bytes": 9857474560,
+    "stopping_milestone_available_bytes": 62991745024,
+    "checkpoint_available_bytes": 62045720576,
+    "checkpoint_net_gain_bytes": 52188246016,
+    "target_bytes": 50000000000,
+    "target_met": true,
+    "attribution": "Whole-volume delta includes concurrent owner writes and reclamation; not an exclusive sum of logical removal totals"
+  },
+  "verified_worker_collections": 308,
+  "extent_sharing": {
+    "files": 3162,
+    "kernel_compared_shared_bytes": 35020546048,
+    "concurrently_removed_files": 11,
+    "reported_errors": 0,
+    "exclusive_physical_gain_claimed": false
+  },
+  "operational_recovery": "operations.json",
+  "operational_archive": {
+    "files": 624,
+    "compressed_bytes": 4762266,
+    "download_verified": true
+  },
+  "preservation": {
+    "active_builds_preserved": true,
+    "corpus_pin_preserved": true,
+    "unarchived_unique_material_deleted": false,
+    "periodic_maintenance_installed": false
+  },
+  "replacement_status": "Open spike; isolated prototype, independent counterexamples and repairs; production workflow not yet replaced"
+}
