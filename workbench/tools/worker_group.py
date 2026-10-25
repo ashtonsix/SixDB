@@ -183,12 +183,23 @@ class Group:
         if not state.get('launch_started'):
             raise ValueError('group launch has not started; no jobs to observe')
         stop = threading.Event()
-        with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(state['members']))) as pool:
+        if storage.managed_root() is not None:
+            # Workers still run concurrently. Only local observation/collection
+            # is serial, keeping the publication lifetime guard out of a
+            # multithreaded Python process.
             try:
-                list(pool.map(lambda name: self.observe(name, stop), state['members']))
+                for name in state['members']:
+                    self.observe(name, stop)
             except BaseException:
                 stop.set()
                 raise
+        else:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(state['members']))) as pool:
+                try:
+                    list(pool.map(lambda name: self.observe(name, stop), state['members']))
+                except BaseException:
+                    stop.set()
+                    raise
         state = self.read()
         clean = True
         for name, entry in state['members'].items():
@@ -330,6 +341,11 @@ class Group:
                 self.update(name, collection_error=str(error))
                 print(f'{name}: collection error: {error}', file=sys.stderr, flush=True)
                 return False
+        if storage.managed_root() is not None:
+            # Publication already serializes on one bounded staging scope.
+            # Its closure lifetime guard must fork from the calling thread,
+            # before unrelated worker threads can hold Python/library locks.
+            return 0 if all([collect(name) for name in names]) else 1
         with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(names))) as pool:
             return 0 if all(list(pool.map(collect, names))) else 1
 
@@ -353,6 +369,7 @@ def create(spec, directory=None, *, source=worker.ROOT):
     """Resolve participants and freeze source once; no compute is launched here."""
     group_id = identifier()
     directory = Path(directory or worker.ROOT / 'build/worker-groups' / group_id).resolve()
+    storage.manage_directory(directory.parent, root=worker.ROOT)
     if directory.exists():
         raise ValueError('choose a new group directory; use wait/status/cancel to recover an existing group')
     if not isinstance(spec.get('members'), dict) or not spec['members']:
@@ -417,6 +434,7 @@ def recover(group_id, directory=None, *, config=None):
             or state['uri'] != f's3://{config["bucket"]}/sixdb/worker-groups/{group_id}'):
         raise ValueError('group manifest identity differs')
     directory = Path(directory or worker.ROOT / 'build/worker-groups' / group_id).resolve()
+    storage.manage_directory(directory.parent, root=worker.ROOT)
     if directory.exists():
         raise ValueError('recovery needs a new directory; existing receipts are not overwritten')
     state['launch_started'] = True
@@ -471,6 +489,7 @@ def main():
     restore.add_argument('--bucket', default=worker.settings()['bucket'])
     restore.add_argument('--region', default=worker.settings()['region'])
     args = parser.parse_args()
+    storage.initialize(worker.ROOT)
     if args.command == 'run':
         group = create(json.loads(args.spec.read_text()), args.output, source=args.source)
         group.launch()

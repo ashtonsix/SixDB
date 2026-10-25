@@ -1,17 +1,11 @@
 """Verified local worker collection, recovery and cache reclamation."""
-from datetime import datetime, timezone
 import errno
-import fcntl
 import hashlib
 import json
 import os
 from pathlib import Path
-import subprocess
-import sys
-import tarfile
 import tempfile
 import time
-import uuid
 
 import artifacts
 import storage
@@ -38,7 +32,7 @@ def matches(root, name, expected):
 def normally_required(name, entry):
     # The transport source archive is unique evidence in S3, not rebuildable
     # compiler output. Keep its identity locally and fetch its bytes on request.
-    return Path(name).name != 'source.tar.gz' and not entry.get('rebuildable', False)
+    return Path(name).name not in {'source.tar.gz', 'source.tar.zst'} and not entry.get('rebuildable', False)
 
 
 def verified(directory, reference, *, full=False, selected=None):
@@ -85,27 +79,81 @@ def record_collection(directory, reference, members):
     storage.write_json(directory / 'collection.json', receipt)
 
 
+def pinned(directory):
+    directory = Path(directory)
+    return any((parent / '.keep-local').exists() for parent in (directory, *directory.parents))
+
+
 def release_launch_source(directory, reference, members):
     """After a fresh archive verification, release only its identical launch copy."""
     expected = members.get('source.tar.gz')
-    if (not expected or (directory / '.keep-local').exists() or
+    if (not expected or pinned(directory) or
             not matches(directory, 'source.tar.gz', expected)):
         return
     receipt = read(directory / 'collection.json')
     root_evicted = receipt.get('root_evicted', {})
     storage.write_json(directory / 'collection.json', receipt | {'root_evicted': root_evicted | {
         'source.tar.gz': {'archive_member': 'source.tar.gz', **expected}}})
-    if not (directory / '.keep-local').exists() and matches(directory, 'source.tar.gz', expected):
+    if not pinned(directory) and matches(directory, 'source.tar.gz', expected):
         (directory / 'source.tar.gz').unlink()
         storage.sync_directory(directory)
 
 
+def release_uploaded_source(directory, job):
+    """Finish launch-source ownership when its independent S3 bytes verify.
+
+    Source is needed for upload and remote execution, not as another permanent
+    local package for every dispatched job. Recovery remains at the job URI.
+    """
+    import hashlib
+    from sixdb_storage.acquire import S3ArchiveSource
+    path = directory / 'source.tar.gz'
+    receipt_path = directory / 'launch-source.json'
+    previous = read(receipt_path)
+    expected = job['source']['sha256']
+    if path.is_symlink():
+        raise ValueError('launch source was replaced by a link; preserved')
+    if path.exists():
+        size = path.stat().st_size
+        if artifacts.sha256(path) != expected:
+            raise ValueError('launch source differs from the prepared job; preserved')
+    elif (previous.get('sha256') == expected and previous.get('uri') == job['uri'] + '/source.tar.gz'):
+        size = previous['bytes']
+    else:
+        raise ValueError('launch source is missing without a recovery receipt')
+    reference = {'format': 1, 'bytes': size, 'sha256': expected, 'files': 1,
+                 'bucket': job['config']['bucket'], 'key': job['prefix'] + '/source.tar.gz',
+                 'region': job['config']['region']}
+    digest, count = hashlib.sha256(), 0
+    with S3ArchiveSource(reference).open(reference) as stream:
+        for chunk in iter(lambda: stream.read(65536), b''):
+            count += len(chunk)
+            if count > size:
+                raise ValueError('uploaded launch source exceeds expected size')
+            digest.update(chunk)
+    if count != size or digest.hexdigest() != expected:
+        raise ValueError('uploaded launch source failed independent verification; local copy preserved')
+    storage.write_json(receipt_path, {'format': 1, 'kind': 'worker-launch-source',
+        'uri': job['uri'] + '/source.tar.gz', 'bucket': reference['bucket'],
+        'key': reference['key'], 'region': reference['region'], 'bytes': size,
+        'sha256': expected, 'verified_at': time.time()})
+    if path.exists() and not pinned(directory):
+        if path.is_symlink() or artifacts.sha256(path) != expected:
+            raise ValueError('local launch source changed during verification; preserved')
+        path.unlink()
+        storage.sync_directory(directory)
+
+
 def collect(directory, reference, *, full=False, selected=None):
-    """A successful call means retained members match verified remote bytes."""
+    """Publish checked members individually, preserving differing local work."""
+    import stat
+    directory = storage.canonical_path(directory)
+    storage.manage_directory(directory.parent, root=Path(__file__).resolve().parents[2])
     selected = artifacts.selection(selected)
     if full and selected is not None:
         raise ValueError('choose full collection or selected files')
-    with storage.lock(directory / '.collection.lock'):
+
+    def perform(temporary):
         if verified(directory, reference, full=full, selected=selected):
             receipt = read(directory / 'collection.json')
             receipt['accessed_at'] = time.time()
@@ -113,6 +161,14 @@ def collect(directory, reference, *, full=False, selected=None):
             return
         print(f'Verifying/restoring local collection: {directory.name}', flush=True)
         destination = directory / 'results'
+        def identity(info):
+            return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+        before = {}
+        if destination.is_dir() and not destination.is_symlink():
+            for root, directories, names in os.walk(destination, followlinks=False):
+                for name in names + [name for name in directories if (Path(root) / name).is_symlink()]:
+                    path = Path(root) / name
+                    before[path.relative_to(destination)] = identity(path.lstat())
         available = verified(directory, reference, selected=set())
         wanted = selected
         if available:
@@ -122,169 +178,101 @@ def collect(directory, reference, *, full=False, selected=None):
             if selected is not None and selected - current.keys():
                 raise ValueError('selected files missing from bundle: ' + ', '.join(sorted(selected - current.keys())))
             wanted = {name for name in wanted if not (destination / name).exists()}
-        with tempfile.TemporaryDirectory(dir=directory, prefix='.collection-') as temp:
-            staging = Path(temp) / 'results'
-            members = artifacts.restore_bundle(reference, staging, selected=wanted,
-                omit_compiler=not full and wanted is None, omit_source_archive=not full and wanted is None)
-            if available:
-                # Adding selected files leaves existing measurements, prepared
-                # inputs and local notes at their original paths.
-                for path in artifacts.files(staging):
-                    target = destination / path.relative_to(staging)
-                    if target.resolve() != destination.resolve() / path.relative_to(staging):
-                        raise ValueError(f'local output path was replaced by a symlink: {target}')
-                    if target.exists():
-                        raise ValueError(f'local output appeared during fetch; preserved: {target}')
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    path.rename(target)
-                    storage.sync_directory(target.parent)
-                record_collection(directory, reference, members)
-                release_launch_source(directory, reference, members)
-                return
-            linked = False
-            for name, expected in members.items():
-                target = staging / name
-                if not target.exists() and matches(destination, name, expected):
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    os.link(destination / name, target)
-                    linked = True
-            if linked:
-                storage.sync_tree(staging)
-            # Preserve existing output if publication is interrupted. Its differing
-            # files remain available as conflicts after the new tree is durable.
-            previous = directory / ('replaced-results-' + uuid.uuid4().hex[:8])
-            if destination.exists() or destination.is_symlink():
-                destination.rename(previous)
-            staging.rename(destination)
-            storage.sync_directory(directory)
-            record_collection(directory, reference, members)
-            release_launch_source(directory, reference, members)
-        # Remove only byte-identical duplicates. Changed and user-added files stay
-        # in the old tree, including interrupted-write witnesses such as empty files.
-        if previous.is_dir() and not previous.is_symlink():
-            for name, expected in members.items():
-                if matches(previous, name, expected):
-                    (previous / name).unlink()
-            for path, _, _ in os.walk(previous, topdown=False):
-                if not any(Path(path).iterdir()):
-                    Path(path).rmdir()
-        if previous.exists() or previous.is_symlink():
-            print(f'Preserved differing local output: {previous}', flush=True)
-
-
-def checkouts(root):
-    """The shared checkout and Git worktrees, including those without workers."""
-    result = subprocess.run(['git', '-C', str(root), 'worktree', 'list', '--porcelain'],
-                            capture_output=True, text=True)
-    checkouts = {root.resolve()}
-    if result.returncode == 0:
-        checkouts.update(Path(line.removeprefix('worktree ')).resolve()
-                         for line in result.stdout.splitlines() if line.startswith('worktree '))
-    return checkouts
-
-
-def roots(root):
-    """This repository's shared checkout, worktrees and conventional workspaces."""
-    found = set()
-    for checkout in checkouts(root):
-        found.add(checkout / 'build/workers')
-        found.update(checkout.glob('build/workspaces/*/build/workers'))
-    unique = {}
-    # OrbStack's Mac and Linux aliases can name the same directory.
-    for path in sorted(found, key=lambda path: len(str(path))):
-        if path.is_dir() and not path.is_symlink():
-            stat = path.stat()
-            unique.setdefault((stat.st_dev, stat.st_ino), path)
-    return sorted(unique.values())
-
-
-def inventory(root, older_hours=24):
-    entries = []
-    for workers in roots(root):
-        root_files = 0
-        for path in workers.iterdir():
+        staging = temporary / 'results'
+        members = artifacts.restore_bundle(reference, staging, selected=wanted,
+            omit_compiler=not full and wanted is None, omit_source_archive=not full and wanted is None)
+        if destination.is_symlink() or destination.exists() and not destination.is_dir():
+            raise ValueError('local results root was replaced; preserved')
+        destination.mkdir(exist_ok=True)
+        staged = artifacts.files(staging)
+        for path in staged:
+            name = path.relative_to(staging)
+            target = destination / name
             try:
-                if path.is_file() and not path.is_symlink():
-                    root_files += path.stat().st_size
+                current = identity(target.lstat())
             except FileNotFoundError:
-                pass
-        if root_files:
-            entries.append({'directory': workers, 'bytes': root_files, 'prunable_bytes': 0,
-                            'eligible': False, 'accessed': time.time(), 'reference': {}, 'reclaimable': 0})
-        for directory in sorted(workers.iterdir()):
-            if not directory.is_dir() or directory.is_symlink():
-                continue
-            reference = read(directory / 'artifact.json')
-            receipt = read(directory / 'collection.json')
-            status = read(directory / 'status.json')
-            size = reclaimable = prunable = 0
-            members = receipt.get('members') if receipt.get('artifact') == reference else None
-            known = isinstance(members, dict) and len(members) == reference.get('files')
-            results = directory / 'results'
-            for path in results.rglob('*') if not results.is_symlink() else []:
-                try:
-                    if path.is_file() and not path.is_symlink():
-                        length = path.stat().st_size
-                        size += length
-                        if not known or path.relative_to(results).as_posix() in members:
-                            prunable += length
-                        if length >= 1024 ** 2:
-                            with path.open('rb') as handle:
-                                if artifacts.rebuildable(path.name, length, handle.read(512)):
-                                    reclaimable += length
-                except FileNotFoundError:
+                current = None
+            if name not in before and current is not None:
+                raise ValueError(f'local output appeared during fetch; preserved: {target}')
+            if name in before and current != before[name]:
+                raise ValueError(f'local output changed during fetch; preserved: {target}')
+        # One deterministic conflict tree holds only differing authored bytes.
+        # Unchanged files, extra notes and prepared-input links keep their paths.
+        archive_id = hashlib.sha256(json.dumps(reference, sort_keys=True).encode()).hexdigest()[:16]
+        conflicts = directory / ('replaced-results-' + archive_id)
+        for path in staged:
+            name = path.relative_to(staging)
+            target = destination / name
+            if target.resolve() != destination.resolve() / name:
+                raise ValueError(f'local output path was replaced by a symlink: {target}')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists() or target.is_symlink():
+                if matches(destination, name.as_posix(), members[name.as_posix()]):
                     continue
-            # The launch copy duplicates results/source.tar.gz, but used to sit
-            # outside every cache budget. Resume already fetches it from S3.
-            source = directory / 'source.tar.gz'
-            try:
-                if source.is_file() and not source.is_symlink():
-                    size += source.stat().st_size
-                    if not known or 'source.tar.gz' in members:
-                        prunable += source.stat().st_size
-            except FileNotFoundError:
-                pass
-            # Partial downloads, conflict witnesses and metadata are real local
-            # storage too. Count them without treating them as archived payload.
-            for parent, children, filenames in os.walk(directory, followlinks=False):
-                if Path(parent) == directory:
-                    children[:] = [name for name in children if name != 'results']
-                for name in filenames:
-                    path = Path(parent) / name
-                    if path == source:
-                        continue
-                    try:
-                        if path.is_file() and not path.is_symlink():
-                            size += path.stat().st_size
-                    except FileNotFoundError:
-                        pass
-            try:
-                created = datetime.strptime(directory.name[:16], '%Y%m%dT%H%M%SZ').replace(tzinfo=timezone.utc).timestamp()
-            except ValueError:
-                created = directory.stat().st_mtime
-            accessed = max(created, receipt.get('accessed_at', 0))
-            has_reference = ({'bucket', 'region', 'key', 'bytes', 'sha256', 'files'} <= reference.keys())
-            eligible = (has_reference and status.get('state') in {'complete', 'failed', 'timeout', 'interrupted'}
-                        and time.time() - accessed >= older_hours * 3600
-                        and not (directory / '.keep-local').exists() and not results.is_symlink())
-            entries.append({'directory': directory, 'bytes': size, 'eligible': eligible,
-                            'accessed': accessed, 'reference': reference, 'reclaimable': reclaimable,
-                            'prunable_bytes': prunable})
-    return sorted(entries, key=lambda entry: entry['accessed'])
+                info = target.lstat()
+                if not stat.S_ISREG(info.st_mode):
+                    raise ValueError(f'nonregular local output preserved: {target}')
+                checksum = artifacts.sha256(target)
+                saved = conflicts / name
+                if (saved.is_file() and not saved.is_symlink() and
+                        artifacts.sha256(saved) != checksum):
+                    saved = conflicts / '.versions' / checksum / name
+                if saved.resolve() != saved.absolute():
+                    raise ValueError(f'local conflict path was replaced by a symlink: {saved}')
+                saved.parent.mkdir(parents=True, exist_ok=True)
+                if saved.exists() or saved.is_symlink():
+                    if (saved.is_symlink() or not saved.is_file() or saved.stat().st_size != info.st_size or
+                            artifacts.sha256(saved) != checksum or artifacts.sha256(target) != checksum):
+                        raise ValueError(f'local conflict differs; preserved: {saved}')
+                    target.unlink()
+                else:
+                    target.rename(saved)
+                    storage.sync_directory(saved.parent)
+                storage.sync_directory(target.parent)
+                print(f'Preserved differing local output: {saved}', flush=True)
+            # Exclusive linking is an atomic no-overwrite publication of this
+            # private inode; unlinking its stage leaves an editable private file.
+            os.link(path, target)
+            path.unlink()
+            storage.sync_directory(target.parent)
+        if storage.managed_root() is None and not available and conflicts.exists():
+            # Legacy repair placed extra notes alongside the first conflicts.
+            # Keep that discoverable layout without recopying an entire tree.
+            for name in before.keys() - {Path(name) for name in members}:
+                target, saved = destination / name, conflicts / name
+                if name.name == '.keep-local' or not target.is_file() or target.is_symlink():
+                    continue
+                if identity(target.lstat()) != before[name]:
+                    continue
+                if saved.resolve() != saved.absolute() or saved.exists() or saved.is_symlink():
+                    raise ValueError(f'local conflict differs; preserved: {saved}')
+                saved.parent.mkdir(parents=True, exist_ok=True)
+                target.rename(saved)
+                storage.sync_directory(saved.parent)
+                storage.sync_directory(target.parent)
+        record_collection(directory, reference, members)
+        release_launch_source(directory, reference, members)
+
+    with storage.lock(directory / '.collection.lock'):
+        if storage.managed_root() is not None:
+            from sixdb_storage import preparation
+            from sixdb_storage.transfers import publication
+            with publication(directory) as temporary:
+                preparation.run(lambda: perform(temporary))
+        else:
+            with tempfile.TemporaryDirectory(dir=directory, prefix='.collection-') as name:
+                perform(Path(name))
 
 
-def reclaim(directory, reference, *, older_hours=0, include_results=False):
+def reclaim(directory, reference, *, include_results=False):
     """Remove byte-identical archived files after a fresh full S3 read.
 
-    Budget maintenance can include old, closed results. Fetch restores them from
-    the same receipt; edits, recent access and pins remain protected.
+    Explicit eviction can include closed results. Fetch restores them from the
+    same receipt; local edits and pins remain protected.
     """
     with storage.lock(directory / '.collection.lock'):
-        if (directory / '.keep-local').exists() or (directory / 'results').is_symlink():
+        if pinned(directory) or (directory / 'results').is_symlink():
             return 0
-        receipt = read(directory / 'collection.json')
-        if time.time() - receipt.get('accessed_at', 0) < older_hours * 3600:
-            return 0  # A fetch after inventory took priority while we waited for the lock.
         if include_results and read(directory / 'status.json').get('state') not in {'complete', 'failed', 'timeout', 'interrupted'}:
             return 0
         print(f'Checking archived {"results" if include_results else "compiler output"}: {directory.name}', flush=True)
@@ -311,7 +299,7 @@ def reclaim(directory, reference, *, older_hours=0, include_results=False):
             'accessed_at': receipt.get('accessed_at', 0), 'reclaimed_at': time.time()})
         removed = 0
         for name, expected in candidates.items():
-            if (directory / '.keep-local').exists():
+            if pinned(directory):
                 break
             if matches(destination, name, expected):
                 path = destination / name
@@ -319,7 +307,7 @@ def reclaim(directory, reference, *, older_hours=0, include_results=False):
                 storage.sync_directory(path.parent)
                 removed += expected['bytes']
         for name, expected in root_candidates.items():
-            if (directory / '.keep-local').exists():
+            if pinned(directory):
                 break
             if matches(directory, name, expected):
                 (directory / name).unlink()
@@ -334,7 +322,7 @@ def evict(directory, state):
     """Explicitly evict a finished collection; never infer completion from age."""
     if not state or state.get('state') not in {'complete', 'failed', 'timeout', 'interrupted'} or not state.get('artifact'):
         raise ValueError('eviction needs a finished worker with an archived result bundle')
-    if (directory / '.keep-local').exists():
+    if pinned(directory):
         raise ValueError('collection is pinned by .keep-local; remove the pin to allow eviction')
     storage.write_json(directory / 'artifact.json', state['artifact'])
     storage.write_json(directory / 'status.json', state)
@@ -343,131 +331,19 @@ def evict(directory, state):
     return removed
 
 
-def show_build_usage(root):
+def maintain(root, *, prune=True):
     import local_cache
-    local_cache.maintain(root, prune=False)
+    return local_cache.maintain(root, prune=prune)
 
 
-def maintenance_lock():
-    return Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache')) / 'sixdb/worker-cache-maintenance.lock'
-
-
-def may_reclaim(directory, reference):
-    """Skip online verification when a complete receipt only has local edits left.
-
-    This is a scheduling hint, never permission to unlink: reclaim still reads
-    and verifies the remote archive before removing any matching local bytes.
-    """
-    receipt = read(directory / 'collection.json')
-    members = receipt.get('members')
-    if (receipt.get('artifact') != reference or not isinstance(members, dict) or
-            len(members) != reference.get('files') or
-            any(not isinstance(entry, dict) or not {'bytes', 'sha256'} <= entry.keys()
-                for entry in members.values())):
-        return True  # No complete local manifest: verify the archive normally.
-    return (any(matches(directory / 'results', name, expected) for name, expected in members.items()) or
-            ('source.tar.gz' in members and matches(directory, 'source.tar.gz', members['source.tar.gz'])))
-
-
-def maintain(root, *, prune=True, older_hours=24, protect=None, max_collections=None):
-    if not prune:
-        return _maintain(root, prune=False, older_hours=older_hours)
-    path = maintenance_lock()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open('a') as lock:
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            return  # Another controller/background sweep already owns maintenance.
-        return _maintain(root, older_hours=older_hours, protect=protect, max_collections=max_collections)
-
-
-def _maintain(root, *, prune=True, older_hours=24, protect=None, max_collections=None):
-    entries = inventory(root, older_hours)
-    total = sum(entry['bytes'] for entry in entries)
-    budget = int(float(os.environ.get('SIXDB_WORKER_CACHE_GIB', '10')) * storage.GIB)
-    if budget < 0:
-        raise ValueError('SIXDB_WORKER_CACHE_GIB must be nonnegative')
-    free = min(info['free'] for info in storage.headroom(root).values())
-    if not prune:
-        largest = sorted(entries, key=lambda entry: entry['bytes'], reverse=True)[:20]
-        for entry in largest:
-            label = 'archived/old' if entry['eligible'] else 'recent/pinned/unarchived'
-            print(f"{entry['bytes'] / storage.GIB:6.2f} GiB  {label:25} {entry['directory']}")
-        for name, info in storage.headroom(root).items():
-            print(f"{name}: {info['free'] / storage.GIB:.2f} GiB free ({info['path']})")
-        print(f'Worker storage (all local job files): {total / storage.GIB:.2f} GiB; budget {budget / storage.GIB:g} GiB')
-        print(f'Largest {len(largest)} of {len(entries)} collections shown; '
-              f"{sum(e['prunable_bytes'] for e in entries if e['eligible']) / storage.GIB:.2f} GiB in old closed collections to verify")
-        print('Old, closed archived collections are cache entries: budget pruning can release sources and measurements.\n'
-              'Use .keep-local for ongoing local audits; worker.py fetch recovers evicted files.\n'
-              'worker.py evict JOB explicitly releases a finished collection regardless of age.')
-        show_build_usage(root)
-        return
-    # Reclaim substantial space with fewer S3 reads; age still protects live work.
-    attempts = 0
-    for entry in sorted(entries, key=lambda entry: -entry['prunable_bytes']):
-        if total <= budget and free >= 10 * storage.GIB:
-            break
-        if entry['eligible'] and entry['prunable_bytes']:
-            if protect is not None and protect.exists() and entry['directory'].samefile(protect):
-                continue
-            if max_collections is not None and attempts >= max_collections:
-                break
-            try:
-                if not may_reclaim(entry['directory'], entry['reference']):
-                    continue
-                attempts += 1
-                removed = reclaim(entry['directory'], entry['reference'], older_hours=older_hours, include_results=True)
-                total -= removed
-                free = min(info['free'] for info in storage.headroom(root).values())
-            except RuntimeError as error:
-                print(f'Cache reclamation paused: {error}; local output preserved.', flush=True)
-                break  # An unavailable S3 connection should not delay every job in the inventory.
-            except (OSError, ValueError, tarfile.TarError) as error:
-                print(f"Kept {entry['directory'].name}: archive check failed: {error}", flush=True)
-    if total > budget:
-        print(f'Worker cache uses {total / storage.GIB:.2f} GiB (budget {budget / storage.GIB:g}); '
-              'recent/pinned/unarchived or edited output is preserved. Inspect: worker.py cache', flush=True)
-
-
-def preflight(root, *, protect=None):
-    # Healthy launches/fetches must not inherit online cache verification.
-    # Try one emergency reclamation only if the actual space reserve is unmet.
+def preflight(root):
+    storage.initialize(root)
+    # Healthy launches/fetches do no online cache verification. Under pressure,
+    # only verified recoverable inputs may leave; worker results stay explicit.
     try:
-        storage.require_space(root)
+        storage.require_space(root / 'build')
     except OSError as error:
         if error.errno != errno.ENOSPC:
             raise
-        maintain(root, protect=protect, max_collections=1)
-        storage.require_space(root)
-
-
-def install_maintenance(root):
-    from dev import checkout_root
-    root = checkout_root(root, Path.home())
-    name = 'sixdb-cache-' + hashlib.sha256(str(root).encode()).hexdigest()[:12]
-    units = Path.home() / '.config/systemd/user'
-    units.mkdir(parents=True, exist_ok=True)
-
-    def quote(value):
-        return '"' + str(value).replace('%', '%%').replace('\\', '\\\\').replace('"', '\\"') + '"'
-
-    environment = ''.join('Environment=' + quote(key + '=' + os.environ[key]) + '\n'
-        for key in ['AWS_PROFILE', 'AWS_REGION', 'AWS_DEFAULT_REGION', 'SIXDB_WORKER_CACHE_GIB',
-                    'SIXDB_MIN_FREE_GIB', 'SIXDB_HOST_STORAGE_PATH', 'XDG_CACHE_HOME',
-                    'SIXDB_LOCAL_BUILD_GIB', 'SIXDB_LOCAL_BUILD_DAYS'] if key in os.environ)
-    service = units / (name + '.service')
-    timer = units / (name + '.timer')
-    service.write_text('[Unit]\nDescription=SixDB local build and verified worker cache maintenance\n\n'
-        '[Service]\nType=oneshot\n'
-        f'WorkingDirectory={str(root).replace("%", "%%")}\n'
-        f'ExecStart={quote(sys.executable)} {quote(root / "workbench/tools/worker.py")} cache --prune\n'
-        + environment + 'Nice=15\nIOSchedulingClass=idle\nTimeoutStartSec=0\n')
-    timer.write_text('[Unit]\nDescription=Keep SixDB build and worker storage within their budgets\n\n'
-        '[Timer]\nOnActiveSec=5min\nOnUnitInactiveSec=30min\nRandomizedDelaySec=2min\n'
-        f'Unit={name}.service\n\n[Install]\nWantedBy=timers.target\n')
-    subprocess.run(['systemd-analyze', '--user', 'verify', str(service), str(timer)], check=True)
-    subprocess.run(['systemctl', '--user', 'daemon-reload'], check=True)
-    subprocess.run(['systemctl', '--user', 'enable', '--now', timer.name], check=True)
-    print(f'Installed {timer.name}; maintenance runs in the background, with the same archive/age/pin checks.')
+        maintain(root)
+        storage.require_space(root / 'build')

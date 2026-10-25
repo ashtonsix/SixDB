@@ -2,7 +2,6 @@
 """Collection corruption, disk-pressure failures and verified cache eviction; no cloud allocation."""
 from contextlib import redirect_stdout
 import errno
-import fcntl
 import io
 import json
 import os
@@ -190,53 +189,6 @@ class StorageChecks(unittest.TestCase):
             cache.reclaim(self.job, reference)
         self.assertTrue((self.job / 'results/probe').exists())
 
-    def test_budget_reclaims_old_closed_results_preserving_active_recent_pinned_and_edits(self):
-        (self.source / 'large.csv').write_bytes(b'measured data\n' * 100000)
-        (self.source / 'source.tar.gz').write_bytes(b'original captured source fixture')
-        self.repack()
-        cache.collect(self.job, self.reference)
-        shutil.copyfile(self.source / 'source.tar.gz', self.job / 'source.tar.gz')
-        storage.write_json(self.job / 'artifact.json', self.reference)
-        storage.write_json(self.job / 'status.json', {'state': 'complete'})
-        destination = self.job / 'results'
-        (destination / 'case-1.csv').write_text('local edited data\n')
-        (destination / 'notes.txt').write_text('unarchived note\n')
-
-        def access(when):
-            receipt = cache.read(self.job / 'collection.json')
-            storage.write_json(self.job / 'collection.json', receipt | {'accessed_at': when})
-
-        access(0)
-        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                self.stream(), redirect_stdout(io.StringIO()):
-            cache.maintain(self.root, protect=self.job)
-            self.assertTrue((destination / 'large.csv').exists())
-            self.assertTrue((self.job / 'source.tar.gz').exists())
-            (self.job / '.keep-local').touch()
-            cache.maintain(self.root)
-            self.assertTrue((destination / 'large.csv').exists())
-            (self.job / '.keep-local').unlink()
-            storage.write_json(self.job / 'status.json', {'state': 'running'})
-            cache.maintain(self.root)
-            self.assertTrue((destination / 'large.csv').exists())
-            storage.write_json(self.job / 'status.json', {'state': 'complete'})
-            access(time.time())
-            cache.maintain(self.root)
-            self.assertTrue((destination / 'large.csv').exists())
-            access(0)
-            cache.maintain(self.root)
-        self.assertFalse((destination / 'large.csv').exists())
-        self.assertFalse((self.job / 'source.tar.gz').exists())
-        self.assertEqual(cache.read(self.job / 'collection.json')['root_evicted']['source.tar.gz']['sha256'],
-                         artifacts.sha256(self.source / 'source.tar.gz'))
-        self.assertFalse((destination / 'case-0.csv').exists())
-        self.assertEqual((destination / 'case-1.csv').read_text(), 'local edited data\n')
-        self.assertEqual((destination / 'notes.txt').read_text(), 'unarchived note\n')
-        self.assertIn('large.csv', cache.read(self.job / 'collection.json')['evicted'])
-        cache.collect(self.job, self.reference, selected=['large.csv'])
-        self.assertEqual((destination / 'large.csv').read_bytes(), (self.source / 'large.csv').read_bytes())
-
     def test_full_eviction_keeps_a_changed_launch_source_copy(self):
         (self.source / 'source.tar.gz').write_bytes(b'original')
         self.repack()
@@ -246,35 +198,9 @@ class StorageChecks(unittest.TestCase):
             cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
         self.assertEqual((self.job / 'source.tar.gz').read_bytes(), b'changed!')
 
-    def test_bounded_maintenance_leaves_remaining_collections_for_a_full_sweep(self):
-        (self.source / 'large.csv').write_bytes(b'data\n' * 100000)
-        self.repack()
-        second = self.job.with_name('20000101T000001Z-second')
-        for job in [self.job, second]:
-            job.mkdir(exist_ok=True)
-            cache.collect(job, self.reference)
-            storage.write_json(job / 'artifact.json', self.reference)
-            storage.write_json(job / 'status.json', {'state': 'complete'})
-            storage.write_json(job / 'collection.json', cache.read(job / 'collection.json') | {'accessed_at': 0})
-        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                redirect_stdout(io.StringIO()):
-            cache.maintain(self.root, max_collections=1)
-            self.assertEqual(sum((job / 'results/large.csv').exists() for job in [self.job, second]), 1)
-            cache.maintain(self.root)
-            self.assertFalse(any((job / 'results/large.csv').exists() for job in [self.job, second]))
-
-    def test_busy_background_maintenance_does_not_block_a_controller(self):
-        lock_path = cache.maintenance_lock()
-        lock_path.parent.mkdir(parents=True, exist_ok=True)
-        with lock_path.open('a') as lock, patch.object(cache, '_maintain') as maintain:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            cache.maintain(self.root)
-        maintain.assert_not_called()
-
     def test_healthy_foreground_preflight_does_not_scan_or_verify_old_archives(self):
         with patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                patch.object(cache, 'inventory', side_effect=AssertionError('foreground cache scan')), \
+                patch.object(cache, 'maintain', side_effect=AssertionError('foreground cache cleanup')), \
                 patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('foreground archive read')):
             cache.preflight(self.root)
 
@@ -286,85 +212,26 @@ class StorageChecks(unittest.TestCase):
             worker.fetch({'id': self.job.name}, self.job, {'state': 'complete', 'artifact': self.reference}, Mock())
         self.assertEqual((self.job / 'results/case-74.csv').read_text(), 'value\n74\n')
 
-    def test_partial_conflict_and_metadata_bytes_count_without_rechecking_evicted_jobs(self):
+    def test_emergency_preflight_uses_input_cleanup_and_preserves_worker_results(self):
+        import local_cache
         cache.collect(self.job, self.reference)
-        storage.write_json(self.job / 'artifact.json', self.reference)
-        storage.write_json(self.job / 'status.json', {'state': 'complete'})
-        storage.write_json(self.job / 'collection.json', cache.read(self.job / 'collection.json') | {'accessed_at': 0})
-        before = sum(e['bytes'] for e in cache.inventory(self.root))
-        extra = {self.job / 'partial/raw.log': b'partial data' * 1000,
-                 self.job / 'replaced-results-witness/notes.txt': b'unique conflict' * 1000,
-                 self.job / 'job.json': b'{}\n',
-                 self.job / 'source.tar.gz': b'old launch copy absent from the result archive',
-                 self.job.parent / 'controller-notes.txt': b'unscoped worker metadata'}
-        for path, data in extra.items():
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(data)
-        self.assertEqual(sum(e['bytes'] for e in cache.inventory(self.root)), before + sum(map(len, extra.values())))
-        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                redirect_stdout(io.StringIO()):
-            cache.maintain(self.root)
-            with patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('no archived payload left')):
-                cache.maintain(self.root)
-        self.assertFalse((self.job / 'results/case-74.csv').exists())
-        for path, data in extra.items():
-            self.assertEqual(path.read_bytes(), data)
-
-    def test_emergency_preflight_reclaims_at_most_one_collection_and_rechecks_reserve(self):
-        second = self.job.with_name('20000101T000001Z-second')
-        for job in [self.job, second]:
-            job.mkdir(exist_ok=True)
-            cache.collect(job, self.reference)
-            storage.write_json(job / 'artifact.json', self.reference)
-            storage.write_json(job / 'status.json', {'state': 'complete'})
-            storage.write_json(job / 'collection.json', cache.read(job / 'collection.json') | {'accessed_at': 0})
-        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                patch.object(storage, 'require_space', side_effect=[OSError(errno.ENOSPC, 'reserve unmet'), None]) as reserve, \
-                redirect_stdout(io.StringIO()):
-            cache.preflight(self.root)
+        launch = self.job / 'source.tar.gz'
+        launch.write_bytes(b'unique launch source')
+        with patch.object(storage, 'require_space', side_effect=OSError(errno.ENOSPC, 'reserve unmet')) as reserve, \
+                patch.object(local_cache, 'maintain') as cleanup, \
+                patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('worker results are explicit')):
+            with self.assertRaisesRegex(OSError, 'reserve unmet'):
+                cache.preflight(self.root)
+        cleanup.assert_called_once_with(self.root, prune=True)
         self.assertEqual(reserve.call_count, 2)
-        self.assertEqual(sum((j / 'results/case-74.csv').exists() for j in [self.job, second]), 1)
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
+        self.assertEqual(launch.read_bytes(), b'unique launch source')
 
-    def test_edited_remainders_skip_archive_reads_but_restored_bytes_requalify(self):
-        (self.source / 'source.tar.gz').write_bytes(b'original launch source')
-        self.repack()
-        cache.collect(self.job, self.reference)
-        storage.write_json(self.job / 'artifact.json', self.reference)
-        storage.write_json(self.job / 'status.json', {'state': 'complete'})
-        storage.write_json(self.job / 'collection.json', cache.read(self.job / 'collection.json') | {'accessed_at': 0})
-        destination = self.job / 'results'
-        edits = {destination / 'case-0.csv': b'VALUE\n0\n',  # Same size as the archive member.
-                 destination / 'case-1.csv': b'longer local edit\n',
-                 self.job / 'source.tar.gz': b'changed launch source!'}
-        for path, data in edits.items():
-            path.write_bytes(data)
-        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                redirect_stdout(io.StringIO()):
-            cache.maintain(self.root)
-            before = sum(e['bytes'] for e in cache.inventory(self.root))
-            with patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('only local edits remain')):
-                cache.maintain(self.root)
-            self.assertEqual(sum(e['bytes'] for e in cache.inventory(self.root)), before)
-            for path, data in edits.items():
-                self.assertEqual(path.read_bytes(), data)
-            shutil.copyfile(self.source / 'case-0.csv', destination / 'case-0.csv')
-            with patch.object(artifacts, 'remote_manifest', wraps=artifacts.remote_manifest) as verify:
-                cache.maintain(self.root)
-            verify.assert_called_once_with(self.reference)
-        self.assertFalse((destination / 'case-0.csv').exists())
-        self.assertEqual((destination / 'case-1.csv').read_bytes(), edits[destination / 'case-1.csv'])
-        self.assertEqual((self.job / 'source.tar.gz').read_bytes(), edits[self.job / 'source.tar.gz'])
-
-    def test_incomplete_or_stale_receipt_still_verifies_remote_archive(self):
+    def test_explicit_eviction_verifies_remote_with_incomplete_or_stale_receipt(self):
         for change in ['missing', 'incomplete', 'stale']:
             with self.subTest(change=change):
                 cache.collect(self.job, self.reference)
-                storage.write_json(self.job / 'artifact.json', self.reference)
-                storage.write_json(self.job / 'status.json', {'state': 'complete'})
-                receipt = cache.read(self.job / 'collection.json') | {'accessed_at': 0}
+                receipt = cache.read(self.job / 'collection.json')
                 if change == 'missing':
                     receipt.pop('members')
                 elif change == 'incomplete':
@@ -372,38 +239,14 @@ class StorageChecks(unittest.TestCase):
                 else:
                     receipt['artifact'] = self.reference | {'sha256': '0' * 64}
                 storage.write_json(self.job / 'collection.json', receipt)
-                with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
-                        patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
+                with self.stream(), \
                         patch.object(artifacts, 'remote_manifest', wraps=artifacts.remote_manifest) as verify, \
                         redirect_stdout(io.StringIO()):
-                    cache.maintain(self.root)
+                    cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
                 verify.assert_called_once_with(self.reference)
                 self.assertFalse((self.job / 'results/case-0.csv').exists())
 
-    def test_bounded_reclamation_prioritizes_payload_not_large_unarchived_partials(self):
-        (self.source / 'large.csv').write_bytes(b'measured\n' * 150000)
-        self.repack()
-        second = self.job.with_name('20000101T000001Z-second')
-        for job in [self.job, second]:
-            job.mkdir(exist_ok=True)
-            cache.collect(job, self.reference)
-            storage.write_json(job / 'artifact.json', self.reference)
-            storage.write_json(job / 'status.json', {'state': 'complete'})
-            storage.write_json(job / 'collection.json', cache.read(job / 'collection.json') | {'accessed_at': 0})
-        (self.job / 'results/large.csv').unlink()
-        partial = self.job / 'partial/unique'
-        partial.parent.mkdir()
-        partial.write_bytes(b'partial' * 500000)
-        with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0'}), self.stream(), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                redirect_stdout(io.StringIO()):
-            cache.maintain(self.root, max_collections=1)
-        self.assertFalse((second / 'results/large.csv').exists())
-        self.assertTrue((self.job / 'results/case-74.csv').exists())
-        self.assertEqual(partial.read_bytes(), b'partial' * 500000)
-
-    def test_combined_prune_reclaims_local_objects_and_closed_worker_results(self):
-        import local_cache
+    def test_unconfigured_worker_prune_reports_diagnostics_and_preserves_local_output(self):
         obj = self.root / 'build/old/CMakeFiles/probe.dir/probe.cpp.o'
         obj.parent.mkdir(parents=True)
         obj.write_bytes(b'\x7fELF' + b'compiler output' * 1000)
@@ -416,15 +259,18 @@ class StorageChecks(unittest.TestCase):
         storage.write_json(self.job / 'artifact.json', self.reference)
         storage.write_json(self.job / 'status.json', {'state': 'complete'})
         storage.write_json(self.job / 'collection.json', cache.read(self.job / 'collection.json') | {'accessed_at': 0})
+        output = io.StringIO()
         with patch.dict(os.environ, {'SIXDB_WORKER_CACHE_GIB': '0', 'SIXDB_LOCAL_BUILD_GIB': '0'}), \
                 patch.object(worker, 'ROOT', self.root), \
                 patch.object(sys, 'argv', ['worker.py', 'cache', '--prune']), \
-                patch.object(local_cache, 'compiler_running', return_value=False), \
-                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB}}), \
-                self.stream(), redirect_stdout(io.StringIO()):
+                patch.object(storage, 'headroom', return_value={'destination': {'free': 100 * storage.GIB, 'path': str(self.root)}}), \
+                patch.object(artifacts, 'remote_manifest', side_effect=AssertionError('unconfigured quota cleanup')), \
+                redirect_stdout(output):
             self.assertEqual(worker.main(), 0)
-        self.assertFalse(obj.exists())
-        self.assertFalse((self.job / 'results/case-74.csv').exists())
+        self.assertIn('unconfigured', output.getvalue())
+        self.assertIn('no SixDB capacity limit is enforced', output.getvalue())
+        self.assertTrue(obj.exists())
+        self.assertTrue(cache.verified(self.job, self.reference, full=True))
 
     def test_explicit_eviction_preserves_edits_and_supports_selective_then_normal_recovery(self):
         (self.source / 'source.tar.gz').write_bytes(b'captured source fixture')
@@ -498,27 +344,6 @@ class StorageChecks(unittest.TestCase):
             with self.assertRaises(OSError):
                 cache.reclaim(self.job, self.reference)
         self.assertTrue(cache.verified(self.job, self.reference, full=True))
-
-    def test_inventory_protects_recent_access_and_unarchived_results(self):
-        storage.write_json(self.job / 'artifact.json', self.reference)
-        storage.write_json(self.job / 'status.json', {'state': 'complete'})
-        with patch.object(cache, 'roots', return_value=[self.job.parent]):
-            self.assertTrue(cache.inventory(self.root)[0]['eligible'])
-            storage.write_json(self.job / 'collection.json', {'accessed_at': time.time()})
-            self.assertFalse(cache.inventory(self.root)[0]['eligible'])
-
-            (self.job / 'collection.json').unlink()
-            (self.job / '.keep-local').touch()
-            self.assertFalse(cache.inventory(self.root)[0]['eligible'])
-            (self.job / '.keep-local').unlink()
-            (self.job / 'artifact.json').write_text('')
-            self.assertFalse(cache.inventory(self.root)[0]['eligible'])
-
-    def test_recent_fetch_protects_against_stale_inventory(self):
-        cache.collect(self.job, self.reference)
-        with patch.object(artifacts, 'remote_manifest') as remote:
-            self.assertEqual(cache.reclaim(self.job, self.reference, older_hours=24), 0)
-        remote.assert_not_called()
 
     def test_symlinked_collection_is_never_reclaimed(self):
         (self.source / 'probe').write_bytes(b'\x7fELF' + b'a' * 2 ** 20)
@@ -605,6 +430,23 @@ worker_cache.collect(pathlib.Path(sys.argv[3]),json.loads(sys.argv[4]))
         self.assertEqual((self.job / 'results/source.tar.gz').read_bytes(), source.read_bytes())
         self.assertIn('source.tar.gz', cache.read(self.job / 'collection.json')['root_evicted'])
         self.assertTrue(cache.verified(self.job, self.reference, full=True))
+
+    def test_ancestor_pin_survives_collection_and_explicit_eviction(self):
+        (self.source / 'source.tar.gz').write_bytes(b'captured source')
+        self.repack()
+        shutil.copyfile(self.source / 'source.tar.gz', self.job / 'source.tar.gz')
+        pin = self.job.parent / '.keep-local'
+        pin.touch()
+        cache.collect(self.job, self.reference)
+        self.assertEqual((self.job / 'source.tar.gz').read_bytes(), b'captured source')
+        with self.assertRaisesRegex(ValueError, 'pinned'):
+            cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
+        self.assertTrue((self.job / 'results/case-0.csv').is_file())
+        pin.unlink()
+        with self.stream():
+            cache.evict(self.job, {'state': 'complete', 'artifact': self.reference})
+        self.assertFalse((self.job / 'source.tar.gz').exists())
+        self.assertFalse((self.job / 'results/case-0.csv').exists())
 
     def test_fresh_source_cleanup_preserves_pins_and_differing_launch_bytes(self):
         (self.source / 'source.tar.gz').write_bytes(b'original')
@@ -760,6 +602,132 @@ worker_cache.collect(pathlib.Path(sys.argv[3]),json.loads(sys.argv[4]))
         self.assertIn('present case-0.csv', output.getvalue())
         remote.assert_not_called()
         self.assertFalse((self.job / 'results/probe').exists())
+
+
+class LaunchSourceChecks(unittest.TestCase):
+    """Exercise real snapshot/dispatch/release; only the remote bytes are fake."""
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        capture = self.root / 'capture'
+        capture.mkdir()
+        subprocess.run(['git', 'init', '-q', str(capture)], check=True)
+        setup = capture / 'workbench/tools/worker-setup.sh'
+        setup.parent.mkdir(parents=True)
+        setup.write_text('#!/bin/sh\nexit 0\n')
+        (capture / 'probe.sh').write_text('#!/bin/sh\necho probe\n')
+        self.directory = self.root / 'jobs/fixture'
+        self.directory.mkdir(parents=True)
+        with patch.dict(os.environ, {'SIXDB_MIN_FREE_GIB': '0'}):
+            source = worker.snapshot(self.directory, capture)
+        worker.save(self.directory / 'source-manifest.json', source.pop('files'))
+        self.job = {'id': 'fixture', 'prefix': 'sixdb/workers/fixture',
+                    'uri': 's3://fixture/sixdb/workers/fixture', 'source': source,
+                    'config': {'bucket': 'fixture', 'region': 'test', 'instance_type': 'fixture',
+                        'capacity': 'spot', 'deadline_seconds': 60, 'idle_seconds': 0,
+                        'hardware': {'VCpuInfo': {'DefaultCores': 1, 'DefaultThreadsPerCore': 1},
+                                     'MemoryInfo': {'SizeInMiB': 1024}}}}
+        worker.save(self.directory / 'job.json', self.job)
+        self.objects, self.uploads, self.reads = {}, [], []
+        self.aws = Mock()
+        def upload(path, uri):
+            self.uploads.append(uri)
+            self.objects[uri] = Path(path).read_bytes()
+        self.aws.upload.side_effect = upload
+        from sixdb_storage.acquire import S3ArchiveSource
+        def stream(_source, reference):
+            uri = f"s3://{reference['bucket']}/{reference['key']}"
+            self.reads.append(uri)
+            return io.BytesIO(self.objects[uri])
+        self.stream = patch.object(S3ArchiveSource, 'open', stream)
+        self.stream.start()
+        self.addCleanup(self.stream.stop)
+        # Select configured dispatch semantics without installing a live mount.
+        self.managed = patch.object(storage, 'managed_root', return_value=self.root / 'managed')
+        self.managed.start()
+        self.addCleanup(self.managed.stop)
+        self.reuse = patch.object(worker, 'reuse', return_value=True)
+        self.reuse_mock = self.reuse.start()
+        self.addCleanup(self.reuse.stop)
+        self.launch = patch.object(worker, 'launch', side_effect=AssertionError('no compute allocation allowed'))
+        self.launch.start()
+        self.addCleanup(self.launch.stop)
+
+    def dispatch(self):
+        with redirect_stdout(io.StringIO()):
+            worker.dispatch(self.job, self.directory, self.aws)
+
+    def test_fresh_upload_verified_before_release_and_retry_needs_no_local_package(self):
+        package = self.directory / 'source.tar.gz'
+        original = package.read_bytes()
+        self.dispatch()
+        self.assertFalse(package.exists())
+        receipt = cache.read(self.directory / 'launch-source.json')
+        self.assertEqual(receipt['sha256'], self.job['source']['sha256'])
+        self.assertEqual(receipt['bytes'], len(original))
+        self.assertEqual(self.objects[receipt['uri']], original)
+        self.assertEqual(len(self.reads), 1)
+        self.assertEqual(self.reuse_mock.call_count, 1)
+        self.dispatch()
+        self.assertEqual(self.uploads.count(receipt['uri']), 1)
+        self.assertEqual(len(self.reads), 2)  # Retry independently verifies recovery again.
+        self.assertEqual(self.reuse_mock.call_count, 2)
+
+    def test_failed_remote_verification_preserves_local_and_never_allocates(self):
+        original_upload = self.aws.upload.side_effect
+        def corrupt(path, uri):
+            original_upload(path, uri)
+            if uri.endswith('/source.tar.gz'):
+                self.objects[uri] = b'corrupt'
+        self.aws.upload.side_effect = corrupt
+        package = self.directory / 'source.tar.gz'
+        original = package.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'independent verification'):
+            self.dispatch()
+        self.assertEqual(package.read_bytes(), original)
+        self.assertFalse((self.directory / 'launch-source.json').exists())
+        self.reuse_mock.assert_not_called()
+
+    def test_changed_launch_assets_refuse_before_any_upload(self):
+        for name in ('source.tar.gz', 'source-manifest.json', 'runtime.py',
+                     'worker_pool.py', 'worker_checkpoint.py'):
+            with self.subTest(name=name):
+                path = self.directory / name
+                original = path.read_bytes()
+                path.write_bytes(b'{}' if name.endswith('.json') else b'changed')
+                with self.assertRaisesRegex(ValueError, 'changed'):
+                    self.dispatch()
+                self.assertEqual(self.uploads, [])
+                self.reuse_mock.assert_not_called()
+                path.write_bytes(original)
+
+    def test_ancestor_pin_keeps_verified_package_until_released(self):
+        pin = self.directory.parent / '.keep-local'
+        pin.touch()
+        self.dispatch()
+        self.assertTrue((self.directory / 'source.tar.gz').is_file())
+        self.assertTrue((self.directory / 'launch-source.json').is_file())
+        pin.unlink()
+        self.dispatch()
+        self.assertFalse((self.directory / 'source.tar.gz').exists())
+
+    def test_edit_during_verification_is_preserved(self):
+        from sixdb_storage.acquire import S3ArchiveSource
+        package = self.directory / 'source.tar.gz'
+        objects = self.objects
+        class EditedStream(io.BytesIO):
+            def read(inner, *args):
+                package.write_bytes(b'concurrent user edit')
+                return super().read(*args)
+        def stream(_source, reference):
+            return EditedStream(objects[f"s3://{reference['bucket']}/{reference['key']}"])
+        with patch.object(S3ArchiveSource, 'open', stream):
+            with self.assertRaisesRegex(ValueError, 'changed during verification'):
+                self.dispatch()
+        self.assertEqual(package.read_bytes(), b'concurrent user edit')
+        self.reuse_mock.assert_not_called()
 
 
 if __name__ == '__main__':

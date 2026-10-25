@@ -3,6 +3,7 @@
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -65,6 +66,10 @@ class CapturedRunCheck(unittest.TestCase):
             subprocess.run(['git', 'init', '-q', str(root)], check=True)
             (root / '.gitignore').write_text('/build/\n')
             (root / 'datasets.py').write_text(Path(datasets.__file__).read_text())
+            tools = Path(datasets.__file__).parent
+            shutil.copy2(tools / 'storage.py', root / 'storage.py')
+            shutil.copytree(tools / 'sixdb_storage', root / 'sixdb_storage',
+                            ignore=shutil.ignore_patterns('__pycache__'))
             (root / 'recipe.py').write_text('stable recipe bytes\n')
             (root / 'prepare.py').write_text('''from pathlib import Path
 import datasets

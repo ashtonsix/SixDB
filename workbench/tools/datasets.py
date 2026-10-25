@@ -8,21 +8,31 @@ import importlib.util
 import json
 import os
 from pathlib import Path
-import shutil
+import stat
 import sys
 import tempfile
+import urllib.parse
 import urllib.request
+import storage
+from sixdb_storage import preparation
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 def cache_root():
-    return Path(os.environ.get('SIXDB_DATA_CACHE', ROOT / 'build/datasets')).expanduser().resolve()
+    storage.initialize(ROOT)
+    managed = storage.managed_root()
+    default = managed / 'datasets' if managed is not None else ROOT / 'build/datasets'
+    path = Path(os.environ.get('SIXDB_DATA_CACHE', default)).expanduser()
+    return storage.manage_directory(path).resolve()
 
 
 def digest(path):
     h = hashlib.sha256()
-    with Path(path).open('rb') as f:
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(fd, 'rb') as f:
+        if not stat.S_ISREG(os.fstat(f.fileno()).st_mode):
+            raise ValueError(f'Input must be a regular file: {path}')
         for chunk in iter(lambda: f.read(1024 * 1024), b''):
             h.update(chunk)
     return h.hexdigest()
@@ -33,18 +43,36 @@ def identity(value):
 
 
 @contextmanager
-def locked(key):
-    directory = cache_root() / '.locks'
+def locked(key, *, blocking=True, _root=None):
+    directory = (_root if _root is not None else cache_root()) / '.locks'
     directory.mkdir(parents=True, exist_ok=True)
     with (directory / (key + '.lock')).open('a') as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
-        yield
+        try:
+            fcntl.flock(f, fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB))
+        except BlockingIOError:
+            yield False
+            return
+        yield True
+
+
+def _cache_directory(name):
+    root = cache_root()
+    directory = root / name
+    directory.mkdir(parents=True, exist_ok=True)
+    for kind in ('downloads', 'prepared'):
+        pending = root / kind
+        if pending.exists():
+            preparation.reconcile(pending, lambda key, **kw: locked(key, _root=root, **kw))
+    return directory
 
 
 def file_hashes(directory):
+    if not stat.S_ISDIR(directory.lstat().st_mode):
+        raise ValueError(f'Prepared input must be a directory: {directory}')
     result = {}
     for p in sorted(directory.rglob('*')):
-        if p.is_symlink():
+        mode = p.lstat().st_mode
+        if not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)):
             raise ValueError(f'Prepared inputs must be regular files: {p}')
         if p.is_file() and p != directory / 'prepared.json':
             result[str(p.relative_to(directory))] = digest(p)
@@ -52,7 +80,9 @@ def file_hashes(directory):
 
 
 def verify(directory):
-    directory = Path(directory)
+    # Recovered runs link their input root to one shared prepared variant.
+    # Members remain regular files; only this root alias is resolved.
+    directory = Path(directory).resolve(strict=True)
     meta = json.loads((directory / 'prepared.json').read_text())
     if meta.get('format') != 2:
         raise ValueError('Resolve this input again with the current preparation format')
@@ -66,43 +96,67 @@ def verify(directory):
 def source(spec):
     """Reuse a verified old download or existing S3/HTTP object by its hash."""
     checksum = spec['sha256']
-    directory = cache_root() / 'downloads'
-    directory.mkdir(parents=True, exist_ok=True)
+    if (not isinstance(checksum, str) or not preparation.KEY.fullmatch(checksum) or
+            type(spec['bytes']) is not int or spec['bytes'] < 0):
+        raise ValueError('Source needs a pinned SHA-256 and nonnegative byte count')
+    directory = _cache_directory('downloads')
     path = directory / checksum
     with locked(checksum):
-        if path.exists():
-            if digest(path) != checksum:
+        if os.path.lexists(path):
+            if digest(path) != checksum or path.stat().st_size != spec['bytes']:
                 raise ValueError(f'Cached download changed: {path}')
             return path
-        with tempfile.TemporaryDirectory(dir=directory) as temp:
-            partial = Path(temp) / 'download'
-            legacy = ROOT / spec.get('legacy_cache', 'build/datasets/no-legacy-input')
-            if legacy.is_file() and digest(legacy) == checksum:
-                try:
-                    os.link(legacy, partial)
-                except OSError:
-                    shutil.copyfile(legacy, partial)
-            elif spec['url'].startswith('s3://'):
-                import subprocess
-                subprocess.run(['aws', 's3', 'cp', spec['url'], str(partial), '--only-show-errors'], check=True)
-            else:
-                print(f'Download: {spec["url"]}', file=sys.stderr)
-                with urllib.request.urlopen(spec['url'], timeout=120) as src, partial.open('wb') as dst:
-                    shutil.copyfileobj(src, dst)
-            if digest(partial) != checksum or partial.stat().st_size != spec['bytes']:
-                raise ValueError(f'Download does not match pinned bytes: {spec["url"]}')
+        with preparation.stage(directory, checksum) as temp:
+            partial = temp / 'download'
+            def download():
+                legacy = ROOT / spec.get('legacy_cache', 'build/datasets/no-legacy-input')
+                if legacy.is_file() and digest(legacy) == checksum:
+                    with legacy.open('rb') as src:
+                        _copy_source(src, partial, spec)
+                elif spec['url'].startswith('s3://'):
+                    from sixdb_storage.acquire import S3ArchiveSource
+                    url = urllib.parse.urlsplit(spec['url'])
+                    reference = {'format': 1, 'sha256': checksum, 'bytes': spec['bytes'], 'files': 1,
+                                 'bucket': url.netloc, 'key': url.path.lstrip('/'),
+                                 'region': spec.get('region', os.environ.get('AWS_REGION', 'us-east-1'))}
+                    with S3ArchiveSource(reference).open(reference) as src:
+                        _copy_source(src, partial, spec)
+                else:
+                    print(f'Download: {spec["url"]}', file=sys.stderr)
+                    with urllib.request.urlopen(spec['url'], timeout=120) as src:
+                        _copy_source(src, partial, spec)
+            preparation.run(download)
             partial.rename(path)
+            storage.sync_directory(directory)
     return path
+
+
+def _copy_source(src, path, spec):
+    """Enforce pinned bytes while writing, including an oversized HTTP/S3 body."""
+    remaining, checksum = spec['bytes'], hashlib.sha256()
+    with path.open('xb') as dst:
+        while True:
+            chunk = src.read(min(1024 * 1024, remaining + 1))
+            if not chunk:
+                break
+            if len(chunk) > remaining:
+                raise ValueError(f'Download exceeds pinned bytes: {spec["url"]}')
+            dst.write(chunk)
+            checksum.update(chunk)
+            remaining -= len(chunk)
+        if remaining or checksum.hexdigest() != spec['sha256']:
+            raise ValueError(f'Download does not match pinned bytes: {spec["url"]}')
+        dst.flush()
+        os.fsync(dst.fileno())
 
 
 def cached(name, recipe, inputs, parameters, build, reference=None):
     """Cache a plain Python preparation function. Recipes need no registration."""
     request = {'format': 2, 'name': name, 'recipe_sha256': digest(recipe), 'inputs': inputs, 'parameters': parameters}
     key = identity(request)
-    directory = cache_root() / 'prepared'
-    directory.mkdir(parents=True, exist_ok=True)
+    directory = _cache_directory('prepared')
     target = directory / key
-    if not target.exists() and reference and reference.exists():
+    if not os.path.lexists(target) and reference and reference.exists():
         ref = json.loads(reference.read_text())
         if ref['key'] != key:
             raise ValueError('Prepared reference names a different recipe')
@@ -113,19 +167,21 @@ def cached(name, recipe, inputs, parameters, build, reference=None):
             # Integrity errors are ValueError and deliberately remain visible.
             print(f'Prepared mirror unavailable; preparing from pinned sources: {exc}', file=sys.stderr)
     with locked(key):
-        if target.exists():
+        if os.path.lexists(target):
             if verify(target)['key'] != key:
                 raise ValueError('Cached variant belongs to a different request')
             return target
-        with tempfile.TemporaryDirectory(dir=directory) as temp:
-            staging = Path(temp) / 'prepared'
+        with preparation.stage(directory, key) as temp:
+            staging = temp / 'prepared'
             staging.mkdir()
-            details = build(staging)
+            details = preparation.run(lambda: build(staging))
             hashes = file_hashes(staging)
             meta = {'format': 2, 'request': request, 'key': key, 'details': details,
                     'files_sha256': hashes, 'id': identity({'request': request, 'files': hashes, 'details': details})}
             (staging / 'prepared.json').write_text(json.dumps(meta, indent=2, sort_keys=True) + '\n')
+            storage.sync_tree(staging)
             staging.rename(target)
+            storage.sync_directory(directory)
     return target
 
 
@@ -167,8 +223,12 @@ def publish(directory):
             if ref['id'] != meta['id'] or ref['key'] != meta['key']:
                 raise ValueError('Published reference belongs to a different input')
             return ref
-        with tempfile.TemporaryDirectory(dir=references) as temp:
-            artifact = artifacts.publish(directory, Path(temp))
+        if storage.managed_root() is not None:
+            # The configured publisher owns one restartable staging scope.
+            artifact = artifacts.publish(directory, references)
+        else:
+            with tempfile.TemporaryDirectory(dir=references) as temp:
+                artifact = artifacts.publish(directory, Path(temp))
         ref = {'format': 1, 'id': meta['id'], 'key': meta['key'], 'artifact': artifact}
         temporary = path.with_suffix('.tmp')
         temporary.write_text(json.dumps(ref, indent=2, sort_keys=True) + '\n')
@@ -181,18 +241,19 @@ def restore(ref):
     # Validate keys before using them as cache paths.
     if any(len(ref[k]) != 64 or any(c not in '0123456789abcdef' for c in ref[k]) for k in ('id', 'key')):
         raise ValueError('Invalid prepared-input identity')
-    directory = cache_root() / 'prepared'
-    directory.mkdir(parents=True, exist_ok=True)
+    directory = _cache_directory('prepared')
     target = directory / ref['key']
     with locked(ref['key']):
-        if not target.exists():
-            with tempfile.TemporaryDirectory(dir=directory) as temp:
-                staging = Path(temp) / 'prepared'
-                artifacts.restore_bundle(ref['artifact'], staging)
+        if not os.path.lexists(target):
+            with preparation.stage(directory, ref['key']) as temp:
+                staging = temp / 'prepared'
+                preparation.run(lambda: (artifacts.restore_bundle(ref['artifact'], staging), None)[1])
                 meta = verify(staging)
                 if meta['id'] != ref['id'] or meta['key'] != ref['key']:
                     raise ValueError('Restored input has a different identity')
+                storage.sync_tree(staging)
                 staging.rename(target)
+                storage.sync_directory(directory)
         if verify(target)['id'] != ref['id']:
             raise ValueError('Cached input has a different identity')
     return target

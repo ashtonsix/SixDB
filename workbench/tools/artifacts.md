@@ -76,12 +76,13 @@ checks retained hashes against Git blobs. It does not contact S3.
 ## Recover or reduce retained evidence
 
 For an artifact used as reusable input, `artifacts.py input REFERENCE.json`
-prints a verified shared directory under `SIXDB_DATA_CACHE` (by default
-`build/datasets`). Repeated `--file PATH` requests exact members. The cache key
-includes the reference and selection; concurrent callers share one atomic fill,
-and reuse checks the retained member hashes. Differing local input is preserved
-and reported. Keep the input reference with results, rather than copying the
-input directory into every run. [Workers](workers.md) provides a shell example.
+prints a verified read-only view of the shared input store. Repeated `--file PATH`
+requests exact members. Different selections share underlying bytes; concurrent
+callers share one checked fill, and process-owned pins protect active inputs.
+`--run -- COMMAND` releases pins when that command ends; `{input}` supplies its
+view path. Keep the input reference with results instead of copying the data into
+every run. The [storage guide](storage.md) covers scope and configured capacity;
+[workers](workers.md) provides a shell example.
 
 ```sh
 python3 workbench/tools/artifacts.py fetch path/to/evidence-or-artifact.json \
@@ -92,7 +93,8 @@ Choose a new destination, in ignored working space or on another volume. Fetch
 verifies the archive and original run receipt, restores shared prepared inputs,
 and recovers a subdirectory reference directly into that destination. Repeated
 `--file EXACT/MEMBER` retrieves only those files and skips whole-run/input checks.
-The compressed archive still downloads in full. Captured sources are in
+The compressed archive is verified in full while streaming; configured tools do
+not stage a download or expand omitted members. Captured sources are in
 `source.tar.gz`; toolchain binaries are not embedded.
 
 To narrow an existing export, preview exact omissions, then repeat with `--apply`:
@@ -130,7 +132,7 @@ diagnostics locally. When a selected archive renamed the original run files,
 `.artifact-eviction-SHA256.json` receipt maps each local path to its archived
 member before removal, and repeated eviction preserves earlier mappings.
 Recover the recorded member with `fetch REFERENCE NEW_DIRECTORY --file MEMBER`.
-This is explicit curation, independent of worker cache budgets or age.
+This is explicit curation, independent of automatic input-cache reclamation.
 
 Bundles are content-addressed under `s3://calico-fleet-artifacts/sixdb/artifacts/sha256/`
 in `us-east-1`, with conditional writes and a 5 GB single-PUT limit. No bucket

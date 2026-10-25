@@ -99,7 +99,7 @@ def copy_compact_files(source, destination, selected, expected=None):
         if expected is not None and expected.get(name) != checksum:
             raise ValueError(f'Compact input missing or changed: {name}')
         (destination / name).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source / name, destination / name)
+        shutil.copy(source / name, destination / name)
         if digest(destination / name) != checksum:
             raise ValueError(f'Compact input changed while copying: {name}')
         hashes[name] = checksum

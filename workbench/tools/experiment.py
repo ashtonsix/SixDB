@@ -18,6 +18,7 @@ import tarfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+import storage
 
 
 def sha256(data: bytes) -> str:
@@ -111,6 +112,9 @@ def source_files(root: Path, *, recorded=()) -> dict[str, bytes]:
 
 class Run:
     def __init__(self, root: Path, output: Path, config: dict, *, workspace: Path | None = None):
+        storage.manage_directory(output.parent, root=root)
+        if workspace is not None:
+            storage.manage_directory(workspace)
         self.root = root
         self.output = output
         output.mkdir(parents=True, exist_ok=False)
@@ -205,7 +209,11 @@ class Run:
                 env = os.environ | {'PYTHONDONTWRITEBYTECODE': '1'}
                 # Captured preparation scripts share the owning checkout's cache.
                 # An explicit cross-checkout/volume cache remains authoritative.
-                env.setdefault('SIXDB_DATA_CACHE', str(self.root / 'build/datasets'))
+                managed = storage.managed_root()
+                shared = managed / 'datasets' if managed is not None else self.root / 'build/datasets'
+                env.setdefault('SIXDB_DATA_CACHE', str(shared))
+                if managed is not None:
+                    storage.manage_directory(Path(env['SIXDB_DATA_CACHE']))
                 env['CMAKE_BUILD_PARALLEL_LEVEL'] = env.get(
                     'SIXDB_BUILD_JOBS', env.get('CMAKE_BUILD_PARALLEL_LEVEL', '1'))
                 process = subprocess.run(argv, cwd=self.root, stdout=out, stderr=err, env=env)

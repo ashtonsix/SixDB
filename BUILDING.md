@@ -36,11 +36,16 @@ selection and troubleshooting. [Experiment helpers](workbench/tools/README.md#ca
 support building captured sources while editing; [workers](workbench/tools/workers.md)
 run scripts on EC2.
 
-[Local storage maintenance](workbench/tools/storage.md#local-builds-captures-and-other-ignored-output)
-budgets ordinary `build/` output as well as worker results. Old idle CMake objects
-can be rebuilt after expiry; use `.keep-local` for incremental work that must stay.
-Pinned and unique output remains visible in accounting. Scheduled maintenance
-is disabled on this device; the storage guide covers explicit pruning and recovery.
+[Local storage](workbench/tools/storage.md) uses the existing native disk quota
+for ordinary builds, worker results, captures and temporary output, including new
+Git worktrees. Current incremental builds stay in place; there is no age-based
+object expiry or storage timer. Shared inputs and verified recovery prevent
+per-job payload copies from accumulating.
+
+On a configured host, initialize a fresh Mac-hosted worktree with the current
+controller's `python3 workbench/tools/storage.py WORKTREE` before configuring it;
+`dev.py` initializes automatically. CMake refuses foreign compiler output before
+compilation. Existing nonempty external builds need verified migration, not deletion.
 
 Floating-point settings disable fast-math and implicit contraction.
 `SIXDB_MARCH` selects the ISA. Fresh configurations default to `x86-64-v3`

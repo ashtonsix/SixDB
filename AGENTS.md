@@ -51,6 +51,12 @@ their current composition context.
 - Follow [BUILDING.md](BUILDING.md) and [code conventions](workbench/design/conventions.md).
   Use the pinned Linux toolchain; prefix Linux commands with `orb -m ubuntu` in
   this macOS/OrbStack workspace. Preserve incremental builds and build needed targets.
+- On the configured OrbStack host, initialize a fresh external/Mac-hosted worktree
+  with the current controller's `workbench/tools/storage.py WORKTREE` before its
+  first CMake configuration. `dev.py` does this automatically. Native Ubuntu
+  worktrees are already quota-covered; CMake refuses foreign compiler output.
+  Do not bypass that check; preserve existing incremental builds and unique output
+  when a path needs migration.
 - Reuse existing [helpers](workbench/tools/README.md), [datasets](workbench/datasets/README.md)
   and [native peers](workbench/peers/README.md) where they fit. Repeated operating
   work can justify a convenient tool or example; a prototype need not adopt a framework.

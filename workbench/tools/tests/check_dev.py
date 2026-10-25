@@ -45,7 +45,7 @@ def main():
                 continue
             (root / "workbench" / module).mkdir(parents=True)
             (root / "workbench" / module / "CMakeLists.txt").write_text("# empty fixture module\n")
-        for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/benchmarks/CMakeLists.txt", "workbench/tools/dev.py", "workbench/tools/dev_watch.py"]:
+        for file in ["workbench/CMakeLists.txt", "workbench/spikes/CMakeLists.txt", "workbench/benchmarks/CMakeLists.txt", "workbench/tools/dev.py", "workbench/tools/dev_watch.py", "workbench/tools/storage.py"]:
             shutil.copy2(ROOT / file, root / file)
         for kind, name in [("spikes", "first"), ("spikes", "second"), ("benchmarks", "recurring")]:
             path = root / "workbench" / kind / name

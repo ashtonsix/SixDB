@@ -2,10 +2,12 @@
 """Run one helper's checks, or all; use --list to discover them. No cloud jobs are launched."""
 import argparse
 import ast
+import os
 from pathlib import Path
 import runpy
 import subprocess
 import sys
+import tempfile
 
 
 def main():
@@ -38,7 +40,20 @@ def main():
     path = checks[args.check]
     sys.path[:0] = [str(here), str(path.parent)]
     sys.argv = [str(path), *args.args]
-    runpy.run_path(str(path), run_name='__main__')
+    # These suites construct disposable fixtures. A host's installed storage
+    # configuration must not migrate them into the live pool accidentally.
+    previous = {key: os.environ.get(key) for key in ('XDG_CONFIG_HOME', 'SIXDB_STORAGE_CONFIG')}
+    with tempfile.TemporaryDirectory(prefix='sixdb-check-config-') as config:
+        os.environ['XDG_CONFIG_HOME'] = config
+        os.environ.pop('SIXDB_STORAGE_CONFIG', None)
+        try:
+            runpy.run_path(str(path), run_name='__main__')
+        finally:
+            for key, value in previous.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
 
 
 if __name__ == '__main__':

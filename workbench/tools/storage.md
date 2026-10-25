@@ -1,126 +1,134 @@
 # Local storage
 
-The current tooling has repeatedly allowed disk exhaustion. Its nominal budgets
-do not enforce admission. The [replacement spike](../spikes/storage-lifecycle/README.md)
-records the failure mechanisms and independent adversarial tests. The provisional
-collection/input changes below reduce specific duplication; they do not establish
-a bounded replacement lifecycle.
+This Ubuntu machine has a **192 GiB native disk limit**, configured through
+OrbStack's supported `machine.ubuntu.disk_bytes` setting. The existing Btrfs
+quota enforces it. The limit includes the data already present; it is not an
+extra allocation. Ordinary builds, captures, new Git worktrees, temporary files,
+filesystem metadata and open-but-unlinked output in this subvolume share it.
+No cleanup timer, image, overlay, mount service or periodic inventory is needed.
+Existing Linux build paths and Git metadata stay in place.
+The four existing Mac-hosted build paths now link into this same bounded store,
+with original bytes and recovery archives verified before removing old copies.
 
-Ordinary collection keeps measurements, logs, individual sources and metadata locally.
-Root and nested `source.tar.gz` packages, recognized compiler output of at least 1 MiB,
-and referenced prepared inputs stay in S3. After a fresh verified collection,
-its byte-identical launch source package can leave too; pins and differing
-local bytes remain. Source identities and recovery references stay local.
-The complete compressed archive still downloads temporarily
-for verification; omitted files are hashed without being expanded.
+The [replacement study](../spikes/storage-lifecycle/README.md) records the
+failures, rejected approaches and independent public-workflow checks. A disk
+limit prevents the tooling from consuming the rest of the Mac; sharing and
+recovery below address the workflows that produced the repeated growth.
+
+## What changed
+
+Repeated artifact inputs previously became full copies inside every worker's
+results, then were archived and downloaded again. Launch source packages also
+remained locally after upload. Nominal cache budgets were retrospective scans,
+not allocation limits, and interrupted transfers could leave another complete
+staging tree on each retry.
+
+Artifact inputs now use one shared immutable store. Selected-member views are
+links to the same checked bytes, with process-owned pins while in use. All
+members and the compressed source are verified while streaming; the compressed
+archive and omitted payloads are not staged locally. Recoverable cache content
+can leave only after fresh recovery verification. Unknown, changed or pinned
+material is preserved.
+
+Fetch, collection, preparation and upload use fixed, owned pending locations.
+An interrupted operation is reconciled on the next operation, including a retry
+with a different destination. Accepted output is separate from disposable pending
+work. Launch source packages leave after their remote bytes independently verify;
+`.keep-local` pins and local edits remain. Recovery receipts keep the source URI,
+size and hash. No automatic expiry deletes unique builds or evidence.
+
+## Reuse inputs and collect results
 
 ```sh
-python3 workbench/tools/worker.py fetch JOB --list             # paths, sizes, local presence
-python3 workbench/tools/worker.py fetch JOB --file study/probe # add one member; repeat --file
-python3 workbench/tools/worker.py fetch JOB --full             # all output and prepared inputs
-python3 workbench/tools/worker.py cache                       # disk use and headroom
-python3 workbench/tools/worker.py cache --prune               # explicit verified reclamation
-python3 workbench/tools/local_cache.py                        # whole local-build accounting
-python3 workbench/tools/worker.py evict JOB                   # release a finished local collection
+input_root=$(python3 workbench/tools/artifacts.py input REFERENCE.json --file rows.bin)
+# Use "$input_root/rows.bin"; retain REFERENCE.json with the result.
+
+python3 workbench/tools/artifacts.py input REFERENCE.json --file rows.bin \
+  --run -- python3 consume.py '{input}'
+
+python3 workbench/tools/worker.py fetch JOB --list
+python3 workbench/tools/worker.py fetch JOB --file path/to/member
+python3 workbench/tools/worker.py fetch JOB --full
 ```
 
-[Retention](artifacts.md) reuses the full worker archive without fetching omitted
-files first. Recovery from an artifact reference can use a directory on another
-volume when local space is tight.
+Do not copy the shared input directory into `SIXDB_RESULTS`. Input views contain
+read-only data links; use ordinary `fetch` for editable copies or executable
+files with their original modes. A finite shell/controller process may borrow
+inputs without changing its benchmark environment. `--run` owns a command's
+lifetime in a private user/PID namespace and releases its pins afterward;
+`{input}` and `SIXDB_INPUT_ROOT` locate its view. Persistent launchers must use
+an explicit command scope rather than pinning inputs indefinitely.
 
-## Older local output
+Prepared dataset variants share the same cache across checkouts. Concurrent
+preparation/publication callers use separate processes: Python closures run in
+a single-threaded process so inherited locks cannot deadlock. Grouped remote
+workers still execute concurrently; their local collection is serial.
 
-Explicit pruning reclaims byte-identical archived results from closed collections
-after 24 hours without collection access, toward a 10 GiB cache budget or 10 GiB
-free space. This includes sources, logs and measurements as well as compiler
-output. A fresh full S3 read verifies each removed file, and the durable receipt
-keeps its recovery identity. Edited/unarchived files, active jobs, recent access
-and `.keep-local` pins stay; these can exceed the budget. `cache --prune` applies
-this now; `--older-hours N` changes the age threshold. Pin an ongoing local audit
-before relying on an older collection. Ordinary fetching renews its access age.
-Any remaining launch `source.tar.gz` is included in the budget and can leave
-only when it matches the freshly verified archive member. `fetch JOB --file
-source.tar.gz` recovers the source under `results/`; checkpoint resume already
-downloads the original source from S3.
-Partial downloads, replacement/conflict trees and job metadata also count in
-worker storage. They are preserved unless covered by explicit verified recovery;
-metadata-only jobs do not trigger repeated archive reads just because the total
-is over budget. A complete local collection receipt also lets maintenance skip
-an archive read when only differing local edits remain. Restoring matching bytes
-makes them eligible again; every actual removal still requires fresh remote
-verification.
+Ordinary worker collection keeps measurements, logs and individual sources.
+Root/nested source packages, large recognized compiler output and referenced
+prepared inputs stay recoverable remotely. `--file` selects an exact member;
+`--full` explicitly restores everything. A retry preserves differing local files
+in a deterministic `replaced-results-*` tree, with later versions under
+`.versions/`. Extra notes keep their existing paths.
 
-Scheduled cache sweeps and the hourly storage heartbeat were removed from this
-device at Ashton's request. Use `worker.py cache --prune` for an explicit sweep.
-Healthy foreground launches and fetches only check space reserves; they do no
-online cache pruning after results become available. If the reserve check fails, preflight can try
-one emergency collection before checking the reserve again. A cache backlog must
-not hold a submission behind archive reads. A shared nonblocking maintenance lock
-prevents simultaneous pruners. Space reserves still apply.
+## Inspect or reclaim
 
-For a finished collection you no longer need locally, `evict JOB` also removes
-archived sources, logs and measurements. It streams and verifies the entire S3
-bundle without staging a download, then removes only byte-identical members.
-The recovery reference, collection receipt, local edits and unarchived files stay.
-`fetch JOB --file PATH` recovers selected files; ordinary `fetch JOB` restores the
-measurement/source-file set, and `--full` restores source packages and compiler output too. Eviction is
-explicit, independent of age and free-space reserves, and respects `.keep-local`.
+```sh
+python3 workbench/tools/storage.py --status
+python3 workbench/tools/local_cache.py
+python3 workbench/tools/worker.py cache --prune
+python3 workbench/tools/worker.py evict JOB
+```
 
-`touch build/workers/JOB/.keep-local` protects fetched output; remove the file
-to release it. Pins do not request a full fetch. The cache covers this checkout,
-Git worktrees and `build/workspaces/*/build/workers`, deduplicating OrbStack aliases.
-`cache` also reports the separate local build budget below.
-For finished local studies with an existing artifact reference,
-[`artifacts.py evict`](artifacts.md#recover-or-reduce-retained-evidence) verifies
-and releases unchanged archived copies, including renamed selected logs.
+Status reads live kernel quota counters, including reserved writes; it does not
+rely on an old scan or saved report. `--prune` can reclaim verified recoverable
+input cache under pressure. It does not expire CMake objects. Explicit worker
+`evict` streams the archive and removes only matching closed results, preserving
+edits and recovery references. [Artifact eviction](artifacts.md#recover-or-reduce-retained-evidence)
+does the same for other archived output. Archive and verify unique inactive
+work before removing it. Pins still consume capacity; filling it produces a
+clear failure rather than deleting useful work or silently raising the limit.
 
-`SIXDB_WORKER_CACHE_GIB` adjusts the budget; `SIXDB_MIN_FREE_GIB` adjusts the
-5 GiB reserve checked before submission and transfers. OrbStack checks both
-the destination and Mac backing volume. Set `SIXDB_HOST_STORAGE_PATH` if its
-image lives elsewhere. These checks cannot bound other applications' disk use.
+The immutable-store target is 10 GiB, within the shared native limit. This is
+not an additional allowance per checkout. `SIXDB_MIN_FREE_GIB` controls the
+foreground space reserve (default 5 GiB); it does not change the hard limit.
 
-## Local builds, captures and other ignored output
+## Configuration and scope
 
-The separate **60 GiB local build budget** counts output files under every
-checkout/worktree's `build/`, including captures, datasets, experiments, reviews,
-frozen workspaces and pinned/unique files. Worker subtrees are counted by the
-10 GiB worker budget instead. OrbStack aliases, nested worktree roots and
-hardlinked files are deduplicated; sparse files count allocated bytes.
-`SIXDB_LOCAL_BUILD_GIB` changes this budget.
+On this Mac the persistent platform setting is:
 
-`worker.py cache --prune` accounts for local output before pruning workers;
-`local_cache.py --prune` handles local output alone. Under budget pressure, or
-below a 20 GiB free-space target, it can remove
-recognised CMake object/PCH products from build trees idle for **seven days**
-(`SIXDB_LOCAL_BUILD_DAYS`). Any recent activity in that build tree keeps its old
-objects. A running compiler, linker or build controller defers automatic removal.
-Ancestor `.keep-local` pins protect incremental work; pins still count toward
-the budget. Tracked files, links, executables, libraries, sources, measurements
-and arbitrary files with compiler-looking names are preserved.
+```sh
+orb config get machine.ubuntu.disk_bytes  # 206158430208
+```
 
-These are retention budgets, not filesystem quotas. Recent, pinned and unique
-material can exceed them. A durable report at
-`~/.cache/sixdb/local-build-cache-CHECKOUT_HASH.json` records over-budget output,
-scan errors and the largest directories; they are not silently excluded from
-accounting. The report reflects its most recent invocation; no scheduled scanner
-refreshes it on this device. The
-[artifact helper](artifacts.md#recover-or-reduce-retained-evidence) preserves
-recovery references for explicit curation.
+`~/.config/sixdb/storage.json` records the cache hub, existing quota scope,
+filesystem UUID, level-zero qgroup and maximum accepted limit. `XDG_CONFIG_HOME`
+and an explicit `SIXDB_STORAGE_CONFIG` select a different configuration. Helpers
+check the live kernel identity, mode, consistency and limit; a missing explicit
+config, removed/raised limit or mismatched output refuses rather than falling
+back to unbounded storage. The platform owns quota setup and persistence;
+SixDB does not introduce another quota installer or boot service.
 
-Frozen captures and new local runner workspaces use verified copy-on-write source
-clones where supported. This avoids another full physical copy of unchanged
-sources without coupling later edits. Existing snapshots can have identical
-data ranges shared by the kernel without changing their bytes, paths or modes.
-Ordinary `du` still counts shared extents at each file; budget accounting is
-conservative after reflinking, rather than a measure of exclusive physical use.
+The boundary is the configured Btrfs subvolume. New ordinary Git worktrees in it
+are covered automatically. Separately created subvolumes, other filesystems and
+arbitrary Mac output paths are not inferred to be covered. Empty explicit output
+locations may link into the hub; nonempty external output needs verified
+migration. Initialize a fresh Mac-hosted worktree with the current controller's
+`python3 workbench/tools/storage.py WORKTREE` before its first CMake configure;
+`dev.py` does this automatically. CMake checks before compiler detection and
+refuses foreign output. A refused configure can leave small CMake control files;
+preserve existing incremental or unique output when resolving a nonempty path.
+Common Git metadata must already be within the boundary and is never relocated.
 
-## Repairing a collection
+Intentional retained Git exports use one checked publication copy
+outside cache storage. The limit cannot reserve space against unrelated Mac
+applications or a privileged operator changing platform settings.
 
-Retry `wait JOB` or `fetch JOB`. They check sizes and hashes against
-`collection.json`, restore damaged or missing output, and report write/sync
-failures. Compiler omissions stay omitted unless requested. Differing or user-added
-files survive repair in `replaced-results-*` beside the results; inspect before deleting.
-A verified collection preserves what the script produced, including failed runs.
+Ephemeral workers without host configuration keep their existing disk boundary;
+local headroom reporting is explicitly diagnostic. `check.py` uses isolated
+configuration for its disposable helper fixtures. Configured workflow reviews
+supply their own small, real kernel quota.
 
-Closed local study recovery checkpoints: [October 16](evidence/storage-20261016/README.md)
-and [October 23](evidence/storage-20261023/README.md).
+The [October 24–25 recovery checkpoint](evidence/storage-20261024/README.md)
+retains references for the immediate reclamation. Rejected image/overlay source
+and test records are recoverable through the study; they are not installed.

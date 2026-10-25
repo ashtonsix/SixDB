@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import re
 import subprocess
 from pathlib import Path
+import storage
 
 def checkout_root(path, home):
     # OrbStack exposes the same Linux home at both /home/... and the macOS
@@ -35,6 +37,7 @@ def active_selection(variable):
 
 
 def refresh(selected, benchmarks, *, log=None):
+    storage.initialize(ROOT)
     # A half-written new target must not replace working editor commands or
     # poison the next refresh's cached selection.
     paths = [BUILD / "CMakeCache.txt", BUILD / "compile_commands.json",
@@ -86,11 +89,25 @@ def refresh(selected, benchmarks, *, log=None):
     # this custom build directory. Publish only changed bytes to avoid restarts
     # on no-op refreshes; the real compiler database remains in build/clang/dev.
     mirror = ROOT / 'compile_commands.json'
-    content = database.read_bytes()
-    if not mirror.exists() or mirror.read_bytes() != content:
-        temporary = mirror.with_suffix('.tmp')
-        temporary.write_bytes(content)
-        temporary.replace(mirror)
+    if storage.managed_root() is not None:
+        # A small structural link keeps the extension's root watcher while the
+        # generated database body and its replacements stay on bounded storage.
+        stamp = BUILD / '.root-database-sha256.json'
+        digest = hashlib.sha256(database.read_bytes()).hexdigest()
+        previous = json.loads(stamp.read_text()) if stamp.exists() else None
+        if (not mirror.is_symlink() or mirror.resolve() != database.resolve() or
+                previous != digest):
+            temporary = mirror.with_suffix('.tmp')
+            temporary.unlink(missing_ok=True)
+            temporary.symlink_to(database)
+            temporary.replace(mirror)
+            storage.write_json(stamp, digest)
+    else:
+        content = database.read_bytes()
+        if not mirror.exists() or mirror.read_bytes() != content:
+            temporary = mirror.with_suffix('.tmp')
+            temporary.write_bytes(content)
+            temporary.replace(mirror)
     print("Active spikes: " + (", ".join(sorted(selected)) or "(none)"))
     print("Active benchmarks: " + (", ".join(sorted(benchmarks)) or "(none)"))
     print(f"Editor compilation database: {database}")
@@ -119,6 +136,7 @@ def main():
         for name in add + remove:
             if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", name):
                 parser.error(f"invalid {kind} name: {name}")
+    storage.initialize(ROOT)
     if args.watch or args.sync or args.install_watch:
         import dev_watch
         if args.install_watch:
@@ -148,4 +166,7 @@ def main():
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (OSError, RuntimeError, ValueError) as error:
+        raise SystemExit(str(error))

@@ -91,9 +91,11 @@ def remote_manifest(reference):
     return members
 
 
-def files(directory):
+def files(directory, *, exclude=()):
     result = []
     for path in sorted(directory.rglob("*")):
+        if any(path.relative_to(directory).is_relative_to(mount) for mount in exclude):
+            continue
         if path.is_symlink() or not (path.is_file() or path.is_dir()):
             raise ValueError(f"bundle only regular files and directories: {path}")
         if path.is_file():
@@ -171,7 +173,22 @@ def publish_inputs(directory):
     return references
 
 
-def restore_inputs(directory):
+def _resolve_inputs(expected, references):
+    import datasets
+    if references.keys() != expected.keys():
+        raise ValueError('Input references do not match the run')
+    sources = {}
+    for mount, ref in references.items():
+        p = Path(mount)
+        if not p.parts or p.is_absolute() or '..' in p.parts:
+            raise ValueError('Invalid restored input mount')
+        if any(ref[k] != expected[mount][k] for k in ('id', 'key')):
+            raise ValueError('Restored dependency has a different identity')
+        sources[mount] = datasets.restore(ref)
+    return sources
+
+
+def restore_inputs(directory, *, prepared=None):
     """Resolve a run's prepared dependencies, also after a worker bundle is fetched."""
     refs = directory / 'input-artifacts.json'
     if not refs.exists():
@@ -192,8 +209,17 @@ def restore_inputs(directory):
             if datasets.verify(target)['id'] != ref['id']:
                 raise ValueError('Existing restored input differs')
         else:
-            source = datasets.restore(ref)
+            source = prepared[mount] if prepared is not None else datasets.restore(ref)
+            meta = datasets.verify(source)
+            if meta['id'] != ref['id'] or meta['key'] != ref['key']:
+                raise ValueError('Restored dependency has a different identity')
             target.parent.mkdir(parents=True, exist_ok=True)
+            if storage.managed_root() is not None:
+                # Prepared inputs have independent immutable identities. A
+                # recovered run keeps that reference rather than another body.
+                os.symlink(source, target, target_is_directory=True)
+                storage.sync_directory(target.parent)
+                continue
             with storage.transfer_lock():
                 storage.require_space(target, sum(path.stat().st_size for path in files(source)))
                 with tempfile.TemporaryDirectory(dir=target.parent, prefix='.input-') as temp:
@@ -205,6 +231,28 @@ def restore_inputs(directory):
 
 
 def publish(directory, temporary, *, bucket=BUCKET, region=REGION, validate_run=True):
+    managed = storage.managed_root()
+    if managed is not None:
+        from sixdb_storage import preparation
+        directory = storage.canonical_path(directory)
+        receipt = directory / 'run.json'
+        references = None
+        if validate_run and receipt.exists() and json.loads(receipt.read_text()).get('inputs'):
+            # Finish dependency publication before the global upload scope, so
+            # publishing a prepared input does not recursively acquire its lock.
+            references = publish_inputs(directory)
+        staging = managed / 'upload-staging'
+        staging.mkdir(exist_ok=True)
+        key = hashlib.sha256(b'sixdb-archive-upload-v1').hexdigest()
+        with storage.lock(managed / '.locks/upload.lock'):
+            with preparation.stage(staging, key) as pending:
+                return preparation.run(lambda: _publish(directory, pending, bucket=bucket,
+                    region=region, validate_run=validate_run, input_references=references))
+    return _publish(directory, temporary, bucket=bucket, region=region, validate_run=validate_run)
+
+
+def _publish(directory, temporary, *, bucket=BUCKET, region=REGION, validate_run=True,
+             input_references=None):
     # Inputs are independent objects. Add a restoration manifest to the bundle
     # without rewriting the completed run or copying datasets into every run.
     receipt = directory / 'run.json'
@@ -216,13 +264,21 @@ def publish(directory, temporary, *, bucket=BUCKET, region=REGION, validate_run=
             mounts = [Path(m) for m in inputs]
             if any(not m.parts or m.is_absolute() or '..' in m.parts for m in mounts):
                 raise ValueError('Invalid input mount')
-            for path in files(directory):
+            for path in files(directory, exclude=mounts):
                 name = path.relative_to(directory)
                 if name == Path('input-artifacts.json') or any(name.is_relative_to(m) for m in mounts):
                     continue
                 (staged / name).parent.mkdir(parents=True, exist_ok=True)
-                os.link(path, staged / name)
-            references = publish_inputs(directory)
+                try:
+                    os.link(path, staged / name)
+                except OSError as error:
+                    if error.errno != 18:  # EXDEV: explicit sources may be on another filesystem.
+                        raise
+                    from sixdb_storage.transfers import copy_checked
+                    copy_checked(path, staged / name,
+                                 {'bytes': path.stat().st_size, 'sha256': sha256(path)},
+                                 path.stat().st_mode)
+            references = input_references if input_references is not None else publish_inputs(directory)
             (staged / 'input-artifacts.json').write_text(json.dumps(references, indent=2, sort_keys=True) + '\n')
             directory = staged
     bundle = temporary / "bundle.tar.gz"
@@ -248,13 +304,19 @@ def publish(directory, temporary, *, bucket=BUCKET, region=REGION, validate_run=
 
 
 def install(staging, destination):
+    if destination.is_symlink():
+        raise ValueError(f'destination is a symlink; preserved: {destination}')
     if destination.exists():
         previous = {str(p.relative_to(destination)): sha256(p) for p in files(destination)}
         current = {str(p.relative_to(staging)): sha256(p) for p in files(staging)}
         if previous != current:
             raise ValueError(f"destination differs; choose a new evidence directory: {destination}")
         return
-    staging.rename(destination)
+    if storage.managed_root() is not None:
+        from sixdb_storage.transfers import publish_directory
+        publish_directory(staging, destination)
+    else:
+        staging.rename(destination)
 
 
 def prepare_compact(source, staging, selected, regenerate, regenerate_from=None):
@@ -387,12 +449,14 @@ def worker_reference(source, *, selected=None):
 
 
 def retain(source, destination, selected=None, regenerate=None, regenerate_from=None):
-    source, destination = source.resolve(), destination.resolve()
+    source = source.resolve()
+    destination = destination.parent.resolve() / destination.name
+    if destination.is_symlink():
+        raise ValueError(f'destination is a symlink; preserved: {destination}')
     if destination.is_relative_to(source):
         raise ValueError("keep retained evidence outside its input run")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=destination.parent, prefix=".retain-") as name:
-        temporary = Path(name)
+    def retain_in(temporary):
         staging = temporary / "evidence"
         staging.mkdir()
         prepare_compact(source, staging, selected, regenerate, regenerate_from)
@@ -402,7 +466,30 @@ def retain(source, destination, selected=None, regenerate=None, regenerate_from=
         raw_selection = provenance['files_sha256'] if provenance.get('kind') == 'files' else None
         reference = worker_reference(source, selected=raw_selection) or publish(source, temporary)
         (staging / "artifact.json").write_text(json.dumps(reference, indent=2) + "\n")
-        install(staging, destination)
+        if storage.managed_root() is None:
+            install(staging, destination)
+        elif destination.exists():
+            install(staging, destination)
+        else:
+            from sixdb_storage.transfers import copy_checked, export_stage
+            members = {path.relative_to(staging): {'bytes': path.stat().st_size, 'sha256': sha256(path)}
+                       for path in files(staging)}
+            with export_stage(destination) as authored:
+                for name, expected in members.items():
+                    target = authored / name
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    copy_checked(staging / name, target, expected, (staging / name).stat().st_mode)
+                storage.sync_tree(authored)
+                install(authored, destination)
+                storage.sync_directory(destination.parent)
+    if storage.managed_root() is not None:
+        from sixdb_storage import preparation
+        from sixdb_storage.transfers import publication
+        with publication(storage.managed_root()) as temporary:
+            preparation.run(lambda: retain_in(temporary))
+    else:
+        with tempfile.TemporaryDirectory(dir=destination.parent, prefix=".retain-") as name:
+            retain_in(Path(name))
     print(f"Retained: {destination}")
 
 
@@ -445,7 +532,8 @@ def unpack(bundle, destination, *, selected=None, manifest=None, omit_compiler=F
                 prefix = source.read(512)
                 compiler = rebuildable(name, member.size, prefix)
                 keep = name.as_posix() in selected if selected is not None else not (
-                    (omit_compiler and compiler) or (omit_source_archive and name.name == 'source.tar.gz'))
+                    (omit_compiler and compiler) or
+                    (omit_source_archive and name.name in ('source.tar.gz', 'source.tar.zst')))
                 path = destination.joinpath(*name.parts)
                 if keep:
                     storage.require_space(destination, member.size)
@@ -486,8 +574,16 @@ def restore_bundle(reference, destination, *, selected=None, omit_compiler=False
 
 
 def _restore_bundle(reference, destination, *, selected=None, omit_compiler=False, omit_source_archive=False):
-    destination = destination.resolve()
-    if destination.exists():
+    storage.manage_directory(destination.parent, root=ROOT)
+    destination = storage.canonical_path(destination.parent) / destination.name
+    if storage.managed_root() is not None:
+        from sixdb_storage.transfers import restore
+        def validate(staging, manifest):
+            if selected is None and reference.get('kind') != 'files':
+                verify_run(staging, archived=manifest if omit_compiler or omit_source_archive else None)
+        return restore(reference, destination, selected=selected, omit_compiler=omit_compiler,
+                       omit_source_archive=omit_source_archive, validate=validate)
+    if destination.exists() or destination.is_symlink():
         raise ValueError("fetch destination already exists")
     destination.parent.mkdir(parents=True, exist_ok=True)
     storage.require_space(destination, reference['bytes'])
@@ -515,16 +611,41 @@ def fetch(reference_path, destination, *, selected=None):
     if reference_path.is_dir():
         reference_path = reference_path / "artifact.json"
     reference = json.loads(reference_path.read_text())
-    destination = destination.resolve()
-    if destination.exists():
+    storage.manage_directory(destination.parent, root=ROOT)
+    destination = storage.canonical_path(destination.parent) / destination.name
+    if destination.exists() or destination.is_symlink():
         raise ValueError('fetch destination already exists')
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=destination.parent) as temp:
-        staging = Path(temp) / 'run'
-        restore_bundle(reference, staging, selected=selected)
+    if storage.managed_root() is not None:
+        from sixdb_storage import preparation
+        from sixdb_storage.transfers import input_metadata, publication, publish_directory
+        prepared = {}
         if selected is None:
-            restore_inputs(staging)
-        staging.rename(destination)
+            metadata = input_metadata(reference)
+            if metadata is not None:
+                # A recipe callback can itself fetch an artifact. Resolve its
+                # dataset keys before holding the independent publication lock.
+                prepared = _resolve_inputs(metadata['run.json'].get('inputs', {}),
+                                           metadata['input-artifacts.json'])
+        with publication(destination.parent) as temp:
+            def restore():
+                staging = temp / 'run'
+                restore_bundle(reference, staging, selected=selected)
+                if selected is None:
+                    restore_inputs(staging, prepared=prepared)
+                if destination.exists() or destination.is_symlink():
+                    raise ValueError('fetch destination already exists')
+                publish_directory(staging, destination)
+                storage.sync_directory(destination.parent)
+            preparation.run(restore)
+    else:
+        with tempfile.TemporaryDirectory(dir=destination.parent) as temp:
+            staging = Path(temp) / 'run'
+            restore_bundle(reference, staging, selected=selected)
+            if selected is None:
+                restore_inputs(staging)
+            staging.rename(destination)
+            storage.sync_directory(destination.parent)
     if selected is None:
         print(f"Restored and verified: {destination}")
     else:
@@ -532,46 +653,36 @@ def fetch(reference_path, destination, *, selected=None):
         print('Whole-run validation and input dataset restoration were not requested.')
 
 
-def cached_input(reference_path, *, selected=None, cache_root=None):
-    """Share verified immutable artifact inputs, outside each job's result bundle."""
+def input_settings(cache_root=None):
     import datasets
-    reference = json.loads(reference_path.read_text())
-    selected = selection(selected)
-    identity = {'artifact': reference, 'selected': sorted(selected) if selected is not None else None}
-    key = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
-    base = (Path(cache_root).resolve() if cache_root is not None else datasets.cache_root()) / 'artifact-inputs'
-    results = os.environ.get('SIXDB_RESULTS')
-    if results and base.is_relative_to(Path(results).resolve()):
-        raise ValueError('input cache must be outside SIXDB_RESULTS')
-    base.mkdir(parents=True, exist_ok=True)
-    destination = base / key
-    marker = '.artifact-input.json'
-    with storage.lock(base / '.locks' / (key + '.lock')):
-        if destination.exists() or destination.is_symlink():
-            receipt = destination / marker
-            if destination.is_symlink() or receipt.is_symlink() or not receipt.is_file():
-                raise ValueError(f'input cache has no regular verification receipt: {destination}')
-            saved = json.loads(receipt.read_text())
-            members = saved['members']
-            wanted = selected if selected is not None else set(members)
-            if saved.get('identity') != identity or {p.relative_to(destination).as_posix()
-                    for p in files(destination)} != wanted | {marker}:
-                raise ValueError(f'input cache differs; existing files preserved: {destination}')
-            for name in wanted:
-                path = export_file(destination, name)
-                expected = members[name]
-                if path.stat().st_size != expected['bytes'] or sha256(path) != expected['sha256']:
-                    raise ValueError(f'input cache differs; existing file preserved: {path}')
-        else:
-            with tempfile.TemporaryDirectory(dir=base, prefix='.input-') as name:
-                staging = Path(name) / 'input'
-                members = restore_bundle(reference, staging, selected=selected)
-                if marker in members:
-                    raise ValueError('input archive uses the cache receipt filename')
-                storage.write_json(staging / marker, {'identity': identity, 'members': members})
-                staging.rename(destination)
-                storage.sync_directory(base)
-    return destination
+    override = cache_root if cache_root is not None else os.environ.get('SIXDB_DATA_CACHE')
+    if override is not None and os.environ.get('SIXDB_RESULTS'):
+        if Path(override).expanduser().resolve().is_relative_to(Path(os.environ['SIXDB_RESULTS']).resolve()):
+            raise ValueError('input cache must be outside SIXDB_RESULTS')
+    settings = storage.immutable_settings()
+    if settings is None:
+        base = Path(cache_root).expanduser().resolve() if cache_root is not None else datasets.cache_root()
+        base.mkdir(parents=True, exist_ok=True)
+        budget = int(float(os.environ.get('SIXDB_WORKER_CACHE_GIB', '10')) * storage.GIB)
+        return base / '.immutable', budget, base / 'input-views'
+    root, budget = settings
+    view_root = None
+    if override is not None:
+        requested = storage.canonical_path(override)
+        storage.manage_directory(requested, root=ROOT)
+        alias = requested / '.sixdb-input-views'
+        target = root.parent / 'input-view-locations' / hashlib.sha256(str(requested).encode()).hexdigest()
+        storage._directory_link(alias, target)
+        view_root = alias.resolve()
+    return root, budget, view_root
+
+
+def cached_input(reference_path, *, selected=None, cache_root=None, owner_pid=None):
+    """Borrow checked shared inputs for the actual caller's lifetime."""
+    from sixdb_storage.inputs import borrow
+    root, budget, view_root = input_settings(cache_root)
+    return borrow(reference_path, root, budget, selected=selected,
+                  owner_pid=owner_pid, view_root=view_root)
 
 
 def evict(directory, reference_path, *, selected=None, match_content=False, minimum_bytes=0, apply=False):
@@ -799,6 +910,9 @@ def report(evidence, output, *, dry_run=False):
         print('  ' + shlex.join(command), flush=True)
     if dry_run:
         return
+    # Report inputs and generated output are working data, unlike the retained
+    # authored export. Refuse or route external output before writing either.
+    storage.manage_directory(output.parent, root=ROOT)
     reference_path = export_file(evidence, meta['full_bundle']) if meta.get('full_bundle') else None
     receipt = {'format': 1, 'status': 'running', 'input': source,
                'provenance_sha256': sha256(evidence / 'provenance.json'),
@@ -876,6 +990,7 @@ def main():
     input_parser.add_argument('reference', type=Path)
     input_parser.add_argument('--cache', type=Path, help='shared data cache (default: SIXDB_DATA_CACHE or build/datasets)')
     input_parser.add_argument('--file', action='append', dest='selected', help='cache this exact member; repeat as needed')
+    input_parser.add_argument('--run', action='store_true', help='own inputs through the command after --')
     evict_parser = commands.add_parser('evict', help='preview/release byte-identical archived local output')
     evict_parser.add_argument('directory', type=Path)
     evict_parser.add_argument('reference', type=Path)
@@ -883,7 +998,18 @@ def main():
     evict_parser.add_argument('--match-content', action='store_true', help='Match renamed archive members by size and SHA-256')
     evict_parser.add_argument('--min-bytes', type=int, default=0, help='Consider only local files at least this large')
     evict_parser.add_argument('--apply', action='store_true', help='release verified local copies and keep recovery mappings')
-    args = parser.parse_args()
+    argv = sys.argv[1:]
+    consumer = []
+    if '--' in argv:
+        separator = argv.index('--')
+        argv, consumer = argv[:separator], argv[separator + 1:]
+    args = parser.parse_args(argv)
+    if consumer and args.command != 'input':
+        parser.error('a command after -- is only supported by input --run')
+    if args.command == 'input' and args.run != bool(consumer):
+        parser.error('input --run requires -- COMMAND')
+    if args.command != 'verify':
+        storage.initialize(ROOT)
     if args.command in ('retain', 'preview'):
         action = retain if args.command == 'retain' else preview
         action(args.run, args.evidence, args.selected, parse_recipe(args.regenerate), args.regenerate_from)
@@ -897,7 +1023,13 @@ def main():
     elif args.command == "fetch":
         fetch(args.reference, args.output, selected=args.selected)
     elif args.command == 'input':
-        print(cached_input(args.reference, selected=args.selected, cache_root=args.cache))
+        if args.run:
+            from sixdb_storage.inputs import run
+            root, budget, view_root = input_settings(args.cache)
+            return run(args.reference, root, budget, consumer,
+                       selected=args.selected, view_root=view_root)
+        print(cached_input(args.reference, selected=args.selected, cache_root=args.cache,
+                           owner_pid=os.getppid()))
     elif args.command == 'evict':
         evict(args.directory, args.reference, selected=args.selected, match_content=args.match_content,
               minimum_bytes=args.min_bytes, apply=args.apply)
@@ -906,8 +1038,11 @@ def main():
             parser.error("keep the reference outside its input bundle")
         cache = ROOT / "build/artifacts"
         cache.mkdir(parents=True, exist_ok=True)
-        with tempfile.TemporaryDirectory(dir=cache) as name:
-            reference = publish(args.directory.resolve(), Path(name))
+        if storage.managed_root() is not None:
+            reference = publish(args.directory.resolve(), cache)
+        else:
+            with tempfile.TemporaryDirectory(dir=cache) as name:
+                reference = publish(args.directory.resolve(), Path(name))
         content = json.dumps(reference, indent=2) + "\n"
         if args.reference.exists() and args.reference.read_text() != content:
             raise ValueError("reference already exists with different content")
@@ -930,4 +1065,4 @@ def parse_recipe(commands):
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

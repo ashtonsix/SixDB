@@ -13,6 +13,9 @@ standalone script with its imports available; extra arguments pass through,
 for example `check.py worker -v`. `check.py all` runs every suite in a separate
 process and summarizes failures. It does not allocate cloud workers. Standard
 `unittest discover` does not select these `check_*.py` scripts.
+The launcher isolates host configuration so disposable helper fixtures cannot
+accidentally use the installed storage pool. Configured storage workflow reviews
+use explicit fixture configurations and real small kernel quotas.
 
 `build`, `dev`, `experiment`, `compile_probe` and `replay` use the pinned Linux toolchain in
 disposable fixtures. `build` also uses LLVM objcopy/strip and `readelf`;

@@ -6,6 +6,7 @@ import os
 from pathlib import Path, PurePosixPath
 import shutil
 import subprocess
+import storage
 
 from experiment import sha256, source_files, source_output, write_snapshot
 
@@ -125,6 +126,8 @@ def capture(base, destination, *, replacements=(), removed=(), expected=None, in
     common = subprocess.check_output(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'],
                                      cwd=base, text=True).strip()
     worktree_git = ['git', '--git-dir', str(checkout_path(common)), 'worktree']
+    storage.manage_directory(destination.parent, root=base)
+    storage.manage_git_worktrees(Path(common) / 'worktrees')
     destination.parent.mkdir(parents=True, exist_ok=True)
     created = False
     receipt_created = False

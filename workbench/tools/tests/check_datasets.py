@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Check cached preparation, concurrent callers, retries, and pinned downloads offline."""
-from concurrent.futures import ThreadPoolExecutor
 import json
+import multiprocessing
 from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
 
 import datasets
+import storage
 
 
 class DatasetCheck(unittest.TestCase):
@@ -18,21 +19,32 @@ class DatasetCheck(unittest.TestCase):
         self.patch = patch.object(datasets, 'ROOT', self.root)
         self.patch.start()
         self.addCleanup(self.patch.stop)
+        unmanaged = patch.object(storage, 'managed_root', return_value=None)
+        unmanaged.start()
+        self.addCleanup(unmanaged.stop)
         self.recipe = self.root / 'recipe.py'
         self.recipe.write_text('recipe v1')
 
     def test_reuse_parameters_and_recipe_identity(self):
-        builds = []
+        builds = self.root / 'build-count.txt'
         def build(out):
-            builds.append(out)
+            with builds.open('a') as count:
+                count.write('built\n')
             (out / 'values').write_bytes(b'preserved bytes\r\n')
             return {'rows': 1}
         def get():
             return datasets.cached('example', self.recipe, {'source': 'pin'}, {'rows': 1}, build)
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            paths = list(pool.map(lambda _: get(), range(4)))
+        def acquire(index):
+            (self.root / f'caller-{index}').write_text(str(get()))
+        processes = [multiprocessing.get_context('fork').Process(target=acquire, args=(i,)) for i in range(4)]
+        for process in processes:
+            process.start()
+        for process in processes:
+            process.join(10)
+            self.assertEqual(process.exitcode, 0)
+        paths = [Path((self.root / f'caller-{i}').read_text()) for i in range(4)]
         self.assertEqual(len(set(paths)), 1)
-        self.assertEqual(len(builds), 1)
+        self.assertEqual(builds.read_text().splitlines(), ['built'])
         first = datasets.verify(paths[0])
         self.assertEqual(get(), paths[0])
         other = datasets.cached('example', self.recipe, {'source': 'pin'}, {'rows': 2}, build)
@@ -59,18 +71,19 @@ class DatasetCheck(unittest.TestCase):
                    'inputs': {}, 'parameters': {}}
         ref = self.root / 'reference.json'
         ref.write_text(json.dumps({'key': datasets.identity(request)}))
-        builds = []
+        builds = self.root / 'build-count.txt'
         def build(out):
-            builds.append(out)
+            with builds.open('a') as count:
+                count.write('built\n')
             (out / 'data').write_text('data')
             return {'sample_positions': [0, 8]}
         with patch.object(datasets, 'restore', side_effect=ValueError('corrupt remote bytes')):
             with self.assertRaisesRegex(ValueError, 'corrupt'):
                 datasets.cached('example', self.recipe, {}, {}, build, ref)
-        self.assertFalse(builds)
+        self.assertFalse(builds.exists())
         with patch.object(datasets, 'restore', side_effect=FileNotFoundError('aws not installed')):
             result = datasets.cached('example', self.recipe, {}, {}, build, ref)
-        self.assertEqual(len(builds), 1)
+        self.assertEqual(builds.read_text().splitlines(), ['built'])
         meta = datasets.verify(result)
         meta['details']['sample_positions'] = [1, 9]
         (result / 'prepared.json').write_text(json.dumps(meta))

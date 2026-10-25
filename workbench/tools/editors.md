@@ -27,10 +27,17 @@ opt-in; existing untracked spikes are discovered on first installation too.
 Add source files to their CMake target so its includes and definitions reach
 clangd. The repository enables vscode-clangd's automatic config reload; the
 installer applies the same settings to an existing Remote SSH installation for
-multi-root workspaces. A changed-byte-only root `compile_commands.json` mirror
-triggers that extension's watcher, so already-open files reload too. No manual
+multi-root workspaces. The root `compile_commands.json` links into the bounded
+build directory; changed-byte-only link refreshes trigger that extension's
+watcher, so already-open files reload too. No manual
 language-server restart is needed after setup. If installing into an already
 open VS Code session, restart clangd once to enable its extension watcher.
+
+On the configured OrbStack host, the helper initializes a fresh Mac-hosted
+worktree's build path before CMake runs. Manual first configuration needs the
+current controller's `python3 workbench/tools/storage.py WORKTREE` first. Native
+Ubuntu worktrees are already quota-covered. Foreign nonempty output is preserved
+and refused pending verified migration; see [local storage](storage.md).
 
 ## Manual selection and diagnostics
 

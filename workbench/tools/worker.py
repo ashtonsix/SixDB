@@ -213,7 +213,9 @@ def resolve(config, aws):
     offers = aws.call('ec2', 'describe-instance-type-offerings', LocationType='availability-zone',
         Filters=[{'Name': 'instance-type', 'Values': [config['instance_type']]}])['InstanceTypeOfferings']
     zones = {offer['Location'] for offer in offers}
-    selected = config.get('subnets')
+    # A resumed job carries the previously resolved id/zone records.
+    selected = [value['id'] if isinstance(value, dict) else value
+                for value in config.get('subnets') or []]
     config['subnets'] = sorted([{'id': s['SubnetId'], 'zone': s['AvailabilityZone']} for s in subnets
         if s['AvailabilityZone'] in zones and s['AvailableIpAddressCount'] > 0
         and (s['SubnetId'] in selected if selected else s['MapPublicIpOnLaunch'])], key=lambda s: s['zone'])
@@ -560,7 +562,7 @@ def idle_hint(job, aws):
 
 def fetch(job, directory, state, aws, *, full=False, selected=None):
     # A final reference describes an immutable bundle; partial syncs are kept separate.
-    worker_cache.preflight(ROOT, protect=directory)
+    worker_cache.preflight(ROOT)
     if state and state.get('artifact'):
         save(directory / 'artifact.json', state['artifact'])
         save(directory / 'status.json', state)
@@ -671,8 +673,40 @@ def settings(overlay=None):
     return base | overlay | {'machines': machines}
 
 
+def _prepare_job(directory, build):
+    """Keep unfinished launch bytes in one owned slot, outside accepted jobs."""
+    storage.manage_directory(directory.parent, root=ROOT)
+    managed = storage.managed_root()
+    if managed is None:
+        return build(directory)
+    from sixdb_storage import preparation, transfers
+    directory = storage.canonical_path(directory.parent) / directory.name
+    key = hashlib.sha256(b'sixdb-worker-preparation-v1').hexdigest()
+    with storage.lock(managed / '.locks/worker-preparation.lock'):
+        parent = transfers.staging_parent(directory, reclaim_keys=())
+        with preparation.stage(parent, key) as pending:
+            staging = pending / directory.name
+            staging.mkdir()
+            job = preparation.run(lambda: build(staging))
+            storage.sync_tree(staging)
+            # Public standalone/group callers precreate this empty placeholder.
+            # rmdir preserves any concurrently added material; rename refuses a
+            # path that appears after removal. Accepted jobs are never staging.
+            try:
+                directory.rmdir()
+            except FileNotFoundError:
+                pass
+            transfers.publish_directory(staging, directory)
+            storage.sync_directory(directory.parent)
+            return job
+
+
 def prepare(config, source_root, script, arguments, directory, aws):
     """Persist a job before dispatch can allocate a worker; caller owns directory."""
+    return _prepare_job(directory, lambda staging: _prepare(config, source_root, script, arguments, staging, aws))
+
+
+def _prepare(config, source_root, script, arguments, directory, aws):
     script = (source_root / script).resolve()
     if not script.is_relative_to(source_root) or not script.is_file():
         raise ValueError('script must be a file in the source repository')
@@ -709,6 +743,10 @@ def checkpoint_status(job, aws):
 
 
 def prepare_resume(prior, config, directory, aws):
+    return _prepare_job(directory, lambda staging: _prepare_resume(prior, config, staging, aws))
+
+
+def _prepare_resume(prior, config, directory, aws):
     if config['bucket'] != prior['config']['bucket'] or config['region'] != prior['config']['region']:
         raise ValueError('resume keeps the original bucket and region')
     if prior['config']['env'].get('SIXDB_GROUP_URI'):
@@ -749,8 +787,24 @@ def prepare_resume(prior, config, directory, aws):
 def dispatch(job, directory, aws):
     """Submit one prepared job. An uncertain outcome is recovered by job ID."""
     config = job['config']
+    if storage.managed_root() is not None:
+        source = directory / 'source.tar.gz'
+        if source.exists() and (source.is_symlink() or artifacts.sha256(source) != job['source']['sha256']):
+            raise ValueError('prepared launch source changed; no upload or compute allocation attempted')
+        manifest = json.loads((directory / 'source-manifest.json').read_text())
+        if hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest() != job['source']['digest']:
+            raise ValueError('prepared source manifest changed; no upload or compute allocation attempted')
+        for name, field in (('runtime.py', 'runtime_sha256'), ('worker_pool.py', 'pool_sha256'),
+                            ('worker_checkpoint.py', 'checkpoint_sha256')):
+            if artifacts.sha256(directory / name) != job['source'][field]:
+                raise ValueError(f'prepared {name} changed; no upload or compute allocation attempted')
     for filename in ('source.tar.gz', 'source-manifest.json', 'runtime.py', 'worker_pool.py', 'worker_checkpoint.py', 'job.json'):
+        if (filename == 'source.tar.gz' and storage.managed_root() is not None and
+                not (directory / filename).exists() and (directory / 'launch-source.json').is_file()):
+            continue
         aws.upload(directory / filename, job['uri'] + '/' + filename)
+    if storage.managed_root() is not None:
+        worker_cache.release_uploaded_source(directory, job)
     cpu = config['hardware']['VCpuInfo']
     vcpus = cpu['DefaultCores'] * config.get('threads_per_core', cpu['DefaultThreadsPerCore'])
     memory = config['hardware']['MemoryInfo']['SizeInMiB'] / 1024
@@ -815,26 +869,16 @@ def main():
             selection.add_argument('--list', action='store_true', dest='list_files', help='list member paths, sizes and local presence without extracting')
     commands.add_parser('list', help='list SixDB worker instances')
     cache = commands.add_parser('cache', help='inspect local build/worker storage and host headroom')
-    cache_mode = cache.add_mutually_exclusive_group()
-    cache_mode.add_argument('--prune', action='store_true', help='maintain local builds and older archived results toward their budgets')
-    cache_mode.add_argument('--install-maintenance', action='store_true', help='install periodic Linux user cache maintenance')
-    cache.add_argument('--older-hours', type=float, default=24, help='preserve recent collections; default 24 hours')
+    cache.add_argument('--prune', action='store_true', help='reclaim verified recoverable input cache under capacity pressure')
     argv = sys.argv[1:]
     arguments = []
     if '--' in argv:
         split = argv.index('--')
         argv, arguments = argv[:split], argv[split + 1:]
     args = parser.parse_args(argv)
+    storage.initialize(ROOT)
     if args.command == 'cache':
-        if args.older_hours < 0:
-            parser.error('--older-hours must be nonnegative')
-        if args.install_maintenance:
-            worker_cache.install_maintenance(ROOT)
-        else:
-            if args.prune:
-                import local_cache
-                local_cache.maintain(ROOT)
-            worker_cache.maintain(ROOT, prune=args.prune, older_hours=args.older_hours)
+        worker_cache.maintain(ROOT, prune=args.prune)
         return 0
     if arguments and args.command != 'run':
         parser.error('arguments after -- are for run scripts')
