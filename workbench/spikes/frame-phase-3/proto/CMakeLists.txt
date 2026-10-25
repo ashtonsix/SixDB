@@ -25,7 +25,7 @@ target_compile_definitions(frame3_widths PRIVATE FRAME3_HAS_COMPACT=${frame3_has
     FRAME3_HAS_BULK_X86=${frame3_has_bulk_x86} FRAME3_HAS_BULK_ARM=${frame3_has_bulk_arm}
     FRAME3_RUNTIME_LEAF=$<STREQUAL:${FRAME3_LEAF},runtime>)
 sixdb_target(frame3_widths)
-target_link_libraries(frame3_widths PUBLIC ikea::seriespack)
+target_link_libraries(frame3_widths PUBLIC ikea::seriespack ikea::intervals)
 add_executable(frame3_check check.cpp)
 sixdb_target(frame3_check)
 target_link_libraries(frame3_check PRIVATE frame3_widths ikea::tuplepack)

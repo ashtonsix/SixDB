@@ -21,6 +21,7 @@
 
 #include "../../frame-phase-2/bounds/stage.h"
 
+#include <ikea/intervals.h>
 #include <ikea/seriespack.h>
 
 #include <cassert>
@@ -1062,16 +1063,19 @@ class intervals final : public stage {
             if (cp[0] >= t)
                 c += m;
             else if (s.last[b] >= t) {
-                // The last region whose checkpoint is below t holds the boundary.
-                const unsigned g = static_cast<unsigned>(std::lower_bound(cp, cp + regions, t) - cp) - 1;
+                // Both searches are Intervals' endpoint search over ordered
+                // values: the last region whose checkpoint is below t holds the
+                // boundary, then the first of its values at or above t.
+                // Reconstruction stays here: the deltas are a framed child in
+                // offset binary, not a native u8/u16 size plane.
+                const unsigned g = ikea::intervals::lower_bound(ikea::intervals::direct_source<u64>{cp, regions}, t) - 1;
                 const unsigned k = std::min(G_, m - g * G_) - 1;
                 alignas(64) u64 w[block_rows];
-                children_[0]->read(p, b * block_rows + g * G_ + 1, k, w);
-                u64 acc = cp[g];
-                unsigned below = 1;
-                for (unsigned i = 0; i < k; ++i)
-                    acc = relative() ? cp[g] + (w[i] ^ bias) : acc + (w[i] ^ bias), below += acc < t;
-                c += m - g * G_ - below;
+                children_[0]->read(p, b * block_rows + g * G_ + 1, k, w + 1);
+                w[0] = cp[g];
+                for (unsigned i = 1; i <= k; ++i)
+                    w[i] = (relative() ? cp[g] : w[i - 1]) + (w[i] ^ bias);
+                c += m - g * G_ - ikea::intervals::lower_bound(ikea::intervals::direct_source<u64>{w, k + 1}, t);
             }
         });
         if (!other.empty())
