@@ -31,7 +31,8 @@ Engine's analyser will later solve (data distribution, access patterns) →
   thirteen "how we win" mechanisms, the baseline roster and targets per
   operation family, stage and tier, including accepted losses.
 - [Execution substrate](substrate/README.md) (front B): dispatch, selections,
-  residence, unpredictable access and staging, point-read attribution.
+  residence, unpredictable access and staging, point-read attribution. Its
+  shared `plane256` image is retired; the findings stand.
 - [SeriesPack remeasured](seriespack/README.md): SeriesPack's own reader under
   every preset against native, the starting gaps for SeriesPack's performance work.
 - [SeriesPack performance](seriespack/performance.md): range SUM, COUNT and
@@ -42,7 +43,8 @@ Engine's analyser will later solve (data distribution, access patterns) →
 - [Bounds stage](bounds/README.md): choosing lo and width by guess, verify
   and refine against an exact oracle, priced on SeriesPack's tiles.
 - [Integer body leaves](bodies/README.md) (front C): leaves for constant, runs
-  and packed bodies across operation families.
+  and packed bodies across operation families. Retired: `plane256` bypassed
+  SeriesPack, whose own kernels now match it.
 - [Cross-thread seams](SEAMS.md): the contracts every thread shares, with owners.
 - [Partition](PARTITION.md): seams, proposed internal packages, the research
   fronts, Ashton's decisions and the first Claude/Codex division.

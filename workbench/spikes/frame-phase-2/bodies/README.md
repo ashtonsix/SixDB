@@ -1,5 +1,11 @@
 # Integer body leaves (front C)
 
+> **Retired, 2026-10-25.** `plane256` and these leaves bypass SeriesPack.
+> SeriesPack's own kernels now match or beat them over SeriesPack's bytes
+> ([SeriesPack performance](../seriespack/performance.md)), so nothing should
+> build on this code. Its findings remain evidence, including the negative
+> results and peer comparisons. New body work belongs in `ikea::seriespack`.
+
 Front C of [phase 2](../PARTITION.md), opened 2026-10-23. The question: how far
 can each leaf over an integer body (constant, runs, packed FOR, encode-time
 exceptions) be pushed, against the native narrow-FOR array, at each width, ISA

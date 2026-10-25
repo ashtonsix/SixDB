@@ -1,5 +1,13 @@
 # Execution substrate, first probe: dispatch is not phase 1's cost
 
+> **Retired image, 2026-10-25.** The shared image built here over front C's
+> `plane256` bodies, with its own descriptor columns and corrections, bypasses
+> SeriesPack and is superseded. SeriesPack's kernels reach the same speed
+> ([SeriesPack performance](../seriespack/performance.md)), and Frame phase 3
+> composes stages over ikea modules. The substrate findings (dispatch,
+> residence, ordering, concurrency, placement) remain evidence. The image
+> code is not a base for new work.
+
 Front B ([partition](../PARTITION.md)), 2026-10-23. Does phase 1's per-block
 cost come from how blocks are dispatched, or from the work inside each block?
 
