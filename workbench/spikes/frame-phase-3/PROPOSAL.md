@@ -72,6 +72,61 @@ contributions/final facts are distinct outputs.
   afterimages do not impose fixed ownership or silently grant future in-place
   or asynchronous modes their authority/lifetime contracts.
 
+## Source, namespace and class map
+
+This is the **proposed extraction**, not files already landed. Names are working
+names; the responsibility boundaries are the proposal. One compiled
+`ikea::frame` target has the following source split. Header paths are relative
+to `ikea/include/ikea/frame/`; TU paths to `ikea/src/frame/`.
+
+| Namespace / header | Main types or entries | Compiled TU | Responsibility |
+| --- | --- | --- | --- |
+| `ikea::frame`, `description.h` | `description`, `node`, `edge`, capabilities | `description.cpp` | Versioned meaning, child domains/sharing and executable-shape admission; separate from fit policy |
+| `ikea::frame`, `image.h` | `stream_manifest`, `image_view`, `validated_image`; `required_sections` | `image.cpp` | Placement bounds and dependency closure; grant-aware content proof, invoking each stage's validator |
+| `ikea::frame`, `reader.h` | `reader`, `bind_reader` | `reader.cpp` | Checked operations and complete-request admission; owns bound execution state, borrows immutable payload |
+| `ikea::frame`, `build.h` | `fitting_policy`, `fit_result`; fit/build/emit | `build.cpp` | Caller-steered construction/rebuild, output sizing and fit facts; delegates each stage's fitting and emission |
+| `ikea::frame`, `change.h` | `edit`, `preparation_budget`, `prepared_group`; `prepare_group` | `change.cpp` | Ordered private afterimages, resource admission, issued effects and exact logical contributions/final facts |
+| `ikea::frame::author`, `author/stage.h` | `stage_spec`, build/read/change requests and law hooks | Hooks implemented in the stage TUs below | Supported extension contract: child roles/domains, image rules, decode and optional operation/change laws |
+| `ikea::frame::detail`, `detail/stage.h` | Internal `stage`, `pack_stage` | `stages/pack.cpp` | Pack fitting, section rules and leaf adaptation; calls SeriesPack's compiled runtime reader/writer/footprint |
+| Same private namespace | `bound_stage` | `stages/bound.cpp` | Window/exception fitting, image proof, compensation laws and slack-aware change hooks |
+| Same private namespace | `intervals_stage` | `stages/intervals.cpp` | Checkpoint/field child mapping, evidence and interval laws; reconstruction/search delegated to Intervals |
+| `ikea::frame::detail`, `detail/execution.h` | Execution state and optional `read_plan` | `execution.cpp` | Coarse/fine traversal, decode fallback, fused consumers and tuned plans; dispatch at block/group or binding-unit grain |
+
+`ikea/frame.h` is the ordinary umbrella. Public headers expose contracts and
+small admission/forwarding code, not every stage body. The author contract is
+supported, but neither the prototype's virtual class nor a binary plugin ABI is
+promised. Stage hooks share the public coordinate, capability and effect types;
+`detail` chooses their concrete representation.
+
+Three seams govern the split:
+
+- **Interpretation → placed image → execution.** Attachment checks metadata and
+  placement without consuming ungranted payload. Validation establishes the
+  stage/child content premises; binding prepares operations against that immutable
+  basis. Image byte validity, availability and query selection remain distinct.
+- **Stage → children.** Each stage's fitting, section emission/validation and
+  algebra live together. Common drivers do admission/traversal, not a second copy
+  of each encoding. Adding a stage supplies those hooks and capability tests;
+  its versioned description and image law are added together. Adding an operation
+  supplies its semantics and optional laws. A defined decode
+  fallback can fill a supported cell; an unknown shape still refuses.
+- **Frame → existing modules and owners.** SeriesPack owns packing geometry,
+  exact reductions and native kernels; Intervals owns reconstruction/search;
+  Ikea selections, description framing and journals are reused. Frame owns the
+  cross-child proof and compensation. Caller/Orbital retains backing and publishes
+  replacements; Loom acquires/yields around declared dependencies. Neither becomes
+  a dependency of the Frame library.
+
+This reorganises the spike's shared implementation rather than creating another:
+`owner/description.*`, `manifest.*` and `group_image.*` feed description/image;
+`binding.*` and `stream_binding.*` converge on one checked reader/change surface.
+`proto/frame.h`, `stages.h`, `runtime_width.h` and `trees.h` split into the author
+contract, private drivers and stage TUs. The typed `widths_*.cpp` remain comparison
+controls; Frame adds no per-width kernel instantiations. Ordinary examples live
+under `ikea/examples/frame/`. The actual Orbital `Control`/`interpretation_owner`/
+`Physical` material and history checks become a separate integration fixture,
+linking Frame and Orbital; native/system controls stay in Workbench.
+
 ## Measured weaknesses and initial limits
 
 These are the qualified spike results, before the queued reuse changes:
