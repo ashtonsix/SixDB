@@ -1,9 +1,9 @@
 # Ikea Frame, phase 3
 
 Opened 2026-10-24. Phase 3 decides what `ikea::frame` lands as its first
-implementation, and how that implementation grows. This page is the
-proposal, revised where the prototypes changed it, and since 25 October the
-stage side's consolidation plan ([landing plan](#landing-plan)).
+implementation, and how that implementation grows. The current joint
+[proposal](PROPOSAL.md) owns landing scope and the source map; this page retains
+the design argument and prototype history ([landing plan](#landing-plan)).
 [FINDINGS.md](FINDINGS.md) has the results and [CHECKLIST.md](CHECKLIST.md)
 what is decided, evidenced and open.
 
@@ -44,7 +44,7 @@ uncertain, and explicit extension points for known future work.
 
 - **Strong contracts:** logical/result meaning, versioned actual interpretation,
   image validation, dependency/read authority, lifetime and refusal guarantees,
-  exact effects/contributions for supported changes, and the measured execution
+  effects for construction and the measured execution
   paths. A different policy or binding cannot reinterpret stored bytes.
 - **Steerable policy:** admitted stage recipes, interval form/spacing, packing
   choice, exception penalty/cap/slack, placement and execution-plan choices.
@@ -63,6 +63,13 @@ costs, but no longer blocks initial extraction. First-landing work is coherent
 API/code extraction, explicit supported capabilities/defaults and qualification
 of the combined implementation. This does not authorize another research
 campaign during consolidation.
+
+Ashton subsequently excluded checked private preparation from the initial build.
+Construction/emission and immutable checked reads land; `prepare_group` and the
+mutation driver stay in research. Change/effect/access/publication distinctions
+still shape extensions, without freezing a write API or charging its scratch to
+the core. Consumers can build replacement images from values under their own
+owner policy; that is not a point-write performance claim.
 
 ## How far phase 2 fell short
 
@@ -238,7 +245,7 @@ Row-level protection is therefore an owner-supplied grant, enforced before
 address formation and kept separate from query selections
 ([checklist A5, B14](CHECKLIST.md)).
 
-### 4. Change: classify, declare, apply, publish
+### 4. Change: classify, declare, apply, publish (research)
 
 A logical write batch moves down the tree like an operation. Each stage
 **absorbs** it (the value fits its parameters), **redirects** it to side data
@@ -249,9 +256,9 @@ The caller admits possible stores and effect slots before **apply**, which uses
 SeriesPack's checked setters and Ikea's journal. **Publish** returns three
 separate outputs: issued-byte effects, the exact logical contribution to
 summaries (SUM and COUNT deltas; MIN and MAX with a precision level), and
-evidence invalidations. The supported initial owner route is private
-afterimages. These outputs shape the extension contract; they do not imply
-that general in-place admission or every evidence-invalidation mode exists.
+evidence invalidations. The private-afterimage prototype stays in research;
+there is no initial Frame mutation API. These outputs shape future contracts
+without choosing afterimages, in-place admission or an invalidation mode now.
 
 A group re-encode (forced compaction, sealing a streaming tail) is a
 conversion: same logical version, new physical alternative, Orbital `adopt`.
@@ -312,10 +319,10 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 | Module | `ikea::frame` (`include/ikea/frame/`): portable description/image types, validation and checked binding, with the stage-author execution layer behind them. Final signatures follow extraction; the research driver is not the public API. |
 | Stages | Optional intervals, sizes or relative ends with framed checkpoints and steerable spacing; bound; SeriesPack pack including constants. Carry the proven laws and supported decoded fallbacks. Sizes' weighted SUM and fused prefix point paths remain optimizations. |
 | Reads | Point/range reads, SUM/COUNT, FILTER, ordered SELECT and selected aggregates; reconcile checked wrappers and result semantics with the existing fused multi-aggregate implementation. |
-| Changes | Basic group private-afterimage preparation with ordered edits, slack/rebuild, effects and exact final facts. Append/conversion/interval changes currently use caller-driven full rebuilds. Additional commands and change modes have explicit capability boundaries. |
+| Construction and changes | Construction/fitting/emission from values lands. Point mutation and `prepare_group`, including private draft/copy/bind/rebuild machinery and scratch, stay in research. Future change capabilities remain explicit; no initial mutation API. |
 | Description and policy | Canonical actual interpretation, child coordinates, capabilities and fit facts. Caller-steered recipes/fit policy/defaults remain separate; qualified cost evidence and unknowns are explicit. |
 | Extensions | Runs, heads, shared TuplePack, presence-rank and split have canonical shape/refusal witnesses. Map, n-way route, other logical domains and further operations remain author-contract extension cases, without fabricated image support. |
-| Integration | A maintained Orbital material/history example: retained interpretation/readers, group replacement, contributions, stale basis and same-version adoption. Ikea does not depend on Orbital; asynchronous Loom and general in-place ownership protocols remain explicit extensions. |
+| Integration | A maintained Orbital example for retained interpretation/readers and externally constructed replacements/conversions. Mutation-specific preparation/history remains research. Ikea does not depend on Orbital; asynchronous Loom and in-place ownership protocols remain extensions. |
 
 ## Interface sketch
 
@@ -331,7 +338,7 @@ namespace fr = ikea::frame;
 auto law = fr::layout::make({fr::intervals{.form = fr::sizes, .checkpoints = 16},
                              fr::bound{.penalty = 2, .cap = 64, .slack = 32},
                              fr::pack{.preset = ikea::seriespack::preset::compact}});
-// Build: fit and emit one part into group images (one Orbital Part each).
+// Build: fit and emit group images; the owner chooses backing/Part placement.
 auto images = fr::encode(*law, values, prior);
 // Place: attach to the Parts a Scope selected, borrowing the arrays.
 auto part = fr::const_view::attach(*law, rows, parts);
@@ -341,18 +348,12 @@ reader->sum(blocks);                  reader->sum(selection);
 reader->count<ge>(blocks, t);         reader->filter<ge>(blocks, t, selection);
 reader->get(row);                     reader->read(first, out);
 reader->select(selection, out);
-// Change: classify from interpretation, declare, apply or re-encode.
-auto writer = fr::bind_writer(*draft);
-auto plan = writer->classify(row, value);  // absorb, redirect or refuse
-plan.envelope();                           // possible reads, stores, records
-writer->apply(plan, effects, contribution);
 // Describe: what Engine's analysis reads.
 fr::census(*part);
 ```
 
-Coarse `blocks` and fine `selection` are Ikea's existing selection types;
-`effects` is `ikea::journal`; `contribution` is the exact SUM and COUNT
-change plus statistics precision.
+Coarse `blocks` and fine `selection` use Ikea's existing selection types.
+The deferred mutation protocol is deliberately absent from this initial sketch.
 
 ## Landing plan
 
@@ -370,10 +371,10 @@ module lands in reviewed batches through Ikea LEAD, as SeriesPack did.
   selected per ISA, selected SUM and `summarise_selected` (SUM, COUNT, MIN,
   MAX in one pass); `intervals` in both forms with framed checkpoints, the
   relative-ends SUM law and the monotone COUNT law.
-- The decode fallback for every other stage × operation cell, and the write
-  fallback (refuse, then group re-encode).
+- Decode fallbacks for supported read cells without a fast law. The write
+  fallback (refuse, then group re-encode) stays in research.
 - Execution as measured: block-grain laws composed at runtime, fused per
-  part (never a retained column-wide mask), and one bind-time plan, the
+  part, with reusable selections available to callers, and one bind-time plan, the
   pipelined point plan, with its admission limits.
 - Fit choosing among trees per column, including the intervals form. Where
   no tree repays (URLHash), Engine keeps a native plain or narrow column:
@@ -413,10 +414,11 @@ binding yet.
 description, image validation and immutable checked binding for non-null
 u64; the stages behind it as an internal execution layer, not the
 prototype's virtual `stage`/`column` driver; placeholders described and
-refused, never silently executed; group private-afterimage preparation as
-the change route; Orbital material and history as a maintained integration
-example and conformance test, so Ikea does not depend on Orbital. Extraction
-reuses one implementation rather than copying prototype algorithms.
+refused, never silently executed; construction/emission from supplied values;
+and Orbital interpretation/old-reader integration outside Ikea's dependencies.
+Ashton's later scope decision excludes private-afterimage preparation and its
+mutation machinery. Its implementations and histories remain research. Extraction
+reuses the shared read/build implementation rather than copying algorithms.
 
 ## Prototypes
 

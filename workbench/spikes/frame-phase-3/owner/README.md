@@ -7,6 +7,14 @@ It is research, not a promoted `ikea::frame` interface.
 
 ## Consolidated boundary
 
+**25 October scope decision:** Ashton excluded checked private preparation from
+the initial Frame build. Extract immutable description/image validation, sparse
+read binding and ordinary construction/emission; keep `prepare_group`, private
+mutation machinery, scratch and mutation histories in research. The initial
+owner fixture retains interpretation and old readers over externally built
+replacement images. This page preserves the research contracts and results;
+they do not define an initial write API.
+
 The owner investigation is closed for feature expansion. The candidate covers
 immutable non-null UInt64/H0 pack, bound/pack and both interval-root forms;
 checked sparse section binding; and basic single-stream group afterimages.
@@ -217,7 +225,7 @@ section unavailable. Other predicates require the admitted immutable closure.
 `required(row_ranges)` reports conservative point/read dependencies; it is not
 a minimum-acquisition claim for every operation.
 
-## One group, one private draft, ordered commands
+## One group, one private draft, ordered commands (research only)
 
 `prepare_group` is an **afterimage** route:
 

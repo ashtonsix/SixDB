@@ -22,17 +22,18 @@ Part need not coincide. The supported recipes compose these optional stages:
   series of their own, and the rows between them as sizes (deltas) or
   relative ends (offsets from the checkpoint).
 - **`bound`**: a per-block window [lo, lo + 2^width) with outliers in
-  per-group exception areas that keep spare slots for later writes.
+  per-group exception areas; reserved capacity is an explicit fit/layout choice.
 - **`pack`**: SeriesPack's packed fields, through its compiled-once
   operations.
 
 Reads: get, read, select, filter, count, sum (whole and selected), and SUM,
 COUNT, MIN and MAX together in one pass, with checked wrappers reconciled at
-extraction. The first owner change route is a private group afterimage for
-basic pack/bound recipes: ordered edits, slack and admitted group rebuild.
-Interval changes, append and conversion currently use caller-driven rebuilds.
-Publication replaces completed images; private apply-journal coverage and logical
-contributions/final facts are distinct outputs.
+extraction. Construction, fitting and emission land; **point mutation and checked
+private preparation do not**. `prepare_group`, its draft/copy/bind/rebuild machinery
+and mutation scratch stay in research, per Ashton's 25 October scope decision.
+Callers can construct replacement images from values and publish through their
+owner; that is not a competitive point-write API. Read binding and construction
+must not pay for the deferred mutation machinery.
 
 ### Strong (we are confident)
 
@@ -41,7 +42,6 @@ contributions/final facts are distinct outputs.
 | Meaning | Supported cells are exact; laws are optional fast rewrites. Unsupported images refuse | Original-value oracles, admitted trees and both interval forms |
 | Composition | Runtime block-grain laws; per-part fusion and reusable selections | Fusion beats retained masks in every measured seam cell |
 | Leaf | SeriesPack compiles its kernels once; Frame compiles none | Runtime leaf at timing parity, build bill halved |
-| Changes | Refusal preserves source/public state; reads are granted, stores declared before apply, contributions exact | Ordered/restored writes, exhaustion, stale retry and old readers through Orbital |
 | Skipping | Clustered predicates settle whole blocks from descriptors | 1.9–8.5× faster than front A's native pair |
 | Interpretation and binding | Versioned meaning and explicit child domains; separate placement, contents and authority. Admit complete demand before output; retain immutable interpretation/backing | Canonical bytes, malformed/guarded images, sparse dependencies, stale-basis/teardown/conversion checks; unchanged decode can still hide a wrong SUM |
 
@@ -68,9 +68,10 @@ contributions/final facts are distinct outputs.
 - Stage/child domains and shared state, with described/refused RLE, head,
   TuplePack and presence/rank shapes.
 - New operations with optional laws, and bind-time plans for critical paths.
-- Separate change capabilities, interpretation versions and evidence. Initial
-  afterimages do not impose fixed ownership or silently grant future in-place
-  or asynchronous modes their authority/lifetime contracts.
+- Separate change capabilities, interpretation versions and evidence. The initial
+  Frame mutation capability is unavailable. Future edits must distinguish logical
+  contributions, issued bytes and evidence invalidation, with explicit access and
+  publication boundaries; no afterimage or in-place protocol is fixed by landing.
 
 ## Source, namespace and class map
 
@@ -84,11 +85,10 @@ to `ikea/include/ikea/frame/`; TU paths to `ikea/src/frame/`.
 | `ikea::frame`, `description.h` | `description`, `node`, `edge`, capabilities | `description.cpp` | Versioned meaning, child domains/sharing and executable-shape admission; separate from fit policy |
 | `ikea::frame`, `image.h` | `stream_manifest`, `image_view`, `validated_image`; `required_sections` | `image.cpp` | Placement bounds and dependency closure; grant-aware content proof, invoking each stage's validator |
 | `ikea::frame`, `reader.h` | `reader`, `bind_reader` | `reader.cpp` | Checked operations and complete-request admission; owns bound execution state, borrows immutable payload |
-| `ikea::frame`, `build.h` | `fitting_policy`, `fit_result`; fit/build/emit | `build.cpp` | Caller-steered construction/rebuild, output sizing and fit facts; delegates each stage's fitting and emission |
-| `ikea::frame`, `change.h` | `edit`, `preparation_budget`, `prepared_group`; `prepare_group` | `change.cpp` | Ordered private afterimages, resource admission, issued effects and exact logical contributions/final facts |
-| `ikea::frame::author`, `author/stage.h` | `stage_spec`, build/read/change requests and law hooks | Hooks implemented in the stage TUs below | Supported extension contract: child roles/domains, image rules, decode and optional operation/change laws |
-| `ikea::frame::detail`, `detail/stage.h` | Internal `stage`, `pack_stage` | `stages/pack.cpp` | Pack fitting, section rules and leaf adaptation; calls SeriesPack's compiled runtime reader/writer/footprint |
-| Same private namespace | `bound_stage` | `stages/bound.cpp` | Window/exception fitting, image proof, compensation laws and slack-aware change hooks |
+| `ikea::frame`, `build.h` | `fitting_policy`, `fit_result`; fit/build/emit | `build.cpp` | Construction/re-encoding from caller-supplied values, output sizing and fit facts; delegates each stage's fitting and emission |
+| `ikea::frame::author`, `author/stage.h` | `stage_spec`, build/read requests and law hooks; capability declarations | Hooks implemented in the stage TUs below | Supported extension contract: child roles/domains, image rules, decode and optional read laws; mutation remains unavailable |
+| `ikea::frame::detail`, `detail/stage.h` | Internal `stage`, `pack_stage` | `stages/pack.cpp` | Pack fitting, section rules and leaf adaptation; calls SeriesPack's runtime readers and initialization |
+| Same private namespace | `bound_stage` | `stages/bound.cpp` | Window/exception fitting, image proof, compensation laws and explicit capacity metadata |
 | Same private namespace | `intervals_stage` | `stages/intervals.cpp` | Checkpoint/field child mapping, evidence and interval laws; reconstruction/search delegated to Intervals |
 | `ikea::frame::detail`, `detail/execution.h` | Execution state and optional `read_plan` | `execution.cpp` | Coarse/fine traversal, decode fallback, fused consumers and tuned plans; dispatch at block/group or binding-unit grain |
 
@@ -97,6 +97,8 @@ small admission/forwarding code, not every stage body. The author contract is
 supported, but neither the prototype's virtual class nor a binary plugin ABI is
 promised. Stage hooks share the public coordinate, capability and effect types;
 `detail` chooses their concrete representation.
+There is no initial `change.h`/`change.cpp` or public `prepare_group`. Future
+change support can extend these contracts without importing the research preparer.
 
 Three seams govern the split:
 
@@ -119,13 +121,16 @@ Three seams govern the split:
 
 This reorganises the spike's shared implementation rather than creating another:
 `owner/description.*`, `manifest.*` and `group_image.*` feed description/image;
-`binding.*` and `stream_binding.*` converge on one checked reader/change surface.
+the read portions of `binding.*` and `stream_binding.*` converge on one checked
+reader. Private preparation and mutable-driver code remain in the spike.
 `proto/frame.h`, `stages.h`, `runtime_width.h` and `trees.h` split into the author
 contract, private drivers and stage TUs. The typed `widths_*.cpp` remain comparison
 controls; Frame adds no per-width kernel instantiations. Ordinary examples live
 under `ikea/examples/frame/`. The actual Orbital `Control`/`interpretation_owner`/
 `Physical` material and history checks become a separate integration fixture,
-linking Frame and Orbital; native/system controls stay in Workbench.
+linking Frame and Orbital for retained interpretation/readers and externally built
+replacements. Mutation-specific histories remain research; native/system controls
+stay in Workbench.
 
 ## Measured weaknesses and initial limits
 
@@ -137,7 +142,6 @@ These are the qualified spike results, before the queued reuse changes:
 | Dispersed predicate → SUM | Up to 1.6× slower on Zen 5, 2.9–3.4× on Graviton 4 | Selected fraction is insufficient; touched-block topology matters |
 | COUNT | OS/EventTime lose 1.5× on Zen 5 | Descriptor pruning is valuable, not universal |
 | Wide SUM/dispersed work | Roughly 2–4× slower than typed native in the local six-cell panel | Exact-wide leaf improvements target part of the gap; recheck changed cells. Wins over DuckDB/Polars include larger query/result boundaries |
-| Checked private preparation | 21–26 µs for one edit, 57–71 µs for 64 edits locally; group-only saves 9–12 µs/batch versus eager attachment | Identical images, but independent drafts excluding publication/disposal; competitive complete native-owner writes are unmeasured |
 
 Memory is conditional too: URLHash's G16 image is 528,864 B against 524,288 B
 native payload, OS 74,721 B against 65,536 B. Neither account is full retained heap.
@@ -175,12 +179,21 @@ Module changes inherit no old timing or qualification automatically.
    keeping owner retention/publication outside Ikea. Preserve old-reader meaning,
    child domains and conversion equivalence; no final Engine interface is required.
 3. **Explicit capabilities and defaults**: which cells have laws, which
-   operations each stage supports, what refuses.
+   operations each stage supports, what refuses. Mutation/private preparation is
+   excluded; retaining its design obligations does not add an initial write API.
 4. **Qualification** of the combined implementation on the workers, against
    front A's controls.
 
 ## Stays in research
 
+- **Writes and checked private preparation.** The current `prepare_group` costs
+  21–26 µs for one edit and 57–71 µs for 64 edits in the local cohort, excluding
+  publication/disposal. It is not the initial write design. Revisit the architecture
+  and complete-operation cost against a strong adaptive native owner later;
+  preserve the existing correctness counterexamples and receipts. Scratch/proof
+  reuse and right-sizing are research questions, not a promise that tuning this
+  implementation will make it competitive. Both current paths request 128 KiB of
+  journal scratch, whose cost is not isolated. No new write study blocks landing.
 - Engine's choice of recipe judged by regret (B11), with a real native
   candidate and a workload reversal: the first Engine-side work on the core.
 - Points: entries stored with their bodies.
@@ -189,7 +202,3 @@ Module changes inherit no old timing or qualification automatically.
 - Scans across groups through one prepared operation (B10).
 - Bound's MAX law is built and checked but not timed, so it lands only as an
   internal law.
-- A strong adaptive-native owner comparison, reusable/right-sized preparation
-  scratch and reuse of an immutable source's checked proof. Both current
-  preparation paths request 128 KiB of journal scratch; its cost has not been
-  isolated. These are follow-ups, not another pre-landing performance campaign.

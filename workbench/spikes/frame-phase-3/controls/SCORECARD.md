@@ -208,7 +208,9 @@ are not copied bytes, peak retained backing, traffic or RSS. The history checks
 matching old/new answers, reuse and contributions; it is not durable MVCC,
 concurrent publication or an Engine summary benchmark.
 
-The current owner-side preparation investigation is now complete. A frozen
+The owner-side preparation investigation is complete and **excluded from the
+initial build**, per Ashton's 25 October decision. These timings preserve the
+research result; they do not qualify a point-write API. A frozen
 O3 local AArch64 comparison uses the checked `ef08bed8` owner, shared
 `a74e1c44` stages and matching SeriesPack `0d44d527`. Microseconds per
 independent batch, **group-only / attach-all**:

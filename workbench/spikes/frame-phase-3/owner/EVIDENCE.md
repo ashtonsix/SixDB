@@ -6,6 +6,11 @@ with explicit unsupported surfaces. It does not promote a public Frame API.
 The [usage and contract](README.md) and [comparison scorecard](../controls/SCORECARD.md)
 keep semantics and performance separate.
 
+**Landing scope, 25 October:** checked private preparation is excluded at Ashton's
+request. Its evidence below is retained research, not a qualified initial write
+path. Immutable binding and construction/emission remain in scope; no preparer,
+mutation scratch or private mutation driver is extracted into the initial core.
+
 ## Current conformance and source epochs
 
 | Epoch | Qualified surface and result |
