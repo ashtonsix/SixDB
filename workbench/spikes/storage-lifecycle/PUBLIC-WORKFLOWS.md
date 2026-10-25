@@ -1,150 +1,72 @@
-# Actual public storage workflows
+# Final public-workflow review
 
-The pre-integration public tools still admit repeated writes past their declared
-budgets. This independent regression workload executes their ordinary entrypoints,
-including real Clang/CMake builds, rather than inferring rollout behavior from
-the byte-store prototype. Public integration and its replay remain outstanding.
+This frozen pipeline cut precedes the separately reviewed final Mac-worktree CMake guard.
 
-## Starting point and safety
+No product failure was observed in the executed cases. This review recorded its
+independent plan (PLAN.md in the qualification archive) before reading storage review outcomes, then froze 45
+current tool files into its own fixture Git repository. Every frozen tool still
+matched the canonical tree at cleanup (`canonical-comparison.json` is `{}`).
 
-The [research retrospective](../../notebook/research-experience.md) found that
-shared input references replaced per-bundle input copies. The current
-[storage guide](../../tools/storage.md) explicitly calls its limits retention
-budgets, and the [owning spike](README.md) distinguishes extent sharing from
-admission control. Those findings suggested testing ordinary input recovery,
-recent/pinned output and interruptions before adding any new storage harness.
-Previous reviewers' outcome reports were not used as an oracle.
+The starting evidence was `workbench/spikes/storage-lifecycle/README.md`: repeated
+input/source copies caused growth, and pathname accounting missed metadata and
+open-unlinked data. The review reused the real public tools and their fixed
+staging/shared-input paths, while independently testing native allocation.
 
-[public_workflows.py](adversarial/public_workflows.py) copies the actual helper
-sources unchanged, recursively including Python packages, into one tiny isolated
-Git repository. This redirects hardcoded `ROOT/build` and `JOBS` paths without
-patching the production functions. The real `capture.py` changes only that fixture
-repository's worktrees. The real CMake entrypoint and `cmake/` rules compile a
-one-function target with the pinned Clang 21.1.8; subsequent builds check useful
-incremental reuse. `experiment.Run` is its public Python interface.
+`harness.py` is executable on Linux through `orb -m ubuntu`. Run its phases in
+order, or copy this small harness and its three external-service scripts to a
+fresh evidence directory and run `harness.py all`. It creates and deletes only a
+new owned subvolume/qgroup; it refuses to reuse a saved review state.
 
-Only AWS is fake: an executable at the head of the child commands' private
-`PATH` implements bounded local `s3api put-object`, `s3api get-object` and
-read-only `s3 cp` responses. It rejects every other operation, including EC2.
-Archive packing, transfer subprocesses, verification, extraction, collection,
-prepared input publication and public CLI dispatch are actual tool code. The
-fixture runs no network operations, real workers, installed-tool changes or
-live-checkout Git mutations. Backend bytes represent completed remote jobs,
-not an actual S3 durability or IAM test.
+| Executed workflow | Observation |
+|---|---|
+| Repeated artifact lifecycle | Two put/fetch/retain/report rounds; identical references; executable modes and output bytes verified; retrying identical retain passed. |
+| Deleted export parent and preview | Retain recreated the missing parent; preview used initialized bounded temporary storage. |
+| Shared inputs | Concurrent real `input --run` consumers in separate checkouts resolved to the same immutable object; datasets and `Run.step` reused one managed dataset hub. |
+| Interrupted preparation | Actual HTTP download interrupted, then recovered; real `worker.prepare` launch snapshots interrupted inside the fixed stage, then retried with the same and a different ID; no owned pending roots remained. The controlled-ID cases use the public Python API. |
+| Actual worker CLI | Two `run --detach` → `wait` → `resume --detach` → `wait` cycles. Unchanged real worker runtime saved and restored checkpoints. |
+| Resolved subnet repair | Both CLI resumes read persisted `[{"id":"subnet-v12","zone":"fixture-a"}]` records and completed; the resumed application independently read `checkpoint-v12`. |
+| Recovery and retention | Selected executable and full compiler/source recovery passed; prepared inputs restored as shared aliases; reupload and fetch of a recovered run passed. |
+| Edits, pins and unique notes | Explicit eviction retained pins, differing samples and notes. Full repair preserved edited samples in deterministic replacement trees, and both unique notes retained their original paths. |
+| Two-member Group | Actual Group CLI launch/wait completed; real runtime intervals overlapped; configured local collection remained serial. |
+| Native capacity | An open-unlinked writer accepted 10,092,544 bytes, then ENOSPC at 33,538,048/33,554,432 referenced bytes. Two concurrent ordinary writers independently reached ENOSPC after 5,963,776 and 6,160,384 bytes. Accepted hash `21c0163f85e5d78ed00b219d5a5a665a2e307a9b21258228e3e0621dc92cb792` survived. Closing/removing pressure and flushing the filesystem permitted a useful artifact fetch. |
+| Cache-report repair | Fresh remote verification reclaimed 1,986,560 allocated bytes while real native admission still refused a 25,835,339-byte reserve. `removed_bytes` retained that useful progress and `errors` retained the refusal. No admission/status internals were patched. |
+| Ordinary native build | New ordinary Git worktree built and ran a tiny CMake/Ninja target with pinned Clang 21.1.8 before invoking a SixDB initializer for that worktree. Its executable belonged to the owned qgroup. |
+| External boundary | An intentional authored export outside the owned quota passed; a nonempty external report parent refused before writing output or receipt. Native identity excluded that export and existing `/dev/shm`, and included ordinary worktrees. No separate filesystem was created. |
 
-`SIXDB_DATA_CACHE`, explicit `artifacts.py input --cache`, `XDG_CACHE_HOME` and
-`TMPDIR` point into the private test root. The local limit is 131,072 bytes;
-the worker limit is 98,304 bytes. Every payload is 65,536 bytes. A per-file
-2 MiB limit and independent 16 MiB fixture guard bound these tests. The completed
-baseline fixture used 5,505,024 bytes by unique-inode `st_blocks` accounting.
+The own boundary was native squota qgroup **0/284**, subvolume
+`/home/ashtonsix/.sixdb-fresh-final-v12-52b221d35f`, with a 32 MiB hard limit.
+Live0/263, parent30000/1, other review scopes, platform settings and services were
+unchanged. No images, persistent mounts or real cloud compute were created.
 
-## Reproduction and source identity
+Only external AWS/HTTP services were replaced: each fake AWS CLI call was a
+separate process, fake EC2 started the unchanged real runtime, and loopback HTTP
+served pinned sources and IMDS. Unknown AWS operations failed closed. This does
+not qualify real EC2/IAM/network behavior or physical cloud disks.
 
-From the Mac-facing repository root, choose a new work directory:
+Operating simplicity is materially better than an image/mount/timer workflow:
+ordinary builds inherit the native boundary; one checked configuration selects
+the hub; repeated workflows required no inventory/age sweep or manual stage
+cleanup. Full capacity still needs the owner to release useful space. Kernel
+reservations can conservatively delay admission; this review explicitly flushed
+after pressure release. Authored exports intentionally occupy their own checked
+publication copy outside the cache boundary.
 
-```sh
-orb -m ubuntu python3 workbench/spikes/storage-lifecycle/adversarial/public_workflows.py \
-  --source /home/ashtonsix/sixdb \
-  --work /home/ashtonsix/sixdb/build/reviews/storage-20261024/actual-workflows-baseline/REPLAY
-```
+`results.jsonl`, bounded command transcripts and compact runtime/job receipts
+contain the execution evidence. Independent `statvfs`, live0 kernel counters and
+own-evidence `st_blocks` were read. Whole-filesystem changes include concurrent
+host activity and cannot isolate this review's contribution; own retained
+evidence is approximately 0.5 MiB allocated, well below 12 MiB. No bulky sources,
+compiler products or filesystem images are retained outside the quota.
 
-The command exits successfully when the baseline workload completes, including
-observed boundedness failures. `--expect-bounded` additionally exits 1 when any
-expectation fails. It refuses an existing work directory. Output `report.json`
-records every exact argv, cwd, per-command environment change, return code and
-output, all copied source SHA-256 values, fixture bytes and external assertions.
-No helper accounting report is used to decide whether a budget was exceeded.
+The review corrected fixture issues (root ownership, combined-output parsing,
+polling the accepted rather than active stage, fake EC2 token parsing, optional
+fixture logging at full quota). These are not counted as product failures.
+The first empty setup subvolume 0/283 was independently identified and removed;
+its proof is `setup-retry-cleanup.json`. Final owned-resource removal is recorded
+in `cleanup.json` and must show both the final scope and qgroup absent.
 
-The final pre-integration execution is
-`build/reviews/storage-20261024/actual-workflows-baseline/baseline-4/report.json`.
-It performed 58 subprocess commands and 25 external checks: 13 passed and 12
-exposed the baseline's limits. Full prior development fixtures are disposable;
-only their small execution receipts need remain. The report identifies the exact
-workload bytes as well as the sources it exercised.
+Key source SHA-256s:
 
-The report SHA-256 is
-`ceef9b749676e0de62905af8d6bec9c3f6cc90c7d4c9692881bb46e3be272215`;
-its replay source is
-`c47f1bac34fc53cc22f2eeb3edb6ca38a0e09a28fcadc4205d224d0590a328de`.
-
-| Public source | SHA-256 |
-| --- | --- |
-| `artifacts.py` | `4a2f504a11b77b021fec1ad9084f1547050b3fc7c739a9a2796b477258158c85` |
-| `capture.py` | `543d75ba9fed7f5213c427e0cebda049cb4f85bbbc343840fe7d6dfb85ab90d2` |
-| `datasets.py` | `3a079cb4c5ffbe01746c1872dfe4b3bf456ec6e569eba032cb8186918894792b` |
-| `experiment.py` | `e459c62886a15cee61844b86c52f8dba90ef9b818a34ca0a48fc26f6accff588` |
-| `worker.py` | `b29070fd1ccdf64f21ab05e63d4f525bc659e22ae25ee85b4f11233d0a222452` |
-| `worker_cache.py` | `6990085bfb61cf0643c52963b5da3b0af02a4d3108942e4fc8d6ca9c265c70e7` |
-| `local_cache.py` | `693347282a620655bc10ac7a3757dcabcbb3d41a19b2aff24d8d507d62c1efac` |
-| `storage.py` | `cf89b9f01e5e0aa69b538ebaa92f61b6f3ff0a7555e4f695c727b029aa01513c` |
-
-## Observed failures, in consequence order
-
-1. **Ordinary admission bypasses both limits.** Four ordinary
-   `artifacts.py fetch` recoveries left 450,560 allocated bytes in local build
-   output despite the 131,072-byte limit. Four ordinary `worker.py fetch`
-   collections left 376,832 allocated bytes despite the 98,304-byte worker
-   limit. Every accepted file matched independent expected bytes. Inputs and
-   references are tiny fixtures; no payload expansion bomb is involved.
-2. **Interruptions spend the same capacity again on retry.** Five killed public
-   artifact fetches left 164,385 compressed bytes in abandoned nested `.fetch-`
-   directories (184,320 allocated bytes). Two killed worker fetches left
-   131,544 compressed bytes. Three killed dataset preparations left 196,608
-   payload bytes. Three killed `Run` writers left another 196,608 payload bytes.
-   The killed process groups include the fake transfer process. A normal retry
-   still recovered correct bytes; old staging remained alongside it.
-3. **Prepared input recovery repeats actual physical data.** A run uses
-   `run.input('inputs', prepared_directory)`, is archived with the real
-   `artifacts.py put`, and is recovered three times with ordinary `fetch`.
-   Each result gets its own `inputs/data.bin`. The Linux FIEMAP physical extent
-   union for those three data files is 196,608 bytes for one 65,536-byte input;
-   all recovered bytes match. The shared `artifacts.py input` helper passes
-   reuse tests, but full ordinary recovery still copies prepared dependencies.
-4. **Datasets, changing captures and useful builds write outside admission.**
-   Four catalog CLI variants with identical output contents occupied 278,528
-   allocated bytes. Three captures separated by actual source edits occupied
-   at least 262,144 physical extent bytes. A real CMake workspace occupied
-   245,760 allocated bytes and completed two useful builds despite the
-   131,072-byte local limit. Its second build performed no compile work.
-5. **Maintenance preserves valuable bytes but cannot establish a bound.**
-   Public `worker.py cache --prune --older-hours 0` preserved a pin, an edited
-   measurement witness and unique local evidence, as it should. Worker output
-   still occupied 385,024 allocated bytes. A report showing over-budget output
-   is observational; it supplies no missing admission control. Subsequent
-   unsafe growth must be refused when protected bytes fill capacity.
-
-The allocation figures include directories and deduplicate hardlinked inodes;
-they can count shared reflink extents repeatedly. The capture and repeated input
-claims therefore use an independent kernel FIEMAP physical union. That union is
-a lower bound excluding unknown/inline extents and filesystem metadata. Initial
-identical captures did share extents, so the retained capture workload makes
-real source edits before each capture. No claim of physical duplication follows
-from equal contents or distinct inode numbers alone.
-
-## Existing behavior to preserve
-
-Repeated `artifacts.py input` requests return one verified cache path. Explicit
-artifact and dataset cache paths are honored; a cache inside `SIXDB_RESULTS` is
-refused before creating it. Repeated dataset requests reuse the same variant.
-Captures preserve earlier bytes after live edits. Real CMake workspace reuse
-avoids recompilation. Default worker collection omits root and nested source
-archives and releases the matching launch archive; selected recovery restores
-the exact nested archive. Worker repair restores the archived measurement and
-preserves the differing user's measurement separately. Explicit pruning keeps
-pins, edits and unique output.
-
-## Replay after integration
-
-The integration contract reported by the owner is unchanged public commands,
-a recursively copied `workbench/tools/sixdb_storage/` package, and private
-`SIXDB_STORAGE_CONFIG` pointing to `{pool,budget_bytes,size_bytes}` after explicit
-initialization. The final admission replay must prepare recovery references with
-enough capacity, then accept correct results or safe refusal under pressure.
-Blindly treating every nonzero command as success would hide broken tools.
-
-This baseline runner currently requires successful commands to reproduce the
-old bypasses. Its useful functional and interruption workloads are executable
-and retained, but the initialized capped-volume replay, restart reconciliation,
-concurrent admissions and actual filesystem exhaustion have not been performed
-against integrated public paths. The baseline does not establish that any
-prototype or future integration passes them.
+- `worker.py`: `f6a8526827b0c0a21d4b498f80dd30eaf5243bb16df5b18c855166cbe9b2fcf1`
+- `local_cache.py`: `988057d3d9ab03fb0877e6b2da057e0fffbbda961b5ca8a8ddfcdd96869a2554`
+- Full manifest: `frozen-tools-sha256.json`; manifest digest `274f4edaea4ef4fb7db750ad35a58750692daaa458574772331a684bf06e317a`.

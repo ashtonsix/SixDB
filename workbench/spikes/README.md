@@ -111,10 +111,10 @@ studies to current runtime and formal-model owners.
 
 ## Work on an investigation
 
-[Research storage lifecycle](storage-lifecycle/README.md) investigates replacement
-of the repeatedly failing storage tooling, with independent growth, disk-full,
-concurrency and crash tests. The existing nominal budgets are not an enforced
-storage bound.
+[Research storage lifecycle](storage-lifecycle/README.md) replaces retrospective
+cleanup budgets with a native disk limit, shared inputs and owned pending work.
+Independent public-workflow, disk-full, interruption and restart checks accompany
+the installed replacement; the rejected image/overlay candidate remains recoverable.
 
 Before creating a study or substantially changing its approach, follow the
 [prior-work instructions](../../AGENTS.md#read-prior-work-before-starting-an-experiment).

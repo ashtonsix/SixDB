@@ -1,127 +1,102 @@
 # Bounded research storage
 
-Ashton requested this replacement spike on October 24, 2026 after repeated disk
-exhaustion. The outcome is a replacement for the storage lifecycle in the
-research tooling, tested by independent adversarial agents. A cleanup, passing
-helper unit tests or an unenforced budget is not that outcome.
+The replacement is installed on the OrbStack Ubuntu host. The operating guide is
+[local storage](../../tools/storage.md); this study retains the causes, rejected
+approach and independent qualification. Ashton requested it after repeated disk
+exhaustion, then required fresh reviewers after repairs and actual public
+workflows rather than a passing standalone prototype.
 
-## Starting evidence
+## What caused the recurrence
 
-The [first research retrospective](../../notebook/research-experience.md) already
-reported that shared input references replaced copies in each bundle. That
-mechanism remains useful, but was not applied by subsequent artifact-based
-runners. The current [storage guide](../../tools/storage.md) explicitly describes
-retention budgets rather than quotas. The October 16 and October 23 recovery
-checkpoints preserve earlier cleanup; neither proves controlled future growth.
+The first [research retrospective](../../notebook/research-experience.md) already
+recommended shared input references. Later runners nevertheless fetched those
+inputs into each job's results, repackaged them and restored another full copy.
+The October 24 audit found about 40.7 GB of repeated input content and roughly
+23 GB of launch/result source-package copies. Nominal 10/60 GiB retention
+budgets did not control admission; accounting was about 180 hours old.
 
-On October 24, local worker files totaled 73,509,436,074 bytes against a nominal
-10 GiB worker budget. 138 collected jobs contained about 40.98 GB allocated in
-input columns; manifests identified about 40.67 GB of repeated content. Launch
-and result source-package copies occupied another roughly 23 GB. Several Frame
-runners fetched the same input artifact under SIXDB_RESULTS/in, so it was
-rebundled and restored for every job. Healthy foreground operations checked a
-5 GiB reserve but did not enforce retention budgets. Local build accounting was
-about 180 hours old. There is no scheduled scanner on this device, by Ashton's
-explicit choice; reinstalling the canceled timer is not a solution.
+A pathname walk also misses open-but-unlinked files and filesystem metadata.
+Cleanup alone could not establish a capacity boundary, and repeated interrupted
+operations left separate pending copies. The immediate recovery preserved
+[308 verified collection references](../../tools/evidence/storage-20261024/README.md)
+and achieved the requested greater-than-50-GB whole-volume gain. That checkpoint
+explicitly includes concurrent owner activity and does not claim every byte as
+exclusive reclamation by this task.
 
-The immediate repair is recorded in ignored build/reviews/storage-20261024/.
-It includes kernel-verified extent sharing without path/content changes and
-freshly verified eviction of archived closed worker collections. Reclamation
-was stopped after the measured physical gain exceeded 50 GB. Provisional
-working-tree changes to default source collection and shared artifact input
-fetching are mitigations to inspect, not proof that this problem is solved.
+## Replacement
 
-## Findings and test subjects
+- **One native limit.** OrbStack's existing Btrfs simple quota now caps this
+  Ubuntu subvolume at 192 GiB, including its existing data. Ordinary native
+  builds, captures, worktrees and configured temporary output share it.
+  There is no storage timer, image, overlay, mount service or periodic scan.
+- **One shared input store.** Artifact selections share immutable payload bytes;
+  prepared data and local runner children share a dataset hub across checkouts.
+  Process-owned pins protect active inputs. Streaming checks the complete source
+  and every member without staging compressed or omitted payloads.
+- **Owned pending work.** Upload, recovery, dataset and launch preparation reuse
+  fixed pending slots. Interruption and different-name retries do not accumulate
+  another unknown partial archive. Completed jobs, edits, pins and unique output
+  remain accepted work, never disposable pending data.
 
-The [lifecycle audit](AUDIT.md) locates the actual admission bypasses; the
-[initial review](REVIEW.md) records further correctness failures. Independent
-[growth](GROWTH-FAILURES.md) and [OS/process](OS-FAILURES.md) harnesses reproduced
-the old failures and tested the first byte-store candidate. Entirely fresh
-[workflow](adversarial/FRESH-WORKFLOW.md) and
-[failure-path](adversarial/FRESH-BREAKER.md) reviewers then checked it again.
-Their combined result was insufficient for deployment: the workflow reviewer
-found nested source duplication, abandoned recovery archives, reader lifetime
-and obsolete metadata failures that a narrower passing suite did not establish.
+Launch sources leave after their independently verified upload; collection omits
+source packages, large compiler output and shared prepared bodies by default.
+Explicit recovery retains their identities. Cache reclamation verifies recovery
+again before removing matching bytes. Current Linux builds and Git metadata
+kept their paths/inodes. Four older Mac-hosted build paths were copied, hash
+checked and archived before their matching old copies were replaced by links
+into the bounded store; see the [migration record](../../tools/evidence/storage-20261025/README.md).
 
-The revised [immutable-store prototype](store.py) has scoped consumers, separate
-persistent pins, verified unique-to-archive transition and recoverable metadata
-retirement. A further independent [reader/metadata review](adversarial/READER-METADATA-V2.md)
-found and retained more failures, then checked their repairs on frozen source
-`216733a3`: ten cases including descriptor-closing readers, wrapper death,
-forked readers, overlapping aliases and changing inputs completed without a
-new observed failure. This is a regular-file recovery backend and experimental
-CLI, not a replacement already connected to normal worker/build operations.
+CMake also checks the configured output boundary before compiler detection.
+Fresh Mac-hosted worktrees must initialize first (the editor helper does this);
+foreign output refuses before compilation. Initial CMake control files can
+precede the check. Common Git metadata is validated in place, never relocated.
 
-The [persistent workspace probe](QUOTA-WORKSPACE.md) established that a fixed-size
-image can enforce byte/inode exhaustion on this host and preserve contents across
-remount. A pathname allocation walk alone misses unlinked open files and
-filesystem metadata. The physical boundary and ordinary archive/consumer paths
-must therefore be composed and tested before a replacement claim. The existing
-worker, dataset, capture and mutable-build paths remain rollout work.
+## Why the image/overlay candidate was dropped
 
-## What the replacement must establish
+The private image prototype enforced capacity, but composing it with ordinary
+work exposed a worse operating model: old data exceeded the image, stable IDE
+paths needed overlays, a full-inode restart needed reserved recovery resources,
+and 128 registered roots involved 385 mounts. Fresh reviewers then found that
+raw CMake in a new worktree bypassed setup and prepared-reference uploads crossed
+filesystems unexpectedly. Root-controlled layer replacement was also insufficiently
+identified. Passing isolated store tests had not established a working system.
 
-- Repeated ordinary jobs sharing inputs and source do not accumulate another
-  complete physical copy per job. Source and data identity and recovery survive.
-- A budget controls admission and actual retained/in-flight output, including
-  temporary files, interrupted writers, metadata and worktrees in its scope.
-  Accounting-only thresholds and a fixed free-space warning do not suffice.
-- Concurrency cannot spend the same remaining capacity twice. A killed or failed
-  operation cannot leave unbounded unaccounted staging or corrupt accepted data.
-- Active incremental builds, pins, changed local files and unarchived unique
-  evidence survive. If they exhaust capacity, the operation refuses safely and
-  identifies the cause rather than pretending its budget is satisfied.
-- Recovery bytes are checked, publication is durable, and damaged or malicious
-  archives/receipts/paths cannot trigger loss outside the managed scope.
-- The actual workflow is useful: ordinary collection, selected recovery, shared
-  datasets, capture/build reuse, archived eviction and old-job compatibility.
-  State what is controlled and what an arbitrary external writer can bypass.
+The host already had consistent native quotas. Using the supported
+[OrbStack machine disk limit](https://docs.orbstack.dev/machines/#resource-limits)
+removed that image/migration/restart machinery. The old age scanner, timer
+installer, duplicate pruning and unused prototype CLI/recovery APIs were retired.
+The remaining custom code handles sharing, checked transfer and interruption;
+it does not implement a second filesystem or a benchmark certification framework.
 
-The candidate design is still open. First audit the producer/consumer lifecycle
-and reproduce the old failure; then test a replacement from the outside. Keep
-state and operating work smaller than the discarded machinery.
+[Retired source, detailed reports and historical harnesses](retired-candidate.json)
+are verified in S3, including an indexed hash map. Earlier
+[qualification cuts](qualification-records.json) and the independently frozen
+[public image-candidate record](image-candidate-records.json) preserve additional
+counterexamples. These are recovery references, not installed alternative backends.
 
-## Adversarial validation
+## Evidence and limits
 
-Independent subagents own failure discovery and external workload oracles.
-When a composed candidate appears ready, start new subagents with clean context
-and ask them to defeat it. A previous review's conclusions are not their oracle.
-Exercise repeated mixed jobs, simultaneous admissions, edits/pins, interrupted
-transfers and publication, recovery corruption, unsafe paths, stale ownership,
-actual filesystem exhaustion where safely available, and restart reconciliation.
-Use tiny isolated fixtures and bounded private filesystem mounts; no real cache
-or unique evidence is disposable test material. No cloud workers or benchmark
-builds are needed. Retain failing cases and limits alongside the eventual result.
+[Final public workflows](PUBLIC-WORKFLOWS.md) use unchanged real worker runtime,
+CLI run/resume/checkpoint/group cycles, repeated artifact/prepared-input recovery,
+concurrency, interruption and genuine native quota exhaustion. Only external
+AWS/HTTP services were offline stand-ins. [Native build review](PUBLIC-NATIVE-BUILDS-V9.md)
+adds actual root CMake, Clang, editor/capture and metadata-pressure checks.
+[Mac-worktree boundary review](PUBLIC-BOUNDARY.md) qualifies the final guard and
+initialization path independently. Frozen source, executable harnesses, commands
+and cleanup proofs are in [qualification records](final-qualification.json).
+The subsequent ancestor-pin policy passed a fresh 18-check public lifecycle
+review, including pins introduced midway through verification. Upload release,
+collection and explicit eviction all preserved the affected local bytes.
 
-Status: open. No replacement or durability claim has been established yet.
+The installed host was also restarted with an active real input consumer. The
+platform limit persisted, stale process pins expired, build/Git inodes stayed
+unchanged, the editor service restarted, and real public input/build checks
+worked afterward. No real cloud workers were launched for this qualification.
 
-## Public workflow qualification and current direction
-
-The [actual-tool baseline](PUBLIC-WORKFLOWS.md) uses unchanged public commands,
-a local external-service fixture and real Clang/CMake compilation. Twelve of
-25 external checks expose growth beyond the advertised budgets. It is the
-rollout regression workload; passing the standalone store cannot replace it.
-
-Fresh composed reviewers found [capacity and recovery failures](COMPOSED-CAPACITY-V5.md)
-and [shared-input/legacy compatibility failures](adversarial/COMPOSED-WORKFLOW-V5.md).
-The capacity breach occurred even with correctly serialized locks: Btrfs kept a
-pre-lock directory descriptor's old enumeration ceiling. Every capacity listing
-now opens a fresh file description relative to the held directory inode. A
-native replay admitted one 16 MiB image and refused the competing one under a
-17 MiB limit. The archive repairs retain bounded recent manifest proofs and
-support the actual legacy member counts. New reviewers must check these again.
-
-The [persistent visible volume](VOLUME.md) addresses a practical failure of the
-private workspace: normal IDE/build consumers need stable paths after a command
-ends. It shares the image admission code, retains a kernel capacity boundary and
-was tested only in a private host-like namespace with ordinary peer processes.
-Public tools are being connected to this boundary. No live build path has been
-silently overlaid or migrated; the existing nonempty trees require verified
-curation/migration and preservation of active incremental work.
-
-[Qualification records](qualification-records.json) recover frozen source cuts,
-compact execution records and earlier counterexamples from S3. `index.json` in
-that bundle maps paths to hashes. It contains no filesystem images or full
-benchmark inputs. The old failure cases remain useful even as production code
-moves out of the spike. Ashton explicitly requires fresh reviewers after fixes,
-including actual public workflows; that work remains active.
+The boundary is the configured level-zero Btrfs subvolume, not arbitrary new
+filesystems or privileged changes. Explicit authored exports remain outside cache
+storage. Live kernel reservations can conservatively delay admission; pressure
+checks retain the refusal and any verified reclamation already completed.
+Finite capacity can refuse useful work; it never justifies erasing unique or
+active data. These tests establish the exercised workflows and limits, not a
+claim about every application on the Mac or untested cloud infrastructure.

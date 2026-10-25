@@ -1,0 +1,130 @@
+{
+  "builds": [
+    {
+      "backup_verified": true,
+      "bytes": 375247469,
+      "files": 5682,
+      "matching_archived_backup_removed": true,
+      "projection_link": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/.cache/sixdb/storage/locations/b6b4658738368870836ec2db",
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-allocation-metadata.json",
+      "source": "/Users/ashtonsix/.codex/worktrees/allocation-metadata/sixdb/build",
+      "target": "/home/ashtonsix/.cache/sixdb/storage/locations/b6b4658738368870836ec2db"
+    },
+    {
+      "backup_verified": true,
+      "bytes": 440025631,
+      "files": 6748,
+      "matching_archived_backup_removed": true,
+      "projection_link": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/.cache/sixdb/storage/locations/6874c6837883d3dbc17f2b5b",
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-allocation-storage.json",
+      "source": "/Users/ashtonsix/.codex/worktrees/allocation-storage/sixdb/build",
+      "target": "/home/ashtonsix/.cache/sixdb/storage/locations/6874c6837883d3dbc17f2b5b"
+    },
+    {
+      "backup_verified": true,
+      "bytes": 10886450,
+      "files": 98,
+      "matching_archived_backup_removed": true,
+      "projection_link": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/.cache/sixdb/storage/locations/194a140c5094cc611bde8298",
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-streampack.json",
+      "source": "/Users/ashtonsix/.codex/worktrees/streampack/sixdb/build",
+      "target": "/home/ashtonsix/.cache/sixdb/storage/locations/194a140c5094cc611bde8298"
+    },
+    {
+      "backup_verified": true,
+      "bytes": 12258093,
+      "files": 42,
+      "matching_archived_backup_removed": true,
+      "projection_link": "/Users/ashtonsix/OrbStack/ubuntu/home/ashtonsix/.cache/sixdb/storage/locations/be32105539be1bd8a35d8e28",
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-worker-checkpoints.json",
+      "source": "/Users/ashtonsix/.codex/worktrees/worker-checkpoints/sixdb/build",
+      "target": "/home/ashtonsix/.cache/sixdb/storage/locations/be32105539be1bd8a35d8e28"
+    }
+  ],
+  "fresh_remote_verification": [
+    {
+      "artifact_sha256": "7e76f2f167d4c4596f0f8a912c075a30946511d1d5dd0d2e3fc2bcf8a4b0005b",
+      "label": "allocation-metadata",
+      "members": 5683,
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-allocation-metadata.json",
+      "verified_at": 1792897050.2872944
+    },
+    {
+      "artifact_sha256": "4d88748c721f98c4e5b0d00c1661474ef60018e25608674541e3e384750c2511",
+      "label": "allocation-storage",
+      "members": 6749,
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-allocation-storage.json",
+      "verified_at": 1792897072.937834
+    },
+    {
+      "artifact_sha256": "f10dc7243906350c23cb855260501b81835fa726f864918d703d238dd8906732",
+      "label": "streampack",
+      "members": 99,
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-streampack.json",
+      "verified_at": 1792897074.8983147
+    },
+    {
+      "artifact_sha256": "1a5d48ebe8876b008b4d050ab8b0f22589b2470c01a5b80cf0ce59dc49e6fb6c",
+      "label": "worker-checkpoints",
+      "members": 43,
+      "reference": "workbench/tools/evidence/storage-20261025/mac-build-worker-checkpoints.json",
+      "verified_at": 1792897086.3818767
+    }
+  ],
+  "primary_build_coverage": [
+    {
+      "build": "/Users/ashtonsix/.codex/worktrees/allocation-metadata/sixdb/build",
+      "canonical_build": "/home/ashtonsix/.cache/sixdb/storage/locations/b6b4658738368870836ec2db",
+      "managed": true,
+      "root": "/Users/ashtonsix/.codex/worktrees/allocation-metadata/sixdb"
+    },
+    {
+      "build": "/Users/ashtonsix/.codex/worktrees/allocation-storage/sixdb/build",
+      "canonical_build": "/home/ashtonsix/.cache/sixdb/storage/locations/6874c6837883d3dbc17f2b5b",
+      "managed": true,
+      "root": "/Users/ashtonsix/.codex/worktrees/allocation-storage/sixdb"
+    },
+    {
+      "build": "/Users/ashtonsix/.codex/worktrees/streampack/sixdb/build",
+      "canonical_build": "/home/ashtonsix/.cache/sixdb/storage/locations/194a140c5094cc611bde8298",
+      "managed": true,
+      "root": "/Users/ashtonsix/.codex/worktrees/streampack/sixdb"
+    },
+    {
+      "build": "/Users/ashtonsix/.codex/worktrees/worker-checkpoints/sixdb/build",
+      "canonical_build": "/home/ashtonsix/.cache/sixdb/storage/locations/be32105539be1bd8a35d8e28",
+      "managed": true,
+      "root": "/Users/ashtonsix/.codex/worktrees/worker-checkpoints/sixdb"
+    },
+    {
+      "build": "/home/ashtonsix/sixdb/build",
+      "canonical_build": "/home/ashtonsix/sixdb/build",
+      "managed": true,
+      "root": "/home/ashtonsix/sixdb"
+    },
+    {
+      "build": "/home/ashtonsix/sixdb-allocator/build",
+      "canonical_build": "/home/ashtonsix/sixdb-allocator/build",
+      "managed": true,
+      "root": "/home/ashtonsix/sixdb-allocator"
+    },
+    {
+      "build": "/home/ashtonsix/sixdb-buildspeed/build",
+      "canonical_build": "/home/ashtonsix/sixdb-buildspeed/build",
+      "managed": true,
+      "root": "/home/ashtonsix/sixdb-buildspeed"
+    },
+    {
+      "build": "/home/ashtonsix/sixdb-worker-reuse/build",
+      "canonical_build": "/home/ashtonsix/sixdb-worker-reuse/build",
+      "managed": true,
+      "root": "/home/ashtonsix/sixdb-worker-reuse"
+    },
+    {
+      "build": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build",
+      "canonical_build": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3/build",
+      "managed": true,
+      "root": "/home/ashtonsix/sixdb-worktrees/ikea-neoverse-v3"
+    }
+  ]
+}

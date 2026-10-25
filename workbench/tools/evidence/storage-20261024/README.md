@@ -38,6 +38,8 @@ Ikea owner reported releasing. Active incremental builds, the corpus pin,
 datasets and unarchived evidence were retained. No timer was installed.
 
 Commit `17093b28` reduces default source-package and per-job input duplication.
-Its shared input cache is explicitly provisional and remains unbounded. The
-replacement's tests and unresolved rollout work belong in the spike, separate
-from this recovery receipt.
+That was provisional mitigation, not the capacity boundary. The installed
+[replacement](../../../spikes/storage-lifecycle/README.md) now uses the native
+quota, shared inputs and fixed transfer staging, with fresh independent workflow
+checks. Its [migration and restart record](../storage-20261025/README.md) is
+separate from this immediate-recovery receipt.

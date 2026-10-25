@@ -1,0 +1,30 @@
+{
+  "active_input_leases_before": 1,
+  "active_input_owners_before": 1,
+  "boot_after": "055f6fde-d06c-4991-b03f-ea9cc550526b",
+  "boot_before": "69157a46-5ac7-4862-b685-2e496abea69b",
+  "build_inode_preserved": true,
+  "checks_after": [
+    "native quota/configuration persisted",
+    "editor user service started",
+    "cmake --preset dev",
+    "sixdb_pmu_probe compiled and linked",
+    "clangd-21 --check: 0 errors",
+    "VS Code Remote SSH: connected, 0 errors / 0 warnings"
+  ],
+  "cloud_workers_launched": false,
+  "git_worktrees_inode_preserved": true,
+  "new_storage_services_or_timers": false,
+  "quota_after": {
+    "capacity_bytes": 206158430208,
+    "filesystem_uuid": "bc5102ea-4ba3-45e3-895f-babc8dbae424",
+    "qgroup": "0/263",
+    "quota_mode": "squota"
+  },
+  "real_input_before_and_after": {
+    "member_bytes": 146,
+    "sha256": "e7dbe1a9baf82939259a3de6ab5909980b63c12359fd0c4d970b22463f97ee02"
+  },
+  "stale_input_leases_after": 0,
+  "stale_input_owners_after": 0
+}
