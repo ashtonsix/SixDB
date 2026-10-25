@@ -51,6 +51,11 @@ their current composition context.
 - Follow [BUILDING.md](BUILDING.md) and [code conventions](workbench/design/conventions.md).
   Use the pinned Linux toolchain; prefix Linux commands with `orb -m ubuntu` in
   this macOS/OrbStack workspace. Preserve incremental builds and build needed targets.
+- The OrbStack machine named `private` is reserved for Ashton's separate work.
+  Do not enter, inspect, use, modify, stop, restart, clone or delete it or its
+  contents/settings. Avoid global OrbStack cleanup, resets or restarts that affect
+  it; keep SixDB operations explicitly scoped to `ubuntu`. This is a machine name,
+  not macOS's system `/private` directory.
 - On the configured OrbStack host, initialize a fresh external/Mac-hosted worktree
   with the current controller's `workbench/tools/storage.py WORKTREE` before its
   first CMake configuration. `dev.py` does this automatically. Native Ubuntu
