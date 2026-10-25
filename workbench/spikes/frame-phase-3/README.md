@@ -348,7 +348,8 @@ module lands in reviewed batches through Ikea LEAD, as SeriesPack did.
 know them:
 
 - Delta lands without a SUM law for the sizes form. The masked-sum law lost
-  to decoding and stays off; a weighted SUM needs SeriesPack work. Relative
+  to decoding and stays off. SeriesPack already supplies a position-weighted
+  primitive; Frame's composed, exact-wide law is not integrated. Relative
   ends carries delta's fast SUM and points, at a byte cost on some columns,
   so fit picks the form per column.
 - Points land 2.6–6.4× behind front A's narrow gather. Smaller entries did
@@ -356,9 +357,10 @@ know them:
   experiment, and the plan is reversible (part C of the checklist).
 - Loom staging for points is not used: a plain software pipeline in the
   plan beat a 32-slot Ring on both machines.
-- Placeholders not yet tried (map, presence, route, domain) land as
-  canonical shapes only, through Ikea LEAD's descriptions, with no fit,
-  decode or law.
+- RLE, H8/H16, shared TuplePack record/field, presence-rank and split have
+  canonical description shapes and explicit unsupported-image refusal through
+  Ikea LEAD's descriptions. Map, n-way routing and domain stages remain
+  unproven extension cases; no canonical image or executable support is claimed.
 
 **Witnesses on existing programs, with no new experiment matrix.**
 Cross-column selected movement (B7) is closed by an exact fixture in
