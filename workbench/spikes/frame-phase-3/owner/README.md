@@ -20,6 +20,13 @@ uses the shared logical/coordinate/effect vocabulary; a live C++ stage tree
 does not define stored interpretation. The prototype's one-part admission bound
 must remain explicit rather than become an accidental whole-column limit.
 
+The initial implementation is a foundation for Engine research. It should
+expose caller-controlled fitting/placement choices and facts/capabilities,
+without requiring Engine's final policy or cost model first. The Engine-choice
+witness follows the core. Known future stage/domain/sharing and change modes
+need extension points; supported semantics, byte authority and lifetime rules
+remain strong even where policy defaults will change.
+
 The [qualification account](EVIDENCE.md) retains the current source epochs,
 counterexamples and completed preparation experiment. Current mutable-owner
 throughput against a strong native owner, in-place lock projection and a

@@ -34,6 +34,36 @@ descriptions, partial binding, retained interpretation and publication. The
 [control scorecard](controls/SCORECARD.md) keeps measured comparisons and their
 remaining qualification limits together.
 
+## Initial foundation and Engine research
+
+Ashton clarified the ordering on 25 October: Engine research will determine
+some of Frame's best interfaces, and that research needs an initial Frame
+implementation. The first landing therefore supplies a usable foundation,
+with strength where the evidence is good, caller steering where policy is
+uncertain, and explicit extension points for known future work.
+
+- **Strong contracts:** logical/result meaning, versioned actual interpretation,
+  image validation, dependency/read authority, lifetime and refusal guarantees,
+  exact effects/contributions for supported changes, and the measured execution
+  paths. A different policy or binding cannot reinterpret stored bytes.
+- **Steerable policy:** admitted stage recipes, interval form/spacing, packing
+  choice, exception penalty/cap/slack, placement and execution-plan choices.
+  Supply useful defaults and facts/capabilities; Engine can override policy and
+  probe alternatives. Missing or estimated costs remain visibly so. Complete
+  calibrated models and a globally best selector are not first-landing gates.
+- **Extensible mechanisms:** stages with explicit child domains and shared
+  state, optional operation laws with correct supported fallbacks, separate
+  interpretation/evidence/preparation, and additional change capabilities.
+  Unsupported placeholder images refuse; future modes do not inherit an
+  unproved law or an implicit access grant.
+
+The Engine-choice witness (B11) moves to research **using the landed core**.
+It remains useful work, including a real native alternative and lifecycle
+costs, but no longer blocks initial extraction. First-landing work is coherent
+API/code extraction, explicit supported capabilities/defaults and qualification
+of the combined implementation. This does not authorize another research
+campaign during consolidation.
+
 ## How far phase 2 fell short
 
 Phase 2's brief (2026-10-23) asked for a "how we win" hypothesis for every
@@ -149,11 +179,12 @@ improved Ikea module.
 | `presence`, `route` | 1 → n with a row map (rank, category) | Placeholder |
 | TuplePack leaf | several columns → one record leaf | Placeholder |
 
-The placeholders matter because their shapes differ: `runs` changes the row
-count, `split` and `route` have several children, `map` holds part-scoped
-state, TuplePack is shared by columns. If the stage contract admits all of
-them, later research slots in without changing it. The prototype checks that
-by building each placeholder's fit, emit and decode.
+The extension shapes differ: `runs` changes the row count, `split` and `route`
+have several children, `map` holds part-scoped state, and TuplePack is shared
+by columns. These constrain the author protocol without pretending their final
+images or policies are settled. The prototype exercises runs, split and shared
+records in memory; the canonical owner description separately witnesses its
+supported shapes and refuses unsupported image execution.
 
 ### 2. Law: every cell works, some cells are fast
 
@@ -212,22 +243,25 @@ address formation and kept separate from query selections
 A logical write batch moves down the tree like an operation. Each stage
 **absorbs** it (the value fits its parameters), **redirects** it to side data
 (an exception slot, a group delta buffer) or **refuses** it (the group must
-re-encode). Classification needs only interpretation, so the caller can
-**declare** the physical envelope (possible reads, possible stores, effect
-slots) before touching payload, as the envelope witness showed. **Apply** uses
+re-encode). Classification can use interpretation where sufficient; a
+payload-dependent proof first needs its declared and granted read envelope.
+The caller admits possible stores and effect slots before **apply**, which uses
 SeriesPack's checked setters and Ikea's journal. **Publish** returns three
 separate outputs: issued-byte effects, the exact logical contribution to
 summaries (SUM and COUNT deltas; MIN and MAX with a precision level), and
-evidence invalidations.
+evidence invalidations. The supported initial owner route is private
+afterimages. These outputs shape the extension contract; they do not imply
+that general in-place admission or every evidence-invalidation mode exists.
 
 A group re-encode (forced compaction, sealing a streaming tail) is a
 conversion: same logical version, new physical alternative, Orbital `adopt`.
 Fitting is deterministic in (values, admitted set, prior), so replay of
 admitted input reproduces a logically identical group.
 
-Writes have a fallback like reads: a stage without a write law refuses, and
-the owner re-encodes the group, so every stage supports writes before it has
-a write law.
+Unsupported writes refuse. For an executable recipe with an admitted
+constructor/emitter, the owner can attempt a group rebuild from decoded
+logical values. That attempt still needs resources and output admission;
+described-only placeholders do not acquire write support from a fallback.
 
 Where write-time outliers live was the main open choice. Prototype 4 compared
 residual-domain patches in bound's exception areas with per-group slack
@@ -249,8 +283,9 @@ Engine never switches on a stage's private kinds. It sees, per part:
 - **statistics** produced as by-products of fitting: min, max, exception
   counts, run counts, sample distincts, bytes under the chosen and rejected
   windows;
-- **cost tables** per stage and operation, per ISA and residence tier,
-  calibrated on the workers.
+- **cost evidence** where qualified, with its operation/ISA/conditioning scope,
+  and explicit unknown or estimated values elsewhere. Engine can measure real
+  alternatives; a complete per-stage/per-tier model is not required first.
 
 That is enough for an analysis module to choose between real alternatives that
 phase 2 already showed reverse with workload: delta or not, the exception
@@ -274,17 +309,18 @@ checkpoint spacing G16 or G64, and later RLE and heads.
 
 | Area | First landing |
 | --- | --- |
-| Module | `ikea::frame` (`include/ikea/frame/`), following Ikea's lifecycle: `layout` (the stage tree), `view::attach` over a part's planes, `validate`, `bind_reader`, `bind_writer`, then commands |
-| Stages | `intervals` (none, sizes, relative ends; G16 and G64) with its SUM law, fused checkpoint-plus-prefix point read and framed checkpoints; `bound`; `pack` (SeriesPack Local and Bulk presets; width 0 for constants) |
-| Reads | `get`, `read`, `select`, `filter`, `count`, `sum`, `min`, `max`, with laws where measured and decode elsewhere |
-| Writes | `set`, `replace`, `append` to a plain tail, `seal` and `compact` as group re-encode; declare, journal, contribution |
-| Description | Schema encode/decode, capabilities, fit statistics, cost tables, two or three presets |
-| Placeholders | `runs`, `split`, `map`, `domain`, `presence`, `route`, TuplePack leaf: each with its shape, children and parameters stated, and a reference decode in the spike |
-| Integration | An Orbital material for a frame part and an end-to-end check through ObjectStore and Loom: bulk load, `SUM(b) WHERE a ≥ t`, points, updates with summaries published, a group re-encode adopted |
+| Module | `ikea::frame` (`include/ikea/frame/`): portable description/image types, validation and checked binding, with the stage-author execution layer behind them. Final signatures follow extraction; the research driver is not the public API. |
+| Stages | Optional intervals, sizes or relative ends with framed checkpoints and steerable spacing; bound; SeriesPack pack including constants. Carry the proven laws and supported decoded fallbacks. Sizes' weighted SUM and fused prefix point paths remain optimizations. |
+| Reads | Point/range reads, SUM/COUNT, FILTER, ordered SELECT and selected aggregates; reconcile checked wrappers and result semantics with the existing fused multi-aggregate implementation. |
+| Changes | Basic group private-afterimage preparation with ordered edits, slack/rebuild, effects and exact final facts. Append/conversion/interval changes currently use caller-driven full rebuilds. Additional commands and change modes have explicit capability boundaries. |
+| Description and policy | Canonical actual interpretation, child coordinates, capabilities and fit facts. Caller-steered recipes/fit policy/defaults remain separate; qualified cost evidence and unknowns are explicit. |
+| Extensions | Runs, heads, shared TuplePack, presence-rank and split have canonical shape/refusal witnesses. Map, n-way route, other logical domains and further operations remain author-contract extension cases, without fabricated image support. |
+| Integration | A maintained Orbital material/history example: retained interpretation/readers, group replacement, contributions, stale basis and same-version adoption. Ikea does not depend on Orbital; asynchronous Loom and general in-place ownership protocols remain explicit extensions. |
 
 ## Interface sketch
 
-For reaction, not settled. It follows Ikea's lifecycle
+For reaction, not settled signatures or a claim that every illustrated command
+is implemented. The initial capability table above governs the landing. It follows Ikea's lifecycle
 ([interfaces](../../../ikea/docs/interfaces.md#follow-one-lifecycle)) so Frame
 adds nouns only for its own ideas: stage, law, group, census. The prototype's
 `frame.h` is the contract underneath it.
@@ -362,11 +398,12 @@ know them:
   Ikea LEAD's descriptions. Map, n-way routing and domain stages remain
   unproven extension cases; no canonical image or executable support is claimed.
 
-**Witnesses on existing programs, with no new experiment matrix.**
-Cross-column selected movement (B7) is closed by an exact fixture in
-[check.cpp](proto/check.cpp). The Engine choice judged by regret (B11) is the
-one witness left: one trace with a held-out workload reversal and a real
-native candidate. B10 (scans across groups) stays
+**Witnesses and follow-on Engine research.** Cross-column selected movement
+(B7) is closed by an exact fixture in [check.cpp](proto/check.cpp). The Engine
+choice judged by regret (B11) follows the initial implementation, so Engine
+research can use that foundation and feed interface/policy improvements back.
+It should include a real native candidate, a workload reversal and lifecycle
+costs, without becoming another pre-landing matrix. B10 (scans across groups) stays
 reversible after landing. A MAX law that skips blocks from their bounds
 (B6) is built and oracle-checked but not timed, and adds no public MAX
 binding yet.

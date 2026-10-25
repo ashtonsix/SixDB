@@ -10,7 +10,14 @@ The checklist has three parts, following Ikea LEAD's split, which I agree with:
 commitments that are expensive to change once public; evidence that the
 first core is useful; and choices that stay reversible after landing.
 
-## A. Decide before fixing the public contract
+Ashton clarified on 25 October that Engine research needs an initial Frame
+foundation. This inventory is not a requirement to settle every open item
+before landing. Initial capabilities need strong semantics and qualification;
+uncertain policies need caller steering, visible facts and useful defaults;
+known future mechanisms need explicit extension points. Unsupported modes stay
+explicit. B11 and broader consumer-driven interface research follow the core.
+
+## A. Contract obligations and explicit initial capabilities
 
 | # | Item | Why it matters | What settles it | Status |
 | --- | --- | --- | --- | --- |
@@ -31,7 +38,7 @@ first core is useful; and choices that stay reversible after landing.
 | A15 | **Leaf kernels compiled once in Ikea** | Each 16-width TU costs 4–7 GB to build inside Frame | SeriesPack erased range operations; curated compiled operations kept distinct from the author route | Done: ikea 0d44d527 adopted as the runtime leaf, timing parity, build halved ([findings §3](FINDINGS.md#seriespacks-compiled-once-operations-adopted)) |
 | A16 | **Reserved capacity for point writes outside bounds** | Writes must not force re-encode | Per-group exception slack | Decided |
 
-## B. Establish through the first complete consumer
+## B. Foundation evidence and research through consumers
 
 | # | Item | Why it matters | Small evidence that settles it | Status |
 | --- | --- | --- | --- | --- |
@@ -45,7 +52,7 @@ first core is useful; and choices that stay reversible after landing.
 | B8 | **Group-local draft [LEAD]**: prepare once, draft the touched group, several ordered changes, emit once | Draft/apply/emit costs 9–17 µs per write, mostly attaching all groups | Copied, new and retained bytes reported per publication | Closed preparation experiment: one touched-group draft, ordered batch and emission; local O3 saves about 9–12 µs/batch versus attach-all with identical images. Independent drafts, not complete publication throughput; see owner/EVIDENCE.md. |
 | B9 | A complete write/read history | Cheap reserved writes can hide deferred cost | Exhaustion, fold or conversion, old readers, exact derived state, on one history | Scoped evidence: real Orbital old/current readers, exhaustion, refusal/stale retry, append and same-version conversions with exact facts. No competitive native-owner, concurrency or durability claim. |
 | B10 | Scan over many groups through one prepared operation | Group-local placement costs scans 1.1–1.6× from calls per group and width | A leaf call spanning groups, or a scan/write weight | Open |
-| B11 | **One consequential Engine choice, judged by regret [LEAD]** | Ashton's bar is analysis that makes impactful decisions; the preset test was too easy and absolute costs were off 34–83% | Choose delta or identity, or scan- or point-oriented policy, across a workload reversal, charging build, change and conversion | Open |
+| B11 | **One consequential Engine choice, judged by regret [LEAD]** | Ashton's bar is analysis that makes impactful decisions; the preset test was too easy and absolute costs were off 34–83% | Choose delta or identity, or scan- or point-oriented policy, across a workload reversal, charging build, change and conversion | Follow-on Engine research using the landed core, per Ashton's 25 October ordering steer. Keep the real native candidate, reversal and lifecycle accounting; this is not an initial-landing prerequisite. |
 | B12 | Strong controls and honest residence | This thread's own controls are weak; the brief's 2× bar is untested | Front A's native and fused pair controls; existing Polars and DuckDB controls timed; resident, flushed and bandwidth-bound runs labelled | Evidence with explicit limits: source-qualified native count-only/gather/pair on Zen 5/Graviton 4 and actual DuckDB/Polars plus Frame/native six-cell local comparisons. Supplied-mask/native-system/residency and strong writer comparisons are deferred; latest combined source qualification is still needed. |
 | B13 | Placeholder shapes not yet tried: map (part state), presence (rank map), route (n children), domain (ALP exceptions) | Untried shapes may force more contract changes | Fit, emit, decode and a declining law for each | Partial: runs, split, record done |
 | B14 | Row protection as an owner-supplied grant, separate from selection | Ashton listed row-level protection as Frame's | Grant enforced before address formation | Open |
