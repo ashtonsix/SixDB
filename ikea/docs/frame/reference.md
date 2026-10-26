@@ -121,10 +121,15 @@ reclamation belong to the owner.
 
 ## Operation admission and results
 
-`get`/`read` use unit row coordinates; `sum`, `count`, `filter` and selected
-operations use coarse block selectors. `required_sections` and `reader.required`
-return conservative point/read acquisition closures; selection and closure do not
-grant bytes. COUNT/FILTER may settle unsigned-domain tautologies without payload.
+`get`/`read` and `row_range{first,count}` use original unit-row coordinates.
+The span SUM/COUNT overloads intersect that range with coarse block selectors;
+SUM additionally accepts a fine selector in original unit rows. Whole-unit SUM,
+COUNT, FILTER and selected operations remain available. All span endpoints are
+range-checked before arithmetic/lowering. Fine coverage is required only over
+the span's coarse intersections, and an empty span requires no payload. `required_sections` and `reader.required`
+return conservative point/read acquisition closures; `reader.required(span,
+coarse)` omits masked-out groups using the execution lowering. These closures
+include dependent checkpoint streams and do not grant bytes. COUNT/FILTER may settle unsigned-domain tautologies without payload.
 
 Before any output write, checked calls admit the entire command: range-safe
 coordinates, comparison, bitmap coverage, output capacity and all nonempty
@@ -153,7 +158,7 @@ kernels. All dispatch bodies compile once in `ikea::frame`.
 | `ikea::frame`, `image.h` | `stream_manifest`, `image_view`, `validated_image` | `manifest.cpp`: placement/closure; `group_image.cpp`: basic parent/leaf proof; `image.cpp`: granted attachment and cross-stream proof |
 | `ikea::frame`, `reader.h` | `reader`, `bind_reader` | `reader.cpp`: checked admission, selection adaptation, complete read requests |
 | `ikea::frame`, `build.h` | `fitting_policy`, `stream_images`, `built_unit`, `build` | `build.cpp`: construct stages from admitted meaning, fit/emit one unit |
-| `ikea::frame::author`, `author/stage.h` | `stage`, `fit_input`, `census`, `point_leaf` | `stage.cpp`: stream traversal and operation definitions via decode |
+| `ikea::frame::author`, `author/stage.h` | `stage`, `request`, `predicate`, `fit_input`, `census`, `point_leaf` | `stage.cpp`: request lowering, stream traversal and reference operation definitions via decode |
 | `ikea::frame::detail`, `detail/stages.h` | pack/bound/interval factories; private concrete stages | `stages/pack.cpp`, `bound.cpp`, `intervals.cpp`: each stage's fitting, section law and algebra |
 | `ikea::frame::detail`, `detail/execution.h` | internal read plan | `execution.cpp`: bind-time point entries; no separate public execution mode |
 
@@ -164,7 +169,20 @@ retention is outside the Frame library and links Orbital separately.
 
 A new stage adds its logical law and child domains, canonical description and
 image admission, fit/emit/attach hooks and decode. Optional laws override whole
-operations at unit/block grain. A new operation needs defined semantics and
+operations over an `author::request`. It retains the span, selected/full blocks,
+borrowed fine rows and selected cardinality. `within(blocks)` narrows a request
+and recomputes cardinality on demand without mutating shared state; `rows_of(b)` requires an active block. A
+`predicate` retains a scalar threshold until a stage produces a per-block plane.
+
+The owning stage applies its law before decomposing into physical groups or
+blocks. Identity children reuse the lowering. Non-identity children receive
+requests in their own row domain: selected parent rows, weighted child
+contributions and dependency/read closure are distinct. Checkpoint SUM, for
+example, retains multiplicities when several root rows use one checkpoint.
+Bounds preserve lo compensation and exception corrections. One partial edge
+must not route full interior blocks through a partial-block fallback. Group-local
+placement remains the ordinary amortisation grain; logical adjacency alone does
+not justify reading across separate backing allocations. A new operation needs defined semantics and
 independent conformance; decode supplies a fallback for supported shapes. No
 binary plugin ABI or automatic acceptance of unknown descriptions is promised.
 Known but unimplemented shapes remain described/refused until their image law

@@ -4,6 +4,7 @@
 #include <ikea/seriespack/selection.h>
 
 namespace ikea::frame {
+namespace author { class request; }
 /// Bound immutable interpretation and operation state; payload remains borrowed.
 /// The owner keeps every granted section initialized, read-isolated, immutable
 /// and at its admitted address through all copies of this reader/image.
@@ -16,19 +17,35 @@ class reader {
     std::expected<bitset256, error> blocks(ikea::intervals::selection) const;
     std::expected<void, error> admit_range(std::size_t, std::size_t) const;
     std::expected<void, error> admit_blocks(const bitset256&) const;
-    struct fine_request { bitset256 active; block_rows_set rows; std::size_t count{}; };
-    std::expected<fine_request, error> selected_rows(const bitset256&, ikea::seriespack::selection) const;
+    std::expected<author::request, error> lower(row_range, ikea::intervals::selection, ikea::seriespack::selection) const;
   public:
     std::size_t size() const noexcept;
     std::span<const section_key> available_sections() const noexcept;
     /// Conservative point/read closure in binding-unit row coordinates, for
     /// Loom/owner acquisition. The returned keys do not grant access.
     [[nodiscard]] std::expected<std::vector<section_key>, error> required(std::span<const row_range>) const;
+    /// The same closure for one span narrowed by coarse blocks, lowered as
+    /// sum(span, blocks) lowers it: a block with no requested row demands
+    /// nothing, so a masked-out group in the middle of the span is not acquired.
+    [[nodiscard]] std::expected<std::vector<section_key>, error> required(row_range span,
+        ikea::intervals::selection blocks) const;
     [[nodiscard]] std::expected<std::uint64_t, error> get(std::size_t row) const;
     [[nodiscard]] std::expected<void, error> read(std::size_t first, std::span<std::uint64_t> output) const;
     /// Coarse selection coordinates are block numbers, starting at zero.
     [[nodiscard]] std::expected<u128, error> sum(ikea::intervals::selection blocks = ikea::intervals::selection::all()) const;
     [[nodiscard]] std::expected<std::uint64_t, error> count(comparison, std::uint64_t threshold,
+        ikea::intervals::selection blocks = ikea::intervals::selection::all()) const;
+    /// SUM over the rows of span [first, first + count) that lie in the coarse
+    /// blocks and, when given, in the fine selection. Coarse coordinates are
+    /// block numbers; fine coordinates are original unit rows, and only rows of
+    /// the span's coarse blocks need be covered. The span is lowered once; a
+    /// block with no selected row needs no payload. Refuses before any work on
+    /// a span outside the reader, an uncovered selection or an unavailable group.
+    [[nodiscard]] std::expected<u128, error> sum(row_range span,
+        ikea::intervals::selection blocks = ikea::intervals::selection::all(),
+        ikea::seriespack::selection rows = ikea::seriespack::selection::all()) const;
+    /// COUNT of the rows of span within the coarse blocks satisfying op.
+    [[nodiscard]] std::expected<std::uint64_t, error> count(comparison, std::uint64_t threshold, row_range span,
         ikea::intervals::selection blocks = ikea::intervals::selection::all()) const;
     /// Writes only selected coarse slots output[block]; clears logical tail
     /// high bits, leaves other slots untouched. Capacity covers selected slots.

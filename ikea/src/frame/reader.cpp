@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <limits>
+#include <new>
 
 namespace ikea::frame {
 namespace {
@@ -18,6 +19,18 @@ predicate_truth domain_truth(comparison op, std::uint64_t threshold) noexcept {
     if ((op == comparison::less && threshold == 0) ||
         (op == comparison::greater && threshold == maximum)) return predicate_truth::never;
     return predicate_truth::unknown;
+}
+// Admits a fine selection over the coarse blocks, then lowers it once; the
+// request borrows the selection's backing.
+std::expected<author::request, error> lower_rows(std::size_t rows, const bitset256& coarse,
+    ikea::seriespack::selection selected) {
+    bool covered = true;
+    coarse.for_each([&](unsigned b) {
+        const auto first = std::size_t{b} * block_rows;
+        covered &= selected.covers(first, std::min(std::size_t{block_rows}, rows - first));
+    });
+    if (!covered) return std::unexpected(error::range);
+    return author::request::make(unsigned(rows), 0, unsigned(rows), coarse, selected);
 }
 }
 std::string_view describe(error e) noexcept {
@@ -50,6 +63,21 @@ std::expected<std::vector<section_key>, error> reader::required(std::span<const 
         return std::unexpected(error::range);
     }
     return std::move(*keys);
+}
+std::expected<std::vector<section_key>, error> reader::required(row_range span, ikea::intervals::selection selected) const {
+    const auto q = lower(span, selected, ikea::seriespack::selection::all());
+    if (!q) return std::unexpected(q.error());
+    try {
+        std::vector<row_range> ranges;
+        q->blocks().for_each_run([&](unsigned b, unsigned n) {
+            const auto first = std::max(span.first, std::size_t{b} * block_rows);
+            const auto end = std::min({span.first + span.count, std::size_t{b + n} * block_rows, size()});
+            ranges.push_back({first, end - first});
+        });
+        return required(ranges);
+    } catch (const std::bad_alloc&) {
+        return std::unexpected(error::resources);
+    }
 }
 std::expected<bitset256, error> reader::blocks(ikea::intervals::selection selected) const {
     const auto n = static_cast<unsigned>((size() + block_rows - 1) / block_rows);
@@ -85,7 +113,7 @@ std::expected<u128, error> reader::sum(ikea::intervals::selection selected) cons
     const auto active = blocks(selected);
     if (!active) return std::unexpected(active.error());
     if (auto admitted = admit_blocks(*active); !admitted) return std::unexpected(admitted.error());
-    return active->empty() ? u128{0} : state_->root_->sum(0, *active);
+    return active->empty() ? u128{0} : state_->root_->sum(0, author::request::whole(unsigned(size()), *active));
 }
 std::expected<std::uint64_t, error> reader::count(comparison op, std::uint64_t threshold,
     ikea::intervals::selection selected) const {
@@ -100,7 +128,7 @@ std::expected<std::uint64_t, error> reader::count(comparison op, std::uint64_t t
         return count;
     }
     if (auto admitted = admit_blocks(*active); !admitted) return std::unexpected(admitted.error());
-    return active->empty() ? std::uint64_t{0} : state_->root_->count_uniform(op, 0, *active, threshold);
+    return active->empty() ? std::uint64_t{0} : state_->root_->count(0, author::request::whole(unsigned(size()), *active), {op, threshold});
 }
 std::expected<void, error> reader::filter(comparison op, std::uint64_t threshold,
     std::span<bitset256> output, ikea::intervals::selection selected) const {
@@ -120,59 +148,79 @@ std::expected<void, error> reader::filter(comparison op, std::uint64_t threshold
     }
     if (auto admitted = admit_blocks(*active); !admitted) return admitted;
     if (active->empty()) return {};
-    block_args thresholds;
-    thresholds.fill(threshold);
-    state_->root_->filter(op, 0, *active, thresholds, output);
+    state_->root_->filter(0, author::request::whole(unsigned(size()), *active), {op, threshold}, output);
     active->for_each([&](unsigned b) {
         const auto n = static_cast<unsigned>(std::min(std::size_t{block_rows}, size() - std::size_t{b} * block_rows));
         output[b] = output[b] & bitset256::first_n(n);
     });
     return {};
 }
-std::expected<reader::fine_request, error> reader::selected_rows(const bitset256& coarse,
-    ikea::seriespack::selection selected) const {
-    fine_request result{coarse, {}, 0};
+std::expected<author::request, error> reader::lower(row_range span, ikea::intervals::selection selected,
+    ikea::seriespack::selection rows) const {
+    if (span.first > size() || span.count > size() - span.first) return std::unexpected(error::range);
+    const auto coarse = blocks(selected);
+    if (!coarse) return std::unexpected(coarse.error());
+    // Only the coarse blocks the span touches need fine coverage.
+    bitset256 touched;
+    if (span.count)
+        touched = *coarse & bitset256::first_n(unsigned((span.first + span.count - 1) / block_rows + 1)) &
+                  ~bitset256::first_n(unsigned(span.first / block_rows));
     bool covered = true;
-    coarse.for_each([&](unsigned b) {
-        const auto first = std::size_t{b} * block_rows;
-        const auto n = static_cast<unsigned>(std::min(std::size_t{block_rows}, size() - first));
-        if (!selected.covers(first, n)) { covered = false; return; }
-        for (unsigned r = 0; r < n; r += 64)
-            result.rows[b].words[r / 64] = selected.mask(first + r, std::min(64u, n - r));
-        if (result.rows[b].empty()) result.active.set(b, false);
-        result.count += result.rows[b].count();
-    });
+    if (!rows.is_all()) {
+        touched.for_each([&](unsigned b) {
+            const auto first = std::max(span.first, std::size_t{b} * block_rows);
+            const auto end = std::min({span.first + span.count, std::size_t{b + 1} * block_rows, size()});
+            covered &= rows.covers(first, end - first);
+        });
+    }
     if (!covered) return std::unexpected(error::range);
-    return result;
+    return author::request::make(unsigned(size()), unsigned(span.first), unsigned(span.count), touched, rows);
+}
+std::expected<u128, error> reader::sum(row_range span, ikea::intervals::selection selected,
+    ikea::seriespack::selection rows) const {
+    const auto q = lower(span, selected, rows);
+    if (!q) return std::unexpected(q.error());
+    if (auto admitted = admit_blocks(q->blocks()); !admitted) return std::unexpected(admitted.error());
+    return !q->selected() ? u128{0} : state_->root_->sum(0, *q);
+}
+std::expected<std::uint64_t, error> reader::count(comparison op, std::uint64_t threshold, row_range span,
+    ikea::intervals::selection selected) const {
+    if (!valid_comparison(op)) return std::unexpected(error::range);
+    const auto q = lower(span, selected, ikea::seriespack::selection::all());
+    if (!q) return std::unexpected(q.error());
+    const auto truth = domain_truth(op, threshold);
+    if (truth != predicate_truth::unknown) return truth == predicate_truth::always ? q->selected() : 0;
+    if (auto admitted = admit_blocks(q->blocks()); !admitted) return std::unexpected(admitted.error());
+    return !q->selected() ? std::uint64_t{0} : state_->root_->count(0, *q, {op, threshold});
 }
 std::expected<u128, error> reader::sum_selected(ikea::seriespack::selection rows,
     ikea::intervals::selection selected) const {
     const auto coarse = blocks(selected);
     if (!coarse) return std::unexpected(coarse.error());
-    const auto fine = selected_rows(*coarse, rows);
+    const auto fine = lower_rows(size(), *coarse, rows);
     if (!fine) return std::unexpected(fine.error());
-    if (auto admitted = admit_blocks(fine->active); !admitted) return std::unexpected(admitted.error());
-    return !fine->count ? u128{0} : state_->root_->sum_selected(0, fine->active, fine->rows);
+    if (auto admitted = admit_blocks(fine->blocks()); !admitted) return std::unexpected(admitted.error());
+    return !fine->selected() ? u128{0} : state_->root_->sum(0, *fine);
 }
 std::expected<summary, error> reader::summarise_selected(ikea::seriespack::selection rows,
     ikea::intervals::selection selected) const {
     const auto coarse = blocks(selected);
     if (!coarse) return std::unexpected(coarse.error());
-    const auto fine = selected_rows(*coarse, rows);
+    const auto fine = lower_rows(size(), *coarse, rows);
     if (!fine) return std::unexpected(fine.error());
-    if (auto admitted = admit_blocks(fine->active); !admitted) return std::unexpected(admitted.error());
+    if (auto admitted = admit_blocks(fine->blocks()); !admitted) return std::unexpected(admitted.error());
     summary result;
-    if (fine->count) state_->root_->summarise_selected(0, fine->active, fine->rows, result);
+    if (fine->selected()) state_->root_->summarise(0, *fine, result);
     return result;
 }
 std::expected<std::size_t, error> reader::select(ikea::seriespack::selection rows,
     std::span<std::uint64_t> output, ikea::intervals::selection selected) const {
     const auto coarse = blocks(selected);
     if (!coarse) return std::unexpected(coarse.error());
-    const auto fine = selected_rows(*coarse, rows);
+    const auto fine = lower_rows(size(), *coarse, rows);
     if (!fine) return std::unexpected(fine.error());
-    if (fine->count > output.size()) return std::unexpected(error::capacity);
-    if (auto admitted = admit_blocks(fine->active); !admitted) return std::unexpected(admitted.error());
-    return !fine->count ? std::size_t{0} : state_->root_->select(0, fine->active, fine->rows, output.data());
+    if (fine->selected() > output.size()) return std::unexpected(error::capacity);
+    if (auto admitted = admit_blocks(fine->blocks()); !admitted) return std::unexpected(admitted.error());
+    return !fine->selected() ? std::size_t{0} : state_->root_->select(0, *fine, output.data());
 }
 } // namespace ikea::frame

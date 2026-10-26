@@ -186,8 +186,55 @@ void coordinate_limits() {
     const auto empty = in::selection::complement(0,std::span<const std::byte>{});
     assert(!empty.covers(0,1) && empty.next(0,256) == 256 && empty.previous(256,256) == 256);
 }
+// Runs, union and complement against position flags.
+void bitset_algebra() {
+    std::array<bool, 256> flags{};
+    bitset256 a, b;
+    for (unsigned i = 0; i < 256; ++i) {
+        flags[i] = (i * 7919) % 11 < 4 || (i >= 60 && i < 130) || i == 255;
+        a.set(i, flags[i]);
+        b.set(i, i % 3 == 0);
+    }
+    std::array<bool, 256> seen{};
+    unsigned previous_end = 0, runs = 0;
+    a.for_each_run([&](unsigned first, unsigned count) {
+        assert(count && (runs == 0 || first > previous_end));
+        assert(first == 0 || !flags[first - 1]);
+        assert(first + count == 256 || !flags[first + count]);
+        for (unsigned i = first; i < first + count; ++i)
+            assert(flags[i] && !seen[i]), seen[i] = true;
+        previous_end = first + count, ++runs;
+    });
+    assert(seen == flags);
+    for (unsigned i = 0; i < 256; ++i)
+        assert((a | b).contains(i) == (flags[i] || i % 3 == 0) && (~a).contains(i) == !flags[i] &&
+               (a & ~b).contains(i) == (flags[i] && i % 3 != 0));
+    for (unsigned from = 0; from <= 256; ++from) {
+        unsigned want = from;
+        while (want < 256 && !flags[want]) ++want;
+        assert(a.next(from, true) == want);
+    }
+    unsigned whole = 0;
+    bitset256::first_n(256).for_each_run([&](unsigned first, unsigned count) { assert(first == 0 && count == 256), ++whole; });
+    bitset256{}.for_each_run([&](unsigned, unsigned) { ++whole; });
+    assert(whole == 1);
+}
+// block_at names a borrowed block only at one of its own origins.
+void borrowed_block_access() {
+    std::array<bitset256, 3> b{};
+    b[1].set(5);
+    const auto s = sp::selection::bits(512, std::span<const bitset256>(b));
+    assert(s.block_at(512) == &b[0] && s.block_at(768) == &b[1] && s.block_at(1024) == &b[2]);
+    assert(!s.block_at(256) && !s.block_at(1280) && !s.block_at(528) && !s.block_at(0));
+    assert(s.block_at(768)->contains(5) && s.contains(768 + 5));
+    const std::array<std::uint16_t, 16> words{};
+    assert(!sp::selection::bits(0, words).block_at(0) && !sp::selection::all().block_at(0) &&
+           !sp::selection::none().block_at(0) && !sp::selection::bits(0, b[0]).block_at(0));
+}
 }
 int main() {
+    borrowed_block_access();
+    bitset_algebra();
     terminal<sp::selection>(); terminal<tp::selection>(); terminal<in::selection>();
     const std::array<std::uint16_t,1> word{1};
     assert(!sp::selection::bits(1,word).covers(1,1));

@@ -39,26 +39,10 @@ class intervals_stage final : public stage {
     }
     unsigned checkpoints(unsigned u, unsigned b, std::uint64_t *cp) const {
         const unsigned n = (rows_in(u, b) + spacing_ - 1) / spacing_;
+
         children_[1]->read(u, b * (block_rows / spacing_), n, cp);
         return n;
     }
-    // Full blocks whose fields are exact take the law; the rest decode.
-    void split(unsigned u, const bitset256 &blocks, bitset256 &full, bitset256 &partial) const {
-        blocks.for_each([&](unsigned b) {
-            (rows_in(u, b) == block_rows && units_[u].exact[b] ? full : partial).set(b);
-        });
-    }
-    __int128 checkpoint_sum(unsigned u, const bitset256 &full) const {
-        __int128 t = 0;
-        full.for_each([&](unsigned b) {
-            alignas(64) std::uint64_t cp[block_rows];
-            const unsigned n = checkpoints(u, b, cp);
-            for (unsigned g = 0; g < n; ++g)
-                t += static_cast<__int128>(spacing_) * cp[g];
-        });
-        return t;
-    }
-
   public:
     intervals_stage(std::unique_ptr<stage> fields, std::unique_ptr<stage> checkpoints, unsigned spacing, interval_form form)
         : children_{std::move(fields), std::move(checkpoints)}, spacing_(spacing), form_(form) {}
@@ -160,51 +144,80 @@ class intervals_stage final : public stage {
         children_[0]->read(u, row - k + 1, k, w + 1);
         return in::wide_sizes{w, &cp, k + 1, spacing_, bias}.at(k);
     }
-    // Within a region of spacing G starting at checkpoint c, the values sum
-    // to G c + sum_i (G - i) delta_i, and delta_i = field_i - 2^63: one exact
-    // weighted SUM of the child per block (weight 0 at checkpoint rows).
-    // Relative ends: G c + sum of the offsets, so one plain SUM of the child.
-    // Partial blocks, and blocks whose fields wrap, decode.
-    u128 sum(unsigned u, const bitset256 &blocks) const override {
-        if (!relative() && spacing_ != 16 && spacing_ != 64)
-            return stage::sum(u, blocks);
-        bitset256 full, partial;
-        split(u, blocks, full, partial);
-        __int128 t = partial.empty() ? 0 : static_cast<__int128>(stage::sum(u, partial));
-        if (full.empty())
+    // A region with w selected rows contributes w times its checkpoint, and
+    // each selected row its offset: relative ends add field - 2^63; sizes add
+    // the prefix of deltas, which over a whole region of spacing G weighs
+    // delta_i by G - i (weight 0 at checkpoint rows). So:
+    // - a run of whole blocks contributes G times one child SUM over its
+    //   checkpoint ranks, with no checkpoint read;
+    // - any other block reads its checkpoints and weighs each by its region's
+    //   selected rows (a span edge, a fine selection, a short tail);
+    // - relative ends add one child SUM of the fields over the same request;
+    //   sizes add one position-weighted child SUM over whole blocks (G 16 or
+    //   64) and decode the rest.
+    // Blocks whose fields may wrap decode.
+    u128 sum(unsigned u, const author::request &q) const override {
+        const unit_state &s = units_[u];
+        const unsigned per = block_rows / spacing_;
+        const bitset256 whole = bitset256::first_n(rows(u) / block_rows); // blocks of complete regions
+        bitset256 law;
+        q.blocks().for_each([&](unsigned b) { law.set(b, s.exact[b]); });
+        if (!relative())
+            law = spacing_ == 16 || spacing_ == 64 ? law & q.full() & whole : bitset256{};
+        __int128 t = 0;
+        if (const bitset256 rest = q.blocks() & ~law; !rest.empty())
+            t += static_cast<__int128>(stage::sum(u, q.within(rest)));
+        if (law.empty())
             return static_cast<u128>(t);
-        t += checkpoint_sum(u, full);
-        const __int128 nb = full.count();
+        const bitset256 uniform = law & q.full() & whole;
+        uniform.for_each_run([&](unsigned b, unsigned n) {
+            const auto ranks = author::request::make(children_[1]->rows(u), b * per, n * per,
+                                                     children_[1]->blocks(u), seriespack::selection::all());
+            t += static_cast<__int128>(spacing_) * static_cast<__int128>(children_[1]->sum(u, ranks));
+        });
+        std::uint64_t selected = std::uint64_t{uniform.count()} * block_rows;
+        (law & ~uniform).for_each([&](unsigned b) {
+            alignas(64) std::uint64_t cp[block_rows];
+            const unsigned regions = checkpoints(u, b, cp);
+            const bitset256 r = q.rows_of(b);
+            for (unsigned g = 0; g < regions; ++g)
+                t += static_cast<__int128>(cp[g]) * (r.rank(std::min(block_rows, (g + 1) * spacing_)) - r.rank(g * spacing_));
+            selected += r.count();
+        });
         if (relative()) {
-            t += static_cast<__int128>(children_[0]->sum(u, full)) - nb * block_rows * static_cast<__int128>(bias);
+            t += static_cast<__int128>(children_[0]->sum(u, q.within(law))) - static_cast<__int128>(selected) * bias;
         } else {
             std::array<std::uint8_t, 64> w{};
             for (unsigned r = 1; r < spacing_; ++r)
                 w[r] = static_cast<std::uint8_t>(spacing_ - r);
             const __int128 per_block = __int128{block_rows / 2} * (spacing_ - 1); // sum of weights in a block
-            t += static_cast<__int128>(children_[0]->weighted_sum(u, full, w.data(), spacing_)) -
-                 nb * per_block * static_cast<__int128>(bias);
+            t += static_cast<__int128>(children_[0]->weighted_sum(u, law, w.data(), spacing_)) -
+                 static_cast<__int128>(law.count()) * per_block * static_cast<__int128>(bias);
         }
         return static_cast<u128>(t);
     }
     // Monotone blocks settle by their first and last values, else by an
     // endpoint search over the checkpoints and one region. Others decode.
-    std::uint64_t count(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs) const override {
+    std::uint64_t count(unsigned u, const author::request &q, const author::predicate &p) const override {
         const unit_state &s = units_[u];
-        if (op != comparison::greater_equal)
-            return stage::count(op, u, blocks, rhs);
-        bitset256 other;
+        if (p.op != comparison::greater_equal)
+            return stage::count(u, q, p);
+        bitset256 other = q.partial();
         std::uint64_t c = 0;
-        blocks.for_each([&](unsigned b) {
+        q.full().for_each([&](unsigned b) {
             if (!s.monotone[b])
                 return other.set(b);
-            const std::uint64_t t = rhs[b];
+            const std::uint64_t t = p.at(b);
             const unsigned m = rows_in(u, b);
-            alignas(64) std::uint64_t cp[block_rows];
-            const unsigned regions = checkpoints(u, b, cp);
-            if (cp[0] >= t) {
+            // The last value settles none, the first checkpoint alone settles
+            // all; only a straddling block reads its checkpoints.
+            if (s.last[b] < t)
+                return;
+            if (children_[1]->get(u, b * (block_rows / spacing_)) >= t) {
                 c += m;
-            } else if (s.last[b] >= t) {
+            } else {
+                alignas(64) std::uint64_t cp[block_rows];
+                const unsigned regions = checkpoints(u, b, cp);
                 // The last region whose checkpoint is below t holds the
                 // boundary, then the first of its values at or above t.
                 const unsigned g = in::lower_bound(in::direct_source<std::uint64_t>{cp, regions}, t) - 1;
@@ -217,7 +230,7 @@ class intervals_stage final : public stage {
             }
         });
         if (!other.empty())
-            c += stage::count(op, u, other, rhs);
+            c += stage::count(u, q.within(other), p);
         return c;
     }
 };

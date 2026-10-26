@@ -9,7 +9,7 @@ target_include_directories(ikea_frame PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/includ
 target_compile_features(ikea_frame PUBLIC cxx_std_23)
 target_link_libraries(ikea_frame PUBLIC ikea::seriespack ikea::intervals)
 
-foreach(check description manifest group_image reader stages)
+foreach(check description manifest group_image reader stages span demand)
   add_executable(ikea_frame_${check}_check EXCLUDE_FROM_ALL test/frame/${check}.cpp)
   sixdb_target(ikea_frame_${check}_check)
   target_link_libraries(ikea_frame_${check}_check PRIVATE ikea::frame)

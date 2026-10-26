@@ -122,11 +122,25 @@ std::expected<group_manifest, image_error> validate_group(std::span<const std::b
             if (!reader) return std::unexpected(image_error::leaf);
             readers[k].emplace(*reader);
         }
+        // A width-k field is below 2^k, so when lo + 2^k - 1 is representable
+        // every inlier is, and only the exception fields need reading. Width
+        // 0 fields are all zero. Otherwise the block's actual fields decide.
+        alignas(64) std::uint64_t fields[256];
         for (unsigned b = 0; b < m.blocks; ++b) {
             unsigned e = m.start[b], end = e + m.count[b];
             const unsigned k = m.width[b];
+            if (!k) continue;
+            const std::size_t base = std::size_t{m.slot[b]} * 256;
+            const auto top = k == 64 ? ~std::uint64_t{0} : (std::uint64_t{1} << k) - 1;
+            if (top <= std::numeric_limits<std::uint64_t>::max() - m.lo[b]) {
+                for (; e < end; ++e)
+                    if (readers[k]->get_unchecked(base + std::to_integer<unsigned>(bytes[m.positions + e])) != 0)
+                        return std::unexpected(image_error::contents);
+                continue;
+            }
+            readers[k]->read_unchecked(base, m.rows[b], fields);
             for (unsigned r = 0; r < m.rows[b]; ++r) {
-                const auto field = k ? readers[k]->get_unchecked(std::size_t{m.slot[b]} * 256 + r) : 0;
+                const auto field = fields[r];
                 const bool exceptional = e < end && std::to_integer<unsigned>(bytes[m.positions + e]) == r;
                 if (exceptional) {
                     if (field != 0) return std::unexpected(image_error::contents);

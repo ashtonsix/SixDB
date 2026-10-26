@@ -104,7 +104,13 @@ Orbital scopes or payload allocations. The owner must keep those alive.
 ## Operations and masks
 
 `get(row)` reads one row; `read(first, output)` reads a contiguous range.
-`sum(blocks)` and `count(comparison, threshold, blocks)` process selected blocks.
+`sum(row_range{first, count}, blocks, rows)` and
+`count(comparison, threshold, row_range{first, count}, blocks)` accept a logical
+span in original unit-row coordinates. Coarse masks name blocks; optional fine
+masks narrow SUM. Full interior runs keep their range laws while only partial
+edges need ranged or masked treatment. Callers need not widen spans or build an
+8 KiB unit bitmap. The whole-unit forms `sum(blocks)` and
+`count(comparison, threshold, blocks)` remain available.
 `filter(comparison, threshold, output, blocks)` writes an original-row `bitset256`
 for each selected block. Other block slots remain untouched, and high tail bits
 are clear. `sum_selected`, `select` and `summarise_selected` consume fine row
@@ -115,10 +121,18 @@ empty summaries have count/sum/max zero and min `UINT64_MAX`.
   starting at zero. Storage must cover the unit's logical blocks.
 - Fine selections use `ikea::seriespack::selection`, including
   `bits(0, span<const bitset256>(filter_output))` without a bitmap copy, in **original unit row**
-  coordinates. Coverage is required only for selected coarse blocks. An empty
-  fine selection eliminates that block's payload demand.
+  coordinates. For a span SUM, coverage is required only for the span's intersection with
+  selected coarse blocks; whole-unit selected operations require coverage over
+  those blocks. Fine origins remain absolute even when a span starts mid-block.
+  An empty fine selection eliminates that block's payload demand.
 - `all()` and `none()` need no bitmap backing. Padding bits beyond the logical
   unit or final block do not introduce rows or blocks.
+
+For example, `reader.sum({3900, 4600}, coarse, fine)` selects rows in
+`[3900,8500)`. A coarse mask can exclude the middle group completely. A fine
+bitmap starting at row 3900 need cover only the selected intersections, and its
+result is not rebased to zero. `count(op, threshold, span, coarse)` uses the same
+span/coarse intersection without a fine argument.
 
 All masks remain borrowed and stable through a call. Selections are demand,
 not access grants. Checked calls admit the complete range, dependency closure,
@@ -140,6 +154,11 @@ dependency closures before acquisition. Acquire those sections through the owner
 or Loom, then validate/bind using explicit grants. A closure is neither a read
 grant nor an owner lease. Frame does not suspend or acquire storage internally.
 Owners keep interpretation, placement, proof and backing coherent across waits.
+`reader.required(span, coarse)` derives demand from the same span/block lowering
+used by execution: a completely masked group in the middle demands no section.
+It includes checkpoint dependencies, even when their rows are outside the
+selected root-row set. Fine selections and contribution multiplicities do not
+alter the meaning of those dependencies.
 
 A conversion constructs new images, proves equivalent logical values, then uses
 its owner's adoption/publication operation. Old readers retain their original
@@ -154,6 +173,7 @@ competitive point-write claim. Future changes must still distinguish logical
 contributions, issued bytes and invalidated evidence; those protocols are research.
 
 Measured strengths and limits are source-qualified in the
-[landing qualification](../../../workbench/spikes/frame-phase-3/GRADUATION.md).
+[landing qualification](../../../workbench/spikes/frame-phase-3/GRADUATION.md) and
+[span/seam qualification](../../../workbench/spikes/frame-seam/NATIVE.md).
 Wide SUM, dispersed predicates and independent points can lose to native arrays;
 encoding is not a universal default.

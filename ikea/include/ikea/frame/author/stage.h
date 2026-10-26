@@ -1,5 +1,6 @@
 #pragma once
 #include <ikea/frame/types.h>
+#include <ikea/seriespack/selection.h>
 
 #include <algorithm>
 #include <array>
@@ -41,6 +42,70 @@ struct point_leaf {
     std::size_t base = 0;
 };
 
+/// The rows of one unit a read covers, in the callee's row domain: the span
+/// [first, first + count) within coarse blocks, narrowed by a borrowed fine
+/// selection of unit rows. Construction lowers that once to the blocks
+/// holding a selected row and those wholly selected (every logical row,
+/// including a short tail), so each stage of an identity chain sees one
+/// lowering. Selection only: it carries no weights and grants no reads; a
+/// law that needs multiplicities or other rows states them itself.
+class request {
+    unsigned rows_ = 0, first_ = 0, count_ = 0;
+    seriespack::selection fine_ = seriespack::selection::all();
+    bitset256 blocks_, full_;
+    static constexpr std::uint64_t unknown = ~std::uint64_t{0};
+    std::uint64_t selected_ = 0; // unknown after within(); counted on demand
+    const bitset256 *borrowed_ = nullptr; // the fine selection's block for first_ / 256 onward, when contiguous
+    bool inside(unsigned b) const noexcept {
+        return first_ <= b * block_rows && b * block_rows + rows_in(b) <= first_ + count_;
+    }
+    bitset256 lower(unsigned b) const noexcept;
+    std::uint64_t count_rows() const noexcept;
+
+  public:
+    /// Every row of the coarse blocks of a unit of rows rows.
+    static request whole(unsigned rows, const bitset256 &coarse) noexcept;
+    /// Trusted: fine covers every row of the span's coarse blocks, and its
+    /// backing outlives the request.
+    static request make(unsigned rows, unsigned first, unsigned count, const bitset256 &coarse,
+                        const seriespack::selection &fine) noexcept;
+    const bitset256 &blocks() const noexcept { return blocks_; }
+    const bitset256 &full() const noexcept { return full_; }
+    bitset256 partial() const noexcept { return blocks_ & ~full_; }
+    bool all_full() const noexcept { return blocks_ == full_; }
+    /// The same request over only the given blocks. Its selected() counts
+    /// only their rows, on first use.
+    request within(const bitset256 &subset) const noexcept {
+        request r = *this;
+        r.blocks_ = blocks_ & subset, r.full_ = full_ & subset, r.selected_ = unknown;
+        return r;
+    }
+    /// The number of selected rows.
+    std::uint64_t selected() const noexcept {
+        return selected_ == unknown ? count_rows() : selected_;
+    }
+    unsigned rows_in(unsigned b) const noexcept { return std::min(block_rows, rows_ - b * block_rows); }
+    /// The selected rows of an active block b, with bits past its rows clear.
+    /// Requires blocks().contains(b); narrowing does not widen read authority.
+    bitset256 rows_of(unsigned b) const noexcept {
+        if (full_.contains(b))
+            return bitset256::first_n(rows_in(b));
+        if (borrowed_ && inside(b))
+            return borrowed_[b - first_ / block_rows] & bitset256::first_n(rows_in(b));
+        return lower(b);
+    }
+};
+
+/// A comparison with one threshold, until a stage makes it vary per block
+/// (bound subtracting each block's lo): then a plane indexed by unit block.
+struct predicate {
+    comparison op;
+    std::uint64_t threshold = 0;
+    const std::uint64_t *plane = nullptr;
+    std::uint64_t at(unsigned block) const noexcept { return plane ? plane[block] : threshold; }
+    bool uniform() const noexcept { return !plane; }
+};
+
 /// One transform of a column's values over units of up to 256 blocks of 256
 /// rows. Every stage decodes a block, and every read has a reference
 /// definition over decoded values (the defaults), so every stage x operation
@@ -49,7 +114,8 @@ struct point_leaf {
 ///
 /// Reads are trusted: the checked reader has admitted the unit, blocks,
 /// rows, availability and output capacity before calling them. Calls name one
-/// unit and a coarse selection of its blocks; dispatch is never per row.
+/// unit and a request over it; a stage lowers it for its own children, and
+/// dispatch is never per row.
 class stage {
     std::vector<std::uint32_t> rows_; // per unit
 
@@ -100,32 +166,54 @@ class stage {
     // Reads. The defaults are the reference definitions over decode.
     /// The rows of one block (rows_in of them).
     virtual void decode(unsigned unit, unsigned block, std::uint64_t *out) const = 0;
-    virtual u128 sum(unsigned unit, const bitset256 &blocks) const;
-    virtual u128 sum_selected(unsigned unit, const bitset256 &blocks, const block_rows_set &rows) const;
+    virtual u128 sum(unsigned unit, const request &) const;
     /// Exact sum of weights[row % period] * value over every row of the
     /// selected blocks; period is 16 or 64 (a parent's position weights).
     virtual u128 weighted_sum(unsigned unit, const bitset256 &blocks, const std::uint8_t *weights,
                               unsigned period) const;
     /// SUM, COUNT, MIN and MAX of the selected rows in one traversal, folded
     /// into out (a running summary across units).
-    virtual void summarise_selected(unsigned unit, const bitset256 &blocks, const block_rows_set &rows,
-                                    summary &out) const;
+    virtual void summarise(unsigned unit, const request &, summary &out) const;
     /// MAX of the selected rows, raising m only; false if none is selected.
-    virtual bool max_selected(unsigned unit, const bitset256 &blocks, const block_rows_set &rows,
-                              std::uint64_t &m) const;
-    virtual std::uint64_t count(comparison, unsigned unit, const bitset256 &blocks, const block_args &rhs) const;
-    /// The same with one threshold for every block, so a stage can settle
-    /// blocks in one pass over its descriptors.
-    virtual std::uint64_t count_uniform(comparison, unsigned unit, const bitset256 &blocks, std::uint64_t rhs) const;
-    /// Writes out[b] for every selected block b, with bits past its rows clear.
-    virtual void filter(comparison, unsigned unit, const bitset256 &blocks, const block_args &rhs,
-                        std::span<bitset256> out) const;
+    virtual bool max(unsigned unit, const request &, std::uint64_t &m) const;
+    virtual std::uint64_t count(unsigned unit, const request &, const predicate &) const;
+    /// Writes out[b] for every block b of the request: the selected rows
+    /// that satisfy the predicate, every other bit clear.
+    virtual void filter(unsigned unit, const request &, const predicate &, std::span<bitset256> out) const;
     virtual std::uint64_t get(unsigned unit, unsigned row) const;
     virtual void read(unsigned unit, unsigned first, unsigned n, std::uint64_t *out) const;
-    /// Values of the selected rows of the selected blocks, in row order.
-    virtual std::size_t select(unsigned unit, const bitset256 &blocks, const block_rows_set &rows,
-                               std::uint64_t *out) const;
+    /// Values of the selected rows, in row order.
+    virtual std::size_t select(unsigned unit, const request &, std::uint64_t *out) const;
+
+    // Convenience block-set forms share the request-based operation bodies.
+    u128 sum(unsigned unit, const bitset256 &blocks) const { return sum(unit, request::whole(rows(unit), blocks)); }
+    u128 sum_selected(unsigned unit, const bitset256 &blocks, const block_rows_set &rows) const;
+    void summarise_selected(unsigned unit, const bitset256 &blocks, const block_rows_set &rows, summary &out) const;
+    bool max_selected(unsigned unit, const bitset256 &blocks, const block_rows_set &rows, std::uint64_t &m) const;
+    std::uint64_t count(comparison op, unsigned unit, const bitset256 &blocks, const block_args &rhs) const {
+        return count(unit, request::whole(rows(unit), blocks), {op, 0, rhs.data()});
+    }
+    std::uint64_t count_uniform(comparison op, unsigned unit, const bitset256 &blocks, std::uint64_t rhs) const {
+        return count(unit, request::whole(rows(unit), blocks), {op, rhs});
+    }
+    void filter(comparison op, unsigned unit, const bitset256 &blocks, const block_args &rhs, std::span<bitset256> out) const {
+        filter(unit, request::whole(rows(unit), blocks), {op, 0, rhs.data()}, out);
+    }
+    std::size_t select(unsigned unit, const bitset256 &blocks, const block_rows_set &rows, std::uint64_t *out) const;
 };
+
+/// Calls f.template operator()<Op>() with op as a template argument, so a
+/// row loop compiles once per comparison rather than branching per row.
+template <class F> decltype(auto) with_op(comparison op, F &&f) {
+    switch (op) {
+    case comparison::equal: return f.template operator()<comparison::equal>();
+    case comparison::less: return f.template operator()<comparison::less>();
+    case comparison::less_equal: return f.template operator()<comparison::less_equal>();
+    case comparison::greater: return f.template operator()<comparison::greater>();
+    case comparison::greater_equal: break;
+    }
+    return f.template operator()<comparison::greater_equal>();
+}
 
 /// Runtime comparison, for laws whose operator is a call argument.
 constexpr bool test(comparison op, std::uint64_t x, std::uint64_t t) noexcept {

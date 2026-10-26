@@ -1,0 +1,760 @@
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 2926.594, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 5461.938, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 8282.281, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 61022.469, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 24900.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 20091.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 33430.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 130652.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 16456.719, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 572.812, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 23493.375, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 65548.781, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 48721.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 4820.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 55460.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 227632.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 15705.156, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 8433.531, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 20837.375, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 19404.875, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 29650.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 26040.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 34490.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 169282.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 14445.75, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 29713.719, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 36714.125, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 62112.156, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 42570.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 64970.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 64650.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 202212.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 33515.625, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 3257.219, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 44597.312, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 112156.719, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 47890.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 7130.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 54621.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 268143.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 126356.25}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 8298.812}
+{"column": "OS", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 41514.156}
+{"column": "OS", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 1675.344}
+{"column": "OS", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 3211.281}
+{"column": "OS", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 10944.156}
+{"column": "UserID", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 112936.25}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 24928.688}
+{"column": "UserID", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 48017.031}
+{"column": "UserID", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 8204.75}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 317.188}
+{"column": "UserID", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 1459.719}
+{"column": "URLHash", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 110833.75}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 24795.25}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 38875.375}
+{"column": "URLHash", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 7915.688}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 4435.375}
+{"column": "URLHash", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 9344.781}
+{"column": "EventTime", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 278115.25}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 42364.812}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 58108.062}
+{"column": "EventTime", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 7559.125}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 15101.719}
+{"column": "EventTime", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 75235.75}
+{"column": "gen_ts", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 214552.0}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 51074.25}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 66630.031}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 16715.812}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 1702.188}
+{"column": "gen_ts", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 83356.438}
+{"column": "OS_pack", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 4707.5}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 24176.812}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 35501.594}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 7747.594}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 4278.156}
+{"column": "OS_pack", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 0, "ns": 8869.781}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 3088.156, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 5588.156, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 10249.469, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 61925.625, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 22840.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 19850.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 34161.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 121871.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 15675.438, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 543.125, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 24280.25, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 64502.5, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 44920.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 5590.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 57370.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 204172.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 15836.406, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 8903.844, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 22728.031, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 18382.344, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 25670.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 22281.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 34610.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 165902.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 10503.219, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 30065.594, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 30800.625, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 60316.531, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 35581.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 64881.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 62360.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 202072.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 29716.562, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 853.125, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 0, "ns": 47855.781, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 0, "ns": 111044.531, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 44150.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 5610.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 0, "ns": 60110.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 0, "ns": 264763.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 21102.75}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 7468.812}
+{"column": "OS", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 39829.156}
+{"column": "OS", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 1736.875}
+{"column": "OS", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 3240.344}
+{"column": "OS", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 10949.812}
+{"column": "UserID", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 8287.75}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 20272.062}
+{"column": "UserID", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 46365.469}
+{"column": "UserID", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 8026.938}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 318.469}
+{"column": "UserID", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 1456.875}
+{"column": "URLHash", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 29457.75}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 19708.312}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 37452.875}
+{"column": "URLHash", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 7836.625}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 4456.312}
+{"column": "URLHash", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 9446.344}
+{"column": "EventTime", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 161174.0}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 21514.906}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 57332.125}
+{"column": "EventTime", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 6419.438}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 15154.531}
+{"column": "EventTime", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 49632.062}
+{"column": "gen_ts", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 106543.5}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 38667.875}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 65373.781}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 16117.031}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 456.25}
+{"column": "gen_ts", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 57757.75}
+{"column": "OS_pack", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 3772.5}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 18976.125}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 34596.281}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 7723.219}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 4405.656}
+{"column": "OS_pack", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 0, "ns": 9012.281}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 3094.719, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 5785.344, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 10813.531, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 62473.719, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 21381.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 21461.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 38091.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 120821.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 15387.969, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 510.625, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 24419.312, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 62634.688, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 46230.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 5450.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 54761.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 214502.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 15653.906, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 8658.219, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 22126.781, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 18159.562, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 27541.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 22810.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 35490.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 157772.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 10838.531, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 31416.25, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 33375.312, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 60231.531, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 39080.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 64291.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 59620.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 197812.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 29767.469, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 878.125, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 45685.125, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 111979.219, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 45050.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 5650.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 56180.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 242573.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 21055.0}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 7471.0}
+{"column": "OS", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 40099.469}
+{"column": "OS", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 1743.75}
+{"column": "OS", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 3247.531}
+{"column": "OS", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 11152.625}
+{"column": "UserID", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 8457.75}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 20368.0}
+{"column": "UserID", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 47421.094}
+{"column": "UserID", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 8064.156}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 319.688}
+{"column": "UserID", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 1468.75}
+{"column": "URLHash", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 28557.75}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 19515.812}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 37426.938}
+{"column": "URLHash", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 7848.844}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 4508.781}
+{"column": "URLHash", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 9388.531}
+{"column": "EventTime", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 162026.75}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 21580.5}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 57698.719}
+{"column": "EventTime", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 6467.562}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 20140.188}
+{"column": "EventTime", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 49544.875}
+{"column": "gen_ts", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 105563.5}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 39296.969}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 65055.0}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 16000.156}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 452.531}
+{"column": "gen_ts", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 57786.188}
+{"column": "OS_pack", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 3852.5}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 18826.75}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 35151.281}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 7914.438}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 4517.25}
+{"column": "OS_pack", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 1, "ns": 8841.344}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 2937.531, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 5499.094, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 8269.125, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 61659.969, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 23551.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 21421.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 31610.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 109631.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 15582.969, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 544.719, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 22686.156, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 62625.625, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 48200.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 6670.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 55350.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 208482.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 15461.406, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 8299.75, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 20912.094, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 19354.25, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 26530.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 22300.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 33490.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 165871.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 14735.438, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 30363.125, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 38120.062, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 63222.5, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 44480.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 66591.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 62501.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 203042.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 33509.062, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 3252.844, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 1, "ns": 44960.438, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 1, "ns": 115333.344, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 46770.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 7030.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 1, "ns": 56671.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 1, "ns": 247632.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 127978.75}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 8486.0}
+{"column": "OS", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 42006.969}
+{"column": "OS", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 1685.0}
+{"column": "OS", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 3242.844}
+{"column": "OS", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 10911.062}
+{"column": "UserID", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 113981.0}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 26248.094}
+{"column": "UserID", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 49489.844}
+{"column": "UserID", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 8099.156}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 358.75}
+{"column": "UserID", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 1489.094}
+{"column": "URLHash", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 109996.0}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 25009.625}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 39385.094}
+{"column": "URLHash", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 8011.625}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 4374.75}
+{"column": "URLHash", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 9282.281}
+{"column": "EventTime", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 276467.75}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 44061.031}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 58983.094}
+{"column": "EventTime", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 7451.0}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 15177.344}
+{"column": "EventTime", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 75335.75}
+{"column": "gen_ts", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 219162.25}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 51092.375}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 66552.531}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 17060.812}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 1793.125}
+{"column": "gen_ts", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 83527.688}
+{"column": "OS_pack", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 3787.5}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 24568.344}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 35874.094}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 7933.812}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 4328.5}
+{"column": "OS_pack", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 1, "ns": 8921.344}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 2952.844, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 5726.938, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 9103.219, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 61621.531, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 23800.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 21310.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 33280.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 126591.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 15431.406, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 503.75, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 22602.406, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 65869.062, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 47130.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 5140.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 53431.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 208012.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 15752.969, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 8563.5, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 20854.281, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 18797.688, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 27461.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 23230.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 30950.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 166102.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 14452.625, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 29820.281, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 36989.438, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 60776.844, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 45520.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 63811.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 78081.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 181112.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 33710.656, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 3311.906, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 45097.656, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 112503.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 45791.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 5750.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 55540.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 257493.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 125446.25}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 8336.031}
+{"column": "OS", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 41324.156}
+{"column": "OS", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 1656.875}
+{"column": "OS", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 3220.656}
+{"column": "OS", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 10893.562}
+{"column": "UserID", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 113353.75}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 24952.125}
+{"column": "UserID", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 47945.781}
+{"column": "UserID", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 7971.938}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 316.25}
+{"column": "UserID", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 1424.719}
+{"column": "URLHash", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 109553.75}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 24657.719}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 38799.156}
+{"column": "URLHash", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 8006.0}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 4417.875}
+{"column": "URLHash", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 9132.281}
+{"column": "EventTime", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 276580.25}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 43976.688}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 58120.281}
+{"column": "EventTime", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 7336.938}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 14922.969}
+{"column": "EventTime", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 75431.344}
+{"column": "gen_ts", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 217124.75}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 51607.062}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 66795.969}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 16816.094}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 1681.594}
+{"column": "gen_ts", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 83894.562}
+{"column": "OS_pack", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 3905.0}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 24446.156}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 35815.688}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 7726.312}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 4305.031}
+{"column": "OS_pack", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 2, "ns": 9007.906}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 3067.844, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 5567.875, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 9979.781, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 64414.688, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 23051.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 22581.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 39731.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 130651.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 16161.719, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 567.812, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 25422.438, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 68695.062, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 47921.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 6150.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 54160.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 207312.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 15538.906, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 8631.938, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 22282.719, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 18333.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 28860.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 24770.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 32840.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 165511.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 10507.625, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 30348.75, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 30636.219, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 60126.219, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 35260.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 61350.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 58810.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 202912.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 29691.844, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 883.125, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 2, "ns": 46159.812, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 2, "ns": 111144.531, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 51951.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 5070.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 2, "ns": 58151.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 2, "ns": 257943.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 21235.25}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 7301.969}
+{"column": "OS", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 40712.906}
+{"column": "OS", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 1735.938}
+{"column": "OS", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 3363.469}
+{"column": "OS", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 11590.438}
+{"column": "UserID", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 8570.25}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 21987.375}
+{"column": "UserID", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 47722.688}
+{"column": "UserID", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 8455.375}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 337.5}
+{"column": "UserID", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 1526.281}
+{"column": "URLHash", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 29715.25}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 20109.281}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 38816.625}
+{"column": "URLHash", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 8115.719}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 4572.531}
+{"column": "URLHash", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 9570.094}
+{"column": "EventTime", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 167031.5}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 22102.719}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 57879.938}
+{"column": "EventTime", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 6461.312}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 14959.844}
+{"column": "EventTime", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 49788.625}
+{"column": "gen_ts", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 106376.0}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 39009.469}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 65896.875}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 16221.438}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 452.812}
+{"column": "gen_ts", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 57598.375}
+{"column": "OS_pack", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 3802.5}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 18995.188}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 35080.031}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 7853.531}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 4529.719}
+{"column": "OS_pack", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 2, "ns": 9220.094}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 3082.844, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 5603.188, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 10009.156, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 61579.688, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 23510.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 21810.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 34291.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 129781.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 15927.344, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 515.938, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 24298.969, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 63192.188, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 48101.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 6260.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 60381.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 205592.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 15635.781, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 8551.344, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 22225.219, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 18399.562, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 28171.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 24680.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 35710.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 168981.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 11020.719, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 31710.312, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 32014.062, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 62814.688, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 40420.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 61541.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 69910.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 207232.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 30797.812, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 919.719, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 47929.25, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 114786.438, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 43110.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 4920.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 58160.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 276013.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 21277.75}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 7178.812}
+{"column": "OS", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 40135.719}
+{"column": "OS", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 1759.688}
+{"column": "OS", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 3261.906}
+{"column": "OS", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 11169.812}
+{"column": "UserID", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 8390.0}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 21582.406}
+{"column": "UserID", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 46144.188}
+{"column": "UserID", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 8216.969}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 350.0}
+{"column": "UserID", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 1508.781}
+{"column": "URLHash", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 32992.75}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 19548.938}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 38056.0}
+{"column": "URLHash", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 8128.219}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 4545.031}
+{"column": "URLHash", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 9355.406}
+{"column": "EventTime", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 165179.0}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 21615.844}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 57116.812}
+{"column": "EventTime", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 6693.812}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 15187.031}
+{"column": "EventTime", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 49626.438}
+{"column": "gen_ts", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 105278.5}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 39425.719}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 67126.906}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 16727.344}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 485.938}
+{"column": "gen_ts", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 58938.719}
+{"column": "OS_pack", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 3805.0}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 19108.0}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 35404.719}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 7907.594}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 4506.594}
+{"column": "OS_pack", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 3, "ns": 9378.531}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 2947.531, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 5495.656, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 8533.812, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 61764.656, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 20981.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 21460.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 32230.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 128641.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 15368.906, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 522.812, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 22399.594, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 62196.25, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 45670.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 6100.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 56301.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 204742.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 15850.469, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 8578.531, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 20758.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 18467.688, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 26800.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 23761.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 32360.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 158451.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 14527.969, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 30300.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 38005.688, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 60976.562, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 41251.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 60980.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 70311.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 160191.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 33365.656, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 3254.406, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 3, "ns": 45165.438, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 3, "ns": 113284.875, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 46711.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 7250.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 3, "ns": 54411.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 3, "ns": 251183.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 125453.75}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 8799.125}
+{"column": "OS", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 40346.969}
+{"column": "OS", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 1664.406}
+{"column": "OS", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 3157.219}
+{"column": "OS", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 10847.281}
+{"column": "UserID", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 113136.0}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 25014.625}
+{"column": "UserID", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 48121.406}
+{"column": "UserID", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 7941.969}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 315.938}
+{"column": "UserID", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 1439.406}
+{"column": "URLHash", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 108951.0}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 24770.875}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 38769.75}
+{"column": "URLHash", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 7989.781}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 4420.656}
+{"column": "URLHash", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 9157.594}
+{"column": "EventTime", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 277167.75}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 43238.844}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 57970.281}
+{"column": "EventTime", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 7331.312}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 14866.094}
+{"column": "EventTime", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 75418.531}
+{"column": "gen_ts", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 214047.25}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 50969.25}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 66288.469}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 16853.281}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 1712.219}
+{"column": "gen_ts", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 84087.375}
+{"column": "OS_pack", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 3715.0}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 24116.812}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 35559.406}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 7750.688}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 4299.125}
+{"column": "OS_pack", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 3, "ns": 9000.406}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 2955.656, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 5496.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 8266.344, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 61362.188, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 21380.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 19430.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 33750.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 121321.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 16172.062, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 733.438, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 22468.969, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 62380.906, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 48520.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 5710.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 57951.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 210562.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 15391.406, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 8287.562, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 20467.406, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 18166.75, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 26560.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 22591.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 30451.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 170422.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 14557.344, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 29772.469, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 37270.062, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 59914.656, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 43330.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 63981.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 67130.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 149732.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 34325.344, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 3267.531, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 46071.062, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 116652.719, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 47340.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 6630.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 54361.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "base", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 247872.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 125038.75}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 8342.906}
+{"column": "OS", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 41406.031}
+{"column": "OS", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 1679.062}
+{"column": "OS", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 3207.844}
+{"column": "OS", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 11154.5}
+{"column": "UserID", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 113261.0}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 25014.625}
+{"column": "UserID", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 48357.375}
+{"column": "UserID", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 7991.938}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 311.562}
+{"column": "UserID", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 1449.719}
+{"column": "URLHash", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 109561.0}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 24701.5}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 39583.844}
+{"column": "URLHash", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 7993.812}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 4406.0}
+{"column": "URLHash", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 9562.281}
+{"column": "EventTime", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 275395.25}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 43137.0}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 58115.875}
+{"column": "EventTime", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 7353.812}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 14859.531}
+{"column": "EventTime", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 74887.938}
+{"column": "gen_ts", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 215417.25}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 51005.812}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 66833.469}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 16862.344}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 1673.156}
+{"column": "gen_ts", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 83694.562}
+{"column": "OS_pack", "op": "bind", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 3775.0}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 24305.25}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 35623.156}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 7722.281}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 4274.094}
+{"column": "OS_pack", "op": "filter_ge", "arm": "base", "conditioning": "repeated", "round": 4, "ns": 8983.844}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 3042.219, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 5569.438, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 9939.156, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 62218.75, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 24570.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 19440.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 33500.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "OS", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 119092.0, "ikea_image_bytes": 74721, "spike_image_bytes": 73517, "native_value_bytes": 65536}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 15584.844, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 509.062, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 24122.094, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 62091.875, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 43500.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 5080.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 58891.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "UserID", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 183492.0, "ikea_image_bytes": 429501, "spike_image_bytes": 428333, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 15447.312, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 8558.531, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 22171.781, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 18571.438, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 25701.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 22221.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 33991.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "URLHash", "form": 0, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 160982.0, "ikea_image_bytes": 528864, "spike_image_bytes": 528128, "native_value_bytes": 524288}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 10642.906, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 29775.594, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 30897.156, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 58929.656, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 34590.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 60231.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 62571.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "EventTime", "form": 2, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 158212.0, "ikea_image_bytes": 162741, "spike_image_bytes": 161316, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 30695.938, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 897.188, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 65536, "round": 4, "ns": 46738.594, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "repeated", "rows": 65536, "requests": 4096, "round": 4, "ns": 114306.125, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "sum", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 44331.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "count_ge", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 5130.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "selected_sum_period3", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 65536, "round": 4, "ns": 57640.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "gen_ts", "form": 1, "op": "points_materialized", "arm": "candidate", "conditioning": "eviction_sweep_256MiB", "rows": 65536, "requests": 4096, "round": 4, "ns": 261672.0, "ikea_image_bytes": 100094, "spike_image_bytes": 99056, "native_value_bytes": 262144}
+{"column": "OS", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 20860.25}
+{"column": "OS", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 7435.094}
+{"column": "OS", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 39415.688}
+{"column": "OS", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 1715.656}
+{"column": "OS", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 3210.656}
+{"column": "OS", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 10875.719}
+{"column": "UserID", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 8325.0}
+{"column": "UserID", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 20404.906}
+{"column": "UserID", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 46792.625}
+{"column": "UserID", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 8014.156}
+{"column": "UserID", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 330.0}
+{"column": "UserID", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 1480.0}
+{"column": "URLHash", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 28117.75}
+{"column": "URLHash", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 19600.5}
+{"column": "URLHash", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 37300.375}
+{"column": "URLHash", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 7823.5}
+{"column": "URLHash", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 4515.688}
+{"column": "URLHash", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 9205.094}
+{"column": "EventTime", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 163939.25}
+{"column": "EventTime", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 22053.344}
+{"column": "EventTime", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 56919.938}
+{"column": "EventTime", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 6407.25}
+{"column": "EventTime", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 15159.219}
+{"column": "EventTime", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 49481.094}
+{"column": "gen_ts", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 102603.5}
+{"column": "gen_ts", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 38719.781}
+{"column": "gen_ts", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 65488.438}
+{"column": "gen_ts", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 16063.594}
+{"column": "gen_ts", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 457.844}
+{"column": "gen_ts", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 57579.312}
+{"column": "OS_pack", "op": "bind", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 3715.0}
+{"column": "OS_pack", "op": "sum_selected_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 18927.688}
+{"column": "OS_pack", "op": "summarise_clustered", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 35115.969}
+{"column": "OS_pack", "op": "sum_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 7782.875}
+{"column": "OS_pack", "op": "count_ge_alt8", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 4445.062}
+{"column": "OS_pack", "op": "filter_ge", "arm": "candidate", "conditioning": "repeated", "round": 4, "ns": 9083.812}

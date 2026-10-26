@@ -274,24 +274,28 @@ class pack_stage final : public stage {
         else
             std::fill_n(out, s.rows[b], std::uint64_t{0});
     }
-    u128 sum(unsigned u, const bitset256 &blocks) const override {
-        u128 t = 0;
-        each_width(units_[u], blocks, [&](const width_set &w, const bitset256 &m) {
-            if (w.K)
-                each_run(w, m, [&](std::size_t first, std::size_t n) { t += w.array.reader->sum_exact_unchecked(first, n); });
-        });
-        return t;
-    }
-    u128 sum_selected(unsigned u, const bitset256 &blocks, const block_rows_set &rows) const override {
+    // Wholly selected blocks take range SUMs over same-width runs; a block
+    // whose selection is one range (a span edge) takes a range SUM, any
+    // other one masked SUM.
+    u128 sum(unsigned u, const author::request &q) const override {
         const unit_state &s = units_[u];
         u128 t = 0;
-        each_width(s, blocks, [&](const width_set &w, const bitset256 &m) {
-            if (w.K)
-                m.for_each([&](unsigned b) {
-                    std::uint16_t masks[16];
-                    masks_of(rows[b], masks);
-                    t += w.array.reader->sum_masked_exact_unchecked(first_row(s, b), s.rows[b], masks);
-                });
+        each_width(s, q.blocks(), [&](const width_set &w, const bitset256 &m) {
+            if (!w.K)
+                return;
+            each_run(w, m & q.full(), [&](std::size_t first, std::size_t n) { t += w.array.reader->sum_exact_unchecked(first, n); });
+            (m & ~q.full()).for_each([&](unsigned b) {
+                const bitset256 r = q.rows_of(b);
+                const unsigned lo = r.next(0, true), hi = r.next(lo, false);
+                if (lo == 256)
+                    return;
+                if (r.next(hi, true) == 256)
+                    return void(t += w.array.reader->sum_exact_unchecked(first_row(s, b) + lo, hi - lo));
+                std::uint16_t masks[16];
+                masks_of(r, masks);
+
+                t += w.array.reader->sum_masked_exact_unchecked(first_row(s, b), s.rows[b], masks);
+            });
         });
         return t;
     }
@@ -307,30 +311,48 @@ class pack_stage final : public stage {
         });
         return t;
     }
-    std::uint64_t count(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs) const override {
+    // One range COUNT per block over its selected range: the whole block,
+    // or a span edge's rows. A block with an irregular fine selection decodes.
+    std::uint64_t count(unsigned u, const author::request &q, const author::predicate &p) const override {
         const unit_state &s = units_[u];
         std::uint64_t c = 0;
-        each_width(s, blocks, [&](const width_set &w, const bitset256 &m) {
+        bitset256 irregular;
+        each_width(s, q.blocks(), [&](const width_set &w, const bitset256 &m) {
             m.for_each([&](unsigned b) {
-                c += w.K ? w.array.reader->count_unchecked(op, first_row(s, b), s.rows[b], rhs[b])
-                       : author::test(op, 0, rhs[b]) ? s.rows[b] : 0;
+                unsigned lo = 0, n = s.rows[b];
+                if (!q.full().contains(b)) {
+                    const bitset256 r = q.rows_of(b);
+                    lo = r.next(0, true);
+                    const unsigned hi = r.next(lo, false);
+                    if (r.next(hi, true) != 256)
+                        return irregular.set(b);
+                    n = hi - lo;
+                }
+
+                c += w.K ? w.array.reader->count_unchecked(p.op, first_row(s, b) + lo, n, p.at(b))
+                       : author::test(p.op, 0, p.at(b)) ? n : 0;
             });
         });
+        if (!irregular.empty())
+            c += stage::count(u, q.within(irregular), p);
         return c;
     }
-    void filter(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs, std::span<bitset256> out) const override {
+    void filter(unsigned u, const author::request &q, const author::predicate &p, std::span<bitset256> out) const override {
         const unit_state &s = units_[u];
-        each_width(s, blocks, [&](const width_set &w, const bitset256 &m) {
+        each_width(s, q.blocks(), [&](const width_set &w, const bitset256 &m) {
             m.for_each([&](unsigned b) {
                 if (!w.K) {
-                    out[b] = author::test(op, 0, rhs[b]) ? bitset256::first_n(s.rows[b]) : bitset256{};
+                    out[b] = author::test(p.op, 0, p.at(b)) ? bitset256::first_n(s.rows[b]) : bitset256{};
                     return;
                 }
                 if (s.rows[b] < block_rows)
                     out[b] = {};
-                w.array.reader->filter_words_unchecked(op, first_row(s, b), s.rows[b], rhs[b], out[b].words.data());
+
+                w.array.reader->filter_words_unchecked(p.op, first_row(s, b), s.rows[b], p.at(b), out[b].words.data());
             });
         });
+        if (!q.all_full())
+            q.partial().for_each([&](unsigned b) { out[b] = out[b] & q.rows_of(b); });
     }
     std::uint64_t get(unsigned u, unsigned row) const override {
         const unit_state &s = units_[u];

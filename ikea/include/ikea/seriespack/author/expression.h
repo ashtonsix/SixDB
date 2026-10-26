@@ -623,6 +623,39 @@ unsigned __int128 exact_halves_regions(const Source& source, std::size_t first, 
             edge);
         total += static_cast<u128>(vaddvq_u64(lo)) + (static_cast<u128>(vaddvq_u64(hi)) << 32);
     }
+#elif defined(__AVX2__)
+    // Four u64 lanes per part: a lane's selection bit becomes an all-ones
+    // or zero lane, so unselected rows contribute zero to both halves.
+    const auto lower = _mm256_set1_epi64x(0xffffffff), lane_bits = _mm256_setr_epi64x(1, 2, 4, 8);
+    for (std::size_t at = 0; at < count; at += std::size_t{1} << 20) {
+        const std::size_t n = std::min<std::size_t>(count - at, std::size_t{1} << 20);
+        __m256i lo = _mm256_setzero_si256(), hi = _mm256_setzero_si256();
+        scan_regions(
+            source, first + at, n,
+            [&](std::size_t row, const auto& x) __attribute__((always_inline)) {
+                const auto y = native::widen<64>(x);
+                const auto bits = mask(row);
+                detail::each<y.v.size()>([&](auto p) __attribute__((always_inline)) {
+                    const auto selected = _mm256_and_si256(_mm256_set1_epi64x(bits >> (4 * p)), lane_bits);
+                    const auto v = _mm256_and_si256(_mm256_cmpeq_epi64(selected, lane_bits), y.v[p]);
+                    if constexpr (Weighted) {
+                        const std::size_t r = row + 4 * p;
+                        std::uint32_t w4;
+                        std::memcpy(&w4, weights + (r & (period - 1)), 4);
+                        const auto wp = _mm256_cvtepu8_epi64(_mm_cvtsi32_si128(static_cast<int>(w4)));
+                        lo = _mm256_add_epi64(lo, _mm256_mul_epu32(_mm256_and_si256(v, lower), wp));
+                        hi = _mm256_add_epi64(hi, _mm256_mul_epu32(_mm256_srli_epi64(v, 32), wp));
+                    } else {
+                        lo = _mm256_add_epi64(lo, _mm256_and_si256(v, lower));
+                        hi = _mm256_add_epi64(hi, _mm256_srli_epi64(v, 32));
+                    }
+                });
+            },
+            edge);
+        alignas(32) std::uint64_t l[4], h[4];
+        _mm256_store_si256(reinterpret_cast<__m256i*>(l), lo), _mm256_store_si256(reinterpret_cast<__m256i*>(h), hi);
+        total += static_cast<u128>(l[0] + l[1] + l[2] + l[3]) + (static_cast<u128>(h[0] + h[1] + h[2] + h[3]) << 32);
+    }
 #else
     scan_regions(
         source, first, count,

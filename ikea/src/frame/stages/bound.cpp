@@ -11,6 +11,7 @@ namespace ikea::frame::detail {
 namespace {
 using author::stage;
 using windows::mask;
+using author::with_op;
 
 class bound_stage final : public stage {
     std::unique_ptr<stage> child_;
@@ -78,26 +79,18 @@ class bound_stage final : public stage {
             return d == 0 ? settle::none : d > m ? settle::all : settle::partial;
         return d > m ? settle::none : settle::partial;
     }
-    template <class F> static decltype(auto) with_op(comparison op, F &&f) {
-        switch (op) {
-        case comparison::equal: return f.template operator()<comparison::equal>();
-        case comparison::less: return f.template operator()<comparison::less>();
-        case comparison::less_equal: return f.template operator()<comparison::less_equal>();
-        case comparison::greater: return f.template operator()<comparison::greater>();
-        case comparison::greater_equal: break;
-        }
-        return f.template operator()<comparison::greater_equal>();
-    }
     // Descriptors settle whole blocks; only partial blocks reach the child,
     // against t - lo.
-    template <comparison Op> std::uint64_t count_as(unsigned u, const bitset256 &blocks, const block_args &rhs) const {
+    template <comparison Op> std::uint64_t count_as(unsigned u, const bitset256 &blocks, const author::predicate &p) const {
         const unit_state &s = units_[u];
         bitset256 partial;
         block_args d;
+
         std::uint64_t c = 0;
         blocks.for_each([&](unsigned b) {
             const unsigned E = s.count[b];
-            switch (classify<Op>(rhs[b], s.lo[b], s.width[b], d[b])) {
+            const std::uint64_t t = p.at(b);
+            switch (classify<Op>(t, s.lo[b], s.width[b], d[b])) {
             case settle::all: c += rows_in(u, b) - E; break;
             case settle::none: break;
             case settle::partial:
@@ -106,7 +99,7 @@ class bound_stage final : public stage {
                 break;
             }
             if (E)
-                each_exception(s, b, [&](std::uint8_t, std::uint64_t v) { c += ikea::compare<Op>(v, rhs[b]); });
+                each_exception(s, b, [&](std::uint8_t, std::uint64_t v) { c += ikea::compare<Op>(v, t); });
         });
         if (!partial.empty())
             c += child_->count(Op, u, partial, d);
@@ -117,14 +110,12 @@ class bound_stage final : public stage {
     template <comparison Op> std::uint64_t count_uniform_as(unsigned u, const bitset256 &blocks, std::uint64_t t) const {
         const unit_state &s = units_[u];
         const unsigned nb = blocks_in(u);
-        if (!(blocks == bitset256::first_n(nb)) || rows_in(u, nb - 1) != block_rows) {
-            block_args rhs;
-            rhs.fill(t);
-            return count_as<Op>(u, blocks, rhs);
-        }
+        if (!(blocks == bitset256::first_n(nb)) || rows_in(u, nb - 1) != block_rows)
+            return count_as<Op>(u, blocks, {Op, t});
         std::uint64_t settled = 0;
         std::uint8_t partial_flag[unit_blocks];
         block_args d;
+
         for (unsigned b = 0; b < nb; ++b) {
             const std::uint64_t lo = s.lo[b], m = mask(s.width[b]), E = s.count[b];
             const bool below = t < lo;
@@ -157,12 +148,13 @@ class bound_stage final : public stage {
         return settled;
     }
     template <comparison Op>
-    void filter_as(unsigned u, const bitset256 &blocks, const block_args &rhs, std::span<bitset256> out) const {
+    void filter_as(unsigned u, const bitset256 &blocks, const author::predicate &p, std::span<bitset256> out) const {
         const unit_state &s = units_[u];
         bitset256 partial;
         block_args d;
+
         blocks.for_each([&](unsigned b) {
-            const settle k = classify<Op>(rhs[b], s.lo[b], s.width[b], d[b]);
+            const settle k = classify<Op>(p.at(b), s.lo[b], s.width[b], d[b]);
             if (k == settle::partial)
                 partial.set(b);
             else
@@ -172,7 +164,7 @@ class bound_stage final : public stage {
             child_->filter(Op, u, partial, d, out);
         blocks.for_each([&](unsigned b) {
             if (s.count[b])
-                each_exception(s, b, [&](std::uint8_t pos, std::uint64_t v) { out[b].set(pos, ikea::compare<Op>(v, rhs[b])); });
+                each_exception(s, b, [&](std::uint8_t pos, std::uint64_t v) { out[b].set(pos, ikea::compare<Op>(v, p.at(b))); });
         });
     }
 
@@ -312,22 +304,19 @@ class bound_stage final : public stage {
             out[r] += s.lo[b];
         each_exception(s, b, [&](std::uint8_t pos, std::uint64_t v) { out[pos] = v; });
     }
-    // SUM = fields + lo x rows + each exception's value minus the lo its slot
-    // stands for (modulo 2^128, so a value below lo needs no sign).
-    u128 sum(unsigned u, const bitset256 &blocks) const override {
+    // SUM = fields + lo x selected rows + each selected exception's value
+    // minus the lo its slot stands for (modulo 2^128, so a value below lo
+    // needs no sign). The child sees the same request.
+    u128 sum(unsigned u, const author::request &q) const override {
         const unit_state &s = units_[u];
-        u128 t = child_->sum(u, blocks);
-        blocks.for_each([&](unsigned b) {
-            t += static_cast<u128>(s.lo[b]) * rows_in(u, b);
-            each_exception(s, b, [&](std::uint8_t, std::uint64_t v) { t += v, t -= s.lo[b]; });
-        });
-        return t;
-    }
-    u128 sum_selected(unsigned u, const bitset256 &blocks, const block_rows_set &rows) const override {
-        const unit_state &s = units_[u];
-        u128 t = child_->sum_selected(u, blocks, rows);
-        blocks.for_each([&](unsigned b) {
-            const bitset256 r = rows[b] & bitset256::first_n(rows_in(u, b));
+        u128 t = child_->sum(u, q);
+        q.blocks().for_each([&](unsigned b) {
+            if (q.full().contains(b)) {
+                t += static_cast<u128>(s.lo[b]) * rows_in(u, b);
+                each_exception(s, b, [&](std::uint8_t, std::uint64_t v) { t += v, t -= s.lo[b]; });
+                return;
+            }
+            const bitset256 r = q.rows_of(b);
             unsigned n = r.count();
             each_exception(s, b, [&](std::uint8_t pos, std::uint64_t v) {
                 if (r.contains(pos))
@@ -360,13 +349,13 @@ class bound_stage final : public stage {
     // exceptions are known. A block whose largest selected exception reaches
     // its inlier bound settles without decoding; the rest decode in
     // descending bound order until the next bound cannot beat the maximum.
-    bool max_selected(unsigned u, const bitset256 &blocks, const block_rows_set &rows, std::uint64_t &m) const override {
+    bool max(unsigned u, const author::request &q, std::uint64_t &m) const override {
         const unit_state &s = units_[u];
         std::array<std::pair<std::uint64_t, std::uint16_t>, unit_blocks> open;
         unsigned n = 0;
         bool any = false;
-        blocks.for_each([&](unsigned b) {
-            const bitset256 r = rows[b] & bitset256::first_n(rows_in(u, b));
+        q.blocks().for_each([&](unsigned b) {
+            const bitset256 r = q.rows_of(b);
             if (r.empty())
                 return;
             any = true;
@@ -389,18 +378,24 @@ class bound_stage final : public stage {
         for (unsigned i = 0; i < n && open[i].first > m; ++i) {
             const unsigned b = open[i].second;
             decode(u, b, x);
-            (rows[b] & bitset256::first_n(rows_in(u, b))).for_each([&](unsigned r) { m = std::max(m, x[r]); });
+            q.rows_of(b).for_each([&](unsigned r) { m = std::max(m, x[r]); });
         }
         return any;
     }
-    std::uint64_t count(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs) const override {
-        return with_op(op, [&]<comparison Op>() { return count_as<Op>(u, blocks, rhs); });
+    // Descriptor laws over wholly selected blocks; partial blocks (span
+    // edges, fine selections) decode.
+    std::uint64_t count(unsigned u, const author::request &q, const author::predicate &p) const override {
+        const std::uint64_t edges = q.all_full() ? 0 : stage::count(u, q.within(q.partial()), p);
+        if (q.full().empty())
+            return edges;
+        return edges + with_op(p.op, [&]<comparison Op>() {
+            return p.uniform() ? count_uniform_as<Op>(u, q.full(), p.threshold) : count_as<Op>(u, q.full(), p);
+        });
     }
-    std::uint64_t count_uniform(comparison op, unsigned u, const bitset256 &blocks, std::uint64_t t) const override {
-        return with_op(op, [&]<comparison Op>() { return count_uniform_as<Op>(u, blocks, t); });
-    }
-    void filter(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs, std::span<bitset256> out) const override {
-        with_op(op, [&]<comparison Op>() { filter_as<Op>(u, blocks, rhs, out); });
+    void filter(unsigned u, const author::request &q, const author::predicate &p, std::span<bitset256> out) const override {
+        with_op(p.op, [&]<comparison Op>() { filter_as<Op>(u, q.blocks(), p, out); });
+        if (!q.all_full())
+            q.partial().for_each([&](unsigned b) { out[b] = out[b] & q.rows_of(b); });
     }
     // Field first: a nonzero field is never an exception.
     std::uint64_t get(unsigned u, unsigned row) const override {
@@ -426,12 +421,12 @@ class bound_stage final : public stage {
             at += m;
         }
     }
-    std::size_t select(unsigned u, const bitset256 &blocks, const block_rows_set &rows, std::uint64_t *out) const override {
+    std::size_t select(unsigned u, const author::request &q, std::uint64_t *out) const override {
         const unit_state &s = units_[u];
-        const std::size_t k = child_->select(u, blocks, rows, out);
+        const std::size_t k = child_->select(u, q, out);
         std::size_t at = 0;
-        blocks.for_each([&](unsigned b) {
-            const bitset256 r = rows[b] & bitset256::first_n(rows_in(u, b));
+        q.blocks().for_each([&](unsigned b) {
+            const bitset256 r = q.rows_of(b);
             const unsigned n = r.count();
             for (unsigned i = 0; i < n; ++i)
                 out[at + i] += s.lo[b];

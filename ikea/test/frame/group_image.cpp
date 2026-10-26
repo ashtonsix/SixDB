@@ -258,6 +258,34 @@ void negatives(guarded &guard) {
         "duplicate/out-of-order width array admitted");
     ++malformed_cases;
 
+    // A window whose top wraps is legal while its actual fields fit: the
+    // proof must read those fields rather than refuse the block, and still
+    // catch one field past the limit or a nonzero exception field.
+    for (unsigned width : {1u, 13u, 63u, 64u}) {
+        auto near = blocks_for(width, 513, true);
+        for (auto &b : near) {
+            b.lo = ~u64{0} - mask(width) + 1;
+            for (auto &f : b.fields)
+                f = std::min(f, mask(width) - 1);
+            for (unsigned e : b.exceptions)
+                b.fields[e] = 0;
+        }
+        check(bool(fo::validate_group(guard.place(encode(near, fo::image_preset::compact, true).bytes),
+            fo::image_preset::compact, true, 513, 0)), "near-MAX window with fitting fields refused");
+        ++valid_cases;
+        auto past = near;
+        past[1].fields[7] = mask(width);
+        const auto wrapped = fo::validate_group(guard.place(encode(past, fo::image_preset::compact, true).bytes),
+            fo::image_preset::compact, true, 513, 0);
+        check(!wrapped && wrapped.error() == fo::image_error::contents, "near-MAX field past the limit admitted");
+        auto nonzero = near;
+        nonzero[1].fields[nonzero[1].exceptions[1]] = 1;
+        const auto slot = fo::validate_group(guard.place(encode(nonzero, fo::image_preset::compact, true).bytes),
+            fo::image_preset::compact, true, 513, 0);
+        check(!slot && slot.error() == fo::image_error::contents, "near-MAX exception with a nonzero field admitted");
+        malformed_cases += 2;
+    }
+
     const auto unreadable = std::span<const std::byte>(guard.inaccessible(), 1);
     for (auto [rows, group] : {std::pair{0u, 0u}, std::pair{65537u, 0u}, std::pair{4096u, 1u},
                               std::pair{4097u, 2u}, std::pair{65536u, ~0u}}) {

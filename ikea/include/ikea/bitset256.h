@@ -33,9 +33,37 @@ struct bitset256 {
             for (auto bits = words[w]; bits; bits &= bits - 1)
                 f(w * 64 + static_cast<unsigned>(std::countr_zero(bits)));
     }
+    /// Visit maximal runs of consecutive set positions in increasing order,
+    /// as f(first, count).
+    template<class F> constexpr void for_each_run(F&& f) const {
+        for (unsigned first = next(0, true); first < 256;) {
+            const unsigned end = next(first, false);
+            f(first, end - first);
+            first = next(end, true);
+        }
+    }
     friend constexpr bitset256 operator&(const bitset256& a, const bitset256& b) noexcept {
         return {{a.words[0] & b.words[0], a.words[1] & b.words[1],
                  a.words[2] & b.words[2], a.words[3] & b.words[3]}};
+    }
+    friend constexpr bitset256 operator|(const bitset256& a, const bitset256& b) noexcept {
+        return {{a.words[0] | b.words[0], a.words[1] | b.words[1],
+                 a.words[2] | b.words[2], a.words[3] | b.words[3]}};
+    }
+    /// The complement over all 256 positions.
+    friend constexpr bitset256 operator~(const bitset256& a) noexcept {
+        return {{~a.words[0], ~a.words[1], ~a.words[2], ~a.words[3]}};
+    }
+    /// The first position at or after from (0..256) whose bit is value, or 256.
+    constexpr unsigned next(unsigned from, bool value) const noexcept {
+        assert(from <= 256);
+        while (from < 256) {
+            const auto word = (value ? words[from / 64] : ~words[from / 64]) & (~std::uint64_t{0} << (from % 64));
+            if (word)
+                return from / 64 * 64 + static_cast<unsigned>(std::countr_zero(word));
+            from = (from / 64 + 1) * 64;
+        }
+        return 256;
     }
 
     constexpr bool contains(unsigned position) const noexcept {
@@ -102,6 +130,8 @@ struct bitset256 {
     bool operator==(const bitset256&) const = default;
 };
 static_assert(sizeof(bitset256) == 32 && alignof(bitset256) == alignof(std::uint64_t));
-// Also make the hidden friend available to qualified composition adapters.
+// Also make the hidden friends available to qualified composition adapters.
 constexpr bitset256 operator&(const bitset256&, const bitset256&) noexcept;
+constexpr bitset256 operator|(const bitset256&, const bitset256&) noexcept;
+constexpr bitset256 operator~(const bitset256&) noexcept;
 } // namespace ikea

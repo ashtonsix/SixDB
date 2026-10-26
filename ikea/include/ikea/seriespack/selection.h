@@ -77,6 +77,14 @@ class selection {
     }
     bool is_all() const noexcept { return kind_ == kind::all; }
     bool is_none() const noexcept { return kind_ == kind::none; }
+    /// The borrowed block holding rows [first, first + 256), when this
+    /// selection borrows consecutive blocks and first is one of their
+    /// origins; otherwise null. Lets a caller use a block without masks.
+    const bitset256* block_at(std::size_t first) const noexcept {
+        if (kind_ != kind::blocks || first < first_ || (first - first_) % 256 || (first - first_) / 256 >= words_)
+            return nullptr;
+        return static_cast<const bitset256*>(data_) + (first - first_) / 256;
+    }
     bool covers(std::size_t first, std::size_t count) const noexcept {
         if ((kind_ == kind::bits || kind_ == kind::block || kind_ == kind::blocks) && first_ % 16)
             return false;

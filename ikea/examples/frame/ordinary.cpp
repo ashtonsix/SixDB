@@ -54,6 +54,18 @@ int main() {
     for (auto x:values) expected+=x;
     const auto total=reader.sum();
     check(total && *total==expected);
+    // Logical spans stay in unit rows; Frame lowers their edges and full interiors.
+    const fr::row_range span{17, 509};
+    fr::u128 expected_span = 0;
+    std::uint64_t expected_count = 0;
+    for (std::size_t r = span.first; r < span.first + span.count; ++r) {
+        expected_span += values[r];
+        expected_count += values[r] >= 1020;
+    }
+    const auto span_total = reader.sum(span);
+    const auto span_count = reader.count(ikea::comparison::greater_equal, 1020, span);
+    check(span_total && *span_total == expected_span);
+    check(span_count && *span_count == expected_count);
     std::vector<u64> output(values.size());
     check(reader.read(0,output) && output==values);
 
