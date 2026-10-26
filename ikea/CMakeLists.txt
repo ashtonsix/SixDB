@@ -15,7 +15,7 @@ foreach(example ordinary composition)
 endforeach()
 target_link_libraries(ikea_example_intervals_composition PRIVATE ikea::seriespack)
 
-foreach(check search cuts sparse seams)
+foreach(check search cuts sparse seams wide)
   add_executable(ikea_intervals_${check}_check EXCLUDE_FROM_ALL test/intervals/${check}.cpp)
   sixdb_target(ikea_intervals_${check}_check)
   target_compile_options(ikea_intervals_${check}_check PRIVATE -fno-vectorize -fno-slp-vectorize)
@@ -221,7 +221,7 @@ set(ikea_example_targets
   ikea_example_bec_ordinary ikea_example_bec_native ikea_example_bec_integration
   ikea_example_bec_bec4096)
 set(ikea_check_targets
-  ikea_intervals_search_check ikea_intervals_cuts_check ikea_intervals_sparse_check ikea_intervals_seams_check
+  ikea_intervals_search_check ikea_intervals_cuts_check ikea_intervals_sparse_check ikea_intervals_seams_check ikea_intervals_wide_check
   ikea_streampack_compact_geometry_check ikea_streampack_compact_cuts_check ikea_streampack_compact_edits_check
   ikea_streampack_check ikea_streampack_boundaries_check ikea_streampack_encodings_check
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_ownership_check
@@ -259,3 +259,5 @@ sixdb_target(ikea_selection_check)
 target_link_libraries(ikea_selection_check PRIVATE ikea::intervals)
 add_test(NAME ikea_selection_check COMMAND $<TARGET_FILE:ikea_selection_check>)
 add_dependencies(ikea_validate ikea_selection_check)
+
+include(cmake/Frame.cmake)

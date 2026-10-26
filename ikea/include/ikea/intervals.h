@@ -3,3 +3,5 @@
 #include <ikea/intervals/sparse.h>
 #include <ikea/intervals/projected.h>
 #include <ikea/intervals/edit.h>
+
+#include <ikea/intervals/wide.h>

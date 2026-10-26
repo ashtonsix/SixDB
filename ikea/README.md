@@ -12,6 +12,7 @@ provide the concrete calls and maintained examples.
 
 | Choose a component | Physical model | Start here |
 | --- | --- | --- |
+| Frame | Composable integer stages over SeriesPack: intervals, bounds, exact aggregates and checked immutable group images | [Use](docs/frame/usage.md) · [Reference and source map](docs/frame/reference.md) |
 | SeriesPack | Packed unsigned arrays, 1–64 bits per value; tiled payload and optional head planes | [Use](docs/seriespack/usage.md) · [Physical tour](docs/seriespack/representation.md) · [Compose](docs/seriespack/extending.md) · [Reference](docs/seriespack/reference.md) |
 | TuplePack | Fixed-layout units containing byte-contained unsigned codes; ordered projections with caller-chosen packet grouping | [Use](docs/tuplepack/usage.md) · [Compose](docs/tuplepack/extending.md) · [Reference](docs/tuplepack/reference.md) |
 | Bec | Headless bitset codes sharing one count-tree core: Bec256 for 256 positions; Bec4096 for 4096, with one population/length per body and direct block, count and rank access. The caller retains population, exact body length and location | [Use and choose](docs/bec/usage.md) · [Bec256](docs/bec/bec256.md) · [Bec4096](docs/bec/bec4096.md) · [Representation](docs/bec/representation.md) |
@@ -66,8 +67,8 @@ and [TuplePack](docs/tuplepack/reference.md#routes-and-native-execution) referen
 the [Bec256 guide](docs/bec/bec256.md#compose-native-values), and the
 [StreamPack reference](docs/streampack/reference.md).
 
-Link `ikea::seriespack`, `ikea::tuplepack`, `ikea::bec`, `ikea::intervals` or `ikea::streampack` and
-include the corresponding `<ikea/seriespack.h>`, `<ikea/tuplepack.h>`,
+Link `ikea::frame`, `ikea::seriespack`, `ikea::tuplepack`, `ikea::bec`, `ikea::intervals` or `ikea::streampack` and
+include the corresponding `<ikea/frame.h>`, `<ikea/seriespack.h>`, `<ikea/tuplepack.h>`,
 `<ikea/bec.h>`, `<ikea/intervals.h>` or `<ikea/streampack.h>`.
 `ikea_validate` runs the modules' correctness checks, independent wire checks
 and examples. For sets and maps, link `ikea::hashtable` and include

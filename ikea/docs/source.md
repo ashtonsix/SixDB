@@ -195,3 +195,15 @@ and [Boundlist portfolio](../../workbench/spikes/boundlist/PORTFOLIO.md) explain
 flattened generic value wrappers and default wider inverse routes were rejected.
 The owner retains coherent source/schema/backing/filter state through staged
 completion and coordinates allocation, locks, publication and old-image lifetime.
+
+## Frame source boundaries
+
+Frame's [source and extension map](frame/reference.md#source-and-extension-map)
+separates canonical description, manifest/content proof, checked reader, fitting
+and per-stage algebra. `ikea::frame` compiles the drivers once; SeriesPack owns
+width-specific packing/reductions and Intervals owns reconstruction/search.
+The `author::stage` contract defines decode and optional whole-operation laws.
+A new image shape lands with its description, proof and conformance; unsupported
+placeholders refuse. Owner retention/publication lives in a separately linked
+[Orbital example](../examples/frame/owner/history.cpp). Private preparation and
+Frame mutation remain research.
