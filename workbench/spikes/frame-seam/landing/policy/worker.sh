@@ -2,7 +2,7 @@
 set -euo pipefail
 study=workbench/spikes/frame-seam/landing/policy
 case "$(uname -m)" in
- x86_64) profiles='avx512 avx2'; tune=zen5 ;;
+ x86_64) profiles='avx512 avx2'; tune=znver5 ;;
  *) profiles=neon; tune=neoverse-v2 ;;
 esac
 lscpu -J > "$SIXDB_RESULTS/lscpu.json"
