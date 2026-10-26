@@ -1,5 +1,10 @@
 # Frame stage seam and cross-block laws
 
+**Landed in Ikea.** The span interface, contribution laws, group fast paths and
+qualified neutral-mask reductions are maintained. See the [landing record](landing/README.md)
+for final code, CPU-qualified results, remaining losses and recovery. The material
+below retains the development history.
+
 Spike branch `spike/frame-seam`, from 7fa3ad56 (the carried-region landing).
 The question: can `author::stage` carry request shape (spans, selectors,
 uniform predicates, contributions in another row domain) so that laws cross
@@ -17,7 +22,7 @@ candidates were reverted: group decode, uniform pack runs, a generalised bound
 uniform pass and initial neutralised masked loops. Ordered runs (step 4) were
 paused by Ashton's steer and are not started.
 
-**Native qualification of record: [NATIVE.md](NATIVE.md)** (Codex). Candidate
+**Historical native spike qualification: [NATIVE.md](NATIVE.md)** (Codex). Candidate
 38695dc4 was run against original Frame 7fa3ad56 on Zen 5 with identical leaf
 archives. Span gains hold on AVX-512 and AVX2, and all checks pass. The OS
 period-3 selected SUM residual on AVX2 is +6% repeated and +11% under
@@ -288,7 +293,10 @@ Codex's span comparison, head span overload against base's strongest caller
 | span with fine selection | 0.71 (0.95) |
 | clustered fine | 0.77 (0.97) |
 
-## Mask diagnostic (separate, not applied)
+## Historical mask diagnostic
+
+The qualified production forms are now landed; see the [landing record](landing/README.md#density-policy).
+The initial diagnostic below remains a separate comparison.
 
 Ashton's principle is that a masked-out row contributes the identity rather
 than a branch. It was examined on side branch `spike/frame-seam-mask` at

@@ -1,5 +1,9 @@
 # Native span comparison
 
+This is the historical spike qualification. The implementation has since landed;
+[final landing qualification](landing/README.md) includes the mask kernels and
+ISA density policy.
+
 **Keep the span seam and its contribution laws.** It simplifies the caller and
 improves the tested range shapes on Zen 5. Keep coarse/full/partial distinctions
 through lowering: forcing one partial edge to change the interior's algorithm

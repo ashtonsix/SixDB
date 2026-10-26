@@ -93,7 +93,10 @@ def main():
     parser.add_argument("out", type=Path)
     args = parser.parse_args()
     shapes, details, regressions = [], [], []
-    for isa in ("avx512", "avx2"):
+    isas = [isa for isa in ("avx512", "avx2", "neon") if (args.evidence / isa / "span.jsonl").is_file()]
+    if not isas:
+        parser.error("no complete span cohort found")
+    for isa in isas:
         s, d, r = audit_profile(args.evidence, isa)
         shapes.extend(s)
         details.extend(d)
@@ -105,14 +108,14 @@ def main():
             writer = csv.DictWriter(output, fieldnames=list(rows[0]))
             writer.writeheader()
             writer.writerows(rows)
-    print("| SUM shape | AVX-512 time/base | AVX2 time/base |")
-    print("| --- | ---: | ---: |")
+    print("| SUM shape | " + " | ".join(isa + " time/base" for isa in isas) + " |")
+    print("| --- | " + " | ".join("---:" for _ in isas) + " |")
     for op in sorted({r["op"] for r in shapes}):
         by_isa = {r["isa"]: r["geomean_ratio"] for r in shapes if r["op"] == op}
-        print(f"| {op} | {by_isa['avx512']:.2f} | {by_isa['avx2']:.2f} |")
-    print("\nRegressions >5%, median ns/query:")
+        print("| " + op + " | " + " | ".join(f"{by_isa[isa]:.2f}" for isa in isas) + " |")
+    print("\nRegressions >5% vs original or qualified, median ns/query:")
     for row in sorted(regressions, key=lambda r: r["ratio"], reverse=True):
-        if row["ratio"] > 1.05:
+        if row["ratio"] > 1.05 or row.get("ratio_qualified", 0) > 1.05:
             print(row)
 
 

@@ -171,8 +171,8 @@ A new stage adds its logical law and child domains, canonical description and
 image admission, fit/emit/attach hooks and decode. Optional laws override whole
 operations over an `author::request`. It retains the span, selected/full blocks,
 borrowed fine rows and selected cardinality. `within(blocks)` narrows a request
-and recomputes cardinality on demand without mutating shared state; `rows_of(b)` requires an active block. A
-`predicate` retains a scalar threshold until a stage produces a per-block plane.
+and recomputes cardinality on demand without mutating shared state.
+`rows_of(b)` requires an active block. A `predicate` retains a scalar threshold until a stage produces a per-block plane.
 
 The owning stage applies its law before decomposing into physical groups or
 blocks. Identity children reuse the lowering. Non-identity children receive
@@ -182,8 +182,9 @@ example, retains multiplicities when several root rows use one checkpoint.
 Bounds preserve lo compensation and exception corrections. One partial edge
 must not route full interior blocks through a partial-block fallback. Group-local
 placement remains the ordinary amortisation grain; logical adjacency alone does
-not justify reading across separate backing allocations. A new operation needs defined semantics and
-independent conformance; decode supplies a fallback for supported shapes. No
+not justify reading across separate backing allocations.
+
+A new operation needs defined semantics and independent conformance; decode supplies a fallback for supported shapes. No
 binary plugin ABI or automatic acceptance of unknown descriptions is promised.
 Known but unimplemented shapes remain described/refused until their image law
 and operation semantics land together.

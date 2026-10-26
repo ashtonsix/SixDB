@@ -45,7 +45,7 @@ author capabilities, mixed-workload layout choices, filtering, conversion and pl
 | [Packed filters](packed-filters/README.md) | Direct packed comparisons, native controls and early exits; production contracts in Ikea. |
 | [Filter composition](filter-composition/README.md) | Fused/shared/CPS alternatives, compiler expansion and runtime costs across AVX2, AVX-512 and NEON. |
 | [Ikea composition](ikea-composition/README.md) | Question map into integer/bitset/heterogeneous probes, ABI, grain, value reuse and SeriesPack history. |
-| [Frame stage seam](frame-seam/README.md) | Span/group execution, contribution laws and fine-mask kernels; native qualification and remaining research. |
+| [Frame stage seam](frame-seam/README.md) | Landed span/group execution, contribution laws and ISA-tuned fine-mask reductions; [native qualification and remaining gaps](frame-seam/landing/README.md). |
 | [Ikea Frame, phase 3](frame-phase-3/README.md) | Read/build core extracted into Ikea: [consumer guide](../../ikea/docs/frame/usage.md), [landing qualification](frame-phase-3/GRADUATION.md), and the retained research frontier (writes, recipe choice and additional stages). |
 | [Ikea Frame, phase 2](frame-phase-2/README.md) | Reopened Frame research: [fused and composed stages](frame-phase-2/STAGES.md), [mechanisms and tiered targets](frame-phase-2/MECHANISMS.md), [proposed partition](frame-phase-2/PARTITION.md). |
 | [Ikea Frame, phase 1](frame-phase-1/README.md) | Closed. SeriesPack/TuplePack container research: [stocktake and remaining map](frame-phase-1/INVENTORY.md), real integer programs, selective scans, multi-field execution and mutation/ownership costs; no maintained Frame API yet. |

@@ -1,0 +1,69 @@
+{
+  "candidate": "e613867028e098258412c2507dc0c00e33573989",
+  "base": "7fa3ad56",
+  "qualified": "38695dc4",
+  "controls": {
+    "base": {
+      "commit": "7fa3ad56",
+      "files": {
+        "ikea/include/ikea/frame.h": "b9ce6e5a0e63a0394d48acfaea3f789cabcaf9ac7f94a946a83b8199dbcfa414",
+        "ikea/include/ikea/frame/author/stage.h": "140cb9acbcc686fe8eddf613a3b4bde974a5d2a334a1397cd88e39a2fd17f112",
+        "ikea/include/ikea/frame/build.h": "f7cdf8b58439a4f35b0c6ca37fbe692167b66ca3d1ba9823212dd83a7342163f",
+        "ikea/include/ikea/frame/description.h": "f34a76f420055f0064e419cc53d6edc12bbccea077e07311dda6ee3c86aecb3f",
+        "ikea/include/ikea/frame/detail/execution.h": "b775119c7c99190055f5d953ef45da84fd8674b75e37f7be1bb3150b3cbbf439",
+        "ikea/include/ikea/frame/detail/group_image.h": "6216b810ecd0ef2b0eff3c91693b3696a85f9b0b6f7f3b2f29a392e6c91a5130",
+        "ikea/include/ikea/frame/detail/image_state.h": "3d9b9b48e002d8de7d13e1c7cc0760445a3b0a3d07c7154258b65302a2a47c22",
+        "ikea/include/ikea/frame/detail/recipe.h": "1b1b1c7703d107f1175e8470ec68908453689b09901ee0775a42cb3f2b2f83d5",
+        "ikea/include/ikea/frame/detail/stages.h": "880536df53451ac25a3eb627d8179fb21c55f722feb02232cd1d83e6f83b042f",
+        "ikea/include/ikea/frame/image.h": "42fc8499621e62b4b61d8ea774a6a17ea60bb8427fdb2f57686e94958955b1ab",
+        "ikea/include/ikea/frame/reader.h": "f05097ce29980dc8e53eeeda966ba0a84e50114ba598c2cf1dacf4ac0bb9c02f",
+        "ikea/include/ikea/frame/types.h": "dcfd548374d9e3f70e3b0c855372f78ac6f6efed3181f5c994abeab876573135",
+        "ikea/src/frame/build.cpp": "f696f80fd849de67d7e3a1f9f73642fa17d5640867dd09e642da4e454557c16c",
+        "ikea/src/frame/description.cpp": "37c49754ec57da1194cc1a957e65b68f0493e2d9d666e4a769d009449dab7323",
+        "ikea/src/frame/execution.cpp": "9fce88146e7255a91f1e0ce651693092c98a50c7b564b77a618e431e469ba253",
+        "ikea/src/frame/group_image.cpp": "dee0b26723e77fc21c8280aeb859420a84b5b0c2e28643d101693ee9e39d90ce",
+        "ikea/src/frame/image.cpp": "7ac5c7553555ef1da9c87da86e583a3cc99f00f6f3378734aa5415b5fd5ee815",
+        "ikea/src/frame/manifest.cpp": "8a267e095d13300555bbf3666be1bdaef7b00e40dc2a5f4c41438f8794b43d2c",
+        "ikea/src/frame/reader.cpp": "679496ed7c32f6083b67d406abe579e0c4e52f497ddd205930afbbb1aa0dc7ec",
+        "ikea/src/frame/sections.h": "b956e5701f96a384cb49a0d1d1f5233e9e1aaabb7ad77f5fc2f6be9565514933",
+        "ikea/src/frame/stage.cpp": "60130c25f969605621cfd8f641dddf35934ca79422698bb8d58adc9d152185ea",
+        "ikea/src/frame/stages/bound.cpp": "8cae580a772e017f3883c7b8e2cb4caeea2ee52446f9f98aa87268e18e87727a",
+        "ikea/src/frame/stages/intervals.cpp": "12fd9b4cc90cf62248baaf320cf2d5d106211f609d0b09cc935e834c9dea0f77",
+        "ikea/src/frame/stages/pack.cpp": "252b0b7008e8c26e5247cbdeadb2e05a4548175f02ae35fa21107876745d9d69",
+        "ikea/src/frame/stages/windows.h": "842bb8b1a57c00967b525f307ad050a6747359e34e2f3ca80c946c15f40074bd"
+      }
+    },
+    "qualified": {
+      "commit": "38695dc4",
+      "files": {
+        "ikea/include/ikea/frame.h": "b9ce6e5a0e63a0394d48acfaea3f789cabcaf9ac7f94a946a83b8199dbcfa414",
+        "ikea/include/ikea/frame/author/stage.h": "48d15f71907adabfba6f123889b18c4bde783c5aad5a5097459df8b108634cec",
+        "ikea/include/ikea/frame/build.h": "f7cdf8b58439a4f35b0c6ca37fbe692167b66ca3d1ba9823212dd83a7342163f",
+        "ikea/include/ikea/frame/description.h": "f34a76f420055f0064e419cc53d6edc12bbccea077e07311dda6ee3c86aecb3f",
+        "ikea/include/ikea/frame/detail/counters.h": "2e9b52261bd3d004a06cb2b41c43164f45edf330513978f19c96e4f4b5b02788",
+        "ikea/include/ikea/frame/detail/execution.h": "b775119c7c99190055f5d953ef45da84fd8674b75e37f7be1bb3150b3cbbf439",
+        "ikea/include/ikea/frame/detail/group_image.h": "6216b810ecd0ef2b0eff3c91693b3696a85f9b0b6f7f3b2f29a392e6c91a5130",
+        "ikea/include/ikea/frame/detail/image_state.h": "3d9b9b48e002d8de7d13e1c7cc0760445a3b0a3d07c7154258b65302a2a47c22",
+        "ikea/include/ikea/frame/detail/recipe.h": "1b1b1c7703d107f1175e8470ec68908453689b09901ee0775a42cb3f2b2f83d5",
+        "ikea/include/ikea/frame/detail/stages.h": "880536df53451ac25a3eb627d8179fb21c55f722feb02232cd1d83e6f83b042f",
+        "ikea/include/ikea/frame/image.h": "42fc8499621e62b4b61d8ea774a6a17ea60bb8427fdb2f57686e94958955b1ab",
+        "ikea/include/ikea/frame/reader.h": "1bab09ddc4acd15fdf1dccdcf529ec9af228f9543864a028bb90625984df7093",
+        "ikea/include/ikea/frame/types.h": "dcfd548374d9e3f70e3b0c855372f78ac6f6efed3181f5c994abeab876573135",
+        "ikea/src/frame/build.cpp": "f696f80fd849de67d7e3a1f9f73642fa17d5640867dd09e642da4e454557c16c",
+        "ikea/src/frame/description.cpp": "37c49754ec57da1194cc1a957e65b68f0493e2d9d666e4a769d009449dab7323",
+        "ikea/src/frame/execution.cpp": "9fce88146e7255a91f1e0ce651693092c98a50c7b564b77a618e431e469ba253",
+        "ikea/src/frame/group_image.cpp": "d182cd2704a51bd96d2d39ee4bf766381bb7fc4c29b1fda70ab128a27527661a",
+        "ikea/src/frame/image.cpp": "7ac5c7553555ef1da9c87da86e583a3cc99f00f6f3378734aa5415b5fd5ee815",
+        "ikea/src/frame/manifest.cpp": "8a267e095d13300555bbf3666be1bdaef7b00e40dc2a5f4c41438f8794b43d2c",
+        "ikea/src/frame/reader.cpp": "746ecf24c2c0a7630873f3e847a59a8871a53e4eb3c4297e40061c2e6a246ffe",
+        "ikea/src/frame/sections.h": "b956e5701f96a384cb49a0d1d1f5233e9e1aaabb7ad77f5fc2f6be9565514933",
+        "ikea/src/frame/stage.cpp": "3a7682617e09511f2d51ad682f83ccdae6fb93d9860b8bc8ca796f2eeed1ae70",
+        "ikea/src/frame/stages/bound.cpp": "792082a2d2349cf4a27144353a5e6aed32eb550adbd1ed4c19dd49bc8f44ff94",
+        "ikea/src/frame/stages/intervals.cpp": "7b0069417a178b50353a7bf9c1860acda116c84dae46417f7f70b8b3f0faef7f",
+        "ikea/src/frame/stages/pack.cpp": "ef9fcf026ad787c7753a3ab1aa5bfd78355d0435ab4b180012612630bdc2ebf6",
+        "ikea/src/frame/stages/windows.h": "842bb8b1a57c00967b525f307ad050a6747359e34e2f3ca80c946c15f40074bd"
+      }
+    }
+  },
+  "old_expression_sha256": "4098ccad35220d2cba1d3906a7378299fdc968752a76d79274b877861ccc07a8"
+}

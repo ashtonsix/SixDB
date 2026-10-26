@@ -116,6 +116,11 @@ for each selected block. Other block slots remain untouched, and high tail bits
 are clear. `sum_selected`, `select` and `summarise_selected` consume fine row
 selections. The fused summary returns exact SUM, COUNT, MIN and MAX together;
 empty summaries have count/sum/max zero and min `UINT64_MAX`.
+Dense partial-block SUM and summary can keep vector reductions by giving inactive
+rows the operation's identity; sparse blocks can instead visit selected rows.
+This is internal execution choice, without a caller mode or a bitmap conversion.
+For intervals, unselected deltas may still be read to reconstruct a later selected
+row; selection, child contribution weights and read dependencies remain distinct.
 
 - Coarse selections use `ikea::intervals::selection`, in **block** coordinates
   starting at zero. Storage must cover the unit's logical blocks.
@@ -174,6 +179,6 @@ contributions, issued bytes and invalidated evidence; those protocols are resear
 
 Measured strengths and limits are source-qualified in the
 [landing qualification](../../../workbench/spikes/frame-phase-3/GRADUATION.md) and
-[span/seam qualification](../../../workbench/spikes/frame-seam/NATIVE.md).
+[span/seam qualification](../../../workbench/spikes/frame-seam/landing/README.md).
 Wide SUM, dispersed predicates and independent points can lose to native arrays;
 encoding is not a universal default.
