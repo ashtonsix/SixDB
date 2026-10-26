@@ -85,11 +85,24 @@ void check_range_expression(const Expr& expr, const Expected& expected, std::siz
                 want += expected[i];
             IKEA_CHECK(cp::total_regions(expr, first, n) == want);
             {
-                static constexpr std::uint8_t weights[16] = {16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 255};
-                std::uint64_t weighted = 0;
-                for (auto i = first; i < first + n; ++i)
-                    weighted += weights[i % 16] * static_cast<std::uint64_t>(expected[i]);
-                IKEA_CHECK(cp::weighted_sum_regions(expr, first, n, weights) == weighted);
+                // Exact u128 sums: plain, masked, and weighted at periods 16 and 64.
+                using u128 = unsigned __int128;
+                static constexpr std::uint8_t w16[16] = {16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 255};
+                std::uint8_t w64[64];
+                for (unsigned j = 0; j < 64; ++j)
+                    w64[j] = static_cast<std::uint8_t>(64 - j == 64 ? 0 : 64 - j);
+                u128 exact = 0, by16 = 0, by64 = 0, masked = 0;
+                const auto mask = [](std::size_t origin) { return std::uint16_t(0xb6dbu ^ (origin * 0x2311u)); };
+                for (auto i = first; i < first + n; ++i) {
+                    const u128 x = static_cast<std::uint64_t>(expected[i]);
+                    exact += x, by16 += x * w16[i % 16], by64 += x * w64[i % 64];
+                    masked += (mask(i - i % 16) >> (i % 16) & 1) ? x : 0;
+                }
+                const auto all = [](std::size_t) { return std::uint16_t{0xffff}; };
+                IKEA_CHECK(cp::exact_regions(expr, first, n, nullptr, 0, false, all) == exact);
+                IKEA_CHECK(cp::exact_regions(expr, first, n, nullptr, 0, true, mask) == masked);
+                IKEA_CHECK(cp::exact_regions(expr, first, n, w16, 16, false, all) == by16);
+                IKEA_CHECK(cp::exact_regions(expr, first, n, w64, 64, false, all) == by64);
             }
             // scan_regions visits every row of the range exactly once, in
             // order, with its value; groups are aligned to their size.
@@ -168,11 +181,24 @@ void check_erased_operations(const ikea::seriespack::erased_reader<U>& reader, c
                 IKEA_CHECK(reader.sum_masked_unchecked(first, n, all, 1) == want);
             }
             {
-                static constexpr std::uint8_t weights[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 255};
-                std::uint64_t weighted = 0;
-                for (auto i = first; i < first + n; ++i)
-                    weighted += weights[i % 16] * static_cast<std::uint64_t>(expected[i]);
-                IKEA_CHECK(reader.weighted_sum_unchecked(first, n, weights) == weighted);
+                using u128 = unsigned __int128;
+                static constexpr std::uint8_t w16[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 255};
+                std::uint8_t w64[64];
+                for (unsigned j = 0; j < 64; ++j)
+                    w64[j] = static_cast<std::uint8_t>(j % 64 ? 64 - j : 0);
+                u128 exact = 0, by16 = 0, by64 = 0, masked = 0, pattern = 0;
+                for (auto i = first; i < first + n; ++i) {
+                    const u128 x = static_cast<std::uint64_t>(expected[i]);
+                    const std::size_t k = i / 16 - first / 16;
+                    exact += x, by16 += x * w16[i % 16], by64 += x * w64[i % 64];
+                    masked += (masks[k] >> (i % 16) & 1) ? x : 0;
+                    pattern += (masks[k % 3] >> (i % 16) & 1) ? x : 0;
+                }
+                IKEA_CHECK(reader.sum_exact_unchecked(first, n) == exact);
+                IKEA_CHECK(reader.sum_masked_exact_unchecked(first, n, masks.data()) == masked);
+                IKEA_CHECK(reader.sum_masked_exact_unchecked(first, n, masks.data(), 3) == pattern);
+                IKEA_CHECK(reader.weighted_sum_unchecked(first, n, w16) == by16);
+                IKEA_CHECK(reader.weighted_sum_unchecked(first, n, w64, 64) == by64);
             }
             for (const auto rhs : {std::uint64_t{0}, std::uint64_t(count ? expected[count / 3] : 0), ~std::uint64_t{0}})
                 for (const auto op : {comparison::equal, comparison::less, comparison::less_equal, comparison::greater,
@@ -235,6 +261,57 @@ inline void check_runtime_widths() {
             IKEA_CHECK(plain && !plain->compiled_ranges() && ranges && ranges->compiled_ranges());
             check_erased_operations(*ranges, values, rows);
             check_erased_operations(*plain, values, rows);
+            if (width == 43 || width == 50) {
+                // Long ranges of maximum values: exact sums cross the chunks
+                // the modulo kernels run in (weighted at 43 bits, plain at 50).
+                const std::size_t long_rows = 40000;
+                std::vector<ikea::byte> long_bytes(long_rows / 8 * width);
+                std::vector<std::uint64_t> top(long_rows, (std::uint64_t{1} << width) - 1);
+                const sp::dense_output long_out{width, sp::geometry::local, long_bytes, long_rows};
+                std::vector<ikea::journal::entry> long_records(*sp::effect_capacity_initialize(long_out));
+                ikea::journal long_effects{long_records};
+                IKEA_CHECK(sp::initialize(long_out, std::span<const std::uint64_t>(top), long_effects));
+                const auto r = sp::bind_range_reader<std::uint64_t>(sp::dense_input{width, sp::geometry::local, long_bytes, long_rows});
+                std::uint8_t w64[64];
+                unsigned __int128 wsum = 0;
+                for (unsigned j = 0; j < 64; ++j)
+                    w64[j] = static_cast<std::uint8_t>(255 - j);
+                for (std::size_t i = 3; i < long_rows; ++i)
+                    wsum += static_cast<unsigned __int128>(top[i]) * w64[i % 64];
+                IKEA_CHECK(r->sum_exact_unchecked(3, long_rows - 3) == static_cast<unsigned __int128>(top[0]) * (long_rows - 3));
+                IKEA_CHECK(r->weighted_sum_unchecked(3, long_rows - 3, w64, 64) == wsum);
+            }
+            if (width == 64 && storage == sp::geometry::local) {
+                // Past the halves path's 2^20-row fold, from a nonaligned first:
+                // plain, period-3 masked and period-64 weighted u128 sums.
+                using u128 = unsigned __int128;
+                const std::size_t long_rows = (std::size_t{1} << 20) + 3000, first = 5;
+                std::vector<ikea::byte> long_bytes(long_rows * 8);
+                std::vector<std::uint64_t> wide(long_rows);
+                std::uint64_t x = 0x243f6a8885a308d3ULL;
+                for (auto& v : wide)
+                    v = x = x * 6364136223846793005ULL + 1442695040888963407ULL;
+                wide[long_rows - 1] = ~std::uint64_t{0};
+                const sp::dense_output long_out{64, sp::geometry::local, long_bytes, long_rows};
+                std::vector<ikea::journal::entry> long_records(*sp::effect_capacity_initialize(long_out));
+                ikea::journal long_effects{long_records};
+                IKEA_CHECK(sp::initialize(long_out, std::span<const std::uint64_t>(wide), long_effects));
+                const auto r = sp::bind_range_reader<std::uint64_t>(sp::dense_input{64, sp::geometry::local, long_bytes, long_rows});
+                static constexpr std::uint16_t masks3[3] = {0xb6db, 0x0ff0, 0xffff};
+                std::uint8_t w64[64];
+                for (unsigned j = 0; j < 64; ++j)
+                    w64[j] = static_cast<std::uint8_t>(j * 37 + 11);
+                u128 plain = 0, masked = 0, weighted = 0;
+                for (std::size_t i = first; i < long_rows; ++i) {
+                    plain += wide[i];
+                    masked += (masks3[(i / 16 - first / 16) % 3] >> (i % 16) & 1) ? wide[i] : 0;
+                    weighted += static_cast<u128>(wide[i]) * w64[i % 64];
+                }
+                const std::size_t n = long_rows - first;
+                IKEA_CHECK(r->sum_exact_unchecked(first, n) == plain);
+                IKEA_CHECK(r->sum_masked_exact_unchecked(first, n, masks3, 3) == masked);
+                IKEA_CHECK(r->weighted_sum_unchecked(first, n, w64, 64) == weighted);
+            }
             if (width <= 8) {
                 const auto narrow = sp::bind_range_reader<std::uint8_t>(in);
                 IKEA_CHECK(narrow && narrow->compiled_ranges());

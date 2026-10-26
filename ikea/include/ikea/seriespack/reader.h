@@ -249,9 +249,26 @@ template <class Expression> class reader {
             return std::unexpected(error::range);
         return sum_unchecked(first, count);
     }
-    /// The sum, modulo 2^64, of weights[row % 16] * value over [first, first + count).
-    std::uint64_t weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights) const {
-        return with_physical([&](const auto& e) { return author::weighted_sum_regions(e, first, count, weights); });
+    /// The exact sum of every row of [first, first + count), as u128.
+    unsigned __int128 sum_exact_unchecked(std::size_t first, std::size_t count) const {
+        return with_physical([&](const auto& e) {
+            return author::exact_regions(e, first, count, nullptr, 0, false, [](std::size_t) { return std::uint16_t{0xffff}; });
+        });
+    }
+    /// The exact sum of the rows mask(origin) selects, as u128 (no cutoff).
+    template <class Prefilter>
+    unsigned __int128 sum_exact_unchecked(std::size_t first, std::size_t count, Prefilter&& mask) const {
+        return with_physical([&](const auto& e) { return author::exact_regions(e, first, count, nullptr, 0, true, mask); });
+    }
+    /// The exact sum, as u128, of weights[row % period] * value over [first,
+    /// first + count); period is 16 or 64 and weights holds period entries.
+    /// Trusted: the caller proves the weighted total fits u128 (an
+    /// unweighted sum always does; u8 weights can exceed it).
+    unsigned __int128 weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights,
+                                             unsigned period = 16) const {
+        return with_physical([&](const auto& e) {
+            return author::exact_regions(e, first, count, weights, period, false, [](std::size_t) { return std::uint16_t{0xffff}; });
+        });
     }
 #endif
     template <class Prefilter>
@@ -397,8 +414,16 @@ template <class L> class reader<dense_source<L>> {
     [[nodiscard]] std::expected<std::uint64_t, error> sum(std::size_t first, std::size_t count) const {
         return composed().sum(first, count);
     }
-    std::uint64_t weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights) const {
-        return composed().weighted_sum_unchecked(first, count, weights);
+    unsigned __int128 sum_exact_unchecked(std::size_t first, std::size_t count) const {
+        return composed().sum_exact_unchecked(first, count);
+    }
+    template <class Prefilter>
+    unsigned __int128 sum_exact_unchecked(std::size_t first, std::size_t count, Prefilter&& mask) const {
+        return composed().sum_exact_unchecked(first, count, std::forward<Prefilter>(mask));
+    }
+    unsigned __int128 weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights,
+                                             unsigned period = 16) const {
+        return composed().weighted_sum_unchecked(first, count, weights, period);
     }
 #endif
     template <class U> erased_reader<U> erase() const {

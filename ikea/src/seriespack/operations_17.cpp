@@ -1,11 +1,12 @@
-// Compiled range operations for dense widths 17..24; one unit per eight
-// widths bounds each unit's compile memory.
+// Compiled range operations for dense widths 17..20; one unit per four
+// widths bounds each unit's compile memory (narrow widths compile the most
+// kernels).
 #include <ikea/seriespack/detail/dense_operations.h>
 
 namespace ikea::seriespack::detail {
 const range_operations* compiled_operations_17(unsigned width, geometry storage) noexcept {
     const range_operations* out = nullptr;
-    each<8>([&](auto i) {
+    each<4>([&](auto i) {
         constexpr unsigned K = 17 + i;
         if (width != K)
             return;

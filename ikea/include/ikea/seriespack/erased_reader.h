@@ -20,7 +20,11 @@ struct range_operations {
     std::uint64_t (*count)(const void*, comparison, std::size_t first, std::size_t count, std::uint64_t rhs);
     void (*filter_words)(const void*, comparison, std::size_t first, std::size_t count, std::uint64_t rhs,
                          std::uint64_t* words);
-    std::uint64_t (*weighted_sum)(const void*, std::size_t first, std::size_t count, const std::uint8_t* weights);
+    unsigned __int128 (*sum_exact)(const void*, std::size_t first, std::size_t count);
+    unsigned __int128 (*sum_masked_exact)(const void*, std::size_t first, std::size_t count, const std::uint16_t* masks,
+                                          std::size_t period);
+    unsigned __int128 (*weighted_sum)(const void*, std::size_t first, std::size_t count, const std::uint8_t* weights,
+                                      unsigned period);
 };
 /// Borrowed read operation. The source bytes and any named view used at binding
 /// remain alive and unchanged in placement through each call. Coordinates count
@@ -118,13 +122,37 @@ template <class U> class erased_reader {
         });
         return s;
     }
-    /// Trusted: the sum, modulo 2^64, of weights[row % 16] * value over
-    /// [first, first + count), sixteen weights by absolute row.
-    std::uint64_t weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights) const {
+    /// Trusted: the exact sum of every row of [first, first + count), as u128.
+    unsigned __int128 sum_exact_unchecked(std::size_t first, std::size_t count) const {
         if (operations_)
-            return operations_->weighted_sum(resource_, first, count, weights);
-        std::uint64_t s = 0;
-        decoded(first, count, [&](std::size_t row, U x) { s += weights[row % 16] * static_cast<std::uint64_t>(x); });
+            return operations_->sum_exact(resource_, first, count);
+        unsigned __int128 s = 0;
+        decoded(first, count, [&](std::size_t, U x) { s += x; });
+        return s;
+    }
+    /// Trusted: sum_masked_unchecked's selection, summed exactly as u128.
+    unsigned __int128 sum_masked_exact_unchecked(std::size_t first, std::size_t count, const std::uint16_t* masks,
+                                                 std::size_t period = 0) const {
+        if (operations_)
+            return operations_->sum_masked_exact(resource_, first, count, masks, period);
+        unsigned __int128 s = 0;
+        const std::size_t base = first / 16;
+        decoded(first, count, [&](std::size_t row, U x) {
+            const std::size_t k = row / 16 - base;
+            s += (masks[period ? k % period : k] >> (row % 16) & 1) ? x : 0;
+        });
+        return s;
+    }
+    /// Trusted: the exact sum, as u128, of weights[row % period] * value over
+    /// [first, first + count). period is 16 or 64, weights holds period
+    /// entries indexed by the absolute row; an empty range reads none. The
+    /// caller proves the weighted total fits u128.
+    unsigned __int128 weighted_sum_unchecked(std::size_t first, std::size_t count, const std::uint8_t* weights,
+                                             unsigned period = 16) const {
+        if (operations_)
+            return operations_->weighted_sum(resource_, first, count, weights, period);
+        unsigned __int128 s = 0;
+        decoded(first, count, [&](std::size_t row, U x) { s += static_cast<unsigned __int128>(x) * weights[row % period]; });
         return s;
     }
     /// Trusted: rows of [first, first + count) satisfying op against rhs.

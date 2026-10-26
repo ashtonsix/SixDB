@@ -464,54 +464,48 @@ template <class Source, class Group, class Edge>
     for (; count; ++i, --count)
         edge(i, read(scalar, source, i, true).value);
 }
-/// The sum, modulo 2^64, of weights[row % 16] * value over [first, first +
-/// count): a position-weighted SUM in one decode (a delta stage's SUM law
-/// needs the in-region position of each delta). Lanes are multiplied in
-/// registers inside scan_regions; edges are scalar.
+/// Modulo-2^64 sum of weights[row % period] * value over [first, first +
+/// count), period 16 or 64: lanes are multiplied in registers inside
+/// scan_regions, edges are scalar. Exact while count * 255 * 2^K < 2^64;
+/// exact_regions below chunks it, or uses 32-bit halves, to stay exact.
 template <class Source>
 std::uint64_t weighted_sum_regions(const Source& source, std::size_t first, std::size_t count,
-                                   const std::uint8_t* weights) {
+                                   const std::uint8_t* weights, unsigned period) {
     constexpr unsigned K = Source::bit_width;
     if (!count)
         return 0;  // reads no weight
     std::uint64_t edges = 0;
+    const auto edge = [&](std::size_t row, std::uint64_t value) { edges += weights[row & (period - 1)] * value; };
 #if defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
-    // Eight u64 lanes per part; a part's rows are 8 * (p % 2) + lane mod 16.
-    alignas(64) std::uint64_t w[16];
-    for (unsigned j = 0; j < 16; ++j)
-        w[j] = weights[j];
-    const __m512i low = _mm512_load_si512(w), high = _mm512_load_si512(w + 8);
+    // A part holds eight u64 lanes; its weights are the eight bytes at
+    // (row + 8p) % period, widened (no per-call table).
     __m512i acc = _mm512_setzero_si512();
     scan_regions(
         source, first, count,
-        [&](std::size_t, const auto& x) __attribute__((always_inline)) {
+        [&](std::size_t row, const auto& x) __attribute__((always_inline)) {
             const auto y = zmm::widen<64>(x);
             detail::each<y.v.size()>([&](auto p) __attribute__((always_inline)) {
-                acc = _mm512_add_epi64(acc, _mm512_mullo_epi64(y.v[p], p % 2 ? high : low));
+                const auto wp = _mm512_cvtepu8_epi64(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(weights + ((row + 8 * p) & (period - 1)))));
+                acc = _mm512_add_epi64(acc, _mm512_mullo_epi64(y.v[p], wp));
             });
         },
-        [&](std::size_t row, std::uint64_t value) { edges += weights[row % 16] * value; });
+        edge);
     return edges + static_cast<std::uint64_t>(_mm512_reduce_add_epi64(acc));
 #elif defined(__aarch64__)
-    // Per 16-row block: u32 lanes multiply-accumulate into u64; 64-bit values
-    // multiply as two 32-bit halves.
-    std::array<uint32x4_t, 4> w32;
-    for (unsigned j = 0; j < 4; ++j)
-        w32[j] = vmovl_u16(vget_low_u16(vmovl_u8(vcreate_u8(std::uint64_t{weights[4 * j]} | std::uint64_t{weights[4 * j + 1]} << 8 |
-                                                               std::uint64_t{weights[4 * j + 2]} << 16 |
-                                                               std::uint64_t{weights[4 * j + 3]} << 24))));
-    const auto w8 = vld1q_u8(weights);
-    const std::array<uint16x8_t, 2> w16{vmovl_u8(vget_low_u8(w8)), vmovl_high_u8(w8)};
+    // Per 16-row block, the sixteen weight bytes at (row + 16p) % period:
+    // u8 or u16 products below 17 bits, u32 lanes up to 32, halves above.
     auto acc = vdupq_n_u64(0);
     scan_regions(
         source, first, count,
-        [&](std::size_t, const auto& x) __attribute__((always_inline)) {
+        [&](std::size_t row, const auto& x) __attribute__((always_inline)) {
             detail::each<std::tuple_size_v<std::remove_cvref_t<decltype(x.block)>>>([&](auto p) __attribute__((always_inline)) {
+                const auto wv = vld1q_u8(weights + ((row + 16 * p) & (period - 1)));
+                const std::array<uint16x8_t, 2> w16{vmovl_u8(vget_low_u8(wv)), vmovl_high_u8(wv)};
                 if constexpr (K <= 8) {
                     // u8 x u8 products in u16 lanes, pairwise into u32, then u64.
                     const auto v = x.block[p].v[0];
-                    auto pairs = vpaddlq_u16(vmull_u8(vget_low_u8(v), vget_low_u8(w8)));
-                    pairs = vpadalq_u16(pairs, vmull_high_u8(v, w8));
+                    auto pairs = vpaddlq_u16(vmull_u8(vget_low_u8(v), vget_low_u8(wv)));
+                    pairs = vpadalq_u16(pairs, vmull_high_u8(v, wv));
                     acc = vpadalq_u32(acc, pairs);
                 } else if constexpr (K <= 16) {
                     detail::each<2>([&](auto j) __attribute__((always_inline)) {
@@ -523,21 +517,23 @@ std::uint64_t weighted_sum_regions(const Source& source, std::size_t first, std:
                     const auto y = neon::widen<32>(x.block[p]);
                     detail::each<4>([&](auto j) __attribute__((always_inline)) {
                         const auto v = vreinterpretq_u32_u8(y.v[j]);
-                        acc = vmlal_u32(acc, vget_low_u32(v), vget_low_u32(w32[j]));
-                        acc = vmlal_high_u32(acc, v, w32[j]);
+                        const auto wj = j % 2 ? vmovl_high_u16(w16[j / 2]) : vmovl_u16(vget_low_u16(w16[j / 2]));
+                        acc = vmlal_u32(acc, vget_low_u32(v), vget_low_u32(wj));
+                        acc = vmlal_high_u32(acc, v, wj);
                     });
                 } else {
                     const auto y = neon::widen<64>(x.block[p]);
                     detail::each<8>([&](auto j) __attribute__((always_inline)) {
                         const auto v = vreinterpretq_u64_u8(y.v[j]);
-                        const auto wj = j % 2 ? vget_high_u32(w32[j / 2]) : vget_low_u32(w32[j / 2]);
+                        const auto w4 = (j / 2) % 2 ? vmovl_high_u16(w16[j / 4]) : vmovl_u16(vget_low_u16(w16[j / 4]));
+                        const auto wj = j % 2 ? vget_high_u32(w4) : vget_low_u32(w4);
                         acc = vmlal_u32(acc, vmovn_u64(v), wj);
                         acc = vaddq_u64(acc, vshlq_n_u64(vmull_u32(vshrn_n_u64(v, 32), wj), 32));
                     });
                 }
             });
         },
-        [&](std::size_t row, std::uint64_t value) { edges += weights[row % 16] * value; });
+        edge);
     return edges + vaddvq_u64(acc);
 #else
     std::uint64_t total = 0;
@@ -547,12 +543,102 @@ std::uint64_t weighted_sum_regions(const Source& source, std::size_t first, std:
             std::uint64_t values[16];
             native::store16(values, x);
             for (unsigned j = 0; j < 16; ++j)
-                total += weights[(row + j) % 16] * values[j];
+                total += weights[(row + j) & (period - 1)] * values[j];
         },
-        [&](std::size_t row, std::uint64_t value) { edges += weights[row % 16] * value; });
+        edge);
     return edges + total;
 #endif
 }
+
+/// Exact u128 sums by 32-bit halves: each selected value's low and high
+/// halves, times its weight (at most 255), add into separate u64 lanes,
+/// which stay below 2^40 per group, folded into u128 every 2^20 rows.
+/// weights may be null (weight 1); mask(origin) selects 16-row regions.
+template <bool Weighted, class Source, class Mask>
+unsigned __int128 exact_halves_regions(const Source& source, std::size_t first, std::size_t count,
+                                       const std::uint8_t* weights, unsigned period, Mask&& mask) {
+    using u128 = unsigned __int128;
+    u128 total = 0;
+    const auto weight = [&](std::size_t row) -> std::uint64_t {
+        if constexpr (Weighted)
+            return weights[row & (period - 1)];
+        else
+            return 1;
+    };
+    const auto edge = [&](std::size_t row, std::uint64_t value) {
+        if (mask(row - row % 16) >> (row % 16) & 1)
+            total += static_cast<u128>(value) * weight(row);
+    };
+#if defined(__AVX512BW__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
+    const auto lower = _mm512_set1_epi64(0xffffffff);
+    for (std::size_t at = 0; at < count; at += std::size_t{1} << 20) {
+        const std::size_t n = std::min<std::size_t>(count - at, std::size_t{1} << 20);
+        __m512i lo = _mm512_setzero_si512(), hi = _mm512_setzero_si512();
+        scan_regions(
+            source, first + at, n,
+            [&](std::size_t row, const auto& x) __attribute__((always_inline)) {
+                const auto y = zmm::widen<64>(x);
+                detail::each<y.v.size()>([&](auto p) __attribute__((always_inline)) {
+                    const std::size_t r = row + 8 * p;
+                    const auto m = static_cast<__mmask8>(mask(r - r % 16) >> (r % 16));
+                    const auto v = _mm512_maskz_mov_epi64(m, y.v[p]);
+                    if constexpr (Weighted) {
+                        const auto wp = _mm512_cvtepu8_epi64(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(weights + (r & (period - 1)))));
+                        lo = _mm512_add_epi64(lo, _mm512_mul_epu32(_mm512_and_si512(v, lower), wp));
+                        hi = _mm512_add_epi64(hi, _mm512_mul_epu32(_mm512_srli_epi64(v, 32), wp));
+                    } else {
+                        lo = _mm512_add_epi64(lo, _mm512_and_si512(v, lower));
+                        hi = _mm512_add_epi64(hi, _mm512_srli_epi64(v, 32));
+                    }
+                });
+            },
+            edge);
+        total += static_cast<u128>(static_cast<std::uint64_t>(_mm512_reduce_add_epi64(lo))) +
+                 (static_cast<u128>(static_cast<std::uint64_t>(_mm512_reduce_add_epi64(hi))) << 32);
+    }
+#elif defined(__aarch64__)
+    static constexpr std::uint8_t ones[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    for (std::size_t at = 0; at < count; at += std::size_t{1} << 20) {
+        const std::size_t n = std::min<std::size_t>(count - at, std::size_t{1} << 20);
+        auto lo = vdupq_n_u64(0), hi = vdupq_n_u64(0);
+        scan_regions(
+            source, first + at, n,
+            [&](std::size_t row, const auto& x) __attribute__((always_inline)) {
+                detail::each<std::tuple_size_v<std::remove_cvref_t<decltype(x.block)>>>([&](auto p) __attribute__((always_inline)) {
+                    const std::size_t r = row + 16 * p;
+                    const auto bits = mask(r - r % 16) >> (r % 16);
+                    const auto w8 = vld1q_u8(Weighted ? weights + (r & (period - 1)) : ones);
+                    const std::array<uint16x8_t, 2> w16{vmovl_u8(vget_low_u8(w8)), vmovl_high_u8(w8)};
+                    const auto y = neon::widen<64>(x.block[p]);
+                    detail::each<8>([&](auto j) __attribute__((always_inline)) {
+                        const auto v = vreinterpretq_u64_u8(y.v[j]);
+                        const std::uint64_t pair = (bits >> (2 * j) & 1 ? 0xffffffffULL : 0) | (bits >> (2 * j + 1) & 1 ? 0xffffffff00000000ULL : 0);
+                        const auto w4 = (j / 2) % 2 ? vmovl_high_u16(w16[j / 4]) : vmovl_u16(vget_low_u16(w16[j / 4]));
+                        const auto wj = vand_u32(j % 2 ? vget_high_u32(w4) : vget_low_u32(w4), vcreate_u32(pair));
+                        lo = vmlal_u32(lo, vmovn_u64(v), wj);
+                        hi = vmlal_u32(hi, vshrn_n_u64(v, 32), wj);
+                    });
+                });
+            },
+            edge);
+        total += static_cast<u128>(vaddvq_u64(lo)) + (static_cast<u128>(vaddvq_u64(hi)) << 32);
+    }
+#else
+    scan_regions(
+        source, first, count,
+        [&](std::size_t row, const auto& x) {
+            std::uint64_t values[16];
+            native::store16(values, x);
+            const auto bits = mask(row);
+            for (unsigned j = 0; j < 16; ++j)
+                if (bits >> j & 1)
+                    total += static_cast<unsigned __int128>(values[j]) * weight(row + j);
+        },
+        edge);
+#endif
+    return total;
+}
+
 /// The layout of a headless whole-source dense expression, else void.
 template <class E> struct dense_layout {
     using type = void;
@@ -588,6 +674,34 @@ std::uint64_t total_regions(const Source& source, std::size_t first, std::size_t
         }
     }
     return sum_regions(source, first, count, all_rows{}, all);
+}
+
+/// Exact sums as u128: the selected rows (mask(origin), or every row), each
+/// weighted by weights[row % period] when weights is given (period 16 or
+/// 64). Below the width that could wrap, the modulo kernels run on chunks
+/// short enough to be exact; wider widths take 32-bit halves.
+template <class Source, class Mask>
+unsigned __int128 exact_regions(const Source& source, std::size_t first, std::size_t count, const std::uint8_t* weights,
+                                unsigned period, bool masked, Mask&& mask) {
+    constexpr unsigned K = Source::bit_width;
+    // Rows whose maximum total stays below 2^64: 2^(64 - K - 8 for weights).
+    const unsigned bits = K + (weights ? 8 : 0);
+    const std::size_t chunk = bits >= 64 ? 0 : std::min<std::size_t>(std::size_t{1} << (64 - bits), std::size_t{1} << 40);
+    if (chunk >= 256 && !(weights && masked)) {
+        unsigned __int128 total = 0;
+        for (std::size_t at = 0; at < count; at += chunk) {
+            const std::size_t n = std::min(chunk, count - at);
+            if (weights)
+                total += weighted_sum_regions(source, first + at, n, weights, period);
+            else if (masked)
+                total += sum_regions(source, first + at, n, all_rows{}, mask);
+            else
+                total += total_regions(source, first + at, n);
+        }
+        return total;
+    }
+    return weights ? exact_halves_regions<true>(source, first, count, weights, period, mask)
+                   : exact_halves_regions<false>(source, first, count, weights, period, mask);
 }
 
 template <bool Wide = true, class Source, class Cutoff, class Prefilter>

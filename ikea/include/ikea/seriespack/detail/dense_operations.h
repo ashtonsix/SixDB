@@ -49,25 +49,49 @@ template <class F> struct dense_operations {
         case comparison::greater_equal: return filter_as<comparison::greater_equal>(data, first, count, rhs, words);
         }
     }
-    static std::uint64_t weighted_sum(const void* data, std::size_t first, std::size_t count, const std::uint8_t* weights) {
-        return bound(data, first + count).weighted_sum_unchecked(first, count, weights);
+    static unsigned __int128 sum_exact(const void* data, std::size_t first, std::size_t count) {
+        return bound(data, first + count).sum_exact_unchecked(first, count);
     }
-    static constexpr range_operations table{&sum, &sum_masked, &count, &filter_words, &weighted_sum};
+    static unsigned __int128 sum_masked_exact(const void* data, std::size_t first, std::size_t count, const std::uint16_t* masks,
+                                              std::size_t period) {
+        const dense_source<F> source{static_cast<const ikea::byte*>(data), first + count};
+        const std::size_t base = first / 16;
+        return author::exact_regions(author::expression(source), first, count, nullptr, 0, true,
+                                     [&](std::size_t origin) __attribute__((always_inline)) {
+                                         const std::size_t k = origin / 16 - base;
+                                         return masks[period ? k % period : k];
+                                     });
+    }
+    static unsigned __int128 weighted_sum(const void* data, std::size_t first, std::size_t count, const std::uint8_t* weights,
+                                          unsigned period) {
+        return bound(data, first + count).weighted_sum_unchecked(first, count, weights, period);
+    }
+    static constexpr range_operations table{&sum, &sum_masked, &count, &filter_words, &sum_exact, &sum_masked_exact, &weighted_sum};
 };
 /// The compiled range operations of a runtime-width dense layout, or null
-/// (src/seriespack/operations_*.cpp, eight widths per unit).
+/// (src/seriespack/operations_*.cpp, four widths per unit).
 const range_operations* compiled_operations_1(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_5(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_9(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_13(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_17(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_21(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_25(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_29(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_33(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_37(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_41(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_45(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_49(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_53(unsigned width, geometry storage) noexcept;
 const range_operations* compiled_operations_57(unsigned width, geometry storage) noexcept;
+const range_operations* compiled_operations_61(unsigned width, geometry storage) noexcept;
 inline const range_operations* compiled_operations(unsigned width, geometry storage) noexcept {
-    constexpr const range_operations* (*units[8])(unsigned, geometry) noexcept = {
-        compiled_operations_1,  compiled_operations_9,  compiled_operations_17, compiled_operations_25,
-        compiled_operations_33, compiled_operations_41, compiled_operations_49, compiled_operations_57};
-    return width == 0 || width > 64 ? nullptr : units[(width - 1) / 8](width, storage);
+    constexpr const range_operations* (*units[16])(unsigned, geometry) noexcept = {
+        compiled_operations_1, compiled_operations_5, compiled_operations_9, compiled_operations_13,
+        compiled_operations_17, compiled_operations_21, compiled_operations_25, compiled_operations_29,
+        compiled_operations_33, compiled_operations_37, compiled_operations_41, compiled_operations_45,
+        compiled_operations_49, compiled_operations_53, compiled_operations_57, compiled_operations_61};
+    return width == 0 || width > 64 ? nullptr : units[(width - 1) / 4](width, storage);
 }
 } // namespace ikea::seriespack::detail

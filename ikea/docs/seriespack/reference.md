@@ -94,9 +94,16 @@ table and answer the range methods by decoding.
 - **Filter words.** Bit i of `words[i / 64]` is row first + i, unlike mask
   bits. Exactly ⌈count / 64⌉ words are written, with unused high bits zero; a
   checked call that fails writes nothing.
-- **Weighted sums.** The result is the modulo-2^64 Σ weights[row % 16] ×
-  value, with weights indexed by the absolute row, not relative to first. A
-  nonempty call reads all sixteen weights; an empty call reads none.
+- **Exact sums.** `sum_exact`, `sum_masked_exact` and `weighted_sum` return
+  the exact u128 total. Where the width cannot wrap a 64-bit sum within a
+  chunk, the modulo kernels run on chunks short enough to be exact; wider
+  widths (or a weighted, masked sum) add 32-bit halves separately.
+- **Weighted sums.** The result is the exact Σ weights[row % period] ×
+  value, with period 16 or 64 and the weights indexed by the absolute row,
+  not relative to first. A nonempty call may read all `period` weights; an
+  empty call reads none. The weighted total must fit u128, which the caller
+  proves; an unweighted exact sum of a `size_t` count of u64 values always
+  fits.
 - **Runtime point set.** `set(dense_output, row, value, effects)` performs a bound
   writer's checks: range, value fit (a narrow input type fits any width) and
   effect capacity, before any write. Its records name the `dense_output`, so keep
