@@ -20,7 +20,21 @@ The three review closures include the caller's weighted-u128-fit obligation,
 a nonaligned K64 range past the 2^20-row fold, and accurate per-call timing labels.
 The independent local fold witness also passes against the current compiled
 SeriesPack archive. Shared selection/geometry reuse is 22a56d7c; stage extraction
-is 42da0168. Final combined source qualification and control comparisons remain
+is 42da0168. The extracted Frame sources and six fixtures also pass local
+ASan/UBSan: description (559 checks), manifest (284), group images (1,953 valid,
+991 guarded prefixes, 26 malformed), checked readers (5,951), stage oracles and
+wide Intervals. The [sanitizer receipt](landing/evidence/sanitize/receipt.json)
+records flags, source/header/archive/binary hashes and its scope: linked
+SeriesPack/core/Intervals archives are uninstrumented.
+
+Final native qualification uses committed source 26afac10, including compact
+pack state (6c23d0f4), region-wise Intervals traversal (52fd38a8) and in-place
+offset-binary reconstruction (9e1788ee). Capture digest:
+`2eb40a40dc2bdca47ebca094211e14865652aa9eb9a98e18a4d623ea1ec89c3e`.
+Both workers' manifests match all 4,017 captured source files. Jobs:
+`20261026T011106Z-c097ed7a` (Zen 5 AVX2/AVX-512) and
+`20261026T011106Z-b0dc1fa4` (Graviton 4 NEON), small Spot workers sized for
+compilation memory. Final combined source qualification and control comparisons remain
 pending; this document is not yet a consumer-readiness sign-off.
 
 ## Regression panel
