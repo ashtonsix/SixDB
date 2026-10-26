@@ -44,5 +44,9 @@ used for Zen5 AVX2/AVX-512 and Graviton4 NEON. Larger saturation workers and
 additional recipe/format campaigns are outside this graduation run.
 `SIXDB_FRAME_PROFILES=avx2` limits a retry to that profile; it does not change
 the code, flags, checks or query trace for the profile.
+`SIXDB_FRAME_CHECKS=intervals` builds/runs the five Frame checks, two owner examples
+and wide Intervals check for a traversal-only follow-up. It still runs native-control
+conformance and the complete regression panel. Full graduation remains the default;
+unchanged SeriesPack/selection/search test matrices are not repeated in this scope.
 
 Final receipts and any regression decisions belong in [GRADUATION.md](../GRADUATION.md).

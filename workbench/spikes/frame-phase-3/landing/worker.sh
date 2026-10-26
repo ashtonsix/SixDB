@@ -11,6 +11,22 @@ case "$(uname -m)" in
   *) profiles="neon" ;;
 esac
 profiles=${SIXDB_FRAME_PROFILES:-$profiles}
+checks=(ikea_frame_description_check ikea_frame_manifest_check ikea_frame_group_image_check
+  ikea_frame_reader_check ikea_frame_stages_check ikea_example_frame_ordinary ikea_example_frame_owner
+  ikea_selection_check ikea_intervals_search_check ikea_intervals_seams_check ikea_intervals_wide_check
+  ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_admission_check
+  ikea_seriespack_ownership_check ikea_filters_check)
+pattern='^ikea_(frame_.*_check|example_frame_.*|selection_check|intervals_(search|seams|wide)_check|seriespack(_descriptor|_admission|_ownership)?_check|filters_check)$'
+case "${SIXDB_FRAME_CHECKS:-full}" in
+  full) ;;
+  intervals)
+    checks=(ikea_frame_description_check ikea_frame_manifest_check ikea_frame_group_image_check
+      ikea_frame_reader_check ikea_frame_stages_check ikea_example_frame_ordinary ikea_example_frame_owner
+      ikea_intervals_wide_check)
+    pattern='^ikea_(frame_.*_check|example_frame_.*|intervals_wide_check)$'
+    ;;
+  *) printf 'Unknown check scope: %s\n' "$SIXDB_FRAME_CHECKS" >&2; exit 2 ;;
+esac
 for profile in $profiles; do
   case "$profile" in
     avx512) march=znver5; tune=zen5 ;;
@@ -27,11 +43,7 @@ for profile in $profiles; do
     -DSIXDB_SPIKES=frame-phase-3 -DSIXDB_TEST_SCOPE=full \
     -DSIXDB_MARCH="$march" -DSIXDB_TUNE="$tune" > "$out/configure.txt" 2>&1
   /usr/bin/time -v cmake --build "$build" --target \
-    ikea_frame_description_check ikea_frame_manifest_check ikea_frame_group_image_check \
-    ikea_frame_reader_check ikea_frame_stages_check ikea_example_frame_ordinary ikea_example_frame_owner \
-    ikea_selection_check ikea_intervals_search_check ikea_intervals_seams_check ikea_intervals_wide_check \
-    ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_admission_check \
-    ikea_seriespack_ownership_check ikea_filters_check \
+    "${checks[@]}" \
     frame3_native_controls_check frame_landing_measure \
     -j "$SIXDB_BUILD_JOBS" > "$out/build.txt" 2>&1
   sha256sum "$build/workbench/spikes/frame-phase-3/landing/frame_landing_measure" \
@@ -39,7 +51,7 @@ for profile in $profiles; do
   llvm-size-21 "$build/workbench/spikes/frame-phase-3/landing/frame_landing_measure" \
     "$build/ikea/libikea_frame.a" > "$out/text-size.txt"
   printf '%s checks %s\n' "$(date -u +%FT%TZ)" "$profile" >> "$SIXDB_RESULTS/progress.txt"
-  ctest --test-dir "$build" -R '^ikea_(frame_.*_check|example_frame_.*|selection_check|intervals_(search|seams|wide)_check|seriespack(_descriptor|_admission|_ownership)?_check|filters_check)$' \
+  ctest --test-dir "$build" -R "$pattern" \
     --output-on-failure --no-tests=error > "$out/checks.txt" 2>&1
   "$build/workbench/spikes/frame-phase-3/controls/frame3_native_controls_check" > "$out/native-controls.txt" 2>&1
   printf '%s measure %s\n' "$(date -u +%FT%TZ)" "$profile" >> "$SIXDB_RESULTS/progress.txt"
