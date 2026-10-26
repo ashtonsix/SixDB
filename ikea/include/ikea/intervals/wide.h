@@ -12,6 +12,11 @@
 // spacing) readable checkpoints; every rank and visited range within count.
 // No readable halo is assumed beyond them, and the field at a checkpoint rank
 // is never read.
+//
+// field_xor is applied to every field as it is read, so a parent can borrow
+// fields still in its own encoding (Frame's offset binary). In
+// visit_intervals a sink may overwrite the field of the rank it is given,
+// so a parent can reconstruct in place over its decoded fields.
 #pragma once
 #include <ikea/intervals/detail/search.h>
 #include <ikea/intervals/types.h>
@@ -29,14 +34,16 @@ struct wide_sizes {
     const std::uint64_t *checkpoints; // the end of each region's first rank
     unsigned count;
     unsigned spacing; // ranks per checkpoint, at least 1
+    std::uint64_t field_xor = 0;
 
+    std::uint64_t size_of(unsigned rank) const noexcept { return detail::read_element(sizes, rank) ^ field_xor; }
     unsigned size() const noexcept { return count; }
     unsigned groups() const noexcept { return count / spacing + unsigned(count % spacing != 0); }
     std::uint64_t at(unsigned rank) const noexcept {
         const unsigned first = rank - rank % spacing;
         std::uint64_t end = detail::read_element(checkpoints, rank / spacing);
         for (unsigned i = first + 1; i <= rank; ++i)
-            end += detail::read_element(sizes, i);
+            end += size_of(i);
         return end;
     }
     std::uint64_t start(unsigned rank) const noexcept {
@@ -57,7 +64,7 @@ struct wide_sizes {
                 position = end, ++rank;
             }
             for (; rank < limit; ++rank) {
-                end += detail::read_element(sizes, rank);
+                end += size_of(rank);
                 [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
                 position = end;
             }
@@ -75,7 +82,7 @@ struct wide_sizes {
         const unsigned group = next - 1, first = group * spacing, last = first + std::min(spacing, count - first);
         std::uint64_t end = detail::read_element(checkpoints, group);
         for (unsigned rank = first + 1; rank < last; ++rank) {
-            end += detail::read_element(sizes, rank);
+            end += size_of(rank);
             if (detail::meets<Edge>(end, query.value))
                 return rank;
         }
@@ -90,12 +97,15 @@ struct wide_ends {
     const std::uint64_t *checkpoints;
     unsigned count;
     unsigned spacing;
+    std::uint64_t field_xor = 0;
+
+    std::uint64_t end_of(unsigned rank) const noexcept { return detail::read_element(ends, rank) ^ field_xor; }
 
     unsigned size() const noexcept { return count; }
     unsigned groups() const noexcept { return count / spacing + unsigned(count % spacing != 0); }
     std::uint64_t at(unsigned rank) const noexcept {
         const std::uint64_t base = detail::read_element(checkpoints, rank / spacing);
-        return rank % spacing ? base + detail::read_element(ends, rank) : base;
+        return rank % spacing ? base + end_of(rank) : base;
     }
     std::uint64_t start(unsigned rank) const noexcept { return rank ? at(rank - 1) : at(0); }
     /// Consecutive ranks, region by region: one checkpoint per region, then
@@ -113,7 +123,7 @@ struct wide_ends {
                 position = base, ++rank;
             }
             for (; rank < limit; ++rank) {
-                const std::uint64_t end = base + detail::read_element(ends, rank);
+                const std::uint64_t end = base + end_of(rank);
                 [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
                 position = end;
             }
@@ -129,7 +139,7 @@ struct wide_ends {
         const unsigned group = next - 1, first = group * spacing, last = first + std::min(spacing, count - first);
         const std::uint64_t base = detail::read_element(checkpoints, group);
         for (unsigned rank = first + 1; rank < last; ++rank)
-            if (detail::meets<Edge>(base + detail::read_element(ends, rank), query.value))
+            if (detail::meets<Edge>(base + end_of(rank), query.value))
                 return rank;
         return last;
     }

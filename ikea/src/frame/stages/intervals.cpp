@@ -134,22 +134,18 @@ class intervals_stage final : public stage {
         children_[0]->describe(u, c);
     }
 
-    // Decoded fields become two's-complement differences, then Intervals
-    // reconstructs the block from its checkpoints.
-    template <class F> void reconstructed(const std::uint64_t *fields, const std::uint64_t *cp, unsigned n, F &&f) const {
-        if (relative())
-            in::wide_ends{fields, cp, n, spacing_}.visit_intervals(0, n, f);
-        else
-            in::wide_sizes{fields, cp, n, spacing_}.visit_intervals(0, n, f);
-    }
+    // Intervals reconstructs the block from its checkpoints, reading the
+    // decoded fields in offset binary and overwriting each with its value.
     void decode(unsigned u, unsigned b, std::uint64_t *out) const override {
-        alignas(64) std::uint64_t fields[block_rows], cp[block_rows];
-        children_[0]->decode(u, b, fields);
+        alignas(64) std::uint64_t cp[block_rows];
+        children_[0]->decode(u, b, out);
         checkpoints(u, b, cp);
         const unsigned m = rows_in(u, b);
-        for (unsigned r = 0; r < m; ++r)
-            fields[r] ^= bias;
-        reconstructed(fields, cp, m, [&](unsigned r, in::interval<std::uint64_t> v) { out[r] = v.limit; });
+        const auto write = [&](unsigned r, in::interval<std::uint64_t> v) { out[r] = v.limit; };
+        if (relative())
+            in::wide_ends{out, cp, m, spacing_, bias}.visit_intervals(0, m, write);
+        else
+            in::wide_sizes{out, cp, m, spacing_, bias}.visit_intervals(0, m, write);
     }
     std::uint64_t get(unsigned u, unsigned row) const override {
         const std::uint64_t cp = children_[1]->get(u, row / spacing_);
@@ -158,13 +154,11 @@ class intervals_stage final : public stage {
             return cp;
         alignas(64) std::uint64_t w[block_rows];
         if (relative()) { // no prefix: the checkpoint plus one field
-            w[k] = children_[0]->get(u, row) ^ bias;
-            return in::wide_ends{w, &cp, k + 1, spacing_}.at(k);
+            w[k] = children_[0]->get(u, row);
+            return in::wide_ends{w, &cp, k + 1, spacing_, bias}.at(k);
         }
         children_[0]->read(u, row - k + 1, k, w + 1);
-        for (unsigned i = 1; i <= k; ++i)
-            w[i] ^= bias;
-        return in::wide_sizes{w, &cp, k + 1, spacing_}.at(k);
+        return in::wide_sizes{w, &cp, k + 1, spacing_, bias}.at(k);
     }
     // Within a region of spacing G starting at checkpoint c, the values sum
     // to G c + sum_i (G - i) delta_i, and delta_i = field_i - 2^63: one exact
@@ -217,10 +211,8 @@ class intervals_stage final : public stage {
                 const unsigned k = std::min(spacing_, m - g * spacing_) - 1;
                 alignas(64) std::uint64_t w[block_rows];
                 children_[0]->read(u, b * block_rows + g * spacing_ + 1, k, w + 1);
-                for (unsigned i = 1; i <= k; ++i)
-                    w[i] ^= bias;
-                const unsigned below = relative() ? in::lower_bound(in::wide_ends{w, &cp[g], k + 1, spacing_}, t)
-                                                  : in::lower_bound(in::wide_sizes{w, &cp[g], k + 1, spacing_}, t);
+                const unsigned below = relative() ? in::lower_bound(in::wide_ends{w, &cp[g], k + 1, spacing_, bias}, t)
+                                                  : in::lower_bound(in::wide_sizes{w, &cp[g], k + 1, spacing_, bias}, t);
                 c += m - g * spacing_ - below;
             }
         });

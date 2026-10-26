@@ -87,6 +87,32 @@ int main() {
                 check_source(in::wide_ends{e.ends.data(), e.checkpoints.data(), n, spacing}, *x, ordered, spacing);
             }
         }
+    // Fields in another encoding (xor), reconstructed in place over them.
+    for (unsigned spacing : {1u, 3u, 16u, 64u})
+        for (unsigned n : {1u, 17u, 256u, 700u}) {
+            std::vector<u64> x(n);
+            u64 a = 12345;
+            for (unsigned r = 0; r < n; ++r)
+                x[r] = a += (rng() % 2001) - 1000;
+            const auto e = encode(x, spacing);
+            constexpr u64 key = u64{1} << 63;
+            for (int which = 0; which < 2; ++which)
+                for (unsigned first : {0u, 1u, spacing, n / 2})
+                    if (first < n) {
+                        std::vector<u64> fields = which ? e.ends : e.sizes;
+                        for (auto &f : fields)
+                            f ^= key;
+                        const unsigned take = n - first;
+                        auto write = [&](unsigned r, in::interval<u64> v) { fields[r] = v.limit; };
+                        if (which)
+                            in::wide_ends{fields.data(), e.checkpoints.data(), n, spacing, key}.visit_intervals(first, take, write);
+                        else
+                            in::wide_sizes{fields.data(), e.checkpoints.data(), n, spacing, key}.visit_intervals(first, take, write);
+                        // A range from first reads ranks before it through start(),
+                        // which still sees the encoded fields: compare the range only.
+                        expect(std::equal(fields.begin() + first, fields.end(), x.begin() + first), "in place", spacing, n);
+                    }
+        }
     // Boundary arithmetic at the largest counts: a final region of one rank
     // answers from checkpoints alone, without reading a field.
     {
