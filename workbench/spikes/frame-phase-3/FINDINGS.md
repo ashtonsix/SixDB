@@ -1,6 +1,10 @@
 # What the phase 3 prototypes found
 
-24 October 2026. These test the proposal in the [README](README.md); the code
+These are historical prototype findings. The current Ikea extraction and
+qualified native controls are in [GRADUATION.md](GRADUATION.md); its exact
+SeriesPack sums and sizes-form weighted SUM supersede the old decode routes.
+
+24 October 2026. These test the [design](DESIGN.md); the code
 is in [proto/](proto/) and the retained summaries in
 [proto/evidence/](proto/evidence/). Timings are warm, single core, medians of
 three process repeats on Zen 5 (c8a.8xlarge, AVX-512 and AVX2) and Graviton 4
@@ -399,6 +403,6 @@ remaining step.
   descriptors inside it.
 - **Delta lands with the laws that won**: relative ends' SUM and points, the
   monotone COUNT, framed checkpoints; the sizes form keeps decode for SUM
-  ([README landing plan](README.md#landing-plan)).
+  ([historical landing plan](DESIGN.md#landing-plan)).
 - **SeriesPack is asked for erased range operations**, so Frame compiles no
   width-specialised kernels.

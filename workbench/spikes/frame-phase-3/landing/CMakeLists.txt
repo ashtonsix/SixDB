@@ -1,0 +1,3 @@
+add_executable(frame_landing_measure EXCLUDE_FROM_ALL measure.cpp)
+sixdb_target(frame_landing_measure)
+target_link_libraries(frame_landing_measure PRIVATE ikea::frame frame3_widths frame_cells_controls)

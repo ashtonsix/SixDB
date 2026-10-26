@@ -4,7 +4,12 @@
 (Codex). Evidence is in
 [FINDINGS.md](FINDINGS.md), decisions and open items in
 [CHECKLIST.md](CHECKLIST.md), and the history and full argument in the
-[README](README.md).
+[design history](DESIGN.md).
+
+The read/build core is now implemented in Ikea; combined native qualification
+is recorded in [GRADUATION.md](GRADUATION.md). The [consumer reference](../../../ikea/docs/frame/reference.md)
+owns actual source names and public contracts. The map below is the accepted
+extraction plan, retained with its rationale.
 
 Engine research will settle much of Frame's eventual interface, and that
 research needs a Frame to work on. So the first landing is a foundation:
@@ -75,30 +80,27 @@ must not pay for the deferred mutation machinery.
 
 ## Source, namespace and class map
 
-This is the **proposed extraction**, not files already landed. Names are working
-names; the responsibility boundaries are the proposal. One compiled
-`ikea::frame` target has the following source split. Header paths are relative
-to `ikea/include/ikea/frame/`; TU paths to `ikea/src/frame/`.
+One compiled `ikea::frame` target contains the initial implementation. Header
+paths below are relative to `ikea/include/ikea/frame/`; TUs to `ikea/src/frame/`.
+The [consumer reference](../../../ikea/docs/frame/reference.md#source-and-extension-map)
+owns the full map and contracts.
 
-| Namespace / header | Main types or entries | Compiled TU | Responsibility |
-| --- | --- | --- | --- |
-| `ikea::frame`, `description.h` | `description`, `node`, `edge`, capabilities | `description.cpp` | Versioned meaning, child domains/sharing and executable-shape admission; separate from fit policy |
-| `ikea::frame`, `image.h` | `stream_manifest`, `image_view`, `validated_image`; `required_sections` | `image.cpp` | Placement bounds and dependency closure; grant-aware content proof, invoking each stage's validator |
-| `ikea::frame`, `reader.h` | `reader`, `bind_reader` | `reader.cpp` | Checked operations and complete-request admission; owns bound execution state, borrows immutable payload |
-| `ikea::frame`, `build.h` | `fitting_policy`, `fit_result`; fit/build/emit | `build.cpp` | Construction/re-encoding from caller-supplied values, output sizing and fit facts; delegates each stage's fitting and emission |
-| `ikea::frame::author`, `author/stage.h` | `stage_spec`, build/read requests and law hooks; capability declarations | Hooks implemented in the stage TUs below | Supported extension contract: child roles/domains, image rules, decode and optional read laws; mutation remains unavailable |
-| `ikea::frame::detail`, `detail/stage.h` | Internal `stage`, `pack_stage` | `stages/pack.cpp` | Pack fitting, section rules and leaf adaptation; calls SeriesPack's runtime readers and initialization |
-| Same private namespace | `bound_stage` | `stages/bound.cpp` | Window/exception fitting, image proof, compensation laws and explicit capacity metadata |
-| Same private namespace | `intervals_stage` | `stages/intervals.cpp` | Checkpoint/field child mapping, evidence and interval laws; reconstruction/search delegated to Intervals |
-| `ikea::frame::detail`, `detail/execution.h` | Execution state and optional `read_plan` | `execution.cpp` | Coarse/fine traversal, decode fallback, fused consumers and tuned plans; dispatch at block/group or binding-unit grain |
+| Namespace / header | Main types or entries | Compiled TUs and responsibility |
+| --- | --- | --- |
+| `ikea::frame`, `types.h`, `description.h` | geometry, `summary`, `error`; `description`, `node`, `edge` | `description.cpp`: versioned meaning, child domains/sharing and executable-shape admission |
+| `ikea::frame`, `image.h` | `stream_manifest`, `image_view`, `validated_image`; `required_sections` | `manifest.cpp`: placement/closure; `group_image.cpp`: parent/leaf proof; `image.cpp`: granted attachment and cross-stream proof |
+| `ikea::frame`, `reader.h` | `reader`, `bind_reader` | `reader.cpp`: complete-request admission and selection adaptation; retains execution/proof, borrows payload |
+| `ikea::frame`, `build.h` | `fitting_policy`, `stream_images`, `built_unit`, `build` | `build.cpp`: admitted stages, fit/emit one unit and fit census |
+| `ikea::frame::author`, `author/stage.h` | `stage`, `fit_input`, `census`, `point_leaf` | `stage.cpp`: stream traversal and defined decode fallbacks |
+| `ikea::frame::detail`, `detail/stages.h` | factories and private pack/bound/interval stages | `stages/pack.cpp`, `bound.cpp`, `intervals.cpp`: each stage's fitting, section law and algebra; leaf mechanisms delegated to SeriesPack/Intervals |
+| `ikea::frame::detail`, `detail/execution.h` | internal read plan | `execution.cpp`: bind-time point entries |
 
-`ikea/frame.h` is the ordinary umbrella. Public headers expose contracts and
-small admission/forwarding code, not every stage body. The author contract is
-supported, but neither the prototype's virtual class nor a binary plugin ABI is
-promised. Stage hooks share the public coordinate, capability and effect types;
-`detail` chooses their concrete representation.
-There is no initial `change.h`/`change.cpp` or public `prepare_group`. Future
-change support can extend these contracts without importing the research preparer.
+`ikea/frame.h` is the ordinary umbrella. Public headers expose contracts rather
+than width-specific kernels. A new stage adds its description/image law, hooks
+and conformance together; an arbitrary new description is not automatically
+executable. There is no binary plugin ABI and no initial `change.h`/`change.cpp`
+or public `prepare_group`. The actual Orbital owner example lives separately
+from the library and links Orbital only in that example.
 
 Three seams govern the split:
 
