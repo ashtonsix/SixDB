@@ -1,5 +1,9 @@
 # Execution substrate, first probe: dispatch is not phase 1's cost
 
+The unpublished retained-memory census and its check are
+[archived](../../../notebook/retired-spikes.md#paused-frame-adapters-26-october-2026).
+They were never integrated into the paused shared-image driver.
+
 > **Retired image, 2026-10-25.** The shared image built here over front C's
 > `plane256` bodies, with its own descriptor columns and corrections, bypasses
 > SeriesPack and is superseded. SeriesPack's kernels reach the same speed

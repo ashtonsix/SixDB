@@ -1,5 +1,9 @@
 # Complete queries on the shared image
 
+The unpublished same-runner Calico adapter is
+[archived](../../../../notebook/retired-spikes.md#paused-frame-adapters-26-october-2026)
+with its local protocol checks; its native runs produced no timing results.
+
 Front A owns this instrument and its reusable native controls. It consumes B's
 unchanged [image](../../substrate/image.h) and C's header leaves; it introduces
 no Frame representation or Engine interface.

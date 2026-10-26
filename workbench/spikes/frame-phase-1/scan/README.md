@@ -1,5 +1,9 @@
 # Scans, residency and selective consumption
 
+The later unpublished pair-query extension is
+[archived with its old checks](../../../notebook/retired-spikes.md#paused-frame-adapters-26-october-2026).
+It was paused and superseded without final-source qualification.
+
 Ikea LEAD owns the complete comparison. Ashton's 23 October steer prioritises
 Frame's useful strengths over winning every hot loop: compressed scans,
 selective consumption and avoiding materialisation. Point work keeps separate

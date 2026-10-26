@@ -181,6 +181,37 @@ current offline report recipes point to relocated, unchanged scripts.
 Eight-bit tags, 16-slot logical groups and 32/64-byte ISA reads remain distinct
 decisions, with their losing controls and source epochs preserved.
 
+## Paused Frame adapters (26 October 2026)
+
+Three unpublished extensions were paused with the phase-2 shared-image direction
+and later superseded. Ikea LEAD confirmed they have no active dependency:
+
+- Phase-1 scan pairs: complete predicate(A) → SUM/COUNT(B), with staged/fused,
+  native and Polars controls.
+- Phase-2 cells' optional Calico SUM adapter: actual pinned controls in the same
+  runner, with private interpretation owners and separate conditioning/retention
+  accounts. Its two native scripts failed before timing.
+- Phase-2 retained-memory ledger: physical unions of object/vector capacities
+  and old/current views, never integrated into the driver.
+
+The [recovery archive](../spikes/frame-phase-2/paused-adapters.json) preserves all
+18 exact working files, ten committed originals, their patch, per-file hashes,
+and selected old checks/results and recovery pointers. Publication and an
+independent full fetch verified every member before removing the inactive copies.
+Those old receipts do not qualify the final unpublished sources. Committed
+controls and their existing findings retain their own source/evidence identities;
+current Frame use starts with [Ikea](../../ikea/docs/frame/usage.md).
+
+Recover into a fresh ignored directory:
+
+```sh
+orb -m ubuntu python3 workbench/tools/artifacts.py fetch \
+  workbench/spikes/frame-phase-2/paused-adapters.json \
+  build/recovered/paused-frame-adapters
+```
+
+Read `README.md` and `state.json` there before reproducing an old experiment.
+
 ## Recovery
 
 Browse the [complete checkpoint](https://github.com/ashtonsix/SixDB/tree/275698524c58dea08f19961dbc2940cae68b405b/workbench/spikes)
