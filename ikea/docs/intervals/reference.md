@@ -188,6 +188,30 @@ policy are chosen independently by the owner; the
 [performance findings](../../../workbench/spikes/intervals/RAISE-BAR.md) state
 actual workloads, timings, instruction/resource analysis and counterexamples.
 
+## Wide decoded windows
+
+`wide_sizes{fields,checkpoints,count,spacing,field_xor=0}` and `wide_ends{...}`
+borrow u64 fields already decoded by a parent. They define no persisted format.
+A checkpoint is the **endpoint at its region's first rank**, not the region's
+initial cut. That rank's field is ignored. Other fields are differences from
+the preceding endpoint (sizes) or offsets from the checkpoint (ends), reconstructed
+modulo 2^64. `field_xor` translates each field before addition; Frame uses it for
+offset binary without a separate conversion pass.
+
+The owner supplies spacing >= 1, `count` readable fields and ceil(count/spacing)
+readable checkpoints. `at`, `start` and `visit_intervals(begin,take,sink)` require
+valid ranks/ranges and no halo. Reconstruction does not require ordering;
+`lower_bound`/`upper_bound` additionally require nondecreasing reconstructed ends.
+`start(0)` is the first checkpoint; add an explicit origin with `from_ends` when
+ordinary interval geometry is needed.
+
+The visitor carries the previous endpoint across region boundaries, calling
+`sink(rank, interval<u64>{previous,end})`. Its sink may overwrite the field at
+that rank, allowing in-place reconstruction; other borrowed source controls and
+unvisited fields must stay coherent. The resulting fields no longer have their
+encoded interpretation. This explicit overwrite route is separate from ordinary
+read callbacks, which cannot mutate their source.
+
 ## Immutable projections
 
 `run_end_source{ends_minus_one,count}` borrows nondecreasing u8 fields and returns

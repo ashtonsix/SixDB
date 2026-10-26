@@ -8,8 +8,9 @@
 
 The read/build core is now implemented in Ikea; combined native qualification
 is recorded in [GRADUATION.md](GRADUATION.md). The [consumer reference](../../../ikea/docs/frame/reference.md)
-owns actual source names and public contracts. The map below is the accepted
-extraction plan, retained with its rationale.
+owns actual source names and public contracts. The map below describes the
+implementation; its rationale and known limits remain part of the proposal. Performance ratios below describe the original
+research; the landing receipt owns the public extraction comparisons.
 
 Engine research will settle much of Frame's eventual interface, and that
 research needs a Frame to work on. So the first landing is a foundation:

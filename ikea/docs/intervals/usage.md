@@ -116,7 +116,8 @@ An entry-rank filter cannot replace that early skip.
 | G16 group-relative ends | `relative_end_source<L,P>` | Add one checkpoint; local ends must fit L. |
 | Sizes with fewer checkpoints | `sparse_sizes<G,W,P>` | Fewer checkpoints, more local prefix work for random ranks. |
 | Ends relative to sparse checkpoints | `sparse_ends<G,L,P>` | Direct local lookup, but larger G can widen L. |
-| Immutable u8 ends-minus-one | `run_end_source` | Logical exclusive ends are 1..256; tiny lists keep comparison projection. |
+| Decoded u64 differences or checkpoint-relative fields | `wide_sizes`, `wide_ends` | Borrow fields/checkpoints from a parent decoder; modular reconstruction needs no ordering. |
+| Immutable u8 ends-minus-one | `run_end_source` | Logical exclusive ends are 1..256; native-byte search serves every count. |
 | Constant size | `fixed_source<P>` | No boundary plane; owner proves coordinate arithmetic cannot wrap. |
 
 ![The same boundaries represented as absolute ends, sizes plus checkpoints, or relative ends plus checkpoints. All locate rank 18 at start 37 and end 42.](images/encodings.svg)
@@ -180,7 +181,7 @@ The three live consumers use this seam differently:
 | --- | --- | --- |
 | StreamPack | Common kernels inside its typed, fused complete value reads and carried packing walks | Compact schema, count/extent, U, bitmap/retirement, payload movement and effects. Use the public StreamPack value API. |
 | Directory | Direct u32 separators and exact K-byte logical projections with ordinary lower/upper search | Tree-specific fences, selected child/Object access and coherent Scope lifetime. |
-| Frame | Native-byte `run_end_source` (or `direct_source<u8>` over the end-1 plane, with a readable window where the image admits one) for point work at any run count; raw projection only where a predictable program measures better | Tiny/fused readers, descriptor interpretation, signed prediction/exception algebra, block masks and retained frame lifetime. |
+| Frame | `wide_sizes`/`wide_ends` over decoded fields and separately framed checkpoints; `run_end_source` for the research run stage | Fitting/image laws, offset-binary interpretation, block masks and retained frame lifetime. |
 
 A namespace migration alone does not accelerate a caller. The
 [live caller audit](../../../workbench/spikes/intervals/AUDIT.md) distinguishes

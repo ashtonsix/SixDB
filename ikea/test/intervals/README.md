@@ -1,6 +1,6 @@
 # Intervals checks
 
-All four executables compile against maintained Intervals alone. Their expected
+All five executables compile against maintained Intervals alone. Their expected
 results come from independent endpoint/intersection walks, literal cuts and
 original input values rather than a second call to the tested kernel.
 
@@ -10,6 +10,7 @@ original input values rather than a second call to the tested kernel.
 | `ikea_intervals_cuts_check` | Every four-rank size combination 0..2 and every eligibility pattern; raw/selected literal-cut ownership, overlap, range preflight; nonzero near-top u64 origins, strings/multiword keys, 1025 intervals, nested selection and UINT_MAX sentinel arithmetic. |
 | `ikea_intervals_sparse_check` | 1920 fixture states across G16/32/64/128/256, u8/u16 fields, u16/u32/u64 checkpoints, exact/full-capacity read grants, zero regions, partial native tails, serial/independent prefixes, carried ranges, overlap, phases and ordered replacement. |
 | `ikea_intervals_seams_check` | Directory comparison domains; Frame logical endpoint 256, counts 0..256 and tiny projections; strided companions with poisoned siblings; exact/inverted filters; no geometry entry for empty selection; protected16/32/48 and G64 tails; 4536 checked append/resize/refusal/damage cases and an independent retained old image. |
+| `ikea_intervals_wide_check` | Modular u64 reconstruction/search, partial checkpoint regions, every boundary-crossing range, xor-translated fields and in-place reconstruction, UINT_MAX count arithmetic. |
 
 The ordinary example is a standalone Intervals consumer: cuts, rank filtering,
 borrowed size editing and immutable run ends. The composition example adds
@@ -28,7 +29,7 @@ targets are included in `ikea_validate`:
 
 ```sh
 cmake --build BUILD --target ikea_intervals_search_check ikea_intervals_cuts_check \
-  ikea_intervals_sparse_check ikea_intervals_seams_check \
+  ikea_intervals_sparse_check ikea_intervals_seams_check ikea_intervals_wide_check \
   ikea_example_intervals_ordinary ikea_example_intervals_composition
 ctest --test-dir BUILD --output-on-failure -R '^ikea_(intervals_.*_check|example_intervals_.*)$'
 python3 ikea/test/headers.py BUILD --module intervals

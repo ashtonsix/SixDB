@@ -1,8 +1,9 @@
 # Ikea Frame, phase 3
 
 The first read/build implementation is in [`ikea::frame`](../../../ikea/docs/frame/usage.md).
-Combined native qualification is in progress; the [landing receipt](GRADUATION.md)
-records the exact source, checks, control comparisons and remaining limits.
+The read/build core is qualified on Zen 5 AVX2/AVX-512 and Graviton 4 NEON.
+The [landing receipt](GRADUATION.md) records the exact source, checks, control
+comparisons and remaining limits.
 
 The accepted foundation composes intervals (sizes or relative ends), bounds and
 SeriesPack packing over non-null u64 values. Canonical descriptions, explicit
