@@ -31,7 +31,7 @@ and retain it across an owner wait if the unfinished operation still uses it.
 
 | Module | Borrowed backing | Coordinate law |
 | --- | --- | --- |
-| SeriesPack | `span<const uint16_t>` or `span<const bitset256>` | Numeric bit r of word j names `first+16*j+r`; first is divisible by 16. |
+| SeriesPack | `span<const uint16_t>` or `span<const bitset256>` | u16 word j names `first+16*j+r`; bitset j names `first+256*j+r`. First is divisible by 16. |
 | TuplePack | `span<const uint64_t>` | Numeric bit r of word j names `first+64*j+r`; any origin is valid. |
 | Intervals | `span<const std::byte>` | Bit r of byte j names `first+8*j+r`; any origin is valid, with no readable word padding. |
 

@@ -1,12 +1,13 @@
 #include <ikea/frame.h>
 #include <algorithm>
 #include <array>
-#include <cassert>
+#include <cstdlib>
 #include <cstdio>
 #include <vector>
 
 namespace fr = ikea::frame;
 using u64 = std::uint64_t;
+template<class T> void check(const T& value) { if (!value) std::abort(); }
 
 // This example places each emitted group in a separate allocation. An owner
 // may instead co-pack sections and record their distinct offsets and grants.
@@ -40,36 +41,36 @@ int main() {
     for (unsigned r=0;r<values.size();++r) values[r]=1000+r/16;
     values[19]=~u64{0};
     auto built=fr::build(recipe,values);
-    assert(built);
+    check(built);
     const placement placed(*built);
     const auto encoded=fr::encode(recipe);
-    assert(encoded);
+    check(encoded);
     const auto recovered=fr::decode(*encoded);
-    assert(recovered);
+    check(recovered);
     const auto image=fr::validate_image(*recovered,placed.view(values.size()));
-    assert(image);
+    check(image);
     const auto reader=fr::bind_reader(*image);
     fr::u128 expected=0;
     for (auto x:values) expected+=x;
     const auto total=reader.sum();
-    assert(total && *total==expected);
+    check(total && *total==expected);
     std::vector<u64> output(values.size());
-    assert(reader.read(0,output) && output==values);
+    check(reader.read(0,output) && output==values);
 
     // The coarse mask names blocks; fine masks name original unit rows.
     ikea::bitset256 coarse=ikea::bitset256::first_n(2);
     std::array<ikea::bitset256,fr::unit_blocks> matches;
     const auto selected_blocks=ikea::intervals::selection::bits(0,coarse);
-    assert(reader.filter(ikea::comparison::greater_equal,1020,matches,selected_blocks));
+    check(reader.filter(ikea::comparison::greater_equal,1020,matches,selected_blocks));
     // Reuse filter output directly, without flattening bitset subobjects.
     const auto summary=reader.summarise_selected(
         ikea::seriespack::selection::bits(0,std::span<const ikea::bitset256>(matches)),selected_blocks);
-    assert(summary);
+    check(summary);
     fr::summary want;
     for (unsigned r=0;r<512;++r) if(values[r]>=1020) {
         want.sum+=values[r];++want.count;
         want.min=std::min(want.min,values[r]);want.max=std::max(want.max,values[r]);
     }
-    assert(summary->sum==want.sum && summary->count==want.count && summary->min==want.min && summary->max==want.max);
+    check(summary->sum==want.sum && summary->count==want.count && summary->min==want.min && summary->max==want.max);
     std::printf("Frame: %zu rows, %zu streams, exact SUM and fused selected summary pass\n",reader.size(),built->streams.size());
 }
