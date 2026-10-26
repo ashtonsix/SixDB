@@ -17,13 +17,9 @@ template <class U> std::expected<erased_reader<U>, error> bind_reader(const dens
         return std::unexpected(error::description);
     if (source.storage == geometry::striped && !striped_width(source.width))
         return std::unexpected(error::description);
-    const auto rows =
-        source.storage == geometry::local ? 8 : 32 * (8 / std::gcd(source.width % 8, 8u));
-    const auto bytes = rows * source.width / 8;
-    const auto tiles = source.count / rows + (source.count % rows != 0);
-    if (tiles > std::numeric_limits<std::size_t>::max() / bytes)
-        return std::unexpected(error::overflow);
-    if (source.bytes.size() < tiles * bytes)
+    const auto required = layout_value{source.width, 0, source.storage}.required_storage(source.count);
+    if (!required) return std::unexpected(required.error());
+    if (source.bytes.size() < required->plane_bytes[0])
         return std::unexpected(error::capacity);
     std::expected<erased_reader<U>, error> result = std::unexpected(error::description);
     detail::each<sizeof(U) * 8>([&](auto k) {

@@ -31,7 +31,7 @@ and retain it across an owner wait if the unfinished operation still uses it.
 
 | Module | Borrowed backing | Coordinate law |
 | --- | --- | --- |
-| SeriesPack | `span<const uint16_t>` | Numeric bit r of word j names `first+16*j+r`; first is divisible by 16. |
+| SeriesPack | `span<const uint16_t>` or `span<const bitset256>` | Numeric bit r of word j names `first+16*j+r`; first is divisible by 16. |
 | TuplePack | `span<const uint64_t>` | Numeric bit r of word j names `first+64*j+r`; any origin is valid. |
 | Intervals | `span<const std::byte>` | Bit r of byte j names `first+8*j+r`; any origin is valid, with no readable word padding. |
 
@@ -68,6 +68,16 @@ positions strictly before its argument, including the endpoint 256.
 `mask(first,count)` extracts at most 64 positions, requires the window to fit,
 and returns bit r for first+r. `mask(256,0)` is valid. The value has natural u64
 alignment; an owner can request stronger alignment for its own storage.
+
+`bitset256::first_n(n)` constructs positions `[0,n)` for `n` from 0 through
+256. Intersection uses `a & b`; `positions.for_each(callback)` visits set
+positions in increasing order. These preserve the value's coordinate domain;
+they do not convert block positions into rows.
+
+SeriesPack also accepts `bits(first, span<const bitset256>)` for consecutive
+256-row blocks, including Frame FILTER output. It borrows the block objects
+without flattening/copying or treating adjacent arrays as one u64 array. Its
+origin follows SeriesPack's divisible-by-16 rule; bounded masks may cross blocks.
 
 Every selection type accepts a named `bitset256` at an original-coordinate
 origin, without copying or aliasing its u64 objects as u16. The selector borrows

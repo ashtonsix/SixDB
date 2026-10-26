@@ -1,5 +1,6 @@
 #pragma once
 #include <ikea/bitset256.h>
+#include <algorithm>
 #include <bit>
 #include <cassert>
 #include <cstddef>
@@ -14,7 +15,7 @@ namespace ikea::seriespack {
 /// under the same coordinate law without reinterpreting its u64 objects as u16.
 /// Keep backing stable through admission/execution; selection is no read grant.
 class selection {
-    enum class kind { all, none, bits, block };
+    enum class kind { all, none, bits, block, blocks };
     kind kind_ = kind::none;
     std::size_t first_ = 0;
     const void* data_ = nullptr;
@@ -69,10 +70,15 @@ class selection {
             return {kind::block, first, &block, 16};
     }
     static selection bits(std::size_t, const bitset256&&) = delete;
+    /// Borrows consecutive original-row blocks without flattening their u64
+    /// subobjects or copying a filter's output. Origin is divisible by sixteen.
+    static selection bits(std::size_t first, std::span<const bitset256> blocks) noexcept {
+        return {kind::blocks, first, blocks.data(), blocks.size()};
+    }
     bool is_all() const noexcept { return kind_ == kind::all; }
     bool is_none() const noexcept { return kind_ == kind::none; }
     bool covers(std::size_t first, std::size_t count) const noexcept {
-        if ((kind_ == kind::bits || kind_ == kind::block) && first_ % 16)
+        if ((kind_ == kind::bits || kind_ == kind::block || kind_ == kind::blocks) && first_ % 16)
             return false;
         if (!count)
             return true;
@@ -80,13 +86,16 @@ class selection {
             return false;
         if (is_all() || is_none())
             return true;
-        return first >= first_ && (first + (count - 1) - first_) / 16 < words_;
+        return first >= first_ && (first + (count - 1) - first_) /
+            (kind_ == kind::blocks ? 256 : 16) < words_;
     }
     /// Trusted covered original row, after covers(row,1).
     bool contains(std::size_t row) const noexcept {
         if (is_all() || is_none())
             return is_all();
         const auto offset = row - first_;
+        if (kind_ == kind::blocks)
+            return static_cast<const bitset256*>(data_)[offset / 256].contains(unsigned(offset % 256));
         if constexpr (std::endian::native == std::endian::big)
             if (kind_ == kind::block)
                 return static_cast<const bitset256*>(data_)->contains(unsigned(offset));
@@ -102,6 +111,15 @@ class selection {
         if (is_all())
             return limit;
         const auto offset = first - first_;
+        if (kind_ == kind::blocks) {
+            const auto* blocks = static_cast<const bitset256*>(data_);
+            const auto local = unsigned(offset % 256);
+            const auto head = std::min(count, 256u - local);
+            auto result = blocks[offset / 256].mask(local, head);
+            if (head < count)
+                result |= blocks[offset / 256 + 1].mask(0, count - head) << head;
+            return result;
+        }
         if constexpr (std::endian::native == std::endian::big)
             if (kind_ == kind::block)
                 return static_cast<const bitset256*>(data_)->mask(unsigned(offset), count);

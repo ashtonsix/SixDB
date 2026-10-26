@@ -78,6 +78,22 @@ void blocks() {
             if (i < 256 && flags[i]) ++population;
         }
         assert(value.count() == population && value.empty() == !population && value.full() == (population == 256));
+        unsigned next = 0, visited = 0;
+        value.for_each([&](unsigned position) {
+            while (next < 256 && !flags[next]) ++next;
+            assert(position == next);
+            ++next;
+            ++visited;
+        });
+        assert(visited == population);
+        for (unsigned n = 0; n <= 256; ++n) {
+            const auto prefix = bitset256::first_n(n);
+            const auto intersection = value & prefix;
+            for (unsigned i = 0; i < 256; ++i) {
+                assert(prefix.contains(i) == (i < n));
+                assert(intersection.contains(i) == (flags[i] && i < n));
+            }
+        }
         std::array<std::byte,32> stored;
         value.store(stored);
         assert(stored == bytes && bitset256::load(bytes) == value);
@@ -107,6 +123,28 @@ void blocks() {
         for (unsigned i = 0; i < 256; ++i) value.set(i, false);
         assert(value.empty());
     }
+}
+void block_sequences() {
+    std::array<bitset256,3> blocks;
+    std::array<bool,768> flags{};
+    for (unsigned r=0;r<flags.size();++r) {
+        flags[r]=(r*17+3)%23<9;
+        if(flags[r]) blocks[r/256].set(r%256);
+    }
+    const auto selected=sp::selection::bits(32,std::span<const bitset256>(blocks));
+    assert(selected.covers(32,768) && !selected.covers(31,1) && !selected.covers(32,769));
+    for (unsigned first=0;first<=768;++first) {
+        if(first<768) assert(selected.contains(32+first)==flags[first]);
+        for(unsigned n=0;n<=64 && first+n<=768;++n) {
+            std::uint64_t expected=0;
+            for(unsigned r=0;r<n;++r) if(flags[first+r]) expected|=std::uint64_t{1}<<r;
+            assert(selected.mask(32+first,n)==expected);
+        }
+    }
+    const auto regions=selected.region_words();
+    for(unsigned r=0;r<768;r+=16) assert(regions(32+r)==selected.mask(32+r,16));
+    assert(!sp::selection::bits(1,std::span<const bitset256>(blocks)).covers(1,1));
+    assert(!sp::selection::bits(0,std::span<const bitset256>{}).covers(0,1));
 }
 void exact_tails() {
     const auto page = std::size_t(sysconf(_SC_PAGESIZE));
@@ -153,6 +191,6 @@ int main() {
     terminal<sp::selection>(); terminal<tp::selection>(); terminal<in::selection>();
     const std::array<std::uint16_t,1> word{1};
     assert(!sp::selection::bits(1,word).covers(1,1));
-    blocks(); exact_tails(); coordinate_limits();
+    blocks(); block_sequences(); exact_tails(); coordinate_limits();
     std::puts("selection: all256 positions, rank endpoints, every bounded window, origins, complements and exact protected tails pass");
 }

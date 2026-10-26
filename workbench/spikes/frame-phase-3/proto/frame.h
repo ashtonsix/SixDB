@@ -27,6 +27,7 @@
 #include <memory>
 #include <string>
 #include <span>
+#include <utility>
 #include <vector>
 
 namespace frame3 {
@@ -80,18 +81,11 @@ inline bool test(comparison op, u64 x, u64 t) {
 
 /// Visit the set positions of a bitset in order.
 template <class F> inline void each(const bitset256 &s, F &&f) {
-    for (unsigned w = 0; w < 4; ++w)
-        for (u64 m = s.words[w]; m; m &= m - 1)
-            f(w * 64 + static_cast<unsigned>(std::countr_zero(m)));
+    s.for_each(std::forward<F>(f));
 }
-inline bitset256 operator&(const bitset256 &a, const bitset256 &b) {
-    return {{a.words[0] & b.words[0], a.words[1] & b.words[1], a.words[2] & b.words[2], a.words[3] & b.words[3]}};
-}
+using ikea::operator&;
 inline bitset256 first_n(unsigned n) {
-    bitset256 s;
-    for (unsigned w = 0; w < 4; ++w)
-        s.words[w] = n >= 64 * (w + 1) ? ~u64{0} : n > 64 * w ? (u64{1} << (n - 64 * w)) - 1 : 0;
-    return s;
+    return bitset256::first_n(n);
 }
 
 struct width_array;

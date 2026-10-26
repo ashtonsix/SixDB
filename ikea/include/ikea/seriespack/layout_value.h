@@ -5,6 +5,12 @@
 #include <expected>
 
 namespace ikea::seriespack {
+/// Complete occupied tiles for dense placement, including a partial last tile.
+/// Plane order is payload, highest byte, next byte. Inactive planes use zero.
+struct storage_requirements {
+    std::size_t tile_rows{};
+    std::array<std::size_t, 3> tile_bytes{}, plane_bytes{};
+};
 /// Shared byte law. Logical count, addresses and actual plane strides
 /// belong to the parent placement, not to this reusable layout description.
 struct layout_value {
@@ -15,6 +21,9 @@ struct layout_value {
         return {L::width, L::heads, L::storage};
     }
     static constexpr std::size_t encoded_size() noexcept { return 8; }
+    /// Metadata-only geometry and dense storage sizing. Refuses an invalid
+    /// byte law or a byte-count overflow; zero rows require no plane storage.
+    [[nodiscard]] std::expected<storage_requirements, error> required_storage(std::size_t rows) const noexcept;
     [[nodiscard]] std::expected<std::size_t, error> encode(ikea::mutable_bytes) const;
     [[nodiscard]] static std::expected<layout_value, error> decode(ikea::bytes);
 };

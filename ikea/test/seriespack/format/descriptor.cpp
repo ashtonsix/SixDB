@@ -92,6 +92,30 @@ int main() {
         IKEA_CHECK(std::ranges::all_of(output, [](byte b) { return b == byte{0xa5}; }));
         IKEA_CHECK(!sp::layout_value::decode(wire(law)));
     }
+    // Runtime sizing must agree with the independently selected concrete law,
+    // including zero-payload heads, partial tiles and checked overflow.
+    const auto check_storage = []<class F>() {
+        const auto law = sp::layout_value::of<F>();
+        for (std::size_t n : {std::size_t{0}, std::size_t{1}, F::tile_rows - 1, F::tile_rows,
+                              F::tile_rows + 1, F::tile_rows * 3}) {
+            const auto r = law.required_storage(n);
+            IKEA_CHECK(r && r->tile_rows == F::tile_rows);
+            const auto tiles = n / F::tile_rows + (n % F::tile_rows != 0);
+            const std::array<std::size_t,3> per_tile{F::tile_bytes,
+                F::heads >= 8 ? F::tile_rows : 0, F::heads == 16 ? F::tile_rows : 0};
+            IKEA_CHECK(r->tile_bytes == per_tile);
+            for (unsigned p = 0; p < 3; ++p) IKEA_CHECK(r->plane_bytes[p] == tiles * per_tile[p]);
+        }
+    };
+    check_storage.template operator()<sp::layout<1>>();
+    check_storage.template operator()<sp::layout<64>>();
+    check_storage.template operator()<sp::layout<8,sp::geometry::local,8>>();
+    check_storage.template operator()<sp::layout<16,sp::geometry::local,16>>();
+    check_storage.template operator()<sp::layout<20,sp::geometry::striped,8>>();
+    check_storage.template operator()<sp::layout<31,sp::geometry::striped,16>>();
+    for (const auto law : invalid) IKEA_CHECK(!law.required_storage(0));
+    const auto overflow = sp::layout_value{64,0,sp::geometry::local}.required_storage(std::numeric_limits<std::size_t>::max());
+    IKEA_CHECK(!overflow && overflow.error() == sp::error::overflow);
     // The former SP v1 count/stride descriptor is not a headless layout law.
     std::array<byte, 40> old{};
     old[0] = byte{'S'}; old[1] = byte{'P'}; old[2] = byte{1};

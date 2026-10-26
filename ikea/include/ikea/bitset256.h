@@ -16,6 +16,28 @@ namespace ikea {
 struct bitset256 {
     std::array<std::uint64_t, 4> words{};
 
+    /// Positions [0,count), with 0 <= count <= 256.
+    static constexpr bitset256 first_n(unsigned count) noexcept {
+        assert(count <= 256);
+        bitset256 result;
+        for (unsigned w = 0; w < 4; ++w) {
+            const unsigned remaining = count > w * 64 ? count - w * 64 : 0;
+            result.words[w] = remaining >= 64 ? ~std::uint64_t{0}
+                             : remaining ? (std::uint64_t{1} << remaining) - 1 : 0;
+        }
+        return result;
+    }
+    /// Visit set positions in increasing order. The callback receives unsigned.
+    template<class F> constexpr void for_each(F&& f) const {
+        for (unsigned w = 0; w < 4; ++w)
+            for (auto bits = words[w]; bits; bits &= bits - 1)
+                f(w * 64 + static_cast<unsigned>(std::countr_zero(bits)));
+    }
+    friend constexpr bitset256 operator&(const bitset256& a, const bitset256& b) noexcept {
+        return {{a.words[0] & b.words[0], a.words[1] & b.words[1],
+                 a.words[2] & b.words[2], a.words[3] & b.words[3]}};
+    }
+
     constexpr bool contains(unsigned position) const noexcept {
         assert(position < 256);
         return words[position / 64] >> (position % 64) & 1;
@@ -80,4 +102,6 @@ struct bitset256 {
     bool operator==(const bitset256&) const = default;
 };
 static_assert(sizeof(bitset256) == 32 && alignof(bitset256) == alignof(std::uint64_t));
+// Also make the hidden friend available to qualified composition adapters.
+constexpr bitset256 operator&(const bitset256&, const bitset256&) noexcept;
 } // namespace ikea
