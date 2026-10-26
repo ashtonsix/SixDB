@@ -36,5 +36,7 @@ runs the maintained Frame/owner/examples/selection/Intervals/SeriesPack checks,
 plus native-control conformance, before timing. A single immutable capture is
 used for Zen5 AVX2/AVX-512 and Graviton4 NEON. Larger saturation workers and
 additional recipe/format campaigns are outside this graduation run.
+`SIXDB_FRAME_PROFILES=avx2` limits a retry to that profile; it does not change
+the code, flags, checks or query trace for the profile.
 
 Final receipts and any regression decisions belong in [GRADUATION.md](../GRADUATION.md).

@@ -10,11 +10,13 @@ case "$(uname -m)" in
   x86_64) profiles="avx512 avx2" ;;
   *) profiles="neon" ;;
 esac
+profiles=${SIXDB_FRAME_PROFILES:-$profiles}
 for profile in $profiles; do
   case "$profile" in
     avx512) march=znver5; tune=zen5 ;;
     avx2) march=x86-64-v3; tune=zen5 ;;
     neon) march=armv8-a+simd; tune=neoverse-v2 ;;
+    *) printf 'Unknown profile: %s\n' "$profile" >&2; exit 2 ;;
   esac
   build="build/clang/frame-landing-$profile"
   out="$SIXDB_RESULTS/$profile"
