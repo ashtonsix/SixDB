@@ -151,14 +151,16 @@ u128 block_sum(const std::uint64_t *x, unsigned n) noexcept {
     return (static_cast<u128>(hi) << 32) + lo;
 }
 
-// A partially selected block reduces either by visiting its selected rows,
-// or by one dense pass in which every unselected row contributes its
-// operation's identity (0 to SUM and MAX, UINT64_MAX to MIN), whichever its
-// popcount says does less work. The crossovers, in selected rows per 256,
-// are the local aarch64 NEON measurements (about 40% for SUM, 50% for the
-// summary; workbench/spikes/frame-seam/asm); native values are not yet
-// measured.
-constexpr unsigned dense_sum_rows = 103, dense_summary_rows = 128;
+// Partial blocks choose a sparse walk or an identity-element reduction.
+// These conservative crossovers come from the native Zen 5 and Graviton 4
+// comparisons in workbench/spikes/frame-seam/landing. Full blocks bypass this.
+#if defined(__AVX512F__)
+constexpr unsigned dense_sum_rows = 85, dense_summary_rows = 85;
+#elif defined(__AVX2__)
+constexpr unsigned dense_sum_rows = 103, dense_summary_rows = 160;
+#else
+constexpr unsigned dense_sum_rows = 115, dense_summary_rows = 192;
+#endif
 bool dense(unsigned selected, unsigned n, unsigned crossover) noexcept { return selected * block_rows >= crossover * n; }
 
 // Exact SUM of the rows of block x selected by r (clear past its n rows).
