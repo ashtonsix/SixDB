@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <random>
+#include <string_view>
 #include <vector>
 namespace sp = ikea::seriespack;
 using u64 = std::uint64_t;
@@ -47,8 +48,12 @@ template <unsigned K, sp::preset P> void run(const char* name) {
     std::vector<u64> words(4);
     volatile u64 sink = 0;
     auto check = [](bool ok) { if (!ok) { std::fprintf(stderr, "wrong answer\n"); std::exit(1); } };
+    // ns_per_call is per 256 rows: one call per 256-row block (call_rows
+    // 256), except exact_sum, one 65,536-row call amortized per 256 rows.
     auto emit = [&](const char* op, const char* arm, double ns) {
-        std::printf("{\"k\":%u,\"layout\":\"%s\",\"op\":\"%s\",\"arm\":\"%s\",\"ns_per_call\":%.3f}\n", K, name, op, arm, ns);
+        const unsigned call_rows = std::string_view(op) == "exact_sum" ? 65536 : std::string_view(op) == "point" ? 1 : 256;
+        std::printf("{\"k\":%u,\"layout\":\"%s\",\"op\":\"%s\",\"arm\":\"%s\",\"ns_per_call\":%.3f,\"call_rows\":%u}\n", K, name, op,
+                    arm, ns, call_rows);
     };
     // SUM per block.
     { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += typed.sum_unchecked(b * block, block); check(s == want_sum); }
@@ -94,22 +99,45 @@ template <unsigned K, sp::preset P> void run(const char* name) {
     // in-region positions): one decode, against the masked-sum law (one
     // prefiltered SUM per bit of the position, weighted by 2^b).
     static constexpr std::uint8_t weights[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    u64 want_weighted = 0;
+    using u128 = unsigned __int128;
+    u128 want_weighted = 0, want_exact = 0;
     for (std::size_t i = 0; i < n; ++i)
-        want_weighted += (i % 16) * v[i];
+        want_weighted += static_cast<u128>(i % 16) * v[i], want_exact += v[i];
     static constexpr std::uint16_t bit_masks[4] = {0xaaaa, 0xcccc, 0xf0f0, 0xff00};
     auto by_masks = [&](std::size_t b) {
-        u64 s = 0;
+        u128 s = 0;
         for (unsigned bit = 0; bit < 4; ++bit)
-            s += erased.sum_masked_unchecked(b * block, block, &bit_masks[bit], 1) << bit;
+            s += erased.sum_masked_exact_unchecked(b * block, block, &bit_masks[bit], 1) << bit;
         return s;
     };
-    { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += erased.weighted_sum_unchecked(b * block, block, weights); check(s == want_weighted); }
-    { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += by_masks(b); check(s == want_weighted); }
-    { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += typed.weighted_sum_unchecked(b * block, block, weights); check(s == want_weighted); }
-    emit("weighted_sum", "typed", ns_per(blocks, [&] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += typed.weighted_sum_unchecked(b * block, block, weights); sink = s; }));
-    emit("weighted_sum", "erased", ns_per(blocks, [&] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += erased.weighted_sum_unchecked(b * block, block, weights); sink = s; }));
-    emit("weighted_sum", "masked_law", ns_per(blocks, [&] { u64 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += by_masks(b); sink = s; }));
+    auto fold = [](u128 x) { return static_cast<u64>(x) ^ static_cast<u64>(x >> 64); };
+    { u128 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += erased.weighted_sum_unchecked(b * block, block, weights); check(s == want_weighted); }
+    { u128 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += by_masks(b); check(s == want_weighted); }
+    { u128 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += typed.weighted_sum_unchecked(b * block, block, weights); check(s == want_weighted); }
+    emit("weighted_sum", "typed", ns_per(blocks, [&] { u128 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += typed.weighted_sum_unchecked(b * block, block, weights); sink = fold(s); }));
+    emit("weighted_sum", "erased", ns_per(blocks, [&] { u128 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += erased.weighted_sum_unchecked(b * block, block, weights); sink = fold(s); }));
+    emit("weighted_sum", "masked_law", ns_per(blocks, [&] { u128 s = 0; for (std::size_t b = 0; b < blocks; ++b) s += by_masks(b); sink = fold(s); }));
+    // Exact SUM of the whole part in one call, against Frame's former route
+    // (modulo sums in exact chunks, or decode and add above 55 bits).
+    check(erased.sum_exact_unchecked(0, n) == want_exact);
+    auto frame_route = [&] {
+        u128 s = 0;
+        if constexpr (K <= 55) {
+            const std::size_t chunk = K <= 48 ? n : (std::size_t{1} << (64 - K)) / block * block;
+            for (std::size_t at = 0; at < n; at += chunk)
+                s += erased.sum_unchecked(at, std::min(chunk, n - at));
+        } else {
+            alignas(64) u64 x[block];
+            for (std::size_t at = 0; at < n; at += block) {
+                erased.read_unchecked(at, block, x);
+                for (std::size_t i = 0; i < block; ++i) s += x[i];
+            }
+        }
+        return s;
+    };
+    check(frame_route() == want_exact);
+    emit("exact_sum", "erased", ns_per(blocks, [&] { sink = fold(erased.sum_exact_unchecked(0, n)); }));
+    emit("exact_sum", "frame_route", ns_per(blocks, [&] { sink = fold(frame_route()); }));
     // Points through the exposed kernel.
     std::vector<std::uint32_t> rows(4096);
     u64 want_points = 0;
@@ -128,6 +156,8 @@ int main() {
     run<20, sp::preset::compact>("compact");
     run<33, sp::preset::compact>("compact");
     run<55, sp::preset::compact>("compact");
+    run<60, sp::preset::compact>("compact");
+    run<64, sp::preset::compact>("compact");
 #if defined(__aarch64__)
     run<3, sp::preset::bulk_arm>("bulk");
     run<14, sp::preset::bulk_arm>("bulk");

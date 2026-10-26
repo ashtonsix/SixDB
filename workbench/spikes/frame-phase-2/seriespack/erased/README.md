@@ -10,7 +10,7 @@ delta stage. A masked-sum law for that SUM was 1.3–2.6× slower than decoding.
 
 - **`bind_range_reader<U>(dense_input)`** returns the runtime-width reader
   with a layout's compiled `range_operations`. These are compiled once per
-  layout in `src/seriespack/operations_*.cpp`, eight widths per unit.
+  layout in `src/seriespack/operations_*.cpp`, four widths per unit.
   - Range operations: `sum`, `sum_masked` (16-row masks, optionally repeating
     with a period), `count` and `filter_words` per comparison, and
     `weighted_sum`. Checked forms exist for `sum`, `count` and
@@ -88,6 +88,50 @@ so an exact whole-delta SUM still needs a bounded-width or wide lift (u128).
 G64 regions need another route.
 
 Both machines' numbers are from the final sources.
+
+## Exact sums (u128)
+
+Frame phase 3 asked for exact sums, so it can stop chunking SeriesPack's
+modulo-2^64 sums and stop decoding above 55 bits. `sum_exact`,
+`sum_masked_exact` and `weighted_sum` (weights indexed by row % 16 or
+row % 64) now return u128.
+- Where a width cannot wrap a 64-bit sum within a chunk of at least 256 rows,
+  they run the modulo kernels on such chunks.
+- Wider widths, and a weighted masked sum, add the 32-bit halves of each
+  value, times its weight, in separate u64 lanes.
+
+The earlier modulo `weighted_sum` (period 16) is replaced. Weighted sums
+are ns per 256-row call. Exact SUM is ns per 256 rows amortized over one
+65,536-row call (`call_rows` in later evidence); both exact SUM arms share
+that boundary. Jobs `20261025T035710Z-757ad2ac` (Zen 5) and
+`20261025T035743Z-5e5b3efb` (Graviton 4);
+[evidence/exact-zen5.jsonl](evidence/exact-zen5.jsonl),
+[evidence/exact-graviton4.jsonl](evidence/exact-graviton4.jsonl).
+
+| | Zen 5 weighted (runtime / masked law) | Zen 5 exact SUM (SeriesPack / Frame's chunks or decode) | Graviton 4 weighted | Graviton 4 exact SUM |
+| --- | --- | --- | --- | --- |
+| compact K = 3 | 15.6 / 87.0 | 0.4 / 0.4 | 33.0 / 163 | 1.8 / 1.8 |
+| compact K = 12 | 23.8 / 94.7 | 2.3 / 2.3 | 66.2 / 253 | 14.8 / 14.8 |
+| compact K = 33 | 24.0 / 112 | 11.9 / 11.4 | 305 / 498 | 37.6 / 37.6 |
+| compact K = 55 | 38.4 / 152 | 23.2 / 23.5 | 163 / 570 | 73.0 / 73.2 |
+| compact K = 60 | 42.9 / 193 | 30.2 / 105 | 152 / 729 | 116 / 162 |
+| compact K = 64 | 21.1 / 171 | 11.4 / 49.2 | 184 / 478 | 91.3 / 117 |
+
+- The exact weighted sum is 4–8× faster than the masked-sum law on Zen 5.
+  On Graviton 4 it is 2.6–5× faster, and 1.6× at K = 33.
+- The exact SUM matches Frame's chunked route up to 55 bits. Above that it is
+  3.5–4.3× faster than decoding on Zen 5 (1.3–1.4× on Graviton 4).
+- Two fixes came out of timing:
+  - Dividing by a runtime weight period in every part had held the runtime
+    weighted sum at 43 ns on Zen 5; the period (16 or 64) is now a mask.
+  - Narrow widths' operation units outgrew a 16 GB worker at `-j6`. The
+    operations now compile in 16 units of four widths, 1.3 GB at most each;
+    the whole library builds in 58 s at 1.6 GB on Zen 5 and 90 s at 2.8 GB
+    on Graviton 4.
+
+Full-scope checks (every width instantiated) pass on these sources: jobs
+`20261025T035559Z-42af01a9` (Zen 5 AVX2 and AVX-512) and
+`20261025T035630Z-2d0f6664` (Graviton 4).
 
 ## Checks
 
