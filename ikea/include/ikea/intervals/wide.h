@@ -49,17 +49,18 @@ struct wide_sizes {
     std::uint64_t start(unsigned rank) const noexcept {
         return rank ? at(rank - 1) : detail::read_element(checkpoints, 0);
     }
-    /// Consecutive ranks, region by region: one checkpoint load and division
-    /// per region, then one add per rank.
+    /// Consecutive ranks, region by region: one division per call, one
+    /// checkpoint load per region, then one add per rank.
     template <class Sink> [[gnu::always_inline]] void visit_intervals(unsigned begin, unsigned take, Sink &&sink) const {
         if (!take)
             return;
         std::uint64_t position = start(begin), end = position;
         const unsigned stop = begin + take;
-        for (unsigned rank = begin; rank < stop;) {
-            const unsigned offset = rank % spacing, limit = rank + std::min(spacing - offset, stop - rank);
+        unsigned region = begin / spacing, offset = begin % spacing;
+        for (unsigned rank = begin; rank < stop; ++region, offset = 0) {
+            const unsigned limit = rank + std::min(spacing - offset, stop - rank);
             if (!offset) {
-                end = detail::read_element(checkpoints, rank / spacing);
+                end = detail::read_element(checkpoints, region);
                 [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
                 position = end, ++rank;
             }
@@ -108,16 +109,17 @@ struct wide_ends {
         return rank % spacing ? base + end_of(rank) : base;
     }
     std::uint64_t start(unsigned rank) const noexcept { return rank ? at(rank - 1) : at(0); }
-    /// Consecutive ranks, region by region: one checkpoint per region, then
-    /// the checkpoint plus each contiguous field.
+    /// Consecutive ranks, region by region: one division per call, one
+    /// checkpoint per region, then the checkpoint plus each contiguous field.
     template <class Sink> [[gnu::always_inline]] void visit_intervals(unsigned begin, unsigned take, Sink &&sink) const {
         if (!take)
             return;
         std::uint64_t position = start(begin);
         const unsigned stop = begin + take;
-        for (unsigned rank = begin; rank < stop;) {
-            const unsigned offset = rank % spacing, limit = rank + std::min(spacing - offset, stop - rank);
-            const std::uint64_t base = detail::read_element(checkpoints, rank / spacing);
+        unsigned region = begin / spacing, offset = begin % spacing;
+        for (unsigned rank = begin; rank < stop; ++region, offset = 0) {
+            const unsigned limit = rank + std::min(spacing - offset, stop - rank);
+            const std::uint64_t base = detail::read_element(checkpoints, region);
             if (!offset) {
                 [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, base});
                 position = base, ++rank;
