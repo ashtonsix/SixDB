@@ -21,6 +21,20 @@ checks=(ikea_frame_description_check ikea_frame_manifest_check ikea_frame_group_
   ikea_seriespack_check ikea_seriespack_descriptor_check ikea_seriespack_admission_check
   ikea_seriespack_ownership_check ikea_filters_check)
 pattern='^ikea_(frame_.*_check|example_frame_.*|selection_check|intervals_(search|seams|wide)_check|seriespack(_descriptor|_admission|_ownership)?_check|filters_check)$'
+# Unchanged backends need the affected Frame surface and direct leaf oracle,
+# not another build of the unrelated monolithic width-matrix test.
+case "${SIXDB_FRAME_CHECKS:-full}" in
+  full) ;;
+  core)
+    checks=(ikea_frame_description_check ikea_frame_manifest_check ikea_frame_group_image_check
+      ikea_frame_reader_check ikea_frame_stages_check ikea_frame_span_check ikea_frame_demand_check
+      ikea_example_frame_ordinary ikea_example_frame_owner ikea_selection_check
+      ikea_intervals_search_check ikea_intervals_seams_check ikea_intervals_wide_check)
+    pattern='^ikea_(frame_.*_check|example_frame_.*|selection_check|intervals_(search|seams|wide)_check)$'
+    ;;
+  *) exit 2 ;;
+esac
+printf '%s\n' "${SIXDB_FRAME_CHECKS:-full}" > "$SIXDB_RESULTS/check-scope.txt"
 for profile in $profiles; do
   case "$profile" in
     avx512) march=znver5; tune=zen5 ;;
