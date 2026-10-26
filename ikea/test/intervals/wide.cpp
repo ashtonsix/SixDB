@@ -44,9 +44,16 @@ template <class Source> void check_source(const Source &s, const std::vector<u64
     s.visit_intervals(0, n, [&](unsigned r, in::interval<u64> v) {
         visited &= r == seen++ && v.limit == x[r] && v.first == (r ? x[r - 1] : x[0]);
     });
-    std::vector<u64> tail;
-    if (n > 5)
-        s.visit_intervals(n / 3, n / 2, [&](unsigned r, in::interval<u64> v) { visited &= v.limit == x[r]; });
+    // Every range starting and ending inside, at and across region edges.
+    for (unsigned first : {0u, 1u, spacing - 1, spacing, spacing + 1, n / 3, n - 1})
+        for (unsigned take : {1u, 2u, spacing - 1, spacing, spacing + 1, n})
+            if (first < n && take && take <= n - first) {
+                unsigned next = first;
+                s.visit_intervals(first, take, [&](unsigned r, in::interval<u64> v) {
+                    visited &= r == next++ && v.limit == x[r] && v.first == (r ? x[r - 1] : x[0]);
+                });
+                visited &= next == first + take;
+            }
     expect(ends, "at", spacing, n);
     expect(starts, "start", spacing, n);
     expect(visited && seen == n, "visit_intervals", spacing, n);

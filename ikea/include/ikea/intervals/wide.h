@@ -42,15 +42,25 @@ struct wide_sizes {
     std::uint64_t start(unsigned rank) const noexcept {
         return rank ? at(rank - 1) : detail::read_element(checkpoints, 0);
     }
-    /// Consecutive ranks, carrying the previous end: one add per rank.
+    /// Consecutive ranks, region by region: one checkpoint load and division
+    /// per region, then one add per rank.
     template <class Sink> [[gnu::always_inline]] void visit_intervals(unsigned begin, unsigned take, Sink &&sink) const {
         if (!take)
             return;
         std::uint64_t position = start(begin), end = position;
-        for (unsigned rank = begin; rank < begin + take; ++rank) {
-            end = rank % spacing ? end + detail::read_element(sizes, rank) : detail::read_element(checkpoints, rank / spacing);
-            [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
-            position = end;
+        const unsigned stop = begin + take;
+        for (unsigned rank = begin; rank < stop;) {
+            const unsigned offset = rank % spacing, limit = rank + std::min(spacing - offset, stop - rank);
+            if (!offset) {
+                end = detail::read_element(checkpoints, rank / spacing);
+                [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
+                position = end, ++rank;
+            }
+            for (; rank < limit; ++rank) {
+                end += detail::read_element(sizes, rank);
+                [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
+                position = end;
+            }
         }
     }
     /// The first rank whose end meets point: the last region whose checkpoint
@@ -88,14 +98,25 @@ struct wide_ends {
         return rank % spacing ? base + detail::read_element(ends, rank) : base;
     }
     std::uint64_t start(unsigned rank) const noexcept { return rank ? at(rank - 1) : at(0); }
+    /// Consecutive ranks, region by region: one checkpoint per region, then
+    /// the checkpoint plus each contiguous field.
     template <class Sink> [[gnu::always_inline]] void visit_intervals(unsigned begin, unsigned take, Sink &&sink) const {
         if (!take)
             return;
         std::uint64_t position = start(begin);
-        for (unsigned rank = begin; rank < begin + take; ++rank) {
-            const std::uint64_t end = at(rank);
-            [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
-            position = end;
+        const unsigned stop = begin + take;
+        for (unsigned rank = begin; rank < stop;) {
+            const unsigned offset = rank % spacing, limit = rank + std::min(spacing - offset, stop - rank);
+            const std::uint64_t base = detail::read_element(checkpoints, rank / spacing);
+            if (!offset) {
+                [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, base});
+                position = base, ++rank;
+            }
+            for (; rank < limit; ++rank) {
+                const std::uint64_t end = base + detail::read_element(ends, rank);
+                [[clang::always_inline]] sink(rank, interval<std::uint64_t>{position, end});
+                position = end;
+            }
         }
     }
     template <edge Edge, std::integral Query> [[gnu::always_inline]] unsigned boundary(Query point) const {
