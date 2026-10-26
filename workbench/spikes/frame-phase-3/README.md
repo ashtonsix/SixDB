@@ -3,7 +3,8 @@
 The first read/build implementation is in [`ikea::frame`](../../../ikea/docs/frame/usage.md).
 The read/build core is qualified on Zen 5 AVX2/AVX-512 and Graviton 4 NEON.
 The [landing receipt](GRADUATION.md) records the exact source, checks, control
-comparisons and remaining limits.
+comparisons and remaining limits, including the carried-region traversal fix
+(85f22f57) and its before/after results.
 
 The accepted foundation composes intervals (sizes or relative ends), bounds and
 SeriesPack packing over non-null u64 values. Canonical descriptions, explicit
