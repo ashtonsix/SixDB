@@ -31,8 +31,10 @@ std::optional<point_plan> point_plan::make(const author::stage &root, unsigned u
             return std::nullopt;
         plan.entries_.push_back({e.lo, static_cast<std::uint32_t>(e.leaf.base), static_cast<std::uint32_t>(plan.pos_.size()),
                                  leaf, static_cast<std::uint8_t>(e.count)});
-        plan.pos_.insert(plan.pos_.end(), e.positions, e.positions + e.count);
-        plan.val_.insert(plan.val_.end(), e.values, e.values + e.count);
+        if (e.count) {
+            plan.pos_.insert(plan.pos_.end(), e.positions, e.positions + e.count);
+            plan.val_.insert(plan.val_.end(), e.values, e.values + e.count);
+        }
     }
     return plan;
 }

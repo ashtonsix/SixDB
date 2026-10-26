@@ -80,6 +80,14 @@ int main() {
                 check_source(in::wide_ends{e.ends.data(), e.checkpoints.data(), n, spacing}, *x, ordered, spacing);
             }
         }
+    // Boundary arithmetic at the largest counts: a final region of one rank
+    // answers from checkpoints alone, without reading a field.
+    {
+        const u64 checkpoints[2] = {1, 10};
+        const unsigned n = ~0u - 1, spacing = ~0u - 2;
+        expect(in::lower_bound(in::wide_sizes{nullptr, checkpoints, n, spacing}, u64{11}) == n, "wide_sizes limit", spacing, n);
+        expect(in::lower_bound(in::wide_ends{nullptr, checkpoints, n, spacing}, u64{11}) == n, "wide_ends limit", spacing, n);
+    }
     if (failures) {
         std::fprintf(stderr, "%d failures\n", failures);
         return 1;

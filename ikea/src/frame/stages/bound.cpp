@@ -299,7 +299,9 @@ class bound_stage final : public stage {
     bool entry(unsigned u, unsigned b, bound_point_entry &e) const {
         const unit_state &s = units_[u];
         const area &a = area_of(s, b);
-        e = {s.lo[b], {}, a.pos.data() + s.start[b], a.val.data() + s.start[b], s.count[b]};
+        // No pointer is formed into an area without exceptions (it may have no slots).
+        e = {s.lo[b], {}, s.count[b] ? a.pos.data() + s.start[b] : nullptr,
+             s.count[b] ? a.val.data() + s.start[b] : nullptr, s.count[b]};
         return child_->leaf_entry(u, b, e.leaf);
     }
 
@@ -338,9 +340,14 @@ class bound_stage final : public stage {
     u128 weighted_sum(unsigned u, const bitset256 &blocks, const std::uint8_t *weights, unsigned period) const override {
         const unit_state &s = units_[u];
         u128 t = child_->weighted_sum(u, blocks, weights, period);
+        unsigned period_weight = 0;
+        for (unsigned r = 0; r < period; ++r)
+            period_weight += weights[r];
         blocks.for_each([&](unsigned b) {
-            unsigned w = 0;
-            for (unsigned r = 0; r < rows_in(u, b); ++r)
+            // Blocks start on period boundaries: whole periods, then a tail.
+            const unsigned m = rows_in(u, b);
+            unsigned w = m / period * period_weight;
+            for (unsigned r = m / period * period; r < m; ++r)
                 w += weights[r % period];
             t += static_cast<u128>(s.lo[b]) * w;
             each_exception(s, b, [&](std::uint8_t pos, std::uint64_t v) {

@@ -26,10 +26,17 @@ struct width_array {
 };
 
 class pack_stage final : public stage {
+    // A group keeps state only for the widths its blocks use.
+    struct width_set {
+        unsigned K;
+        bitset256 members;
+        width_array array; // empty for width 0
+    };
+    static constexpr std::uint8_t absent = 0xff;
     struct group {
-        std::array<bitset256, 65> members{};
-        std::array<width_array, 65> arrays;
-        std::vector<std::uint8_t> present; // widths with blocks, ascending
+        std::array<std::uint8_t, 65> index; // into widths, or absent
+        std::vector<width_set> widths;      // ascending K
+        group() { index.fill(absent); }
     };
     struct unit_state {
         std::array<std::uint8_t, unit_blocks> width{}, slot{};
@@ -59,19 +66,22 @@ class pack_stage final : public stage {
         return units_[u];
     }
     const width_array *array_of(const unit_state &s, unsigned b) const {
-        return s.width[b] ? &s.groups[b / group_blocks].arrays[s.width[b]] : nullptr;
+        if (!s.width[b])
+            return nullptr;
+        const group &q = s.groups[b / group_blocks];
+        return &q.widths[q.index[s.width[b]]].array;
     }
     std::size_t first_row(const unit_state &s, unsigned b) const { return std::size_t{s.slot[b]} * block_rows; }
     template <class F> void each_width(const unit_state &s, const bitset256 &blocks, F &&f) const {
         for (const group &q : s.groups)
-            for (unsigned K : q.present)
-                if (const bitset256 m = q.members[K] & blocks; !m.empty())
-                    f(q, K, m);
+            for (const width_set &w : q.widths)
+                if (const bitset256 m = w.members & blocks; !m.empty())
+                    f(w, m);
     }
     // Consecutive slots of the selected members of one width are contiguous
     // rows of its array: visit each run as (first row, rows).
-    template <class F> void each_run(const group &q, unsigned K, const bitset256 &selected, F &&f) const {
-        const width_array &a = q.arrays[K];
+    template <class F> void each_run(const width_set &w, const bitset256 &selected, F &&f) const {
+        const width_array &a = w.array;
         unsigned slot = 0, run_first = 0, run = 0;
         auto flush = [&] {
             if (run) {
@@ -80,7 +90,7 @@ class pack_stage final : public stage {
                 run = 0;
             }
         };
-        q.members[K].for_each([&](unsigned b) {
+        w.members.for_each([&](unsigned b) {
             if (selected.contains(b)) {
                 if (!run)
                     run_first = slot;
@@ -113,6 +123,7 @@ class pack_stage final : public stage {
         for (unsigned g = 0; g < s.groups.size(); ++g) {
             group &q = s.groups[g];
             std::array<std::vector<std::uint64_t>, 65> staged;
+            std::array<bitset256, 65> members{};
             const unsigned first = g * group_blocks, n = std::min(group_blocks, blocks_in(u) - first);
             for (unsigned b = first; b < first + n; ++b) {
                 const unsigned m = rows_in(u, b);
@@ -126,17 +137,22 @@ class pack_stage final : public stage {
                 s.rows[b] = static_cast<std::uint16_t>(m);
                 s.width[b] = static_cast<std::uint8_t>(K);
                 s.slot[b] = static_cast<std::uint8_t>(K ? staged[K].size() / block_rows : 0);
-                q.members[K].set(b);
+                members[K].set(b);
                 if (K)
                     staged[K].insert(staged[K].end(), x, x + m);
             }
+            unsigned present = 0;
+            for (const auto &m : members)
+                present += !m.empty();
+            q.widths.reserve(present);
             for (unsigned K = 0; K <= 64; ++K) {
-                if (q.members[K].empty())
+                if (members[K].empty())
                     continue;
-                q.present.push_back(static_cast<std::uint8_t>(K));
+                q.index[K] = static_cast<std::uint8_t>(q.widths.size());
+                q.widths.push_back({K, members[K], {}});
                 if (!K)
                     continue;
-                width_array &a = q.arrays[K];
+                width_array &a = q.widths.back().array;
                 const auto need = storage(K, staged[K].size());
                 if (!need)
                     return std::unexpected(error::capacity);
@@ -167,10 +183,10 @@ class pack_stage final : public stage {
         const unsigned first = g * group_blocks, n = std::min(group_blocks, blocks_in(u) - first);
         for (unsigned b = first; b < first + n; ++b)
             put<std::uint8_t>(out, s.width[b]), put<std::uint8_t>(out, s.slot[b]), put<std::uint16_t>(out, s.rows[b]);
-        put<std::uint8_t>(out, static_cast<std::uint8_t>(q.present.size()));
-        for (unsigned K : q.present) {
-            const width_array &a = q.arrays[K];
-            put<std::uint8_t>(out, static_cast<std::uint8_t>(K));
+        put<std::uint8_t>(out, static_cast<std::uint8_t>(q.widths.size()));
+        for (const width_set &w : q.widths) {
+            const width_array &a = w.array;
+            put<std::uint8_t>(out, static_cast<std::uint8_t>(w.K));
             put<std::uint32_t>(out, static_cast<std::uint32_t>(a.rows));
             put<std::uint32_t>(out, static_cast<std::uint32_t>(a.bytes.size()));
             put_bytes(out, a.bytes);
@@ -191,6 +207,7 @@ class pack_stage final : public stage {
         const unsigned first = g * group_blocks, n = std::min(group_blocks, blocks_in(u) - first);
         std::array<std::size_t, 65> expected_rows{};
         std::array<unsigned, 65> next_slot{};
+        std::array<bitset256, 65> members{};
         for (unsigned b = first; b < first + n; ++b) {
             const unsigned K = c.take<std::uint8_t>(), slot = c.take<std::uint8_t>(), m = c.take<std::uint16_t>();
             // Width zero owns no array, so every constant block has slot 0.
@@ -198,36 +215,38 @@ class pack_stage final : public stage {
                 return std::unexpected(error::contents);
             s.width[b] = static_cast<std::uint8_t>(K), s.slot[b] = static_cast<std::uint8_t>(slot);
             s.rows[b] = static_cast<std::uint16_t>(m);
-            q.members[K].set(b);
+            members[K].set(b);
             expected_rows[K] += m;
         }
         const unsigned present = c.take<std::uint8_t>();
+        unsigned widths = 0;
+        for (const auto &m : members)
+            widths += !m.empty();
+        if (!c.ok || widths != present)
+            return std::unexpected(error::contents);
+        q.widths.reserve(present);
         int previous = -1;
         for (unsigned i = 0; i < present; ++i) {
             const unsigned K = c.take<std::uint8_t>();
             const std::size_t n_rows = c.take<std::uint32_t>(), n_bytes = c.take<std::uint32_t>();
-            if (!c.ok || K > 64 || static_cast<int>(K) <= previous || q.members[K].empty())
+            if (!c.ok || K > 64 || static_cast<int>(K) <= previous || members[K].empty())
                 return std::unexpected(error::contents);
             previous = static_cast<int>(K);
-            q.present.push_back(static_cast<std::uint8_t>(K));
             const auto need = K ? storage(K, n_rows) : std::nullopt;
             if ((K ? n_rows != expected_rows[K] : n_rows != 0) || (K ? !need || need->plane_bytes[0] != n_bytes : n_bytes))
                 return std::unexpected(error::contents);
             const auto bytes = c.span(n_bytes);
             if (!c.ok)
                 return std::unexpected(error::contents);
+            q.index[K] = static_cast<std::uint8_t>(q.widths.size());
+            q.widths.push_back({K, members[K], {}});
             if (K) {
-                width_array &a = q.arrays[K];
+                width_array &a = q.widths.back().array;
                 a.bytes = bytes, a.rows = n_rows;
                 if (auto bound = bind(a, K); !bound)
                     return std::unexpected(bound.error());
             }
         }
-        unsigned widths = 0;
-        for (const auto &m : q.members)
-            widths += !m.empty();
-        if (!c.ok || widths != present)
-            return std::unexpected(error::contents);
         return c.at;
     }
 
@@ -257,21 +276,21 @@ class pack_stage final : public stage {
     }
     u128 sum(unsigned u, const bitset256 &blocks) const override {
         u128 t = 0;
-        each_width(units_[u], blocks, [&](const group &q, unsigned K, const bitset256 &m) {
-            if (K)
-                each_run(q, K, m, [&](std::size_t first, std::size_t n) { t += q.arrays[K].reader->sum_exact_unchecked(first, n); });
+        each_width(units_[u], blocks, [&](const width_set &w, const bitset256 &m) {
+            if (w.K)
+                each_run(w, m, [&](std::size_t first, std::size_t n) { t += w.array.reader->sum_exact_unchecked(first, n); });
         });
         return t;
     }
     u128 sum_selected(unsigned u, const bitset256 &blocks, const block_rows_set &rows) const override {
         const unit_state &s = units_[u];
         u128 t = 0;
-        each_width(s, blocks, [&](const group &q, unsigned K, const bitset256 &m) {
-            if (K)
+        each_width(s, blocks, [&](const width_set &w, const bitset256 &m) {
+            if (w.K)
                 m.for_each([&](unsigned b) {
                     std::uint16_t masks[16];
                     masks_of(rows[b], masks);
-                    t += q.arrays[K].reader->sum_masked_exact_unchecked(first_row(s, b), s.rows[b], masks);
+                    t += w.array.reader->sum_masked_exact_unchecked(first_row(s, b), s.rows[b], masks);
                 });
         });
         return t;
@@ -280,10 +299,10 @@ class pack_stage final : public stage {
         u128 t = 0;
         // Arrays start on block boundaries and 256 % period == 0, so a row's
         // weight is the same in array and block coordinates.
-        each_width(units_[u], blocks, [&](const group &q, unsigned K, const bitset256 &m) {
-            if (K)
-                each_run(q, K, m, [&](std::size_t first, std::size_t n) {
-                    t += q.arrays[K].reader->weighted_sum_unchecked(first, n, weights, period);
+        each_width(units_[u], blocks, [&](const width_set &w, const bitset256 &m) {
+            if (w.K)
+                each_run(w, m, [&](std::size_t first, std::size_t n) {
+                    t += w.array.reader->weighted_sum_unchecked(first, n, weights, period);
                 });
         });
         return t;
@@ -291,9 +310,9 @@ class pack_stage final : public stage {
     std::uint64_t count(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs) const override {
         const unit_state &s = units_[u];
         std::uint64_t c = 0;
-        each_width(s, blocks, [&](const group &q, unsigned K, const bitset256 &m) {
+        each_width(s, blocks, [&](const width_set &w, const bitset256 &m) {
             m.for_each([&](unsigned b) {
-                c += K ? q.arrays[K].reader->count_unchecked(op, first_row(s, b), s.rows[b], rhs[b])
+                c += w.K ? w.array.reader->count_unchecked(op, first_row(s, b), s.rows[b], rhs[b])
                        : author::test(op, 0, rhs[b]) ? s.rows[b] : 0;
             });
         });
@@ -301,15 +320,15 @@ class pack_stage final : public stage {
     }
     void filter(comparison op, unsigned u, const bitset256 &blocks, const block_args &rhs, std::span<bitset256> out) const override {
         const unit_state &s = units_[u];
-        each_width(s, blocks, [&](const group &q, unsigned K, const bitset256 &m) {
+        each_width(s, blocks, [&](const width_set &w, const bitset256 &m) {
             m.for_each([&](unsigned b) {
-                if (!K) {
+                if (!w.K) {
                     out[b] = author::test(op, 0, rhs[b]) ? bitset256::first_n(s.rows[b]) : bitset256{};
                     return;
                 }
                 if (s.rows[b] < block_rows)
                     out[b] = {};
-                q.arrays[K].reader->filter_words_unchecked(op, first_row(s, b), s.rows[b], rhs[b], out[b].words.data());
+                w.array.reader->filter_words_unchecked(op, first_row(s, b), s.rows[b], rhs[b], out[b].words.data());
             });
         });
     }

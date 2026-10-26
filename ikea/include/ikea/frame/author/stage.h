@@ -87,8 +87,10 @@ class stage {
     // inline children's) from immutable bytes, which stay placed and alive
     // while the tree is used; payload is borrowed. It checks the section's
     // byte law and this stage's premises over its children, and returns the
-    // bytes it consumed. validate_unit checks premises spanning groups and
-    // streams, once every section of the unit is attached.
+    // bytes it consumed. It is not a content proof: premises over children
+    // and across streams are proved by validate_image for the groups it
+    // admits. validate_unit is an author hook for a fully attached unit; the
+    // image layer does not call it, and it proves nothing by default.
     virtual std::expected<std::size_t, error> attach(unsigned unit, std::size_t rows, unsigned group,
                                                      std::span<const std::byte>);
     virtual std::expected<void, error> validate_unit(unsigned unit) const;

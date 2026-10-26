@@ -7,6 +7,11 @@
 // Reconstruction (at, start, visit_intervals) needs no ordering. Search
 // (lower_bound, upper_bound) assumes the ends never decrease; the owner
 // proves that before searching, as for every Intervals source.
+//
+// Trusted window: spacing >= 1; count readable fields and ceil(count /
+// spacing) readable checkpoints; every rank and visited range within count.
+// No readable halo is assumed beyond them, and the field at a checkpoint rank
+// is never read.
 #pragma once
 #include <ikea/intervals/detail/search.h>
 #include <ikea/intervals/types.h>
@@ -57,7 +62,7 @@ struct wide_sizes {
         const unsigned next = detail::checkpoint_boundary<Edge, 0>(checkpoints, groups(), query.value);
         if (next == 0)
             return 0;
-        const unsigned group = next - 1, first = group * spacing, last = std::min(count, first + spacing);
+        const unsigned group = next - 1, first = group * spacing, last = first + std::min(spacing, count - first);
         std::uint64_t end = detail::read_element(checkpoints, group);
         for (unsigned rank = first + 1; rank < last; ++rank) {
             end += detail::read_element(sizes, rank);
@@ -100,7 +105,7 @@ struct wide_ends {
         const unsigned next = detail::checkpoint_boundary<Edge, 0>(checkpoints, groups(), query.value);
         if (next == 0)
             return 0;
-        const unsigned group = next - 1, first = group * spacing, last = std::min(count, first + spacing);
+        const unsigned group = next - 1, first = group * spacing, last = first + std::min(spacing, count - first);
         const std::uint64_t base = detail::read_element(checkpoints, group);
         for (unsigned rank = first + 1; rank < last; ++rank)
             if (detail::meets<Edge>(base + detail::read_element(ends, rank), query.value))

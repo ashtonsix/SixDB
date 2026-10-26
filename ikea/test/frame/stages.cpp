@@ -133,6 +133,12 @@ struct column {
                 any |= root->max_selected(u, t, r, m);
         return any ? std::optional(m) : std::nullopt;
     }
+    fr::u128 weighted(const std::uint8_t *weights, unsigned period) const {
+        fr::u128 s = 0;
+        for (unsigned u = 0; u < units; ++u)
+            s += root->weighted_sum(u, blocks(u), weights, period);
+        return s;
+    }
     u64 count(comparison op, u64 t) const {
         u64 c = 0;
         for (unsigned u = 0; u < units; ++u)
@@ -231,6 +237,18 @@ void check(const std::string &what, const column &c, const std::vector<u64> &v) 
             c.filter(op, t, words.data());
             expect(words == oracle, what + " filter" + at);
         }
+    // Position weights, including all-zero and maximal ones, over every block
+    // (the unit's partial last block takes the tail of a period).
+    for (unsigned period : {16u, 64u})
+        for (int kind = 0; kind < 3; ++kind) {
+            std::array<std::uint8_t, 64> w{};
+            for (unsigned r = 0; r < period; ++r)
+                w[r] = kind == 0 ? 0 : kind == 1 ? 255 : static_cast<std::uint8_t>(rng());
+            fr::u128 want = 0;
+            for (std::size_t i = 0; i < n; ++i)
+                want += static_cast<fr::u128>(v[i]) * w[i % fr::unit_rows % period];
+            expect(c.weighted(w.data(), period) == want, what + " weighted period " + std::to_string(period));
+        }
     bool points = true;
     for (std::size_t i = 0; i < n; ++i)
         points &= c.get(i) == v[i];
@@ -298,7 +316,11 @@ int main() {
     expect(point_plan::admits(65536, 0) && !point_plan::admits(65537, 0), "point plan leaf limit");
     expect(point_plan::admits(1, ~std::uint32_t{0}) && !point_plan::admits(1, std::size_t{~std::uint32_t{0}} + 1),
            "point plan exception limit");
-    for (const auto &[name, v] : cols) {
+    // Constant columns have no exceptions and, with no slack, empty areas.
+    auto plan_cols = cols;
+    plan_cols.emplace_back("zeros", std::vector<u64>(fr::unit_rows + 300, 0));
+    plan_cols.emplace_back("sevens", std::vector<u64>(fr::unit_rows + 300, 77));
+    for (const auto &[name, v] : plan_cols) {
         const column c = built(bound_pack(), v);
         bool ok = true;
         for (unsigned u = 0; ok && u < c.units; ++u) {
